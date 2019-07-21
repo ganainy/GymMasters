@@ -1,3 +1,41 @@
 <resources>
     <string name="app_name">Gym Masters</string>
+
+    <!-- Login Activity -->
+    <string name="login_email_edit_text_hint">E-mail</string>
+    <string name="login_password_edit_text_hint">Password</string>
+    <string name="login_login_button">Login</string>
+    <string name="login_sign_up_button">No Account Yet? Sign Up Now</string>
+    <string name="under_appname_intro_loginscreen">Easy and Smart Learning, Welcome!</string>
+
+    <string name="login_choose_another_user_name_toast">Choose a different user name</string>
+
+    <!-- Sign Up Activity -->
+    <string name="sign_up_user_name_edit_text_hint">User Name</string>
+    <string name="sign_up_email_edit_text_hint">E-mail</string>
+    <string name="sign_up_password_edit_text_hint">Password</string>
+    <string name="sign_up_teacher_radio_button">Teacher</string>
+    <string name="sign_up_student_radio_button">Student</string>
+    <string name="sign_up_sign_up_button">Sign Up</string>
+    <string name="sign_up_teacher_or_student">Please select account type&#8230; Teacher or Student?</string>
+    <string name="under_appname_intro_signupscreen">Sign Up Here!</string>
+    <string name="sign_up_choose_profile_image">Choose your profile image</string>
+    <string name="sign_up_type_not_choosed_text_toast">Please, choose your account type</string>
+    <string name="fillhere_signuplogin_error">Field Can\'t be empty</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="sign_up">Sign up</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+
+
+
+
+
+
+
+
 </resources>
