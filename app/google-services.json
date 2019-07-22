@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "316904056049",
+    "firebase_url": "https://gymmasters-d56bb.firebaseio.com",
+    "project_id": "gymmasters-d56bb",
+    "storage_bucket": "gymmasters-d56bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316904056049:android:13c3c6a65bcbec53",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "316904056049-qf2jtroja6hasdarlb4cakisglv23l8a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myapplication",
+            "certificate_hash": "78216473c04b3cc5c0c88b3cca6cfe60e4bacbd6"
+          }
+        },
+        {
+          "client_id": "316904056049-9ug77a8hdsuo0sa6tfcp3fnggj759vak.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgnPkbgdGyrBsi57L8ZpE7BFEfnNGBIq0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "316904056049-9ug77a8hdsuo0sa6tfcp3fnggj759vak.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
