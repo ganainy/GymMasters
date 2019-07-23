@@ -7,7 +7,7 @@
    >
 
     <LinearLayout
-        android:background="@drawable/gradient"
+        android:background="@drawable/signup_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -18,7 +18,7 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="8dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
@@ -26,7 +26,7 @@
                 android:layout_height="141dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:src="@drawable/profile_pic_default"
+                android:src="@drawable/anonymous_profile"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -35,9 +35,12 @@
         </android.support.constraint.ConstraintLayout>
 
         <android.support.design.widget.TextInputLayout
+            android:background="@drawable/edittext_bg"
+android:layout_marginTop="16dp"
             android:id="@+id/user_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="4dp"
             android:theme="@style/TextLabel"
             app:errorEnabled="true"
             app:errorTextAppearance="@color/colorPrimary"
@@ -60,10 +63,12 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-
+            android:background="@drawable/edittext_bg"
+            android:layout_marginTop="16dp"
             android:id="@+id/email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="4dp"
             android:theme="@style/TextLabel"
             app:errorEnabled="true"
             app:errorTextAppearance="@color/colorPrimary">
@@ -84,10 +89,12 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-
+            android:background="@drawable/edittext_bg"
             android:id="@+id/password"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="4dp"
             android:theme="@style/TextLabel"
             app:errorEnabled="true"
             app:passwordToggleEnabled="true"
@@ -114,6 +121,7 @@
 
 
         <Button
+            android:layout_margin="16dp"
             android:id="@+id/signupButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

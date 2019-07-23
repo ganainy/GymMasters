@@ -13,9 +13,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+
+
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,8 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         signup=findViewById(R.id.signupTextView);
 
 
-        //google sign in
-        signInWithGoogle();
+
         //open signup activity
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,14 +57,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void signInWithGoogle() {
-        //TODO continue google sign in
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
 
-
-    }
 
     private void checkEmailAndPassword() {
 
