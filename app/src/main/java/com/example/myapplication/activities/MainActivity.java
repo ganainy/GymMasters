@@ -1,8 +1,10 @@
 package com.example.myapplication.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -18,10 +20,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
+import com.example.myapplication.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,12 +38,16 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
-    private ImageView imageView;
+    private CircleImageView imageView;
     FirebaseAuth mAuth;
     private String profilePictureId;
+    TextView nameNavigation,emailNavigation;
+    private String name,email,rating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,38 +73,36 @@ public class MainActivity extends AppCompatActivity
 
 
 
-
-
-
-
-
-        show();
+        showProfilePictureInNavigationMenu();
     }
 
-    private void show() {
-        //
+    private void showProfilePictureInNavigationMenu() {
+        //used callback so we only try to show the image  after the id is retreived from the database otherwise it would be null
         getProfileImageId(new FirebaseCallback() {
             @Override
-            public void onCallback(String profilePictureId) {
+            public void onCallback(User loggedInUser) {
                 NavigationView navigationView = findViewById(R.id.nav_view);
                 View hView =  navigationView.getHeaderView(0);
                 imageView = hView.findViewById(R.id.imageViewProfile);
+                //set name and email in the navigationView
+                nameNavigation=hView.findViewById(R.id.nameNavigation);
+                emailNavigation=hView.findViewById(R.id.emailNavigation);
+
+                nameNavigation.setText(loggedInUser.getName());
+                emailNavigation.setText(loggedInUser.getEmail());
 
 
                 StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                //reference to logged in user profile image
                 StorageReference pathReference = storageRef.child("images/"+profilePictureId);
-                Log.i(TAG, "onCallback: sax"+profilePictureId);
 
 
-                final long ONE_MEGABYTE = 1024 * 1024;
-                pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+
+                pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
-                    public void onSuccess(byte[] bytes) {
-                        // Data for "images/island.jpg" is returns, use this as needed
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        imageView.setImageBitmap(Bitmap.createScaledBitmap(bmp,imageView.getWidth(),
-                                imageView.getHeight(), false));
-                        Log.i(TAG, "onSuccess: ");
+                    public void onSuccess(Uri uri) {
+                        //download image with glide then show it in the navigation menu
+                        Glide.with(getApplicationContext()).load(uri.toString()).into(imageView);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -104,6 +111,8 @@ public class MainActivity extends AppCompatActivity
                         Log.i(TAG, "onFailure: "+exception.getMessage());
                     }
                 });
+
+
             }
         });
 
@@ -121,7 +130,12 @@ public class MainActivity extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 profilePictureId=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("photo").getValue().toString();
-                firebaseCallback.onCallback(profilePictureId);
+                name=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("name").getValue().toString();
+                email=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("email").getValue().toString();
+                rating=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("rating").getValue().toString();
+
+
+                firebaseCallback.onCallback(new User(name,email,rating,profilePictureId));
             }
 
             @Override
@@ -190,6 +204,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
     private interface FirebaseCallback{
-        void onCallback(String profilePictureId);
+        void onCallback(User loggedInUser);
     }
 }
