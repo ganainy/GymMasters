@@ -14,11 +14,19 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.example.myapplication.R;
+import com.example.myapplication.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -33,7 +41,8 @@ public class SignUpActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     //private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
-   // private StorageReference mStorageRef;
+    private String userName,email;
+    // private StorageReference mStorageRef;
 
 
 
@@ -64,8 +73,8 @@ public class SignUpActivity extends AppCompatActivity {
         emailEditText=findViewById(R.id.emailEditText);
         passwordEditText=findViewById(R.id.passwordEditText);
         userNameEditText=findViewById(R.id.userNameEditText);
-        final String userName = userNameEditText.getText().toString().trim();
-        final String email = emailEditText.getText().toString().trim();
+        userName = userNameEditText.getText().toString().trim();
+        email = emailEditText.getText().toString().trim();
         final String password = passwordEditText.getText().toString().trim();
 
         String fillhere = getResources().getString((R.string.fillhere_signuplogin_error));
@@ -93,20 +102,64 @@ public class SignUpActivity extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             FancyToast.makeText(SignUpActivity.this,"Registration successful.",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,false).show();
                             startActivity(new Intent(SignUpActivity.this,MainActivity.class));
-                            FirebaseUser user = mAuth.getCurrentUser();
-                         //   updateUI(user);
+                            String uid = mAuth.getCurrentUser().getUid();
+                            saveUserInfoInRealtimeDb(uid);
+
                         } else {
 
                             // If sign in fails, display a message to the user.
                             constraintLayout.setVisibility(View.GONE);
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             FancyToast.makeText(SignUpActivity.this,"Registration failed.",FancyToast.LENGTH_LONG,FancyToast.ERROR,false).show();
-                           // updateUI(null);
+
                         }
 
                         // ...
                     }
                 });
+    }
+
+    private void saveUserInfoInRealtimeDb(String uid) {
+
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users");
+        User user=null;
+        if (imageUri!=null)
+        {
+            //uploadImage to firebase storage
+            uploadProfilePic(imageUri);
+            user=new User(userName,email,"-1",imageUri.getLastPathSegment());
+        }
+        else
+        {
+            user=new User(userName,email,"-1","-1");
+        }
+
+        myRef.child(uid).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.i(TAG, "onSuccess: ");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: "+e.getMessage());
+            }
+        });
+
+    }
+
+    private void  uploadProfilePic(Uri imageUri) {
+        // Create a storage reference from our app
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
+
+        final StorageReference imagesRef = storageRef.child("images/"+imageUri.getLastPathSegment());
+        imagesRef.putFile(imageUri);
+
+
+
     }
 
     private void selectPhoto() {
