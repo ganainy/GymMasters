@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.User;
@@ -21,12 +20,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -38,7 +35,6 @@ public class SignUpActivity extends AppCompatActivity {
     private TextInputEditText userNameEditText, emailEditText, passwordEditText;
     private Uri imageUri;
     Button signUp;
-    private ProgressBar progressBar;
     //private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
     private String userName,email;
@@ -101,7 +97,10 @@ public class SignUpActivity extends AppCompatActivity {
                             constraintLayout.setVisibility(View.GONE);
                             Log.d(TAG, "createUserWithEmail:success");
                             FancyToast.makeText(SignUpActivity.this,"Registration successful.",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,false).show();
-                            startActivity(new Intent(SignUpActivity.this,MainActivity.class));
+                            Intent intent=new Intent(SignUpActivity.this,MainActivity.class);
+                            if (imageUri!=null)
+                            intent.putExtra("imageUri",imageUri.toString());
+                            startActivity(intent);
                             String uid = mAuth.getCurrentUser().getUid();
                             saveUserInfoInRealtimeDb(uid);
 
@@ -124,19 +123,19 @@ public class SignUpActivity extends AppCompatActivity {
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users");
-        User user=null;
+        User newUser;
         if (imageUri!=null)
         {
             //uploadImage to firebase storage
             uploadProfilePic(imageUri);
-            user=new User(userName,email,"-1",imageUri.getLastPathSegment());
+            newUser =new User(userName,email,"-1",imageUri.getLastPathSegment());
         }
         else
         {
-            user=new User(userName,email,"-1","-1");
+            newUser =new User(userName,email,"-1","-1");
         }
 
-        myRef.child(uid).setValue(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+        myRef.child(uid).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.i(TAG, "onSuccess: ");

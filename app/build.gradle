@@ -11,6 +11,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -39,6 +40,9 @@ dependencies {
   //glide library for images
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    //exo player
+    implementation 'com.google.android.exoplayer:exoplayer:2.7.3'
+    implementation 'org.jsoup:jsoup:1.10.3'
 
 
 }
