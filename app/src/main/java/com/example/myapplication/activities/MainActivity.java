@@ -8,7 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,29 +20,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.MainActivityViewModel;
 import com.example.myapplication.R;
+import com.example.myapplication.adapters.ViewPagerAdapterMainActivity;
+import com.example.myapplication.adapters.ViewPagerAdapterWelcomeActivity;
 import com.example.myapplication.model.User;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -56,21 +46,20 @@ public class MainActivity extends AppCompatActivity
     TextView nameNavigation,emailNavigation;
     private String name,email,rating;
     private StorageReference storageRef;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -80,13 +69,37 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-
+        setupViewPagerAndTabLayout();
         showUserDataInNavigationMenu();
 
-        showGifFromStorage();
+     //   showGifFromStorage();
     }
 
-    private void showGifFromStorage() {
+    private void setupViewPagerAndTabLayout() {
+        viewPager=findViewById(R.id.view_pager_main);
+        //view pager and tab layout for swiping fragments
+        viewPager.setAdapter(new ViewPagerAdapterMainActivity(getSupportFragmentManager()));
+        TabLayout tabLayout =  findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager, true);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_crisscross_position);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_dumbbell_variant_outline);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_conversation);
+        tabLayout.getTabAt(0).setText(("Workout"));
+        tabLayout.getTabAt(1).setText(("Exercises"));
+        tabLayout.getTabAt(2).setText(("Chat"));
+
+
+
+        //add custom view in tablayout for example if i want to show pic beside text
+       /* TabLayout.Tab tab = tabLayout.newTab();
+        tab.setCustomView( R.layout.tablayout_item );
+        tabLayout.addTab(tab);*/
+
+
+
+    }
+
+  /*  private void showGifFromStorage() {
         storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference pathReference = storageRef.child("ExRx.net - Machine-assisted Chest Dip.MP4");
         pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -122,7 +135,7 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-    }
+    }*/
 
 
     private void showUserDataInNavigationMenu() {
@@ -146,17 +159,14 @@ public class MainActivity extends AppCompatActivity
                 if (getIntent().hasExtra("imageUri"))
                 {
                     Uri myUri = Uri.parse(getIntent().getStringExtra("imageUri"));
-
                     Glide.with(MainActivity.this)
                             .load(myUri)
                             .into(imageView);
-
                 }else
                 {
                      storageRef = FirebaseStorage.getInstance().getReference();
                     //reference to logged in user profile image
                     StorageReference pathReference = storageRef.child("images/"+profilePictureId);
-
                     pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
@@ -171,14 +181,9 @@ public class MainActivity extends AppCompatActivity
                             Log.i(TAG, "onFailure: "+exception.getMessage());
                         }
                     });
-
                 }
-
             }
         });
-
-
-
     }
 
 
@@ -240,6 +245,13 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+    //show excecises for the clicked genre
+    public void triceps(View view) {
+        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
+    }
+
     public interface FirebaseCallback{
         void onCallback(User loggedInUser);
     }

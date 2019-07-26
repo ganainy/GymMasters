@@ -10,23 +10,24 @@ import com.example.myapplication.fragments.LoginFragment2;
 import com.example.myapplication.fragments.LoginFragment3;
 
 
-public class ViewPagerAdapter extends FragmentPagerAdapter {
-    public ViewPagerAdapter(FragmentManager fm) {
+public class ViewPagerAdapterWelcomeActivity extends FragmentPagerAdapter {
+    public ViewPagerAdapterWelcomeActivity(FragmentManager fm) {
         super(fm);
     }
 
+    private static final String TAG = "ViewPagerAdapterWelcome";
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                Log.i("hehe", "getItem: 1");
+                Log.i(TAG, "getItem: 1");
                 return new LoginFragment1();
 
             case 1:
-                Log.i("hehe", "getItem: 2");
+                Log.i(TAG, "getItem: 2");
                 return new LoginFragment2();
             case 2:
-                Log.i("hehe", "getItem: 3");
+                Log.i(TAG, "getItem: 3");
                 return new LoginFragment3();
         }
         return null; //does not happen

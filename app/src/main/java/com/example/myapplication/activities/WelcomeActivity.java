@@ -5,7 +5,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -13,9 +12,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.adapters.ViewPagerAdapter;
+import com.example.myapplication.adapters.ViewPagerAdapterWelcomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class WelcomeActivity extends AppCompatActivity {
     ViewPager viewPager;
@@ -30,7 +28,7 @@ public class WelcomeActivity extends AppCompatActivity {
         login=findViewById(R.id.logInTextView);
 
         //view pager and tab layout for swiping fragments
-        viewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager()));
+        viewPager.setAdapter(new ViewPagerAdapterWelcomeActivity(getSupportFragmentManager()));
         TabLayout tabLayout =  findViewById(R.id.tabDots);
         tabLayout.setupWithViewPager(viewPager, true);
         showSignUpButton();
