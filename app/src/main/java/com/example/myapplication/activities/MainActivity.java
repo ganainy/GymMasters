@@ -1,5 +1,6 @@
 package com.example.myapplication.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication.MainActivityViewModel;
 import com.example.myapplication.R;
 import com.example.myapplication.model.User;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -125,7 +127,9 @@ public class MainActivity extends AppCompatActivity
 
     private void showUserDataInNavigationMenu() {
         //used callback so we only try to show the image  after the id is retreived from the database otherwise it would be null
-        getUserData(new FirebaseCallback() {
+        MainActivityViewModel mViewModel;
+        mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        mViewModel.getUserData(new FirebaseCallback() {
             @Override
             public void onCallback(User loggedInUser) {
                 NavigationView navigationView = findViewById(R.id.nav_view);
@@ -177,31 +181,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void getUserData(final FirebaseCallback firebaseCallback) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users");
 
-        mAuth = FirebaseAuth.getInstance();
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                profilePictureId=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("photo").getValue().toString();
-                name=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("name").getValue().toString();
-                email=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("email").getValue().toString();
-                rating=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("rating").getValue().toString();
-
-
-                firebaseCallback.onCallback(new User(name,email,rating,profilePictureId));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-    }
 
     @Override
     public void onBackPressed() {
@@ -260,7 +240,7 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    private interface FirebaseCallback{
+    public interface FirebaseCallback{
         void onCallback(User loggedInUser);
     }
 }
