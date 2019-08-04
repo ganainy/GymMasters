@@ -1,12 +1,14 @@
 package com.example.myapplication.model;
 
-public class Excercise {
+import java.io.Serializable;
+
+public class Exercise  implements Serializable {
     String name,bodyPart,excecution,preperation,mechanism,utility,previewPhoto1,previewPhoto2,videoLink;
 
-    public Excercise() {
+    public Exercise() {
     }
 
-    public Excercise(String name,String bodyPart, String excecution, String preperation, String mechanism, String utility, String previewPhoto1, String previewPhoto2, String videoLink) {
+    public Exercise(String name, String bodyPart, String excecution, String preperation, String mechanism, String utility, String previewPhoto1, String previewPhoto2, String videoLink) {
         this.name = name;
         this.excecution = excecution;
         this.preperation = preperation;

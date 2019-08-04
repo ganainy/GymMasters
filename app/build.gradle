@@ -37,7 +37,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     //fancy toast
     implementation 'com.github.Shashank02051997:FancyToast-Android:0.1.6'
-  //glide library for images
+    //glide library for images
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     //exo player

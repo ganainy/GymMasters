@@ -248,8 +248,12 @@ public class MainActivity extends AppCompatActivity
 
 
     //show excecises for the clicked genre
-    public void triceps(View view) {
-        Toast.makeText(this, "hi", Toast.LENGTH_SHORT).show();
+    public void triceps(View view)
+    {
+        Intent intent=new Intent(MainActivity.this,ExercisesActivity.class);
+        intent.putExtra("triceps","triceps");
+        startActivity(intent);
+
     }
 
     public interface FirebaseCallback{

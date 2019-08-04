@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myapplication">
-<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,10 +11,15 @@
         android:roundIcon="@drawable/dumbbell"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.SpecificExerciseActivity"></activity>
+        <activity
+            android:name=".activities.ExercisesActivity"
+            android:label="@string/title_activity_exercises"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.LoginActivity"
             android:theme="@style/NoActionBar" />
