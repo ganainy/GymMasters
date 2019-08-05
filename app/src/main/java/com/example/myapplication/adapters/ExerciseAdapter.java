@@ -105,7 +105,7 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
                             filteredList.add(exercise);
                         }
                         filteredNameList = filteredList;
-                    }e
+                    }
 
                 }
                 FilterResults results = new FilterResults();
