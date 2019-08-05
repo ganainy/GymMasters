@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,18 +24,21 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder> {
+public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>  implements Filterable {
     List<Exercise> exercisesList;
+    List<Exercise> filteredNameList;
     Context context;
     private static final String TAG = "ExerciseAdapter";
     private StorageReference storageRef;
 
-    public ExerciseAdapter(Context context) {
-        this.context=context;
+    public ExerciseAdapter(Context context,List<Exercise>exercisesList) {
+        this.context = context;
+        this.exercisesList=exercisesList;
     }
 
     @NonNull
@@ -47,7 +52,7 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
     @Override
     public void onBindViewHolder(@NonNull ExerciseViewHolder exerciseViewHolder, int i) {
         exerciseViewHolder.exerciseName.setText(exercisesList.get(i).getName());
-      downloadAndShowExerciseImage(exercisesList.get(i).getPreviewPhoto1(),exerciseViewHolder);
+        downloadAndShowExerciseImage(exercisesList.get(i).getPreviewPhoto1(), exerciseViewHolder);
     }
 
     private void downloadAndShowExerciseImage(String previewPhoto1, final ExerciseViewHolder exerciseViewHolder) {
@@ -66,43 +71,77 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
-                Log.i(TAG, "onFailure: "+exception.getMessage());
+                Log.i(TAG, "onFailure: " + exception.getMessage());
             }
         });
 
-        }
+    }
 
 
     @Override
     public int getItemCount() {
-        return exercisesList.size()!=0?exercisesList.size():0;
+        return exercisesList.size() != 0 ? exercisesList.size() : 0;
     }
 
-    public void  setDataSource(List<Exercise> exerciseList)
-    {
-        this.exercisesList = exerciseList;
-    }
-
-    //viewHolder
-    public class ExerciseViewHolder extends RecyclerView.ViewHolder{
-        CircleImageView exerciseImage;
-    TextView exerciseName;
+//    public void setDataSource(List<Exercise> exerciseList) {
+//        this.exercisesList = exerciseList;
+//    }
 
 
-        public ExerciseViewHolder(@NonNull View itemView) {
-            super(itemView);
-            exerciseImage=itemView.findViewById(R.id.exerciseImageView);
-            exerciseName=itemView.findViewById(R.id.exerciseNameEdittext);
 
-            //open full exercise info when exercise from recycler is clicked
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                   ExercisesActivity exercisesActivity= (ExercisesActivity)context;
-                    exercisesActivity.handleClick(exercisesList.get(getAdapterPosition()));
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                Log.i(TAG, "performFiltering: ");
+                String charSequenceString = constraint.toString();
+                if (charSequenceString.isEmpty()) {
+                    filteredNameList = exercisesList;
+                } else {
+                    List<Exercise> filteredList = new ArrayList<>();
+                    for (Exercise exercise : exercisesList) {
+                        if (exercise.getName().toLowerCase().contains(charSequenceString.toLowerCase())) {
+                            filteredList.add(exercise);
+                        }
+                        filteredNameList = filteredList;
+                    }e
+
                 }
-            });
-        }
+                FilterResults results = new FilterResults();
+                results.values = filteredNameList;
+                return results;
+            }
 
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                Log.i(TAG, "publishResults,exercisesList: "+exercisesList.size());
+                exercisesList = (List<Exercise>) results.values;
+                notifyDataSetChanged();
+            }
+        };
     }
-}
+
+            //viewHolder
+            class ExerciseViewHolder extends RecyclerView.ViewHolder {
+                CircleImageView exerciseImage;
+                TextView exerciseName;
+
+
+                ExerciseViewHolder(@NonNull View itemView) {
+                    super(itemView);
+                    exerciseImage = itemView.findViewById(R.id.exerciseImageView);
+                    exerciseName = itemView.findViewById(R.id.exerciseNameEdittext);
+
+                    //open full exercise info when exercise from recycler is clicked
+                    itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ExercisesActivity exercisesActivity = (ExercisesActivity) context;
+                            exercisesActivity.handleClick(exercisesList.get(getAdapterPosition()));
+                        }
+                    });
+                }
+
+            }
+        }

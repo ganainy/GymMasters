@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +29,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class SpecificMuscleFragment extends Fragment {
-
+    ExerciseAdapter exerciseAdapter;
     private static final String TAG = "SpecificMuscleFragment";
 
     public SpecificMuscleFragment() {
@@ -95,6 +96,7 @@ public class SpecificMuscleFragment extends Fragment {
 
                 //after loading exercises show them in the recycler view
                 setupRecycler(view, exerciseList);
+                setupSearchView();
 
             }
 
@@ -105,11 +107,32 @@ public class SpecificMuscleFragment extends Fragment {
         });
     }
 
+    private void setupSearchView() {
+        ExercisesActivity exercisesActivity=(ExercisesActivity)getActivity();
+        SearchView searchView=exercisesActivity.findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String queryString) {
+                Log.i(TAG, "onQueryTextSubmit: ");
+                exerciseAdapter.getFilter().filter(queryString);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String queryString) {
+                Log.i(TAG, "onQueryTextChange: ");
+                exerciseAdapter.getFilter().filter(queryString);
+
+                return false;
+            }
+        });
+    }
+
 
     private void setupRecycler(View view, List<Exercise> exerciseList) {
         RecyclerView recyclerView = view.findViewById(R.id.exerciseRecyclerView);
-        ExerciseAdapter exerciseAdapter = new ExerciseAdapter(getActivity());
-        exerciseAdapter.setDataSource(exerciseList);
+         exerciseAdapter = new ExerciseAdapter(getActivity(),exerciseList);
+        //exerciseAdapter.setDataSource(exerciseList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(exerciseAdapter);
