@@ -1,6 +1,8 @@
 package com.example.myapplication.fragments;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -11,17 +13,28 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.activities.ExercisesActivity;
 import com.example.myapplication.adapters.ExerciseAdapter;
 import com.example.myapplication.model.Exercise;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +42,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class SpecificMuscleFragment extends Fragment {
+
     ExerciseAdapter exerciseAdapter;
     private static final String TAG = "SpecificMuscleFragment";
 
@@ -49,6 +63,9 @@ public class SpecificMuscleFragment extends Fragment {
         ExercisesActivity activity = (ExercisesActivity) getActivity();
         String myDataFromActivity = activity.getMyData();
         Log.i(TAG, "onCreateView: " + myDataFromActivity);
+
+
+
 
         getExercise(myDataFromActivity, view);
 
@@ -75,10 +92,10 @@ public class SpecificMuscleFragment extends Fragment {
 
         //once we selected the right muscle group node this could will be the same for all exercises info
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
+            List<Exercise> exerciseList = new ArrayList<>();
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<Exercise> exerciseList = new ArrayList<>();
+
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Exercise exercise = new Exercise();
                     exercise.setName(ds.child("Name").getValue().toString());
@@ -91,12 +108,23 @@ public class SpecificMuscleFragment extends Fragment {
                     exercise.setUtility(ds.child("utility").getValue().toString());
                     exercise.setVideoLink(ds.child("videoLink").getValue().toString());
                     exerciseList.add(exercise);
-                    Log.i(TAG, "onDataChange: " + exercise.getName());
                 }
 
+                //
+                download(exerciseList, new CallbackInterface() {
+                    @Override
+                    public void callbackMethod(List<Exercise> exerciseList) {
+
+                        Log.i(TAG, "7agat: "+exerciseList.size());
+                        setupRecycler(view, exerciseList);
+                        setupSearchView();
+                    }
+                });
+                //
+
                 //after loading exercises show them in the recycler view
-                setupRecycler(view, exerciseList);
-                setupSearchView();
+
+
 
             }
 
@@ -108,19 +136,20 @@ public class SpecificMuscleFragment extends Fragment {
     }
 
     private void setupSearchView() {
+    
         ExercisesActivity exercisesActivity=(ExercisesActivity)getActivity();
         SearchView searchView=exercisesActivity.findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String queryString) {
-                Log.i(TAG, "onQueryTextSubmit: ");
+              
                 exerciseAdapter.getFilter().filter(queryString);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String queryString) {
-                Log.i(TAG, "onQueryTextChange: ");
+              
                 exerciseAdapter.getFilter().filter(queryString);
 
                 return false;
@@ -130,14 +159,57 @@ public class SpecificMuscleFragment extends Fragment {
 
 
     private void setupRecycler(View view, List<Exercise> exerciseList) {
+        Log.i(TAG, "setupRecycler: ");
         RecyclerView recyclerView = view.findViewById(R.id.exerciseRecyclerView);
          exerciseAdapter = new ExerciseAdapter(getActivity(),exerciseList);
         //exerciseAdapter.setDataSource(exerciseList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(exerciseAdapter);
-        Log.i(TAG, "list size: " + exerciseList.size());
+     
     }
+
+    private void download(final List<Exercise>exerciseList, final CallbackInterface callbackInterface) {
+        Log.i(TAG, "download: "+exerciseList.size());
+        for (int i=0; i < exerciseList.size(); i++) {
+            StorageReference storageRef=FirebaseStorage.getInstance().getReference().child(exerciseList.get(i).getPreviewPhoto1());
+            File localFile = null;
+            try {
+                localFile = File.createTempFile("images", "jpg");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            final File finalLocalFile = localFile;
+            final int finalI = i;
+            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    // Local temp file has been created
+                    exerciseList.get(finalI).setPreviewBitmap(BitmapFactory.decodeFile(finalLocalFile.getAbsolutePath()));
+                    Log.i(TAG, "setPreviewBitmap: "+  exerciseList.get(finalI).getPreviewBitmap().toString());
+                    callbackInterface.callbackMethod(exerciseList);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                    Log.i(TAG, "onFailure: ");
+                }
+            });
+        }
+
+    }
+
+
+
+
+    private interface CallbackInterface
+    {
+         void callbackMethod(List<Exercise> exerciseList);
+    }
+
+
 
 
 }

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,11 +20,15 @@ import com.example.myapplication.R;
 import com.example.myapplication.activities.ExercisesActivity;
 import com.example.myapplication.activities.SpecificExerciseActivity;
 import com.example.myapplication.model.Exercise;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +57,10 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
     @Override
     public void onBindViewHolder(@NonNull ExerciseViewHolder exerciseViewHolder, int i) {
         exerciseViewHolder.exerciseName.setText(exercisesList.get(i).getName());
-        downloadAndShowExerciseImage(exercisesList.get(i).getPreviewPhoto1(), exerciseViewHolder);
+        exerciseViewHolder.exerciseImage.setImageBitmap(exercisesList.get(i).getPreviewBitmap());
+        Log.i(TAG, "onBindViewHolder: "+exercisesList.get(i).getPreviewBitmap());
+
+      //  downloadAndShowExerciseImage(exercisesList.get(i).getPreviewPhoto1(), exerciseViewHolder);
     }
 
     private void downloadAndShowExerciseImage(String previewPhoto1, final ExerciseViewHolder exerciseViewHolder) {
@@ -63,7 +71,7 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
             @Override
             public void onSuccess(Uri uri) {
 
-                Glide.with((context)).load(uri.toString()).into(exerciseViewHolder.exerciseImage);
+               // Glide.with((context)).load(uri.toString()).into(exerciseViewHolder.exerciseImage);
                 Log.i(TAG, "onSuccess: loaded from storage");
 
             }
@@ -76,6 +84,7 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
         });
 
     }
+
 
 
     @Override
@@ -144,4 +153,8 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
                 }
 
             }
-        }
+
+
+
+
+}

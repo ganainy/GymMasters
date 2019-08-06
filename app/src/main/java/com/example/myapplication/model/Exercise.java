@@ -1,9 +1,12 @@
 package com.example.myapplication.model;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 public class Exercise  implements Serializable {
     String name,bodyPart,excecution,preperation,mechanism,utility,previewPhoto1,previewPhoto2,videoLink;
+    Bitmap previewBitmap;
 
     public Exercise() {
     }
@@ -18,6 +21,14 @@ public class Exercise  implements Serializable {
         this.previewPhoto2 = previewPhoto2;
         this.videoLink = videoLink;
         this.bodyPart = bodyPart;
+    }
+
+    public Bitmap getPreviewBitmap() {
+        return previewBitmap;
+    }
+
+    public void setPreviewBitmap(Bitmap previewBitmap) {
+        this.previewBitmap = previewBitmap;
     }
 
     public String getBodyPart() {
