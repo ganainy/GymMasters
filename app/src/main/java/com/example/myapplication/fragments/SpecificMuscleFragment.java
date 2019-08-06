@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.myapplication.R;
 import com.example.myapplication.activities.ExercisesActivity;
@@ -109,6 +110,10 @@ public class SpecificMuscleFragment extends Fragment {
                     public void callbackMethod(List<Exercise> exerciseList) {
 
                         Log.i(TAG, "7agat: "+exerciseList.size());
+                        //hide loading bar
+                        ProgressBar progressBar = view.findViewById(R.id.progressBar);
+                        progressBar.setVisibility(View.GONE);
+
                         setupRecycler(view, exerciseList);
                         setupSearchView();
                     }
