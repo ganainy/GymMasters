@@ -43,6 +43,9 @@ dependencies {
     //exo player
     implementation 'com.google.android.exoplayer:exoplayer:2.7.3'
     implementation 'org.jsoup:jsoup:1.10.3'
+    //butterknife
+    implementation 'com.jakewharton:butterknife:8.1.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.1.0'
 
 
 }

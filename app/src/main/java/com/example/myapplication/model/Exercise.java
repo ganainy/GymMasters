@@ -1,12 +1,22 @@
 package com.example.myapplication.model;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import java.io.Serializable;
-
-public class Exercise  implements Serializable {
+public class Exercise implements Parcelable {
     String name,bodyPart,excecution,preperation,mechanism,utility,previewPhoto1,previewPhoto2,videoLink;
-    Bitmap previewBitmap;
+    public static final Creator<Exercise> CREATOR = new Creator<Exercise>() {
+        @Override
+        public Exercise createFromParcel(Parcel in) {
+            return new Exercise(in);
+        }
+
+        @Override
+        public Exercise[] newArray(int size) {
+            return new Exercise[size];
+        }
+    };
 
     public Exercise() {
     }
@@ -21,6 +31,30 @@ public class Exercise  implements Serializable {
         this.previewPhoto2 = previewPhoto2;
         this.videoLink = videoLink;
         this.bodyPart = bodyPart;
+    }
+
+    Bitmap previewBitmap, preview2Bitmap;
+
+    protected Exercise(Parcel in) {
+        name = in.readString();
+        bodyPart = in.readString();
+        excecution = in.readString();
+        preperation = in.readString();
+        mechanism = in.readString();
+        utility = in.readString();
+        previewPhoto1 = in.readString();
+        previewPhoto2 = in.readString();
+        videoLink = in.readString();
+        previewBitmap = in.readParcelable(Bitmap.class.getClassLoader());
+        preview2Bitmap = in.readParcelable(Bitmap.class.getClassLoader());
+    }
+
+    public Bitmap getPreview2Bitmap() {
+        return preview2Bitmap;
+    }
+
+    public void setPreview2Bitmap(Bitmap preview2Bitmap) {
+        this.preview2Bitmap = preview2Bitmap;
     }
 
     public Bitmap getPreviewBitmap() {
@@ -101,5 +135,26 @@ public class Exercise  implements Serializable {
 
     public void setVideoLink(String videoLink) {
         this.videoLink = videoLink;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(bodyPart);
+        parcel.writeString(excecution);
+        parcel.writeString(preperation);
+        parcel.writeString(mechanism);
+        parcel.writeString(utility);
+        parcel.writeString(previewPhoto1);
+        parcel.writeString(previewPhoto2);
+        parcel.writeString(videoLink);
+        parcel.writeParcelable(previewBitmap, i);
+        parcel.writeParcelable(preview2Bitmap, i);
     }
 }

@@ -13,4 +13,5 @@
     <color name="list_item_color">#dae7f2</color>
     <color name="splash_background">#dae7f2</color>
     <color name="beige">#cccccc</color>
+    <color name="activity_bg">#EBEBEB</color>
 </resources>

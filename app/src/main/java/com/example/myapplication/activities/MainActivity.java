@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -20,13 +18,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.MainActivityViewModel;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.ViewPagerAdapterMainActivity;
-import com.example.myapplication.adapters.ViewPagerAdapterWelcomeActivity;
 import com.example.myapplication.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -89,53 +85,8 @@ public class MainActivity extends AppCompatActivity
         tabLayout.getTabAt(2).setText(("Chat"));
 
 
-
-        //add custom view in tablayout for example if i want to show pic beside text
-       /* TabLayout.Tab tab = tabLayout.newTab();
-        tab.setCustomView( R.layout.tablayout_item );
-        tabLayout.addTab(tab);*/
-
-
-
     }
 
-  /*  private void showGifFromStorage() {
-        storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference pathReference = storageRef.child("ExRx.net - Machine-assisted Chest Dip.MP4");
-        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-
-
-
-                TrackSelector trackSelector = new DefaultTrackSelector();
-
-                SimpleExoPlayer exoPlayer = ExoPlayerFactory.newSimpleInstance(MainActivity.this, trackSelector);
-
-                PlayerView simpleExoPlayerView = findViewById(R.id.videoFullScreenPlayer);
-
-                simpleExoPlayerView.setPlayer(exoPlayer);
-
-                exoPlayer.setPlayWhenReady(true);
-
-                DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(MainActivity.this, Util.getUserAgent(MainActivity.this, "VideoPlayer"));
-
-                MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
-
-                exoPlayer.prepare(videoSource);
-                exoPlayer.setPlayWhenReady(true);
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-                Log.i(TAG, "onFailure : "+exception.getMessage());
-            }
-        });
-
-
-    }*/
 
 
     private void showUserDataInNavigationMenu() {
