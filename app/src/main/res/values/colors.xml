@@ -14,4 +14,5 @@
     <color name="splash_background">#dae7f2</color>
     <color name="beige">#cccccc</color>
     <color name="activity_bg">#EBEBEB</color>
+    <color name="grid_bg">#B3B3B3</color>
 </resources>

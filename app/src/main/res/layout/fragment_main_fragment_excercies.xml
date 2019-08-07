@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.MainFragmentExcercies">
 
 
@@ -17,13 +16,14 @@
        >
 
        <ImageView
+           android:id="@+id/triceps"
            android:layout_width="0dp"
            android:layout_height="0dp"
          android:layout_columnWeight="1"
            android:layout_rowWeight="1"
          android:src="@drawable/triceps"
            android:scaleType="centerCrop"
-           android:onClick="triceps"
+
            />
        <ImageView
            android:layout_width="0dp"

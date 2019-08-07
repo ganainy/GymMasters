@@ -39,6 +39,7 @@ import java.util.List;
  */
 public class SpecificMuscleFragment extends Fragment {
 
+
     ExerciseAdapter exerciseAdapter;
     private static final String TAG = "SpecificMuscleFragment";
 

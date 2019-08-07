@@ -2,30 +2,40 @@ package com.example.myapplication.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.TableLayout;
 
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.SpecificMusclePagerAdapter;
-import com.example.myapplication.adapters.ViewPagerAdapterMainActivity;
-import com.example.myapplication.fragments.SpecificMuscleFragment;
 import com.example.myapplication.model.Exercise;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ExercisesActivity extends AppCompatActivity {
     ViewPager viewPager;
     String muscle;
 
+    @BindView(R.id.htab_collapse_toolbar)
+    CollapsingToolbarLayout htab_collapse_toolbar;
+
+    @OnClick(R.id.addExerciseFab)
+    void openAddExerciseFragment() {
+
+        startActivity(new Intent(ExercisesActivity.this, AddNewExerciseActivity.class));
+
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercises);
+        ButterKnife.bind(this);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 

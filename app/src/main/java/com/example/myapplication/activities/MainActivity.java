@@ -44,11 +44,11 @@ public class MainActivity extends AppCompatActivity
     private StorageReference storageRef;
     private ViewPager viewPager;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -68,8 +68,10 @@ public class MainActivity extends AppCompatActivity
         setupViewPagerAndTabLayout();
         showUserDataInNavigationMenu();
 
+
      //   showGifFromStorage();
     }
+
 
     private void setupViewPagerAndTabLayout() {
         viewPager=findViewById(R.id.view_pager_main);
@@ -198,14 +200,14 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    //show excecises for the clicked genre
+   /* //show excecises for the clicked genre
     public void triceps(View view)
     {
-        Intent intent=new Intent(MainActivity.this,ExercisesActivity.class);
-        intent.putExtra("triceps","triceps");
-        startActivity(intent);
 
-    }
+
+    }*/
+
+
 
     public interface FirebaseCallback{
         void onCallback(User loggedInUser);
