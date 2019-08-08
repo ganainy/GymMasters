@@ -93,13 +93,13 @@ public class SpecificMuscleFragment extends Fragment {
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Exercise exercise = new Exercise();
-                    exercise.setName(ds.child("Name").getValue().toString());
-                    exercise.setExcecution(ds.child("Execution").getValue().toString());
-                    exercise.setPreperation(ds.child("Preparation").getValue().toString());
+                    exercise.setName(ds.child("name").getValue().toString());
+                    exercise.setExecution(ds.child("execution").getValue().toString());
+                    exercise.setPreparation(ds.child("preparation").getValue().toString());
                     exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
-                    exercise.setMechanism(ds.child("mechanic").getValue().toString());
-                    exercise.setPreviewPhoto1(ds.child("preview").getValue().toString());
-                    exercise.setPreviewPhoto2(ds.child("preview2").getValue().toString());
+                    exercise.setMechanism(ds.child("mechanism").getValue().toString());
+                    exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
+                    exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
                     exercise.setUtility(ds.child("utility").getValue().toString());
                     exercise.setVideoLink(ds.child("videoLink").getValue().toString());
                     exerciseList.add(exercise);

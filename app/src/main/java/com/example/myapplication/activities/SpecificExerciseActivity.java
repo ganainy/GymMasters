@@ -102,8 +102,8 @@ public class SpecificExerciseActivity extends AppCompatActivity {
         //change name in actionbar
         setTitle(exercise.getName());
 
-        executionTextView.setText(exercise.getExcecution());
-        preparationTextView.setText(exercise.getPreperation());
+        executionTextView.setText(exercise.getExecution());
+        preparationTextView.setText(exercise.getPreparation());
         mechanicTextView.setText(exercise.getMechanism());
         utilityTextView.setText(exercise.getUtility());
 
@@ -120,16 +120,23 @@ public class SpecificExerciseActivity extends AppCompatActivity {
 
     private void downloadPreviewImage2(final CallbackInterface callbackInterface) {
 
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(exercise.getPreviewPhoto2());
+        StorageReference storageRef2 = FirebaseStorage.getInstance().getReference().child(exercise.getPreviewPhoto2());
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(exercise.getPreviewPhoto1());
+        File localFile2 = null;
         File localFile = null;
         try {
             localFile = File.createTempFile("images", "jpg");
+            localFile2 = File.createTempFile("images", "jpg");
+
             final File finalLocalFile = localFile;
+            final File finalLocalFile2 = localFile2;
+
             storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     // Local temp file has been createed
-                    exercise.setPreview2Bitmap(BitmapFactory.decodeFile(finalLocalFile.getAbsolutePath()));
+                    exercise.setPreviewBitmap(BitmapFactory.decodeFile(finalLocalFile.getAbsolutePath()));
+
                     callbackInterface.callbackMethod(exercise);
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -139,9 +146,11 @@ public class SpecificExerciseActivity extends AppCompatActivity {
                 }
             });
 
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
     }
 

@@ -5,7 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Exercise implements Parcelable {
-    String name,bodyPart,excecution,preperation,mechanism,utility,previewPhoto1,previewPhoto2,videoLink;
+    String name, bodyPart, execution, preparation, mechanism, utility, previewPhoto1, previewPhoto2, videoLink;
     public static final Creator<Exercise> CREATOR = new Creator<Exercise>() {
         @Override
         public Exercise createFromParcel(Parcel in) {
@@ -21,10 +21,10 @@ public class Exercise implements Parcelable {
     public Exercise() {
     }
 
-    public Exercise(String name, String bodyPart, String excecution, String preperation, String mechanism, String utility, String previewPhoto1, String previewPhoto2, String videoLink) {
+    public Exercise(String name, String bodyPart, String execution, String preparation, String mechanism, String utility, String previewPhoto1, String previewPhoto2, String videoLink) {
         this.name = name;
-        this.excecution = excecution;
-        this.preperation = preperation;
+        this.execution = execution;
+        this.preparation = preparation;
         this.mechanism = mechanism;
         this.utility = utility;
         this.previewPhoto1 = previewPhoto1;
@@ -38,8 +38,8 @@ public class Exercise implements Parcelable {
     protected Exercise(Parcel in) {
         name = in.readString();
         bodyPart = in.readString();
-        excecution = in.readString();
-        preperation = in.readString();
+        execution = in.readString();
+        preparation = in.readString();
         mechanism = in.readString();
         utility = in.readString();
         previewPhoto1 = in.readString();
@@ -81,20 +81,20 @@ public class Exercise implements Parcelable {
         this.name = name;
     }
 
-    public String getExcecution() {
-        return excecution;
+    public String getExecution() {
+        return execution;
     }
 
-    public void setExcecution(String excecution) {
-        this.excecution = excecution;
+    public void setExecution(String execution) {
+        this.execution = execution;
     }
 
-    public String getPreperation() {
-        return preperation;
+    public String getPreparation() {
+        return preparation;
     }
 
-    public void setPreperation(String preperation) {
-        this.preperation = preperation;
+    public void setPreparation(String preparation) {
+        this.preparation = preparation;
     }
 
     public String getMechanism() {
@@ -147,8 +147,8 @@ public class Exercise implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
         parcel.writeString(bodyPart);
-        parcel.writeString(excecution);
-        parcel.writeString(preperation);
+        parcel.writeString(execution);
+        parcel.writeString(preparation);
         parcel.writeString(mechanism);
         parcel.writeString(utility);
         parcel.writeString(previewPhoto1);

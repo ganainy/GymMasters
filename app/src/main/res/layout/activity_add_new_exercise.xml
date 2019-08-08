@@ -47,7 +47,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
-                            android:hint="Enter execution steps.."
+                            android:hint="Enter execution name.."
                             android:textSize="20sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             tools:text=" dd" />
@@ -124,11 +124,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             tools:text=" dd" />
 
-                        <ImageView
-                            android:id="@+id/mechanicInfo"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/question_mark" />
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -153,11 +149,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             tools:text=" dd" />
 
-                        <ImageView
-                            android:id="@+id/utilityInfo"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/question_mark" />
+
 
                     </LinearLayout>
 
@@ -185,18 +177,35 @@
                             tools:text=" dd" />
                     </LinearLayout>
 
-
-                    <ImageView
-                        android:id="@+id/addExercisePhoto"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:layout_margin="16dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_add"
-                        android:textColor="@color/textblack"
-                        android:textSize="20sp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
 
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:id="@+id/addExercisePhoto"
+                            android:layout_height="200dp"
+                            android:layout_margin="16dp"
+                            android:layout_weight="1"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/startexercise"
+                            android:textColor="@color/textblack"
+                            android:textSize="20sp" />
+
+                        <ImageView
+                            android:id="@+id/addExercisePhoto2"
+                            android:layout_width="0dp"
+                            android:layout_height="200dp"
+                            android:layout_margin="16dp"
+                            android:layout_weight="1"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/endexercise"
+                            android:textColor="@color/textblack"
+                            android:textSize="20sp" />
+
+                    </LinearLayout>
                     <Button
                         android:id="@+id/saveButton"
                         style="@style/MyButtonStyle"

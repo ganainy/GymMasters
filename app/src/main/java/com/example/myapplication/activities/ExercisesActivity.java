@@ -73,6 +73,8 @@ public class ExercisesActivity extends AppCompatActivity {
     public void handleClick(Exercise exercise) {
 
         Intent intent=new Intent(ExercisesActivity.this,SpecificExerciseActivity.class);
+        //parcelable have size limit so i wont pass image bitmap with the exercise
+        exercise.setPreviewBitmap(null);
         intent.putExtra("exercise",exercise);
         startActivity(intent);
 
