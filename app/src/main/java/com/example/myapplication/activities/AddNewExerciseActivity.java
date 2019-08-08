@@ -78,7 +78,7 @@ public class AddNewExerciseActivity extends AppCompatActivity {
             uploadExercisePhotos();
             Exercise exercise = new Exercise(nameTextView.getText().toString(), newExerciseSelectedMuscle,
                     executionTextView.getText().toString(), preparationTextView.getText().toString(),
-                    newExerciseMechanic, newExerciseUtility, imageUri.getLastPathSegment(), image2Uri.getLastPathSegment(), "");
+                    newExerciseMechanic, newExerciseUtility, imageUri.getLastPathSegment(), image2Uri.getLastPathSegment(), "no_video");
             uploadExercise(exercise);
 
         }

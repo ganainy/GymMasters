@@ -67,6 +67,7 @@ public class SpecificExerciseActivity extends AppCompatActivity {
     @BindView(R.id.showVideoFAB)
     FloatingActionButton showVideoFAB;
     private boolean b;
+    private Timer timer;
 
     @OnClick(R.id.showVideoFAB)
     void hidePhotoShowVideo() {
@@ -181,11 +182,11 @@ public class SpecificExerciseActivity extends AppCompatActivity {
     private void switchExercisePhotos(Exercise exercise) {
 
         //switch exercise photos every 1.5 seconds
-        Timer timer = new Timer();
-        TimerTask t = new TimerTask() {
+        timer = new Timer();
+        TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-
+                Log.i(TAG, "timer is running");
                 if (!b) {
                     b = true;
                     runOnUiThread(new Runnable() {
@@ -207,7 +208,8 @@ public class SpecificExerciseActivity extends AppCompatActivity {
                 }
             }
         };
-        timer.scheduleAtFixedRate(t, 0, 1500);
+        timer.scheduleAtFixedRate(timerTask, 0, 1500);
+
     }
 
 
@@ -263,6 +265,9 @@ public class SpecificExerciseActivity extends AppCompatActivity {
 
     private void showVideoFromStorage(String videoLink) {
 
+        //stop timer from working in background
+        timer.cancel();
+
         //show hidden view then play video
         simpleExoPlayerView.setVisibility(View.VISIBLE);
 
@@ -293,6 +298,10 @@ public class SpecificExerciseActivity extends AppCompatActivity {
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
                 FancyToast.makeText(SpecificExerciseActivity.this, "Unable to play video", Toast.LENGTH_SHORT, 3, false).show();
+                //show swapping photos again and hide videoplayer
+                simpleExoPlayerView.setVisibility(View.GONE);
+                exerciseImageView.setVisibility(View.VISIBLE);
+                switchExercisePhotos(exercise);
                 Log.i(TAG, exception.getMessage());
             }
         });
@@ -301,6 +310,9 @@ public class SpecificExerciseActivity extends AppCompatActivity {
     }
 
 
-
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        timer.cancel();
+    }
 }
