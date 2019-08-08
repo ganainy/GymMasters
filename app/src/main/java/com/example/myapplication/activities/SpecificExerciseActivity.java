@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.Exercise;
@@ -32,7 +31,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.io.File;
 import java.io.IOException;
@@ -266,7 +264,8 @@ public class SpecificExerciseActivity extends AppCompatActivity {
     private void showVideoFromStorage(String videoLink) {
 
         //stop timer from working in background
-        timer.cancel();
+        if (timer != null)
+            timer.cancel();
 
         //show hidden view then play video
         simpleExoPlayerView.setVisibility(View.VISIBLE);
@@ -296,17 +295,46 @@ public class SpecificExerciseActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-                FancyToast.makeText(SpecificExerciseActivity.this, "Unable to play video", Toast.LENGTH_SHORT, 3, false).show();
-                //show swapping photos again and hide videoplayer
-                simpleExoPlayerView.setVisibility(View.GONE);
-                exerciseImageView.setVisibility(View.VISIBLE);
-                switchExercisePhotos(exercise);
+                // if firebase storage video not working ,ask to play on youtube instead
+                openAlertDialog();
                 Log.i(TAG, exception.getMessage());
             }
         });
 
 
+    }
+
+    private void openAlertDialog() {
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(this);
+        builder.setMessage("Show video from youtube instead?").setTitle("Error playing video :/");
+
+
+        builder.setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/results?search_query=" + exercise.getName()));
+                        startActivity(intent);
+                        showSwitchingPhotosAgain();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //  show swapping photos again and hide videoplayer
+                        showSwitchingPhotosAgain();
+                    }
+                });
+        //Creating dialog box
+        AlertDialog alert = builder.create();
+        //Setting the title manually
+        alert.show();
+    }
+
+    private void showSwitchingPhotosAgain() {
+        //  show swapping photos again and hide videoplayer
+        simpleExoPlayerView.setVisibility(View.GONE);
+        exerciseImageView.setVisibility(View.VISIBLE);
+        switchExercisePhotos(exercise);
     }
 
 
