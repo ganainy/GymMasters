@@ -24,7 +24,7 @@ public class ExercisesActivity extends AppCompatActivity {
     CollapsingToolbarLayout htab_collapse_toolbar;
 
     @OnClick(R.id.addExerciseFab)
-    void openAddExerciseFragment() {
+    void openAddNewExerciseActivity() {
 
         startActivity(new Intent(ExercisesActivity.this, AddNewExerciseActivity.class));
 

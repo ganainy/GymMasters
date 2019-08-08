@@ -11,7 +11,8 @@
         android:roundIcon="@drawable/dumbbell"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.AddNewExerciseActivity"></activity>
+        <activity android:name=".activities.SpecificWorkoutActivity"></activity>
+        <activity android:name=".activities.AddNewExerciseActivity" />
         <activity android:name=".activities.SpecificExerciseActivity" />
         <activity
             android:name=".activities.ExercisesActivity"
