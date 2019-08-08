@@ -108,36 +108,27 @@ public class SpecificExerciseActivity extends AppCompatActivity {
         utilityTextView.setText(exercise.getUtility());
 
         //test
-        downloadPreviewImage2(new CallbackInterface() {
-            @Override
-            public void callbackMethod(Exercise exercise) {
-                switchExercisePhotos(exercise);
-            }
-        });
+        downloadPreviewImage();
+
 
 
     }
 
-    private void downloadPreviewImage2(final CallbackInterface callbackInterface) {
+    private void downloadPreviewImage() {
 
-        StorageReference storageRef2 = FirebaseStorage.getInstance().getReference().child(exercise.getPreviewPhoto2());
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(exercise.getPreviewPhoto1());
-        File localFile2 = null;
         File localFile = null;
         try {
             localFile = File.createTempFile("images", "jpg");
-            localFile2 = File.createTempFile("images", "jpg");
 
             final File finalLocalFile = localFile;
-            final File finalLocalFile2 = localFile2;
 
             storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     // Local temp file has been createed
                     exercise.setPreviewBitmap(BitmapFactory.decodeFile(finalLocalFile.getAbsolutePath()));
-
-                    callbackInterface.callbackMethod(exercise);
+                    downloadPreviewImage2();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -151,7 +142,40 @@ public class SpecificExerciseActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+//
 
+//
+
+    }
+
+    private void downloadPreviewImage2() {
+        StorageReference storageRef2 = FirebaseStorage.getInstance().getReference().child(exercise.getPreviewPhoto2());
+        File localFile2 = null;
+
+
+        try {
+            localFile2 = File.createTempFile("images", "jpg");
+
+            final File finalLocalFile2 = localFile2;
+            storageRef2.getFile(localFile2).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    // Local temp file has been createed
+                    exercise.setPreview2Bitmap(BitmapFactory.decodeFile(finalLocalFile2.getAbsolutePath()));
+                    switchExercisePhotos(exercise);
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void switchExercisePhotos(Exercise exercise) {
@@ -277,9 +301,6 @@ public class SpecificExerciseActivity extends AppCompatActivity {
     }
 
 
-    private interface CallbackInterface {
-        void callbackMethod(Exercise exercise);
-    }
 
 
 }
