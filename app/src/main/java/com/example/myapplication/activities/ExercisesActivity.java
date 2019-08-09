@@ -3,7 +3,6 @@ package com.example.myapplication.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
@@ -45,25 +44,19 @@ public class ExercisesActivity extends AppCompatActivity {
         }
         //TODO add elseif for other muscles
 
-        setupViewPagerAndTabLayout();
+        setupViewPager();
     }
 
     public String getMyData() {
         return muscle;
     }
 
-    private void setupViewPagerAndTabLayout() {
+    private void setupViewPager() {
         viewPager = findViewById(R.id.htab_viewpager);
         //view pager and tab layout for swiping fragments
         viewPager.setAdapter(new SpecificMusclePagerAdapter(getSupportFragmentManager()));
-        TabLayout tabLayout = findViewById(R.id.htab_tabs);
-        tabLayout.setupWithViewPager(viewPager, true);
 
-//        tabLayout.getTabAt(0).setIcon(R.drawable.ic_crisscross_position);
-//        tabLayout.getTabAt(1).setIcon(R.drawable.ic_dumbbell_variant_outline);
 
-        tabLayout.getTabAt(0).setText(("Exercises"));
-        tabLayout.getTabAt(1).setText(("Favourite Exercises"));
 
 
     }

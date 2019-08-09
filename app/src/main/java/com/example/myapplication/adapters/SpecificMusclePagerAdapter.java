@@ -5,12 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
 
-import com.example.myapplication.fragments.FavouriteSpecificMuscleFragment;
-import com.example.myapplication.fragments.MainFragmentExcercies;
-import com.example.myapplication.fragments.MainFragmentWorkouts;
 import com.example.myapplication.fragments.SpecificMuscleFragment;
-
-import java.util.List;
 
 public class SpecificMusclePagerAdapter extends FragmentPagerAdapter {
 
@@ -27,15 +22,13 @@ public class SpecificMusclePagerAdapter extends FragmentPagerAdapter {
                 Log.i(TAG, "getItem: 1");
                 return new SpecificMuscleFragment();
 
-            case 1:
-                Log.i(TAG, "getItem: 2");
-                return new FavouriteSpecificMuscleFragment();
+
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return 1;
     }
 }
