@@ -91,7 +91,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
             super(itemView);
             textViewWorkoutName = itemView.findViewById(R.id.textViewWorkoutName);
             textViewNumberOfExercises = itemView.findViewById(R.id.textViewNumberOfExercises);
-            textViewTime = itemView.findViewById(R.id.textViewTime);
+            textViewTime = itemView.findViewById(R.id.textViewReps);
             workoutImageView = itemView.findViewById(R.id.workoutImageView);
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -99,14 +99,15 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
                 public void onClick(View view) {
                     MainActivity mainActivity = (MainActivity) context;
                     Intent intent = new Intent(WorkoutAdapter.this.context, SpecificWorkoutActivity.class);
-                    //intent.putExtra("workout",workoutList.get(getAdapterPosition()));
+                    intent.putExtra("workout", workoutList.get(getAdapterPosition()));
                     mainActivity.startActivity(intent);
-                    //todo pass workout data to new activity and show it like el coach
+
 
                 }
             });
         }
 
     }
+
 
 }

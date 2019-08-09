@@ -28,6 +28,11 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -42,7 +47,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SpecificExerciseActivity extends AppCompatActivity {
-    Exercise exercise;
+    private static final String TAG = "hehe";
 
     @BindView(R.id.exo_playerview)
     PlayerView simpleExoPlayerView;
@@ -66,6 +71,8 @@ public class SpecificExerciseActivity extends AppCompatActivity {
     FloatingActionButton showVideoFAB;
     private boolean b;
     private Timer timer;
+    public Exercise exercise;
+    private String exerciseName;
 
     @OnClick(R.id.showVideoFAB)
     void hidePhotoShowVideo() {
@@ -86,7 +93,7 @@ public class SpecificExerciseActivity extends AppCompatActivity {
         showAlertDialog(utilityTextView.getText().toString().toLowerCase());
     }
 
-    private static final String TAG ="SpecificExerciseActivit" ;
+    private String targetMuscle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,21 +101,70 @@ public class SpecificExerciseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_specific_exercise);
         ButterKnife.bind(this);
 
-        //get exercise info from clicked exercise in adapter
+
         Intent i = getIntent();
-        exercise = i.getParcelableExtra("exercise");
+        if (i.hasExtra("name")) { //if true it means exercise is coming from inside a workout
+            exerciseName = i.getStringExtra("name");
+            targetMuscle = i.getStringExtra("targetMuscle");
+            //change exerciseName in actionbar
+            setTitle(exerciseName);
+            downloadExercise(new CallbackInterface() {
+                @Override
+                public void callbackMethod(Exercise exercisee) {
+                    exercise = exercisee;
+                    showInViews();
+                }
+            });
+        } else if (i.hasExtra("exercise")) {//if true it means exercise is coming from adapter of the fragment of ExerciseActivity
+            // exercise=new Exercise();
+            exercise = i.getParcelableExtra("exercise");
+            //change exerciseName in actionbar
+            setTitle(exercise.getName());
+            showInViews();
 
-        //change name in actionbar
-        setTitle(exercise.getName());
 
+        }
+
+    }
+
+    private void showInViews() {
         executionTextView.setText(exercise.getExecution());
         preparationTextView.setText(exercise.getPreparation());
         mechanicTextView.setText(exercise.getMechanism());
         utilityTextView.setText(exercise.getUtility());
 
-        //test
         downloadPreviewImage();
+    }
 
+    private void downloadExercise(final CallbackInterface callbackInterface) {
+        exercise = new Exercise();
+        DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference("excercises").child(targetMuscle);
+        exerciseNode.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if (ds.child("name").getValue().equals(exerciseName)) {
+                        exercise.setExecution(ds.child("execution").getValue().toString());
+                        exercise.setPreparation(ds.child("preparation").getValue().toString());
+                        exercise.setMechanism(ds.child("mechanism").getValue().toString());
+                        exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
+                        exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
+                        exercise.setUtility(ds.child("utility").getValue().toString());
+                        exercise.setVideoLink(ds.child("videoLink").getValue().toString());
+
+
+                    }
+                }
+                callbackInterface.callbackMethod(exercise);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.i(TAG, "onCancelled: " + databaseError.getMessage() + " %%% " + databaseError.getDetails());
+
+            }
+        });
 
 
     }
@@ -161,7 +217,7 @@ public class SpecificExerciseActivity extends AppCompatActivity {
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     // Local temp file has been createed
                     exercise.setPreview2Bitmap(BitmapFactory.decodeFile(finalLocalFile2.getAbsolutePath()));
-                    switchExercisePhotos(exercise);
+                    switchExercisePhotos();
 
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -177,14 +233,14 @@ public class SpecificExerciseActivity extends AppCompatActivity {
         }
     }
 
-    private void switchExercisePhotos(Exercise exercise) {
+    private void switchExercisePhotos() {
 
         //switch exercise photos every 1.5 seconds
         timer = new Timer();
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                Log.i(TAG, "timer is running");
+
                 if (!b) {
                     b = true;
                     runOnUiThread(new Runnable() {
@@ -334,13 +390,21 @@ public class SpecificExerciseActivity extends AppCompatActivity {
         //  show swapping photos again and hide videoplayer
         simpleExoPlayerView.setVisibility(View.GONE);
         exerciseImageView.setVisibility(View.VISIBLE);
-        switchExercisePhotos(exercise);
+        switchExercisePhotos();
     }
 
 
     @Override
     protected void onPause() {
         super.onPause();
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
+    }
+
+    private interface CallbackInterface {
+        void callbackMethod(Exercise exercise);
     }
 }
+
+

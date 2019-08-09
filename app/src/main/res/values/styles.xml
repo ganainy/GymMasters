@@ -51,7 +51,7 @@
     <color name="green">#4CAF50</color>
 
     <!--edittext style-->
-    <style name="myEdittext" parent="TextAppearance.AppCompat.Widget.TextView.SpinnerItem">
+    <style name="myTextView" parent="TextAppearance.AppCompat.Widget.TextView.SpinnerItem">
         <item name="android:textColor">@color/textblack</item>
         <item name="android:textSize">28sp</item>
     </style>

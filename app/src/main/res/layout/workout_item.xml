@@ -27,7 +27,7 @@
 
         <TextView
             android:id="@+id/textViewWorkoutName"
-            style="@style/myEdittext"
+            style="@style/myTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -56,7 +56,7 @@
 
         <TextView
             android:id="@+id/textViewNumberOfExercises"
-            style="@style/myEdittext"
+            style="@style/myTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -80,12 +80,12 @@
             android:layout_marginEnd="8dp"
             android:src="@drawable/ic_access_time_black_24dp"
 
-            app:layout_constraintEnd_toStartOf="@+id/textViewTime"
+            app:layout_constraintEnd_toStartOf="@+id/textViewReps"
             app:layout_constraintTop_toBottomOf="@+id/textViewWorkoutName" />
 
         <TextView
-            android:id="@+id/textViewTime"
-            style="@style/myEdittext"
+            android:id="@+id/textViewReps"
+            style="@style/myTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
