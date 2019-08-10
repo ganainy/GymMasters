@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".fragments.MainFragmentWorkouts">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/workoutRecyclerView"

@@ -79,12 +79,14 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(new ViewPagerAdapterMainActivity(getSupportFragmentManager()));
         TabLayout tabLayout =  findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager, true);
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_crisscross_position);
+
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_dumbbell_variant_outline);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_conversation);
-        tabLayout.getTabAt(0).setText(("Workout"));
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_crisscross_position);
+
+        tabLayout.getTabAt(0).setText(("Home"));
         tabLayout.getTabAt(1).setText(("Exercises"));
-        tabLayout.getTabAt(2).setText(("Chat"));
+        tabLayout.getTabAt(2).setText(("Workout"));
 
 
     }
@@ -119,7 +121,8 @@ public class MainActivity extends AppCompatActivity
                 {
                      storageRef = FirebaseStorage.getInstance().getReference();
                     //reference to logged in user profile image
-                    StorageReference pathReference = storageRef.child("images/"+profilePictureId);
+
+                    StorageReference pathReference = storageRef.child("images/" + loggedInUser.getPhoto());
                     pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
@@ -180,17 +183,13 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_find) {
+            //todo add features of navigation menu items
+        } else if (id == R.id.nav_followers) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_following) {
 
-        } else if (id == R.id.nav_tools) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_posts) {
 
         }
 

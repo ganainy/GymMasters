@@ -26,6 +26,7 @@
 
            />
        <ImageView
+           android:id="@+id/chest"
            android:layout_width="0dp"
            android:layout_height="0dp"
            android:layout_columnWeight="1"
@@ -35,6 +36,7 @@ android:src="@drawable/chest"
            />
 
        <ImageView
+           android:id="@+id/shoulders"
            android:layout_width="0dp"
            android:layout_height="0dp"
            android:layout_columnWeight="1"
@@ -43,6 +45,7 @@ android:src="@drawable/chest"
            android:scaleType="centerCrop"
            />
        <ImageView
+           android:id="@+id/biceps"
            android:layout_width="0dp"
            android:layout_height="0dp"
            android:layout_columnWeight="1"
@@ -51,6 +54,7 @@ android:src="@drawable/chest"
            android:scaleType="centerCrop"
            />
        <ImageView
+           android:id="@+id/abs"
            android:layout_width="0dp"
            android:layout_height="0dp"
            android:layout_columnWeight="1"
@@ -59,6 +63,7 @@ android:src="@drawable/chest"
            android:scaleType="centerCrop"
            />
        <ImageView
+           android:id="@+id/back"
            android:layout_width="0dp"
            android:layout_height="0dp"
            android:layout_columnWeight="1"
@@ -67,6 +72,7 @@ android:src="@drawable/chest"
            android:scaleType="centerCrop"
            />
        <ImageView
+           android:id="@+id/forearm"
            android:layout_width="0dp"
            android:layout_height="0dp"
            android:layout_columnWeight="1"
@@ -75,6 +81,7 @@ android:src="@drawable/chest"
            android:scaleType="centerCrop"
            />
        <ImageView
+           android:id="@+id/upperleg"
            android:layout_width="0dp"
            android:layout_height="0dp"
            android:layout_columnWeight="1"
@@ -83,6 +90,7 @@ android:src="@drawable/chest"
            android:scaleType="centerCrop"
            />
        <ImageView
+           android:id="@+id/glutes"
            android:layout_width="0dp"
            android:layout_height="0dp"
            android:layout_columnWeight="1"
@@ -92,6 +100,7 @@ android:src="@drawable/chest"
            />
 
        <ImageView
+           android:id="@+id/cardio"
            android:layout_width="0dp"
            android:layout_height="0dp"
            android:layout_columnWeight="1"
@@ -100,6 +109,7 @@ android:src="@drawable/chest"
            android:scaleType="centerCrop"
            />
        <ImageView
+           android:id="@+id/lowerleg"
            android:layout_width="0dp"
            android:layout_height="0dp"
            android:layout_columnWeight="1"
@@ -107,14 +117,15 @@ android:src="@drawable/chest"
            android:src="@drawable/lowerleg"
            android:scaleType="centerCrop"
            />
+
        <ImageView
+           android:id="@+id/showall"
            android:layout_width="0dp"
            android:layout_height="0dp"
-           android:layout_columnWeight="1"
            android:layout_rowWeight="1"
-           android:src="@drawable/allexcercises"
+           android:layout_columnWeight="1"
            android:scaleType="centerCrop"
-           />
+           android:src="@drawable/showall" />
    </GridLayout>
 
     <GridLayout
@@ -125,16 +136,19 @@ android:src="@drawable/chest"
         >
 
         <TextView
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-           android:text="Triceps"
-            android:textColor="@color/textwhite"
-            android:textSize="20sp"
-           android:layout_rowWeight="1"
+            android:layout_rowWeight="1"
             android:layout_columnWeight="1"
+            android:fontFamily="sans-serif-black"
             android:gravity="center"
-            />
+            android:text="Triceps"
+            android:textColor="@color/textwhite"
+            android:textSize="20sp" />
         <TextView
+            android:fontFamily="sans-serif-black"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Chest"
@@ -145,6 +159,8 @@ android:src="@drawable/chest"
             android:gravity="center"
             />
         <TextView
+            android:fontFamily="sans-serif-black"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Shoulders"
@@ -155,6 +171,8 @@ android:src="@drawable/chest"
             android:gravity="center"
             />
         <TextView
+            android:fontFamily="sans-serif-black"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Biceps"
@@ -165,6 +183,8 @@ android:src="@drawable/chest"
             android:gravity="center"
             />
         <TextView
+            android:fontFamily="sans-serif-black"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Abs"
@@ -175,6 +195,8 @@ android:src="@drawable/chest"
             android:gravity="center"
             />
         <TextView
+            android:fontFamily="sans-serif-black"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Back"
@@ -185,6 +207,8 @@ android:src="@drawable/chest"
             android:gravity="center"
             />
         <TextView
+            android:fontFamily="sans-serif-black"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Forearm"
@@ -195,6 +219,8 @@ android:src="@drawable/chest"
             android:gravity="center"
             />
         <TextView
+            android:fontFamily="sans-serif-black"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Upper leg"
@@ -205,6 +231,8 @@ android:src="@drawable/chest"
             android:gravity="center"
             />
         <TextView
+            android:fontFamily="sans-serif-black"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Glutes"
@@ -215,6 +243,8 @@ android:src="@drawable/chest"
             android:gravity="center"
             />
         <TextView
+            android:fontFamily="sans-serif-black"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cardio"
@@ -226,6 +256,8 @@ android:src="@drawable/chest"
             android:gravity="center"
             />
         <TextView
+            android:fontFamily="sans-serif-black"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Lower leg"
@@ -237,6 +269,8 @@ android:src="@drawable/chest"
             android:gravity="center"
             />
         <TextView
+            android:fontFamily="sans-serif-black"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Show all"

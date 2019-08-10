@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import com.example.myapplication.R;
 
 
-public class MainFragmentChat extends Fragment {
-    public MainFragmentChat() {
+public class MainFragmentHome extends Fragment {
+    public MainFragmentHome() {
         // Required empty public constructor
     }
 

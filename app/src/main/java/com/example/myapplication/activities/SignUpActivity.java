@@ -128,11 +128,11 @@ public class SignUpActivity extends AppCompatActivity {
         {
             //uploadImage to firebase storage
             uploadProfilePic(imageUri);
-            newUser =new User(userName,email,"-1",imageUri.getLastPathSegment());
+            newUser = new User(uid, userName, email, "-1", imageUri.getLastPathSegment());
         }
         else
         {
-            newUser =new User(userName,email,"-1","-1");
+            newUser = new User(uid, userName, email, "-1", "-1");
         }
 
         myRef.child(uid).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -187,8 +187,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-       // updateUI(currentUser);
+
     }
 }

@@ -36,12 +36,90 @@ public class MainFragmentExcercies extends Fragment {
 
 
     @OnClick(R.id.triceps)
-    void showTricepsExercises() {
+    void q() {
         Intent intent = new Intent(getActivity(), ExercisesActivity.class);
         intent.putExtra("triceps", "triceps");
         startActivity(intent);
     }
 
-    //TODO add for other muscles
+    @OnClick(R.id.chest)
+    void qq() {
+        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
+        intent.putExtra("chest", "chest");
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.shoulders)
+    void qqq() {
+        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
+        intent.putExtra("shoulders", "shoulders");
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.biceps)
+    void qqqq() {
+        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
+        intent.putExtra("biceps", "biceps");
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.abs)
+    void qqqqq() {
+        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
+        intent.putExtra("abs", "abs");
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.back)
+    void qqqqqq() {
+        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
+        intent.putExtra("back", "back");
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.forearm)
+    void qqqqqqq() {
+        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
+        intent.putExtra("forearm", "forearm");
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.upperleg)
+    void qqqqqqqq() {
+        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
+        intent.putExtra("upperleg", "upperleg");
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.glutes)
+    void qqqqqqqqq() {
+        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
+        intent.putExtra("glutes", "glutes");
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.cardio)
+    void qqqqqqqqqq() {
+        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
+        intent.putExtra("cardio", "cardio");
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.lowerleg)
+    void qqqqqqqqqqq() {
+        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
+        intent.putExtra("lowerleg", "lowerleg");
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.showall)
+    void qqqqqqqqqqqq() {
+        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
+        intent.putExtra("showall", "showall");
+        startActivity(intent);
+    }
+
+
+
 
 }

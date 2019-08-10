@@ -1,19 +1,19 @@
 package com.example.myapplication.model;
 
-import android.net.Uri;
-
 public class User {
     private String name,email,rating;
+    String id;
     private String photo;
 
     public User() {
     }
 
-    public User(String name, String email, String rating, String photo) {
+    public User(String id, String name, String email, String rating, String photo) {
         this.name = name;
         this.email = email;
         this.rating = rating;
         this.photo = photo;
+        this.id = id;
     }
 
     public String getName() {
@@ -46,5 +46,13 @@ public class User {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

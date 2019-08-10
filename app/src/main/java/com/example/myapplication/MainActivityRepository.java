@@ -20,7 +20,7 @@ public class MainActivityRepository {
     }
         FirebaseAuth mAuth;
         private String profilePictureId;
-        private String name,email,rating;
+    private String name, email, rating, id;
 
         public void getUserData(final MainActivity.FirebaseCallback firebaseCallback) {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -35,9 +35,10 @@ public class MainActivityRepository {
                     name=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("name").getValue().toString();
                     email=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("email").getValue().toString();
                     rating=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("rating").getValue().toString();
+                    id = dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("id").getValue().toString();
 
 
-                    firebaseCallback.onCallback(new User(name,email,rating,profilePictureId));
+                    firebaseCallback.onCallback(new User(id, name, email, rating, profilePictureId));
                 }
 
                 @Override

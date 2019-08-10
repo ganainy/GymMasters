@@ -82,7 +82,52 @@ public class SpecificMuscleFragment extends Fragment {
                 myRef = exercisesNode.child("triceps");
                 break;
             }
-            //TODO add other cases
+            case "chest": {
+                myRef = exercisesNode.child("chest");
+                break;
+            }
+            case "shoulders": {
+                myRef = exercisesNode.child("shoulders");
+                break;
+            }
+            case "biceps": {
+                myRef = exercisesNode.child("biceps");
+                break;
+            }
+            case "abs": {
+                myRef = exercisesNode.child("abs");
+                break;
+            }
+            case "back": {
+                myRef = exercisesNode.child("back");
+                break;
+            }
+            case "forearm": {
+                myRef = exercisesNode.child("forearm");
+                break;
+            }
+            case "upperleg": {
+                myRef = exercisesNode.child("upperleg");
+                break;
+            }
+            case "glutes": {
+                myRef = exercisesNode.child("glutes");
+                break;
+            }
+            case "cardio": {
+                myRef = exercisesNode.child("cardio");
+                break;
+            }
+            case "lowerleg": {
+                myRef = exercisesNode.child("lowerleg");
+                break;
+            }
+            case "showall": {
+                myRef = exercisesNode.child("showall");
+                break;
+            }
+
+
 
         }
         //once we selected the right muscle group node this could will be the same for all exercises info
@@ -110,8 +155,8 @@ public class SpecificMuscleFragment extends Fragment {
                     @Override
                     public void callbackMethod(List<Exercise> exerciseList) {
 
-                        Log.i(TAG, "7agat: "+exerciseList.size());
                         //hide loading bar
+                        //todo fix progress bar showing even if there is no exercises
                         ProgressBar progressBar = view.findViewById(R.id.progressBar);
                         progressBar.setVisibility(View.GONE);
 
@@ -137,7 +182,6 @@ public class SpecificMuscleFragment extends Fragment {
     private void downloadExercisesImages(final List<Exercise> exerciseList, final CallbackInterface callbackInterface) {
 
         //download images and store them as bitmap in the model class so later we can show them in the adapter
-        Log.i(TAG, "downloadExercisesImages: " + exerciseList.size());
         for (int i = 0; i < exerciseList.size(); i++) {
             //download preview image 1
             StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(exerciseList.get(i).getPreviewPhoto1());
@@ -190,7 +234,6 @@ public class SpecificMuscleFragment extends Fragment {
         });
     }
     private void setupRecycler(View view, List<Exercise> exerciseList) {
-        Log.i(TAG, "setupRecycler: ");
         RecyclerView recyclerView = view.findViewById(R.id.exerciseRecyclerView);
          exerciseAdapter = new ExerciseAdapter(getActivity(),exerciseList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());

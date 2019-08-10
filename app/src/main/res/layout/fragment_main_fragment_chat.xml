@@ -1,14 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.MainFragmentChat">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/activity_bg"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    tools:context=".fragments.MainFragmentHome">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="chat" />
+        android:orientation="vertical">
 
-</FrameLayout>
+        <android.support.v7.widget.CardView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:elevation="3dp"
+            app:cardCornerRadius="8dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/customWorkoutRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </android.support.v7.widget.RecyclerView>
+
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:elevation="3dp"
+            app:cardCornerRadius="8dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/customExerciseRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
+
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+</ScrollView>

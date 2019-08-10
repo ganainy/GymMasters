@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.myapplication.R;
@@ -16,18 +17,19 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ExercisesActivity extends AppCompatActivity {
+    private static final String TAG = "ExercisesActivity";
     ViewPager viewPager;
     String muscle;
 
     @BindView(R.id.htab_collapse_toolbar)
     CollapsingToolbarLayout htab_collapse_toolbar;
 
+    @BindView(R.id.htab_header)
+    ImageView htab_header;
+
     @OnClick(R.id.addExerciseFab)
     void openAddNewExerciseActivity() {
-
         startActivity(new Intent(ExercisesActivity.this, AddNewExerciseActivity.class));
-
-
     }
 
     @Override
@@ -36,15 +38,57 @@ public class ExercisesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exercises);
         ButterKnife.bind(this);
 
+        //set header image based on selected muscle from previous fragment
+        setTabHeaderIamge();
 
-        if (getIntent().hasExtra("triceps")) {
-            ImageView imageView = findViewById(R.id.htab_header);
-            imageView.setImageResource(R.drawable.triceps);
-            this.muscle = "triceps";
-        }
-        //TODO add elseif for other muscles
 
         setupViewPager();
+    }
+
+    private void setTabHeaderIamge() {
+
+        if (getIntent().hasExtra("triceps")) {
+            htab_header.setImageResource(R.drawable.triceps);
+            this.muscle = "triceps";
+
+        } else if (getIntent().hasExtra("chest")) {
+            htab_header.setImageResource(R.drawable.chest);
+            this.muscle = "chest";
+            Log.i(TAG, "setTabHeaderIamge: chest");
+        } else if (getIntent().hasExtra("shoulders")) {
+            htab_header.setImageResource(R.drawable.shoulder);
+            this.muscle = "shoulders";
+            Log.i(TAG, "setTabHeaderIamge: shoulders");
+        } else if (getIntent().hasExtra("biceps")) {
+            htab_header.setImageResource(R.drawable.biceps);
+            this.muscle = "biceps";
+            Log.i(TAG, "setTabHeaderIamge: biceps");
+        } else if (getIntent().hasExtra("abs")) {
+            htab_header.setImageResource(R.drawable.abs);
+            this.muscle = "abs";
+        } else if (getIntent().hasExtra("back")) {
+            htab_header.setImageResource(R.drawable.back);
+            this.muscle = "back";
+        } else if (getIntent().hasExtra("forearm")) {
+            htab_header.setImageResource(R.drawable.forarm);
+            this.muscle = "forearm";
+        } else if (getIntent().hasExtra("upperleg")) {
+            htab_header.setImageResource(R.drawable.upperleg);
+            this.muscle = "upperleg";
+        } else if (getIntent().hasExtra("glutes")) {
+            htab_header.setImageResource(R.drawable.glutes);
+            this.muscle = "glutes";
+        } else if (getIntent().hasExtra("cardio")) {
+            htab_header.setImageResource(R.drawable.cardio);
+            this.muscle = "cardio";
+        } else if (getIntent().hasExtra("lowerleg")) {
+            htab_header.setImageResource(R.drawable.lowerleg);
+            this.muscle = "lowerleg";
+        } else if (getIntent().hasExtra("showall")) {
+            htab_header.setImageResource(R.drawable.showall);
+            this.muscle = "showall";
+        }
+
     }
 
     public String getMyData() {
