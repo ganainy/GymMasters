@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.MainActivityViewModel;
 import com.example.myapplication.R;
+import com.example.myapplication.adapters.ViewPagerAdapterCreateWorkout;
 import com.example.myapplication.adapters.ViewPagerAdapterMainActivity;
 import com.example.myapplication.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,10 +32,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    SelectedBundle selectedBundle;
 
     private static final String TAG = "MainActivity";
     private CircleImageView imageView;
@@ -42,13 +48,21 @@ public class MainActivity extends AppCompatActivity
     TextView nameNavigation,emailNavigation;
     private String name,email,rating;
     private StorageReference storageRef;
-    private ViewPager viewPager;
+
+
+    @BindView(R.id.view_pager_main)
+    ViewPager view_pager_main;
+
+    @BindView(R.id.view_pager_create_workout)
+    ViewPager view_pager_create_workout;
+    private TabLayout tabLayout;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -65,7 +79,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        setupViewPagerAndTabLayout();
+        setupMainViewPager();
         showUserDataInNavigationMenu();
 
 
@@ -73,12 +87,11 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void setupViewPagerAndTabLayout() {
-        viewPager=findViewById(R.id.view_pager_main);
+    private void setupMainViewPager() {
         //view pager and tab layout for swiping fragments
-        viewPager.setAdapter(new ViewPagerAdapterMainActivity(getSupportFragmentManager()));
-        TabLayout tabLayout =  findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager, true);
+        view_pager_main.setAdapter(new ViewPagerAdapterMainActivity(getSupportFragmentManager()));
+        tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(view_pager_main, true);
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_dumbbell_variant_outline);
@@ -91,7 +104,25 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void setupViewPagerForCreateWorkout() {
 
+        view_pager_create_workout.setVisibility(View.VISIBLE);
+        view_pager_main.setVisibility(View.GONE);
+
+
+        view_pager_create_workout.setAdapter(new ViewPagerAdapterCreateWorkout(getSupportFragmentManager()));
+        tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(view_pager_create_workout, true);
+        tabLayout.getTabAt(0).setText(("STEP1"));
+
+
+        tabLayout.getTabAt(1).setText(("STEP2"));
+    }
+
+
+    public void gotoNextTab() {
+        tabLayout.getTabAt(1).select();
+    }
 
     private void showUserDataInNavigationMenu() {
         //used callback so we only try to show the image  after the id is retreived from the database otherwise it would be null
@@ -199,16 +230,36 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-   /* //show excecises for the clicked genre
-    public void triceps(View view)
-    {
+    //result coming from createWorkoutFragment1
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null)
+            return;
+        if (requestCode == 103) {
+            Log.i(TAG, "requestCode: ok");
+            //pass image uri to the createworkoutfragment1
+            Bundle bundle = new Bundle();
+            bundle.putString("imageString", String.valueOf(data.getData()));
+            selectedBundle.onBundleSelect(bundle);
+
+        }
+
+    }
 
 
-    }*/
-
+    public void setOnBundleSelected(SelectedBundle selectedBundle) {
+        this.selectedBundle = selectedBundle;
+    }
 
 
     public interface FirebaseCallback{
         void onCallback(User loggedInUser);
+    }
+
+
+    public interface SelectedBundle {
+        void onBundleSelect(Bundle bundle);
     }
 }

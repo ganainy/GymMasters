@@ -6,12 +6,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/activity_bg"
     android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:animateLayoutChanges="true"
     tools:context=".fragments.MainFragmentHome">
 
     <LinearLayout
+        android:animateLayoutChanges="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <Button
+            android:id="@+id/createWorkout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="create workout" />
+
+        <ImageView
+            android:id="@+id/testImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/cardio"
+            android:visibility="gone" />
 
         <android.support.v7.widget.CardView
 

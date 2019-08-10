@@ -5,11 +5,37 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.example.myapplication.R;
+import com.example.myapplication.activities.MainActivity;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class MainFragmentHome extends Fragment {
+
+    @BindView(R.id.testImage)
+    ImageView testImage;
+
+    @OnClick(R.id.createWorkout)
+    void createWorkout() {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.setupViewPagerForCreateWorkout();
+
+     /*  if ( testImage.getVisibility()==View.VISIBLE)
+        {
+            testImage.setVisibility(View.GONE);
+        }else
+       {
+           testImage.setVisibility(View.VISIBLE);
+       }*/
+
+    }
+
+
     public MainFragmentHome() {
         // Required empty public constructor
     }
@@ -19,6 +45,8 @@ public class MainFragmentHome extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main_fragment_chat, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_fragment_home, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 }
