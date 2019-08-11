@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.example.myapplication.R;
 import com.example.myapplication.activities.SpecificExerciseActivity;
 import com.example.myapplication.activities.SpecificWorkoutActivity;
-import com.example.myapplication.model.WorkoutExercise;
+import com.example.myapplication.model.Exercise;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private static final int TYPE_REPS = 1;
     private static final int TYPE_TIME = 2;
     final Context context;
-    private List<WorkoutExercise> workoutExerciseList;
+    private List<Exercise> workoutExerciseList;
 
     public SpecificWorkoutAdapter(Context context) {
         this.context = context;
@@ -67,7 +67,7 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-    public void setDataSource(List<WorkoutExercise> workoutExerciseList) {
+    public void setDataSource(List<Exercise> workoutExerciseList) {
         this.workoutExerciseList = workoutExerciseList;
 
     }
@@ -76,7 +76,7 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         SpecificWorkoutActivity specificWorkoutActivity = (SpecificWorkoutActivity) context;
         Intent intent = new Intent(context, SpecificExerciseActivity.class);
         intent.putExtra("name", workoutExerciseList.get(adapterPosition).getName());
-        intent.putExtra("targetMuscle", workoutExerciseList.get(adapterPosition).getTargetMuscle());
+        intent.putExtra("targetMuscle", workoutExerciseList.get(adapterPosition).getBodyPart());
         specificWorkoutActivity.startActivity(intent);
     }
 
@@ -111,11 +111,11 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         }
 
-        public void setDetails(WorkoutExercise workoutExercise) {
+        public void setDetails(Exercise workoutExercise) {
             textViewExName.setText(workoutExercise.getName());
             textViewSets.setText(workoutExercise.getSets() + " Sets");
             textViewReps.setText(workoutExercise.getReps() + " Reps");
-            textViewTargetMuscle.setText(workoutExercise.getTargetMuscle());
+            textViewTargetMuscle.setText(workoutExercise.getBodyPart());
         }
     }
 
@@ -149,11 +149,11 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
 
 
-        public void setDetails(WorkoutExercise workoutExercise) {
+        public void setDetails(Exercise workoutExercise) {
             textViewExName.setText(workoutExercise.getName());
             textViewSets.setText(workoutExercise.getSets() + " Sets");
             textViewTime.setText(workoutExercise.getDuration() + " Secs");
-            textViewTargetMuscle.setText(workoutExercise.getTargetMuscle());
+            textViewTargetMuscle.setText(workoutExercise.getBodyPart());
         }
     }
 }

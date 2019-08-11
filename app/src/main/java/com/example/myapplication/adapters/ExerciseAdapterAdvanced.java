@@ -41,6 +41,8 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
 
     public ExerciseAdapterAdvanced(Context context) {
         this.context = context;
+        sets = "1";
+        reps = "1";
     }
 
     @NonNull

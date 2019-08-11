@@ -9,8 +9,8 @@ import android.util.Log;
 
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.SpecificWorkoutAdapter;
+import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
-import com.example.myapplication.model.WorkoutExercise;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,8 +27,8 @@ public class SpecificWorkoutActivity extends AppCompatActivity {
     private static final String TAG = "SpecificWorkoutActivity";
     @BindView(R.id.specificWorkoutRecycler)
     RecyclerView specificWorkoutRecycler;
-    private WorkoutExercise workoutExercise;
-    private List<WorkoutExercise> workoutExerciseList;
+    private Exercise exercise;
+    private List<Exercise> workoutExerciseList;
 
 
     @Override
@@ -47,17 +47,17 @@ public class SpecificWorkoutActivity extends AppCompatActivity {
         reference.child("workout").child(workout.getId()).child("workoutExerciseList").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                workoutExercise = new WorkoutExercise();
+                exercise = new Exercise();
                 workoutExerciseList = new ArrayList<>();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    workoutExercise.setName(ds.child("name").getValue().toString());
-                    workoutExercise.setSets(ds.child("sets").getValue().toString());
-                    workoutExercise.setTargetMuscle(ds.child("bodyPart").getValue().toString());
+                    exercise.setName(ds.child("name").getValue().toString());
+                    exercise.setSets(ds.child("sets").getValue().toString());
+                    exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
                     if (ds.hasChild("reps"))
-                        workoutExercise.setReps(ds.child("reps").getValue().toString());
+                        exercise.setReps(ds.child("reps").getValue().toString());
                     if (ds.hasChild("duration"))
-                        workoutExercise.setDuration(ds.child("duration").getValue().toString());
-                    workoutExerciseList.add(workoutExercise);
+                        exercise.setDuration(ds.child("duration").getValue().toString());
+                    workoutExerciseList.add(exercise);
                 }
                 Log.i(TAG, "onDataChange: " + workoutExerciseList.size());
                 setupRecycler();
