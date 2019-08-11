@@ -5,7 +5,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Exercise implements Parcelable {
-    String name, bodyPart, execution, preparation, mechanism, utility, previewPhoto1, previewPhoto2, videoLink;
     public static final Creator<Exercise> CREATOR = new Creator<Exercise>() {
         @Override
         public Exercise createFromParcel(Parcel in) {
@@ -17,6 +16,7 @@ public class Exercise implements Parcelable {
             return new Exercise[size];
         }
     };
+    String name, bodyPart, execution, preparation, mechanism, utility, previewPhoto1, previewPhoto2, videoLink, sets, reps, duration;
 
     public Exercise() {
     }
@@ -32,7 +32,6 @@ public class Exercise implements Parcelable {
         this.videoLink = videoLink;
         this.bodyPart = bodyPart;
     }
-
     Bitmap previewBitmap, preview2Bitmap;
 
     protected Exercise(Parcel in) {
@@ -45,6 +44,9 @@ public class Exercise implements Parcelable {
         previewPhoto1 = in.readString();
         previewPhoto2 = in.readString();
         videoLink = in.readString();
+        sets = in.readString();
+        reps = in.readString();
+        duration = in.readString();
         previewBitmap = in.readParcelable(Bitmap.class.getClassLoader());
         preview2Bitmap = in.readParcelable(Bitmap.class.getClassLoader());
     }
@@ -137,6 +139,29 @@ public class Exercise implements Parcelable {
         this.videoLink = videoLink;
     }
 
+    public String getSets() {
+        return sets;
+    }
+
+    public void setSets(String sets) {
+        this.sets = sets;
+    }
+
+    public String getReps() {
+        return reps;
+    }
+
+    public void setReps(String reps) {
+        this.reps = reps;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
 
     @Override
     public int describeContents() {
@@ -154,6 +179,9 @@ public class Exercise implements Parcelable {
         parcel.writeString(previewPhoto1);
         parcel.writeString(previewPhoto2);
         parcel.writeString(videoLink);
+        parcel.writeString(sets);
+        parcel.writeString(reps);
+        parcel.writeString(duration);
         parcel.writeParcelable(previewBitmap, i);
         parcel.writeParcelable(preview2Bitmap, i);
     }

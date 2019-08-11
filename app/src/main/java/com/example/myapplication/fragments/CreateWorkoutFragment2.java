@@ -8,6 +8,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +40,30 @@ public class CreateWorkoutFragment2 extends Fragment {
     ConstraintLayout hideThisView;
     @BindView(R.id.recycler)
     RecyclerView recycler;
+    private ExerciseAdapterAdvanced exerciseAdapter;
+    private Workout workout;
+    private List<Exercise> exercisesOfWorkoutList;
+
+
+    @OnClick(R.id.finishButton)
+    void saveWorkout() {
+
+        exercisesOfWorkoutList = exerciseAdapter.getExercisesOfWorkoutList();
+        Log.i(TAG, "saveWorkout: " + exercisesOfWorkoutList.size());
+
+        //now we have workout(name,duration,level,image) which came from createworkoutfragment1 delivered by main activity
+        //also we have exercisesOfWorkoutList which came from exerciseadapterAdvanced
+        //so we can upload workout
+        uploadWorkout();
+
+    }
+
+    private void uploadWorkout() {
+        workout.setExercisesNumber(String.valueOf(exercisesOfWorkoutList.size()));
+        workout.setWorkoutExerciseList(exercisesOfWorkoutList);
+        FirebaseDatabase.getInstance().getReference("workout").push().setValue(workout);
+    }
+
     private List<Exercise> exerciseList = new ArrayList<>();
 
     public CreateWorkoutFragment2() {
@@ -56,7 +82,7 @@ public class CreateWorkoutFragment2 extends Fragment {
             @Override
             public void onBundleSelect(Bundle bundle) {
 
-                Workout workout = (Workout) bundle.getParcelable("workout");
+                workout = (Workout) bundle.getParcelable("workout");
 
                 hideThisView.setVisibility(View.GONE);
                 downloadAllExercises();
@@ -73,14 +99,8 @@ public class CreateWorkoutFragment2 extends Fragment {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Exercise exercise = new Exercise();
                     exercise.setName(ds.child("name").getValue().toString());
-                    exercise.setExecution(ds.child("execution").getValue().toString());
-                    exercise.setPreparation(ds.child("preparation").getValue().toString());
                     exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
-                    exercise.setMechanism(ds.child("mechanism").getValue().toString());
                     exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
-                    exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
-                    exercise.setUtility(ds.child("utility").getValue().toString());
-                    exercise.setVideoLink(ds.child("videoLink").getValue().toString());
                     exerciseList.add(exercise);
 
                 }
@@ -128,7 +148,7 @@ public class CreateWorkoutFragment2 extends Fragment {
 
     private void setupRecycler() {
 
-        ExerciseAdapterAdvanced exerciseAdapter = new ExerciseAdapterAdvanced(getActivity());
+        exerciseAdapter = new ExerciseAdapterAdvanced(getActivity());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         exerciseAdapter.setDataSource(exerciseList);
         recycler.setLayoutManager(linearLayoutManager);

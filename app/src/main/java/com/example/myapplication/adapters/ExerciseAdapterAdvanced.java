@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -34,7 +35,9 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
     private final Context context;
 
     private List<Exercise> exercisesList;
+    private List<Exercise> ExercisesOfWorkoutList = new ArrayList<>();
     private StorageReference storageRef;
+    private String sets, reps;
 
     public ExerciseAdapterAdvanced(Context context) {
         this.context = context;
@@ -119,7 +122,7 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
         };*/
     }
 
-    private void openSetsAndRepsAlertDialog() {
+    private void openSetsAndRepsAlertDialog(final int adapterPosition) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         // Get the layout inflater
         MainActivity mainActivity = (MainActivity) context;
@@ -138,6 +141,8 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         //todo save exercise with sets and reps in workout
+                        addToExercisesOfWorkoutList(adapterPosition);
+
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -149,8 +154,7 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
         builder.show();
 
 
-//
-
+        //two number pickers in alert dialog to choose sets and reps for clicked exercise
         NumberPicker setsPicker = view.findViewById(R.id.setsPicker);
         NumberPicker repsPicker = view.findViewById(R.id.repsPicker);
 
@@ -164,16 +168,28 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
         setsPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                Log.i(TAG, "onValueChange: " + numberPicker.getValue());
+                sets = String.valueOf(numberPicker.getValue());
             }
         });
 
         repsPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                Log.i(TAG, "onValueChange: " + numberPicker.getValue());
+                reps = String.valueOf(numberPicker.getValue());
             }
         });
+    }
+
+    private void addToExercisesOfWorkoutList(int adapterPosition) {
+        exercisesList.get(adapterPosition).setSets(sets);
+        exercisesList.get(adapterPosition).setReps(reps);
+        ExercisesOfWorkoutList.add(exercisesList.get(adapterPosition));
+        Log.i(TAG, "addToExercisesOfWorkoutList: " + ExercisesOfWorkoutList.size());
+    }
+
+
+    public List<Exercise> getExercisesOfWorkoutList() {
+        return ExercisesOfWorkoutList;
     }
 
     //viewHolder
@@ -193,7 +209,7 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
             imageViewPlus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    openSetsAndRepsAlertDialog();
+                    openSetsAndRepsAlertDialog(getAdapterPosition());
                 }
             });
         }

@@ -3,19 +3,10 @@ package com.example.myapplication.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 public class Workout implements Parcelable {
 
-    public static final Creator<Workout> CREATOR = new Creator<Workout>() {
-        @Override
-        public Workout createFromParcel(Parcel in) {
-            return new Workout(in);
-        }
-
-        @Override
-        public Workout[] newArray(int size) {
-            return new Workout[size];
-        }
-    };
 
     public Workout() {
     }
@@ -29,6 +20,18 @@ public class Workout implements Parcelable {
     }
 
     private String id, name, duration, exercisesNumber, level, photoLink;
+    public static final Creator<Workout> CREATOR = new Creator<Workout>() {
+        @Override
+        public Workout createFromParcel(Parcel in) {
+            return new Workout(in);
+        }
+
+        @Override
+        public Workout[] newArray(int size) {
+            return new Workout[size];
+        }
+    };
+    private List<Exercise> workoutExerciseList;
 
     protected Workout(Parcel in) {
         id = in.readString();
@@ -37,6 +40,15 @@ public class Workout implements Parcelable {
         exercisesNumber = in.readString();
         level = in.readString();
         photoLink = in.readString();
+        workoutExerciseList = in.createTypedArrayList(Exercise.CREATOR);
+    }
+
+    public List<Exercise> getWorkoutExerciseList() {
+        return workoutExerciseList;
+    }
+
+    public void setWorkoutExerciseList(List<Exercise> workoutExerciseList) {
+        this.workoutExerciseList = workoutExerciseList;
     }
 
     public String getName() {
@@ -87,6 +99,7 @@ public class Workout implements Parcelable {
         this.id = id;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -100,5 +113,6 @@ public class Workout implements Parcelable {
         parcel.writeString(exercisesNumber);
         parcel.writeString(level);
         parcel.writeString(photoLink);
+        parcel.writeTypedList(workoutExerciseList);
     }
 }
