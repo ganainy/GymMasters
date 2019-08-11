@@ -21,6 +21,7 @@ import com.example.myapplication.model.Workout;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -59,9 +60,12 @@ public class CreateWorkoutFragment2 extends Fragment {
     }
 
     private void uploadWorkout() {
+        DatabaseReference workoutRef = FirebaseDatabase.getInstance().getReference("workout");
+        String id = workoutRef.push().getKey();
+        workout.setId(id);
         workout.setExercisesNumber(String.valueOf(exercisesOfWorkoutList.size()));
         workout.setWorkoutExerciseList(exercisesOfWorkoutList);
-        FirebaseDatabase.getInstance().getReference("workout").push().setValue(workout);
+        workoutRef.child(id).setValue(this.workout);
     }
 
     private List<Exercise> exerciseList = new ArrayList<>();

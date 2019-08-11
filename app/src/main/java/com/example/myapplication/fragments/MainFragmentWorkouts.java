@@ -3,20 +3,16 @@ package com.example.myapplication.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.WorkoutAdapter;
-import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,45 +62,8 @@ public class MainFragmentWorkouts extends Fragment {
                     workout.setDuration(ds.child("duration").getValue().toString() + " mins");
                     workout.setExercisesNumber(ds.child("exercisesNumber").getValue().toString());
                     workout.setPhotoLink(ds.child("photoLink").getValue().toString());
-                    //
-                    final List<Exercise> workoutExerciseList = new ArrayList<>();
-                    ds.child("workoutExerciseList").getRef().addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            Exercise exercise = new Exercise();
-                            exercise.setBodyPart(dataSnapshot.child("bodyPart").getValue().toString());
-                            exercise.setName(dataSnapshot.child("name").getValue().toString());
-                            exercise.setPreviewPhoto1(dataSnapshot.child("previewPhoto1").getValue().toString());
-                            exercise.setReps(dataSnapshot.child("reps").getValue().toString());
-                            exercise.setSets(dataSnapshot.child("sets").getValue().toString());
-                            workoutExerciseList.add(exercise);
+                    workout.setId(ds.child("id").getValue().toString());
 
-                        }
-
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-                    //
-
-                    Log.i(TAG, "onChildAdded: " + workoutExerciseList.size());
-                    workout.setWorkoutExerciseList(workoutExerciseList);
                     workoutList.add(workout);
                 }
                 setupRecycler();
