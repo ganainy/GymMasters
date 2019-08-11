@@ -26,6 +26,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.adapters.ViewPagerAdapterCreateWorkout;
 import com.example.myapplication.adapters.ViewPagerAdapterMainActivity;
 import com.example.myapplication.model.User;
+import com.example.myapplication.model.Workout;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,7 +41,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     SelectedBundle selectedBundle;
-
+    SelectedBundle2 selectedBundle2;
+    Workout workout;
     private static final String TAG = "MainActivity";
     private CircleImageView imageView;
     FirebaseAuth mAuth;
@@ -55,8 +57,9 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.view_pager_create_workout)
     ViewPager view_pager_create_workout;
-    private TabLayout tabLayout;
 
+    @BindView(R.id.tabLayout)
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +68,6 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity
     private void setupMainViewPager() {
         //view pager and tab layout for swiping fragments
         view_pager_main.setAdapter(new ViewPagerAdapterMainActivity(getSupportFragmentManager()));
-        tabLayout = findViewById(R.id.tabLayout);
+
         tabLayout.setupWithViewPager(view_pager_main, true);
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
@@ -111,12 +110,14 @@ public class MainActivity extends AppCompatActivity
 
 
         view_pager_create_workout.setAdapter(new ViewPagerAdapterCreateWorkout(getSupportFragmentManager()));
-        tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(view_pager_create_workout, true);
         tabLayout.getTabAt(0).setText(("STEP1"));
 
 
         tabLayout.getTabAt(1).setText(("STEP2"));
+
+
+
     }
 
 
@@ -230,6 +231,15 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    public void setWorkout(Workout workout)
+    {
+        this.workout=workout;
+        Bundle bundle=new Bundle();
+        bundle.putParcelable("workout",workout);
+        selectedBundle2.onBundleSelect(bundle);
+    }
+
+
     //result coming from createWorkoutFragment1
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -253,6 +263,17 @@ public class MainActivity extends AppCompatActivity
         this.selectedBundle = selectedBundle;
     }
 
+    public void setOnBundleSelected2(SelectedBundle2 selectedBundle2) {
+        this.selectedBundle2 = selectedBundle2;
+    }
+
+    public void getPhotoFromGallery() {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 103);
+    }
+
 
     public interface FirebaseCallback{
         void onCallback(User loggedInUser);
@@ -260,6 +281,9 @@ public class MainActivity extends AppCompatActivity
 
 
     public interface SelectedBundle {
+        void onBundleSelect(Bundle bundle);
+    }
+    public interface SelectedBundle2 {
         void onBundleSelect(Bundle bundle);
     }
 }

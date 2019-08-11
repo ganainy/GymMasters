@@ -209,9 +209,9 @@ public class AddNewExerciseActivity extends AppCompatActivity {
     private void uploadExercisePhotos() {
         // Create a storage reference from our app
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference imagesRef = storageRef.child(imageUri.getLastPathSegment());
+        final StorageReference imagesRef = storageRef.child("exerciseImages/" + imageUri.getLastPathSegment());
         imagesRef.putFile(imageUri);
-        final StorageReference imagesRef2 = storageRef.child(image2Uri.getLastPathSegment());
+        final StorageReference imagesRef2 = storageRef.child("exerciseImages/" + image2Uri.getLastPathSegment());
         imagesRef2.putFile(image2Uri);
 
     }
