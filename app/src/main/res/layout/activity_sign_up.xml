@@ -6,47 +6,46 @@
     android:layout_height="match_parent"
    >
 
-    <LinearLayout
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@drawable/bg_signup"
+
+        />
+
+    <android.support.constraint.ConstraintLayout
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="8dp"
-        android:background="@drawable/signup_bg"
         tools:context=".SignUpActivity">
 
 
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
-                android:layout_width="189dp"
-                android:layout_height="141dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:src="@drawable/anonymous_profile"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </android.support.constraint.ConstraintLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="189dp"
+            android:layout_height="141dp"
+            android:layout_marginTop="140dp"
+            android:src="@drawable/anonymous_profile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.design.widget.TextInputLayout
-            android:background="@drawable/edittext_bg"
-android:layout_marginTop="16dp"
             android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginHorizontal="4dp"
+            android:layout_marginTop="350dp"
+            android:background="@drawable/edittextbg_signup"
             android:theme="@style/TextLabel"
             app:errorEnabled="true"
             app:errorTextAppearance="@color/colorPrimary"
 
-            >
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="12dp">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/userNameEditText"
@@ -64,15 +63,17 @@ android:layout_marginTop="16dp"
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:background="@drawable/edittext_bg"
-            android:layout_marginTop="16dp"
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginHorizontal="4dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittextbg_signup"
             android:theme="@style/TextLabel"
             app:errorEnabled="true"
-            app:errorTextAppearance="@color/colorPrimary">
+            app:errorTextAppearance="@color/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@+id/user_name"
+            tools:layout_editor_absoluteX="8dp">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/emailEditText"
@@ -90,16 +91,17 @@ android:layout_marginTop="16dp"
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:background="@drawable/edittext_bg"
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="16dp"
             android:layout_marginHorizontal="4dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edittextbg_signup"
             android:theme="@style/TextLabel"
             app:errorEnabled="true"
+            app:layout_constraintTop_toBottomOf="@+id/email"
             app:passwordToggleEnabled="true"
-            >
+            tools:layout_editor_absoluteX="8dp">
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/passwordEditText"
@@ -119,45 +121,39 @@ android:layout_marginTop="16dp"
         </android.support.design.widget.TextInputLayout>
 
 
-
-
         <Button
-            android:layout_margin="16dp"
             android:id="@+id/signupButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="50dp"
-            android:background="@drawable/button_selector"
+            android:layout_margin="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/button_selector_blue"
             android:text="@string/sign_up_sign_up_button"
             android:textColor="@color/textwhite"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    </LinearLayout>
 
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraint"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:alpha=".55"
-        android:visibility="gone"
-        android:layout_gravity="center_vertical"
-        android:background="@color/textwhite"
-        android:layout_margin="12dp"
-        >
+        android:layout_height="match_parent"
+        android:alpha=".5"
+        android:background="@color/beige"
+        android:visibility="gone" />
+
 
     <ProgressBar
-
-
+        android:id="@+id/progressBar"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    </android.support.constraint.ConstraintLayout>
-
+        android:layout_gravity="center"
+        android:visibility="gone" />
 </FrameLayout>

@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.User;
@@ -35,6 +36,7 @@ public class SignUpActivity extends AppCompatActivity {
     private TextInputEditText userNameEditText, emailEditText, passwordEditText;
     private Uri imageUri;
     Button signUp;
+    ProgressBar progressBar;
     //private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
     private String userName,email;
@@ -50,6 +52,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         profileImage =findViewById(R.id.profile_image);
         signUp=findViewById(R.id.signupButton);
+        progressBar = findViewById(R.id.progressBar);
         
         selectPhoto();
 
@@ -87,6 +90,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void auth(String email,String password) {
         final ConstraintLayout constraintLayout=findViewById(R.id.constraint);
         constraintLayout.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         mAuth = FirebaseAuth.getInstance();
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -95,6 +99,8 @@ public class SignUpActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             constraintLayout.setVisibility(View.GONE);
+                            progressBar.setVisibility(View.GONE);
+
                             Log.d(TAG, "createUserWithEmail:success");
                             FancyToast.makeText(SignUpActivity.this,"Registration successful.",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,false).show();
                             Intent intent=new Intent(SignUpActivity.this,MainActivity.class);
@@ -108,6 +114,8 @@ public class SignUpActivity extends AppCompatActivity {
 
                             // If sign in fails, display a message to the user.
                             constraintLayout.setVisibility(View.GONE);
+                            progressBar.setVisibility(View.GONE);
+
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             FancyToast.makeText(SignUpActivity.this,"Registration failed.",FancyToast.LENGTH_LONG,FancyToast.ERROR,false).show();
 
