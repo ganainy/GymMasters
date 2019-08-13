@@ -17,28 +17,21 @@ android:background="@drawable/login_bg"
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="64dp"
             android:fontFamily="@font/night_machine"
             android:gravity="center"
             android:text="@string/app_name"
             android:textColor="@color/textblack"
-            android:textSize="35sp" />
+            android:textSize="52sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/under_appname_intro_loginscreen"
-            android:textColor="@color/textwhite"
-            android:textSize="15sp" />
 
         <android.support.design.widget.TextInputLayout
-            android:background="@drawable/edittext_bg"
+            android:layout_marginTop="100dp"
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginHorizontal="4dp"
-            android:layout_marginTop="35dp"
+            android:background="@drawable/empty_selector"
             android:theme="@style/TextLabel"
             app:errorEnabled="true"
             app:errorTextAppearance="@color/colorPrimary">
@@ -59,6 +52,12 @@ android:background="@drawable/login_bg"
                 android:textSize="16sp" />
         </android.support.design.widget.TextInputLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="@color/textblack"></View>
+
         <android.support.design.widget.TextInputLayout
             android:layout_marginTop="16dp"
             android:layout_marginHorizontal="4dp"
@@ -67,7 +66,7 @@ android:background="@drawable/login_bg"
             android:layout_height="50dp"
             android:theme="@style/TextLabel"
             app:errorEnabled="true"
-            android:background="@drawable/edittext_bg"
+            android:background="@drawable/empty_selector"
             app:passwordToggleEnabled="true">
 
             <android.support.design.widget.TextInputEditText
@@ -88,9 +87,10 @@ android:background="@drawable/login_bg"
 
 
         <Button
+            android:background="@drawable/button_selector_blue"
             android:layout_margin="16dp"
             android:id="@+id/loginButton"
-            style="@style/MyButtonStyle"
+            android:textColor="@color/textwhite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"

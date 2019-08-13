@@ -24,9 +24,9 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
-            android:layout_width="189dp"
+            android:layout_width="200dp"
             android:layout_height="141dp"
-            android:layout_marginTop="140dp"
+            android:layout_marginTop="148dp"
             android:src="@drawable/anonymous_profile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -39,7 +39,7 @@
             android:layout_height="50dp"
             android:layout_marginHorizontal="4dp"
             android:layout_marginTop="350dp"
-            android:background="@drawable/edittextbg_signup"
+            android:background="@drawable/empty_selector"
             android:theme="@style/TextLabel"
             app:errorEnabled="true"
             app:errorTextAppearance="@color/colorPrimary"
@@ -68,7 +68,7 @@
             android:layout_height="50dp"
             android:layout_marginHorizontal="4dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/edittextbg_signup"
+            android:background="@drawable/empty_selector"
             android:theme="@style/TextLabel"
             app:errorEnabled="true"
             app:errorTextAppearance="@color/colorPrimary"
@@ -90,13 +90,14 @@
                 android:textSize="12sp" />
         </android.support.design.widget.TextInputLayout>
 
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginHorizontal="4dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/edittextbg_signup"
+            android:background="@drawable/empty_selector"
             android:theme="@style/TextLabel"
             app:errorEnabled="true"
             app:layout_constraintTop_toBottomOf="@+id/email"
