@@ -19,6 +19,7 @@ import com.example.myapplication.activities.MainActivity;
 import com.example.myapplication.adapters.ExerciseAdapterAdvanced;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -66,6 +67,8 @@ public class CreateWorkoutFragment2 extends Fragment {
     }
 
     private void uploadWorkout() {
+        //save user id with the workout
+        workout.setCreatorId(FirebaseAuth.getInstance().getUid());
         DatabaseReference workoutRef = FirebaseDatabase.getInstance().getReference("workout");
         String id = workoutRef.push().getKey();
         workout.setId(id);

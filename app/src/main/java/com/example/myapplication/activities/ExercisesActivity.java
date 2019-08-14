@@ -14,7 +14,6 @@ import com.example.myapplication.model.Exercise;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class ExercisesActivity extends AppCompatActivity {
     private static final String TAG = "ExercisesActivity";
@@ -27,10 +26,6 @@ public class ExercisesActivity extends AppCompatActivity {
     @BindView(R.id.htab_header)
     ImageView htab_header;
 
-    @OnClick(R.id.addExerciseFab)
-    void openAddNewExerciseActivity() {
-        startActivity(new Intent(ExercisesActivity.this, AddNewExerciseActivity.class));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

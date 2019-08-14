@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class SpecificMuscleFragment extends Fragment {
 
     ExerciseAdapter exerciseAdapter;
     private static final String TAG = "SpecificMuscleFragment";
+    private ProgressBar progressBar;
 
     public SpecificMuscleFragment() {
         // Required empty public constructor
@@ -73,7 +75,7 @@ public class SpecificMuscleFragment extends Fragment {
 
     //load exercises from firebase database
     private void getExercise(String myDataFromActivity, final View view) {
-        DatabaseReference exercisesNode = FirebaseDatabase.getInstance().getReference("excercises");
+        final DatabaseReference exercisesNode = FirebaseDatabase.getInstance().getReference("excercises");
         DatabaseReference myRef = null;
 
         //get exercises only for the selected muscle by passing it from the exercise activity to this fragment
@@ -150,14 +152,17 @@ public class SpecificMuscleFragment extends Fragment {
                     exerciseList.add(exercise);
                 }
 
-                //
+
+                progressBar = view.findViewById(R.id.progressBar);
+                if (exerciseList.size() == 0) {
+                    FancyToast.makeText(getActivity(), "No exercises yet in this category", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                    progressBar.setVisibility(View.GONE);
+                }
                 downloadExercisesImages(exerciseList, new CallbackInterface() {
                     @Override
                     public void callbackMethod(List<Exercise> exerciseList) {
 
                         //hide loading bar
-                        //todo fix progress bar showing even if there is no exercises
-                        ProgressBar progressBar = view.findViewById(R.id.progressBar);
                         progressBar.setVisibility(View.GONE);
 
                         setupRecycler(view, exerciseList);
@@ -167,8 +172,6 @@ public class SpecificMuscleFragment extends Fragment {
                 //
 
                 //after loading exercises show them in the recycler view
-
-
 
             }
 
@@ -184,7 +187,7 @@ public class SpecificMuscleFragment extends Fragment {
         //download images and store them as bitmap in the model class so later we can show them in the adapter
         for (int i = 0; i < exerciseList.size(); i++) {
             //download preview image 1
-            StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(exerciseList.get(i).getPreviewPhoto1());
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("exerciseImages/").child(exerciseList.get(i).getPreviewPhoto1());
             File localFile = null;
             try {
                 localFile = File.createTempFile("images", "jpg");

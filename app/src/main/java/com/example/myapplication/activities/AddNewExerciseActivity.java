@@ -19,6 +19,7 @@ import com.example.myapplication.model.Exercise;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -79,6 +80,7 @@ public class AddNewExerciseActivity extends AppCompatActivity {
             Exercise exercise = new Exercise(nameTextView.getText().toString(), newExerciseSelectedMuscle,
                     executionTextView.getText().toString(), preparationTextView.getText().toString(),
                     newExerciseMechanic, newExerciseUtility, imageUri.getLastPathSegment(), image2Uri.getLastPathSegment(), "no_video");
+            exercise.setCreatorId(FirebaseAuth.getInstance().getUid());
             uploadExercise(exercise);
 
         }

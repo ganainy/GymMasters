@@ -19,7 +19,21 @@ public class Workout implements Parcelable {
         this.photoLink = photoLink;
     }
 
-    private String id, name, duration, exercisesNumber, level, photoLink;
+    private String id;
+    private String name;
+    private String duration;
+    private String exercisesNumber;
+    private String level;
+    private String photoLink;
+    private String creatorId;
+
+    public String getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
+    }
     public static final Creator<Workout> CREATOR = new Creator<Workout>() {
         @Override
         public Workout createFromParcel(Parcel in) {

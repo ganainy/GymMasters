@@ -16,7 +16,15 @@ public class Exercise implements Parcelable {
             return new Exercise[size];
         }
     };
-    String name, bodyPart, execution, preparation, mechanism, utility, previewPhoto1, previewPhoto2, videoLink, sets, reps, duration;
+    String name, bodyPart, execution, preparation, mechanism, utility, previewPhoto1, previewPhoto2, videoLink, sets, reps, duration, creatorId;
+
+    public String getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
+    }
 
     public Exercise() {
     }

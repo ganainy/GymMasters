@@ -1,5 +1,6 @@
 package com.example.myapplication.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.myapplication.R;
+import com.example.myapplication.activities.AddNewExerciseActivity;
 import com.example.myapplication.activities.MainActivity;
 
 import butterknife.BindView;
@@ -38,7 +40,7 @@ public class MainFragmentHome extends Fragment {
 
     @OnClick(R.id.createExercise)
     void createExercise() {
-
+        startActivity(new Intent(getActivity(), AddNewExerciseActivity.class));
     }
 
 
