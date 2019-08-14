@@ -34,6 +34,7 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view;
         if (viewType == TYPE_REPS) { // for call layout
+
             view = LayoutInflater.from(context).inflate(R.layout.inside_workout_item_reps, viewGroup, false);
             return new RepsExerciseViewHolder(view);
 
@@ -141,7 +142,6 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 @Override
                 public void onClick(View view) {
                     openSpecificExerciseActivity(getAdapterPosition());
-                    //todo check when adding exercise name is unique
 
                 }
             });

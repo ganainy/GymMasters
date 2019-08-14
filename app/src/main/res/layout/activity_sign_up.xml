@@ -50,7 +50,7 @@
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/userNameEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:drawableStart="@drawable/ic_account_circle_black_24dp"
                 android:drawableLeft="@drawable/ic_account_circle_black_24dp"
                 android:drawablePadding="8dp"
@@ -78,7 +78,7 @@
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/emailEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:drawableStart="@drawable/ic_email_black_24dp"
                 android:drawableLeft="@drawable/ic_email_black_24dp"
                 android:drawablePadding="8dp"
@@ -107,7 +107,7 @@
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/passwordEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:drawableStart="@drawable/ic_lock_outline_black_24dp"
                 android:drawableLeft="@drawable/ic_lock_outline_black_24dp"
                 android:drawablePadding="8dp"
