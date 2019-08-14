@@ -21,6 +21,12 @@
             android:layout_height="wrap_content"
             android:text="create workout" />
 
+        <Button
+            android:id="@+id/createExercise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="create Exercise" />
+
         <ImageView
             android:id="@+id/testImage"
             android:layout_width="match_parent"

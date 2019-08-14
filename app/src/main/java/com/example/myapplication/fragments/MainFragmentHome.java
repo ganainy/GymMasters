@@ -36,6 +36,12 @@ public class MainFragmentHome extends Fragment {
     }
 
 
+    @OnClick(R.id.createExercise)
+    void createExercise() {
+
+    }
+
+
     public MainFragmentHome() {
         // Required empty public constructor
     }

@@ -77,7 +77,7 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         SpecificWorkoutActivity specificWorkoutActivity = (SpecificWorkoutActivity) context;
         Intent intent = new Intent(context, SpecificExerciseActivity.class);
         intent.putExtra("name", workoutExerciseList.get(adapterPosition).getName());
-        intent.putExtra("targetMuscle", workoutExerciseList.get(adapterPosition).getBodyPart());
+        intent.putExtra("targetMuscle", workoutExerciseList.get(adapterPosition).getBodyPart().toLowerCase());
         specificWorkoutActivity.startActivity(intent);
     }
 

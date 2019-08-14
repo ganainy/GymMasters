@@ -171,7 +171,7 @@ public class SpecificExerciseActivity extends AppCompatActivity {
 
     private void downloadPreviewImage() {
 
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(exercise.getPreviewPhoto1());
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("exerciseImages/").child(exercise.getPreviewPhoto1());
         File localFile = null;
         try {
             localFile = File.createTempFile("images", "jpg");
@@ -204,7 +204,7 @@ public class SpecificExerciseActivity extends AppCompatActivity {
     }
 
     private void downloadPreviewImage2() {
-        StorageReference storageRef2 = FirebaseStorage.getInstance().getReference().child(exercise.getPreviewPhoto2());
+        StorageReference storageRef2 = FirebaseStorage.getInstance().getReference().child("exerciseImages/").child(exercise.getPreviewPhoto2());
         File localFile2 = null;
 
 
