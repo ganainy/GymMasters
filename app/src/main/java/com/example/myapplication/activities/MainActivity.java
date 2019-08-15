@@ -81,10 +81,48 @@ public class MainActivity extends AppCompatActivity
         setupMainViewPager();
         showUserDataInNavigationMenu();
 
+        //handle click on navigation view items
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_find:
+                        handleFindClick();
+                        break;
+                    case R.id.nav_posts:
+                        handlePostsClick();
+                        break;
+                    case R.id.nav_followers:
+                        handleFollowersClick();
+                        break;
+                    case R.id.nav_following:
+                        handleFollowedClick();
+                        break;
 
-     //   showGifFromStorage();
+
+                }
+                return false;
+            }
+        });
+        {
+
+        }
     }
 
+    private void handleFollowersClick() {
+    }
+
+    private void handleFindClick() {
+        startActivity(new Intent(MainActivity.this, FindUsersActivity.class));
+    }
+
+    private void handlePostsClick() {
+
+    }
+
+    private void handleFollowedClick() {
+
+    }
 
     private void setupMainViewPager() {
         //view pager and tab layout for swiping fragments

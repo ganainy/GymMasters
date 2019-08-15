@@ -1,7 +1,7 @@
 package com.example.myapplication.model;
 
 public class User {
-    private String name,email,rating;
+    private String name, email, rating, followers, following;
     String id;
     private String photo;
 
@@ -14,6 +14,22 @@ public class User {
         this.rating = rating;
         this.photo = photo;
         this.id = id;
+    }
+
+    public String getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(String followers) {
+        this.followers = followers;
+    }
+
+    public String getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(String following) {
+        this.following = following;
     }
 
     public String getName() {
