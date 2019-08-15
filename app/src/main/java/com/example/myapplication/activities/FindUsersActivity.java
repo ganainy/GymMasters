@@ -39,6 +39,7 @@ public class FindUsersActivity extends AppCompatActivity {
         FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (ds.child("id").getValue().equals(FirebaseAuth.getInstance().getUid())) {
                         //don't show this user in list since it's the logged in user
@@ -48,6 +49,8 @@ public class FindUsersActivity extends AppCompatActivity {
                         user.setPhoto(ds.child("photo").getValue().toString());
                         user.setFollowers(ds.child("followers").getValue().toString());
                         user.setRating(ds.child("rating").getValue().toString());
+                        user.setFollowing(ds.child("following").getValue().toString());
+                        user.setId(ds.child("id").getValue().toString());
                         userList.add(user);
                     }
 

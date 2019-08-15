@@ -1,6 +1,9 @@
 package com.example.myapplication.model;
 
-public class User {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class User implements Parcelable {
     private String name, email, rating, followers, following;
     String id;
     private String photo;
@@ -14,6 +17,28 @@ public class User {
         this.rating = rating;
         this.photo = photo;
         this.id = id;
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    protected User(Parcel in) {
+        name = in.readString();
+        email = in.readString();
+        rating = in.readString();
+        followers = in.readString();
+        following = in.readString();
+        id = in.readString();
+        photo = in.readString();
     }
 
     public String getFollowers() {
@@ -70,5 +95,21 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(email);
+        parcel.writeString(rating);
+        parcel.writeString(followers);
+        parcel.writeString(following);
+        parcel.writeString(id);
+        parcel.writeString(photo);
     }
 }

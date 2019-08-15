@@ -1,6 +1,7 @@
 package com.example.myapplication.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.LayerDrawable;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
+import com.example.myapplication.activities.FindUsersActivity;
+import com.example.myapplication.activities.UserInfoActivity;
 import com.example.myapplication.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -144,6 +147,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 @Override
                 public void onClick(View view) {
                     //todo open user full profile with his workouts and exercises
+                    Intent intent = new Intent(context, UserInfoActivity.class);
+                    intent.putExtra("user", userList.get(getAdapterPosition()));
+                    FindUsersActivity findUsersActivity = (FindUsersActivity) context;
+                    findUsersActivity.startActivity(intent);
                 }
             });
 

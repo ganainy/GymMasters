@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -37,6 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
     private Uri imageUri;
     Button signUp;
     ProgressBar progressBar;
+    FloatingActionButton addProfilePhoto;
     //private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
     private String userName,email;
@@ -51,6 +53,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         profileImage =findViewById(R.id.profile_image);
+        addProfilePhoto = findViewById(R.id.addProfilePhoto);
         signUp=findViewById(R.id.signupButton);
         progressBar = findViewById(R.id.progressBar);
         
@@ -173,6 +176,16 @@ public class SignUpActivity extends AppCompatActivity {
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+            }
+        });
+
+        addProfilePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
