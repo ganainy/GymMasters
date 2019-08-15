@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -22,20 +24,23 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
+public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> implements Filterable {
     private static final String TAG = "UserAdapter";
     private final List<User> userList;
+    private List<User> userListFull;
     private final Context context;
 
     public UserAdapter(Context context, List<User> userList) {
         this.context = context;
         this.userList = userList;
+        userListFull = new ArrayList<>(userList);
     }
 
     @NonNull
@@ -85,6 +90,36 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public int getItemCount() {
         return userList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                List<User> filteredList = new ArrayList<>();
+                if (charSequence == null || charSequence.length() == 0) {
+                    filteredList.addAll(userListFull);
+                } else {
+                    String filterPattern = charSequence.toString().toLowerCase().trim();
+                    for (User user : userListFull) {
+                        if (user.getName().toLowerCase().contains(filterPattern)) {
+                            filteredList.add(user);
+                        }
+                    }
+                }
+                FilterResults results = new FilterResults();
+                results.values = filteredList;
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                userList.clear();
+                userList.addAll((List<User>) filterResults.values);
+                notifyDataSetChanged();
+            }
+        };
     }
 
 

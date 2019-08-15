@@ -5,6 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.UserAdapter;
@@ -20,6 +25,7 @@ import java.util.List;
 
 public class FindUsersActivity extends AppCompatActivity {
     List<User> userList = new ArrayList<>();
+    private UserAdapter userAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +65,38 @@ public class FindUsersActivity extends AppCompatActivity {
 
     private void setupRecycler() {
         RecyclerView recyclerView = findViewById(R.id.usersRecycler);
-        UserAdapter userAdapter = new UserAdapter(FindUsersActivity.this, userList);
+        userAdapter = new UserAdapter(FindUsersActivity.this, userList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(FindUsersActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(userAdapter);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //for filtering
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_users_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        //hide search button from keyboard since it does nothing and we filter on text change
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                userAdapter.getFilter().filter(s);
+                return true;
+            }
+        });
+
+        return true;
     }
 }
