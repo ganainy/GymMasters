@@ -30,8 +30,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddNewExerciseActivity extends AppCompatActivity {
-    private static final String TAG = "AddNewExerciseActivity";
+public class CreateNewExerciseActivity extends AppCompatActivity {
+    private static final String TAG = "CreateNewExerciseActivity";
     private static final int PICK_IMAGE = 101;
     private static final int PICK_IMAGE2 = 102;
     String newExerciseSelectedMuscle;
@@ -70,11 +70,12 @@ public class AddNewExerciseActivity extends AppCompatActivity {
 
     @OnClick(R.id.saveButton)
     void saveExercise() {
+
         if (nameTextView.getText().length() < 6 || executionTextView.getText().length() < 6 || preparationTextView.getText().length() < 6) {
-            FancyToast.makeText(AddNewExerciseActivity.this, "Please fill fields with minimum of 6 letters each.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+            FancyToast.makeText(CreateNewExerciseActivity.this, "Please fill fields with minimum of 6 letters each.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
 
         } else if (imageUri == null || image2Uri == null) {
-            FancyToast.makeText(AddNewExerciseActivity.this, "Please select two photos describing exercise movement.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+            FancyToast.makeText(CreateNewExerciseActivity.this, "Please select two photos describing exercise movement.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
         } else {
             uploadExercisePhotos();
             Exercise exercise = new Exercise(nameTextView.getText().toString(), newExerciseSelectedMuscle,
@@ -93,14 +94,14 @@ public class AddNewExerciseActivity extends AppCompatActivity {
         excercises.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                FancyToast.makeText(AddNewExerciseActivity.this, "Added successfully.", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+                FancyToast.makeText(CreateNewExerciseActivity.this, "Added successfully.", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
                 finish();
             }
 
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                FancyToast.makeText(AddNewExerciseActivity.this, "Something went wrong , check connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                FancyToast.makeText(CreateNewExerciseActivity.this, "Something went wrong , check connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
                 Log.i(TAG, "onFailure: " + e.getMessage());
             }
         });

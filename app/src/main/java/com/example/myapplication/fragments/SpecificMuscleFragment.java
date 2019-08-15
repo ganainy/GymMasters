@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
 import com.example.myapplication.activities.ExercisesActivity;
 import com.example.myapplication.adapters.ExerciseAdapter;
@@ -139,17 +140,20 @@ public class SpecificMuscleFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Exercise exercise = new Exercise();
-                    exercise.setName(ds.child("name").getValue().toString());
-                    exercise.setExecution(ds.child("execution").getValue().toString());
-                    exercise.setPreparation(ds.child("preparation").getValue().toString());
-                    exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
-                    exercise.setMechanism(ds.child("mechanism").getValue().toString());
-                    exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
-                    exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
-                    exercise.setUtility(ds.child("utility").getValue().toString());
-                    exercise.setVideoLink(ds.child("videoLink").getValue().toString());
-                    exerciseList.add(exercise);
+                    //only show in main list the exercises that admin added
+                    if (ds.child("creatorId").getValue().equals(MyConstant.AdminId)) {
+                        Exercise exercise = new Exercise();
+                        exercise.setName(ds.child("name").getValue().toString());
+                        exercise.setExecution(ds.child("execution").getValue().toString());
+                        exercise.setPreparation(ds.child("preparation").getValue().toString());
+                        exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
+                        exercise.setMechanism(ds.child("mechanism").getValue().toString());
+                        exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
+                        exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
+                        exercise.setUtility(ds.child("utility").getValue().toString());
+                        exercise.setVideoLink(ds.child("videoLink").getValue().toString());
+                        exerciseList.add(exercise);
+                    }
                 }
 
 

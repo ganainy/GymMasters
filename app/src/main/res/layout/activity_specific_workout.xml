@@ -24,7 +24,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/imageView7"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView6">
+        app:layout_constraintTop_toBottomOf="@+id/imageView6"
+        tools:listitem="@layout/inside_workout_item_reps">
 
     </android.support.v7.widget.RecyclerView>
 

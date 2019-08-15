@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/activity_bg"
     android:scrollbarAlwaysDrawVerticalTrack="true"
     android:animateLayoutChanges="true"
@@ -15,32 +14,72 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/createWorkout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="create workout" />
 
         <Button
             android:id="@+id/createExercise"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="create Exercise" />
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/add_custom_bg"
+            android:gravity="left|center"
+            android:paddingLeft="16dp"
+            android:text="Create custom exercise"
+            android:textAllCaps="false"
+            android:textColor="@color/textwhite"
+            android:textSize="18sp" />
 
-        <ImageView
-            android:id="@+id/testImage"
+        <Button
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/add_custom_bg"
+            android:gravity="left|center"
+            android:paddingLeft="16dp"
+            android:text="Create custom workout"
+            android:textAllCaps="false"
+            android:textColor="@color/textwhite"
+            android:id="@+id/createWorkout"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:src="@drawable/cardio"
-            android:visibility="gone" />
+            android:textSize="18sp" />
 
-        <android.support.v7.widget.CardView
 
+        <Button
+            android:id="@+id/viewMyExercisesButton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/show_custom_bg"
+            android:gravity="left|center"
+            android:paddingLeft="16dp"
+            android:text="Show my exercises"
+            android:textAllCaps="false"
+            android:textColor="@color/textwhite"
+            android:textSize="18sp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/customExerciseRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:elevation="3dp"
-            app:cardCornerRadius="8dp">
+            android:layout_marginHorizontal="4dp">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:id="@+id/viewMyWorkoutsButton"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/show_custom_bg"
+            android:gravity="left|center"
+            android:paddingLeft="16dp"
+            android:text="Show my workouts"
+            android:textAllCaps="false"
+            android:layout_width="match_parent"
+            android:textColor="@color/textwhite"
+            android:textSize="18sp" />
+
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/customWorkoutRecycler"
@@ -50,22 +89,5 @@
             </android.support.v7.widget.RecyclerView>
 
 
-        </android.support.v7.widget.CardView>
-
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:elevation="3dp"
-            app:cardCornerRadius="8dp">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/customExerciseRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
-
-
-        </android.support.v7.widget.CardView>
     </LinearLayout>
 </ScrollView>

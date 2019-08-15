@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.WorkoutAdapter;
 import com.example.myapplication.model.Workout;
@@ -57,14 +58,17 @@ public class MainFragmentWorkouts extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 workoutList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Workout workout = new Workout();
-                    workout.setName(ds.child("name").getValue().toString());
-                    workout.setDuration(ds.child("duration").getValue().toString() + " mins");
-                    workout.setExercisesNumber(ds.child("exercisesNumber").getValue().toString());
-                    workout.setPhotoLink(ds.child("photoLink").getValue().toString());
-                    workout.setId(ds.child("id").getValue().toString());
+                    //only show in main list the workouts that admin added
+                    if (ds.child("creatorId").getValue().equals(MyConstant.AdminId)) {
+                        Workout workout = new Workout();
+                        workout.setName(ds.child("name").getValue().toString());
+                        workout.setDuration(ds.child("duration").getValue().toString() + " mins");
+                        workout.setExercisesNumber(ds.child("exercisesNumber").getValue().toString());
+                        workout.setPhotoLink(ds.child("photoLink").getValue().toString());
+                        workout.setId(ds.child("id").getValue().toString());
 
-                    workoutList.add(workout);
+                        workoutList.add(workout);
+                    }
                 }
                 setupRecycler();
             }

@@ -1,6 +1,8 @@
 package com.example.myapplication.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,9 +13,16 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.activities.ExercisesActivity;
+import com.example.myapplication.activities.MainActivity;
+import com.example.myapplication.activities.SpecificExerciseActivity;
 import com.example.myapplication.model.Exercise;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +30,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>  implements Filterable {
+    private String fragmentName = null;
     List<Exercise> exercisesList;
     List<Exercise> filteredNameList;
     List<Exercise> originalExerciseList;
@@ -30,6 +40,13 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
     public ExerciseAdapter(Context context,List<Exercise>exercisesList) {
         this.context = context;
         this.exercisesList=exercisesList;
+        this.originalExerciseList = exercisesList;
+    }
+
+    public ExerciseAdapter(Context context, List<Exercise> exercisesList, String fragmentName) {
+        this.fragmentName = fragmentName;
+        this.context = context;
+        this.exercisesList = exercisesList;
         this.originalExerciseList = exercisesList;
     }
 
@@ -44,12 +61,36 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
     @Override
     public void onBindViewHolder(@NonNull ExerciseViewHolder exerciseViewHolder, int i) {
         exerciseViewHolder.exerciseName.setText(exercisesList.get(i).getName());
-        exerciseViewHolder.exerciseImage.setImageBitmap(exercisesList.get(i).getPreviewBitmap());
+
+        if (fragmentName == null) {
+            exerciseViewHolder.exerciseImage.setImageBitmap(exercisesList.get(i).getPreviewBitmap());
+        } else {
+
+            downloadAndShowExerciseImage(exerciseViewHolder, i);
+        }
         Log.i(TAG, "onBindViewHolder: "+exercisesList.get(i).getPreviewBitmap());
 
     }
 
 
+    private void downloadAndShowExerciseImage(final ExerciseAdapter.ExerciseViewHolder exerciseViewHolder, int i) {
+
+        StorageReference pathReference = FirebaseStorage.getInstance().getReference().child("exerciseImages/" + exercisesList.get(i).getPreviewPhoto1());
+        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                //download image with glide then show it in the navigation menu
+                Glide.with(context).load(uri.toString()).into(exerciseViewHolder.exerciseImage);
+                Log.i(TAG, "onSuccess: loaded from storage");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.i(TAG, "onFailure: " + exception.getMessage());
+            }
+        });
+    }
 
 
     @Override
@@ -111,8 +152,21 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
                     itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ExercisesActivity exercisesActivity = (ExercisesActivity) context;
-                            exercisesActivity.handleClick(exercisesList.get(getAdapterPosition()));
+
+                            if (fragmentName.equals("home")) {
+                                //adapter called by main fragment
+                                MainActivity mainActivity = (MainActivity) context;
+                                Intent intent = new Intent(context, SpecificExerciseActivity.class);
+                                //parcelable have size limit so i wont pass image bitmap with the exercise
+                                Exercise exercise = exercisesList.get(getAdapterPosition());
+                                intent.putExtra("exercise", exercise);
+                                context.startActivity(intent);
+                            } else {
+                                //adapter called by specficmuscle fragment which on exercise activity
+                                ExercisesActivity exercisesActivity = (ExercisesActivity) context;
+                                exercisesActivity.handleClick(exercisesList.get(getAdapterPosition()));
+                            }
+
                         }
                     });
                 }
