@@ -1,15 +1,23 @@
 package com.example.myapplication;
 
+import android.app.Application;
 import android.arch.lifecycle.MutableLiveData;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.example.myapplication.model.Exercise;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +68,26 @@ public class UserInfoActivityRepository {
             }
         });
         return data;
+    }
+
+
+    public MutableLiveData<RequestBuilder<Drawable>> downloadUserPhoto(final Application application, String photo) {
+        final MutableLiveData<RequestBuilder<Drawable>> load = new MutableLiveData<>();
+        FirebaseStorage.getInstance().getReference().child("images/").child(photo).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Log.i(TAG, "onSuccesss: ");
+                RequestBuilder<Drawable> load1 = Glide.with(application.getApplicationContext()).load(uri.toString());
+                load.setValue(load1);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: ");
+            }
+        });
+
+        return load;
     }
 }
 

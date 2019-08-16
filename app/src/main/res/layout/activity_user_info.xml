@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="86dp"
             android:layout_marginTop="120dp"
-            android:src="@drawable/ic_plus"
+            android:src="@drawable/follow"
             app:layout_constraintStart_toStartOf="@+id/profile_image"
             app:layout_constraintTop_toTopOf="parent" />
 

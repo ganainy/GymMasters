@@ -2,12 +2,15 @@ package com.example.myapplication.activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.RequestBuilder;
 import com.example.myapplication.R;
 import com.example.myapplication.UserInfoActivityViewModel;
 import com.example.myapplication.model.Exercise;
@@ -20,6 +23,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class UserInfoActivity extends AppCompatActivity {
@@ -29,6 +33,12 @@ public class UserInfoActivity extends AppCompatActivity {
 
     @BindView(R.id.followersTextView)
     TextView followersTextView;
+
+
+    @BindView(R.id.profile_image)
+    CircleImageView profile_image;
+
+
     @BindView(R.id.textViewName)
     TextView textViewName;
     @BindView(R.id.explainExerciseTextview2)
@@ -61,16 +71,28 @@ public class UserInfoActivity extends AppCompatActivity {
 
         if (getIntent().hasExtra("user")) {
             user = (User) getIntent().getParcelableExtra("user");
+
             showDataInView();
 
+            //
             mViewModel = ViewModelProviders.of(this).get(UserInfoActivityViewModel.class);
-            mViewModel.init(user.getId());
+            mViewModel.init(user.getId(), user.getPhoto());
             mViewModel.getExercises().observe(this, new Observer<List<Exercise>>() {
                 @Override
                 public void onChanged(@Nullable List<Exercise> exerciseList) {
                     updateProfileExercisesView(exerciseList);
                 }
             });
+            //
+            mViewModel.getUserPhoto().observe(this, new Observer<RequestBuilder<Drawable>>() {
+                @Override
+                public void onChanged(@Nullable RequestBuilder<Drawable> drawableRequestBuilder) {
+                    Log.i(TAG, "onChanged: ");
+                    drawableRequestBuilder.into(profile_image);
+                }
+            });
+            //
+
         }
     }
 
