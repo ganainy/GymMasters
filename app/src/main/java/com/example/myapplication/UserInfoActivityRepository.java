@@ -10,6 +10,7 @@ import android.util.Log;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.example.myapplication.model.Exercise;
+import com.example.myapplication.model.Workout;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +27,7 @@ public class UserInfoActivityRepository {
     private static final String TAG = "UserInfoActivityReposit";
     private static UserInfoActivityRepository instance;
     private List<Exercise> exerciseList = new ArrayList<>();
+    private List<Workout> workoutList = new ArrayList<>();
 
     public static UserInfoActivityRepository getInstance() {
         if (instance == null) {
@@ -84,6 +86,40 @@ public class UserInfoActivityRepository {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i(TAG, "onFailure: ");
+            }
+        });
+
+        return load;
+    }
+
+    public MutableLiveData<List<Workout>> getWorkouts(final String profileId) {
+        final MutableLiveData<List<Workout>> load = new MutableLiveData<>();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        reference.child("workout").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                workoutList.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    //only show in main list the workouts that admin added
+                    if (ds.child("creatorId").getValue().equals(profileId)) {
+                        Workout workout = new Workout();
+                        workout.setName(ds.child("name").getValue().toString());
+                        workout.setDuration(ds.child("duration").getValue().toString() + " mins");
+                        workout.setExercisesNumber(ds.child("exercisesNumber").getValue().toString());
+                        workout.setPhotoLink(ds.child("photoLink").getValue().toString());
+                        workout.setId(ds.child("id").getValue().toString());
+
+                        workoutList.add(workout);
+                    }
+                }
+
+                load.setValue(workoutList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
 

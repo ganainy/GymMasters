@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 
 import com.bumptech.glide.RequestBuilder;
 import com.example.myapplication.model.Exercise;
+import com.example.myapplication.model.Workout;
 
 import java.util.List;
 
@@ -17,38 +18,42 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
     private final Application application;
     private MutableLiveData<List<Exercise>> exercisesList;
     private UserInfoActivityRepository mRepo;
-    private MutableLiveData<RequestBuilder<Drawable>> requestBuilderMutableLiveData;
+    private MutableLiveData<RequestBuilder<Drawable>> profilePhoto;
+    private MutableLiveData<List<Workout>> workoutList;
 
     public UserInfoActivityViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
     }
 
-    public void init(String profileId, String photo) {
-        if (exercisesList != null) {
-            return;
-        } else {
 
+    public LiveData<List<Exercise>> getExercises(String profileId) {
+        if (exercisesList != null) {
+        } else {
             mRepo = UserInfoActivityRepository.getInstance();
             exercisesList = mRepo.getExercises(profileId);
         }
-
-        if (requestBuilderMutableLiveData != null) {
-            return;
-        } else {
-            mRepo = UserInfoActivityRepository.getInstance();
-            requestBuilderMutableLiveData = mRepo.downloadUserPhoto(application, photo);
-        }
-
-    }
-
-
-    public LiveData<List<Exercise>> getExercises() {
         return exercisesList;
     }
 
-    public LiveData<RequestBuilder<Drawable>> getUserPhoto() {
-        return requestBuilderMutableLiveData;
+    public LiveData<List<Workout>> getWorkouts(String profileId) {
+        if (workoutList != null) {
+        } else {
+            mRepo = UserInfoActivityRepository.getInstance();
+            workoutList = mRepo.getWorkouts(profileId);
+        }
+        return workoutList;
+    }
+
+
+    public LiveData<RequestBuilder<Drawable>> getUserPhoto(String photo) {
+        if (profilePhoto != null) {
+
+        } else {
+            mRepo = UserInfoActivityRepository.getInstance();
+            profilePhoto = mRepo.downloadUserPhoto(application, photo);
+        }
+        return profilePhoto;
     }
 
 

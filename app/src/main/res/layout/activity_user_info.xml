@@ -245,6 +245,7 @@
                 tools:layout_editor_absoluteY="299dp">
 
                 <TextView
+                    android:id="@+id/workoutCountTextView"
                     android:layout_width="70dp"
                     android:layout_height="match_parent"
                     android:background="#9F64C9"
@@ -260,6 +261,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/explainExerciseTextview3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="8dp"
@@ -269,6 +271,7 @@
                         tools:text="Amr created 2 custom exercises" />
 
                     <TextView
+                        android:id="@+id/explainExerciseTextview4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="8dp"
