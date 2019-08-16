@@ -6,25 +6,19 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestBuilder;
-import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
 import com.example.myapplication.UserInfoActivityViewModel;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.Workout;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -78,37 +72,14 @@ public class UserInfoActivity extends AppCompatActivity {
     @OnClick(R.id.followFab)
     void follow() {
 
-        if (isSubscribed) {
-            //get key of the node where logged in user id is saved and delete it
-            final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
-                    .child(user.getId()).child("followersUID");
-            profile.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                        if (dataSnapshot1.getValue().equals(MyConstant.loggedInUserId)) {
-                            String key = dataSnapshot1.getKey();
-                            profile.child(key).removeValue();
-                        }
-                    }
-                }
+        //todo fix follow issue
+        mViewModel.followUnfollow(isSubscribed, user.getId()).observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                Log.i(TAG, "onChanged: string " + s);
+            }
+        });
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-        } else {
-            //subscribe
-            final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
-                    .child(user.getId()).child("followersUID");
-            profile.push().setValue(MyConstant.loggedInUserId);
-        }
-
-
-        // String id = workoutRef.push().getKey();
-        //workoutRef.child(id).setValue(this.workout);
     }
 
     @Override
@@ -146,9 +117,10 @@ public class UserInfoActivity extends AppCompatActivity {
                 }
             });
             //
-            mViewModel.followUnfollow(user.getId()).observe(this, new Observer<Boolean>() {
+            mViewModel.getFollowState(user.getId()).observe(this, new Observer<Boolean>() {
                 @Override
                 public void onChanged(@Nullable Boolean aBoolean) {
+                    Log.i(TAG, "onChanged: Boolean" + aBoolean);
                     updateFab(aBoolean);
                     isSubscribed = aBoolean;
                 }

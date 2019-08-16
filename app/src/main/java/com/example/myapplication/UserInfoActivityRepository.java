@@ -31,6 +31,7 @@ public class UserInfoActivityRepository {
     private List<Exercise> exerciseList = new ArrayList<>();
     private List<Workout> workoutList = new ArrayList<>();
     private Boolean isSubscribed;
+    private String test;
 
     public static UserInfoActivityRepository getInstance() {
         if (instance == null) {
@@ -49,9 +50,7 @@ public class UserInfoActivityRepository {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dsBig : dataSnapshot.getChildren()) {
                     for (DataSnapshot ds : dsBig.getChildren()) {
-                        Log.i(TAG, "onDataChange: " + profileId);
                         if (ds.child("creatorId").getValue().equals(profileId)) {
-                            Log.i(TAG, "onDataChange: true");
                             exercise.setExecution(ds.child("execution").getValue().toString());
                             exercise.setPreparation(ds.child("preparation").getValue().toString());
                             exercise.setMechanism(ds.child("mechanism").getValue().toString());
@@ -83,14 +82,13 @@ public class UserInfoActivityRepository {
         FirebaseStorage.getInstance().getReference().child("images/").child(photo).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Log.i(TAG, "onSuccesss: ");
                 RequestBuilder<Drawable> load1 = Glide.with(application.getApplicationContext()).load(uri.toString());
                 load.setValue(load1);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "onFailure: ");
+                Log.i(TAG, "onFailure: " + e.getMessage());
             }
         });
 
@@ -133,12 +131,10 @@ public class UserInfoActivityRepository {
     }
 
 
-    public MutableLiveData<Boolean> followUnfollow(String profileId) {
+    public MutableLiveData<Boolean> getFollowState(String profileId) {
         final MutableLiveData<Boolean> load = new MutableLiveData<>();
-        Log.i(TAG, "followUnfollow: ");
 
         //add logged in user id in the account of the clicked user
-
         final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users").child(profileId);
         profile.addValueEventListener(new ValueEventListener() {
             @Override
@@ -149,12 +145,10 @@ public class UserInfoActivityRepository {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                             if (dataSnapshot.getValue().equals(MyConstant.loggedInUserId)) {
-                                Log.i(TAG, "onChildAdded:  isSubscribed=true; ");
                                 //this means logged in user already subscribed
                                 isSubscribed = true;
 
                             } else {
-                                Log.i(TAG, "onChildAdded:   isSubscribed=false; ");
                                 isSubscribed = false;
                             }
 
@@ -196,6 +190,44 @@ public class UserInfoActivityRepository {
         });
 
 
+        return load;
+    }
+
+    public MutableLiveData<String> followUnfollow(Boolean isSubscribed, String profileId) {
+        final MutableLiveData<String> load = new MutableLiveData<>();
+
+        if (isSubscribed) {
+            //get key of the node where logged in user id is saved and delete it
+            final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
+                    .child(profileId).child("followersUID");
+            profile.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        if (dataSnapshot1.getValue().equals(MyConstant.loggedInUserId)) {
+                            String key = dataSnapshot1.getKey();
+                            profile.child(key).removeValue();
+                            test = "unfollowdone";
+                            break;
+                        }
+
+                    }
+                    load.setValue(test);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+
+        } else {
+            //subscribe
+            final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
+                    .child(profileId).child("followersUID");
+            profile.push().setValue(MyConstant.loggedInUserId);
+            test = "followdone";
+            load.setValue(test);
+        }
         return load;
     }
 }

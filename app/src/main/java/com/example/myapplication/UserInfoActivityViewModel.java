@@ -21,7 +21,8 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
     private UserInfoActivityRepository mRepo;
     private MutableLiveData<RequestBuilder<Drawable>> profilePhoto;
     private MutableLiveData<List<Workout>> workoutList;
-    private MutableLiveData<Boolean> isSubscribed;
+    private MutableLiveData<Boolean> subscribeState;
+    private MutableLiveData<String> notifyString;
 
     public UserInfoActivityViewModel(@NonNull Application application) {
         super(application);
@@ -49,9 +50,11 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
 
 
     public LiveData<RequestBuilder<Drawable>> getUserPhoto(String photo) {
+
         if (profilePhoto != null) {
 
         } else {
+            Log.i(TAG, "getUserPhoto: ");
             mRepo = UserInfoActivityRepository.getInstance();
             profilePhoto = mRepo.downloadUserPhoto(application, photo);
         }
@@ -59,17 +62,27 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
     }
 
 
-    public LiveData<Boolean> followUnfollow(String profileId) {
-        if (isSubscribed != null) {
-
-            Log.i(TAG, "followUnfollow: viewmodel issub!=null");
+    public LiveData<Boolean> getFollowState(String profileId) {
+        Log.i(TAG, "getFollowState: ");
+       /* if (subscribeState != null) {
 
         } else {
-            Log.i(TAG, "followUnfollow: viewmodel issub==null");
+           */
             mRepo = UserInfoActivityRepository.getInstance();
-            isSubscribed = mRepo.followUnfollow(profileId);
-        }
-        return isSubscribed;
+        subscribeState = mRepo.getFollowState(profileId);
+        /*   }*/
+        return subscribeState;
+    }
+
+    public LiveData<String> followUnfollow(Boolean isSubscribed, String profileId) {
+        Log.i(TAG, "followUnfollow: ");
+      /*  if (notifyString != null) {
+
+        } else {*/
+        mRepo = UserInfoActivityRepository.getInstance();
+        notifyString = mRepo.followUnfollow(isSubscribed, profileId);
+        /* }*/
+        return notifyString;
     }
 
 
