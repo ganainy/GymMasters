@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.bumptech.glide.RequestBuilder;
 import com.example.myapplication.model.Exercise;
@@ -20,6 +21,7 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
     private UserInfoActivityRepository mRepo;
     private MutableLiveData<RequestBuilder<Drawable>> profilePhoto;
     private MutableLiveData<List<Workout>> workoutList;
+    private MutableLiveData<Boolean> isSubscribed;
 
     public UserInfoActivityViewModel(@NonNull Application application) {
         super(application);
@@ -54,6 +56,20 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
             profilePhoto = mRepo.downloadUserPhoto(application, photo);
         }
         return profilePhoto;
+    }
+
+
+    public LiveData<Boolean> followUnfollow(String profileId) {
+        if (isSubscribed != null) {
+
+            Log.i(TAG, "followUnfollow: viewmodel issub!=null");
+
+        } else {
+            Log.i(TAG, "followUnfollow: viewmodel issub==null");
+            mRepo = UserInfoActivityRepository.getInstance();
+            isSubscribed = mRepo.followUnfollow(profileId);
+        }
+        return isSubscribed;
     }
 
 

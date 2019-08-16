@@ -149,7 +149,7 @@
                     android:layout_marginBottom="4dp"
                     android:textColor="@color/textblack"
                     android:textSize="18sp"
-                    tools:text="5" />
+                    tools:text="4/5" />
 
                 <TextView
                     android:id="@+id/textViewRating"

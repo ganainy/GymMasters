@@ -11,10 +11,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 
+import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.UserAdapter;
 import com.example.myapplication.model.User;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -41,7 +41,7 @@ public class FindUsersActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds.child("id").getValue().equals(FirebaseAuth.getInstance().getUid())) {
+                    if (ds.child("id").getValue().equals(MyConstant.loggedInUserId)) {
                         //don't show this user in list since it's the logged in user
                     } else {
                         User user = new User();

@@ -14,12 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
 import com.example.myapplication.activities.MainActivity;
 import com.example.myapplication.adapters.ExerciseAdapterAdvanced;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -68,7 +68,7 @@ public class CreateWorkoutFragment2 extends Fragment {
 
     private void uploadWorkout() {//todo only add workout to mainlist if creatorId IS MY ID
         //save user id with the workout
-        workout.setCreatorId(FirebaseAuth.getInstance().getUid());
+        workout.setCreatorId(MyConstant.loggedInUserId);
         DatabaseReference workoutRef = FirebaseDatabase.getInstance().getReference("workout");
         String id = workoutRef.push().getKey();
         workout.setId(id);

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
 import com.example.myapplication.activities.CreateNewExerciseActivity;
 import com.example.myapplication.activities.MainActivity;
@@ -19,7 +20,6 @@ import com.example.myapplication.adapters.ExerciseAdapter;
 import com.example.myapplication.adapters.WorkoutAdapter;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -98,8 +98,8 @@ public class MainFragmentHome extends Fragment {
                 for (DataSnapshot dsBig : dataSnapshot.getChildren()) {
                     for (DataSnapshot ds : dsBig.getChildren()) {
                         Exercise exercise = new Exercise();
-                        Log.i(TAG, "onChildAdded: " + FirebaseAuth.getInstance().getUid());
-                        if (ds.child("creatorId").getValue().equals(FirebaseAuth.getInstance().getUid())) {
+                        Log.i(TAG, "onChildAdded: " + MyConstant.loggedInUserId);
+                        if (ds.child("creatorId").getValue().equals(MyConstant.loggedInUserId)) {
                             exercise.setName(ds.child("name").getValue().toString());
                             exercise.setExecution(ds.child("execution").getValue().toString());
                             exercise.setPreparation(ds.child("preparation").getValue().toString());
@@ -143,7 +143,7 @@ public class MainFragmentHome extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 myCustomWorkoutList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds.child("creatorId").getValue().equals(FirebaseAuth.getInstance().getUid())) {
+                    if (ds.child("creatorId").getValue().equals(MyConstant.loggedInUserId)) {
                         Workout workout = new Workout();
                         workout.setName(ds.child("name").getValue().toString());
                         workout.setDuration(ds.child("duration").getValue().toString() + " mins");

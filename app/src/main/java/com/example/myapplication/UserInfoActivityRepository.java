@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
@@ -13,6 +14,7 @@ import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +30,7 @@ public class UserInfoActivityRepository {
     private static UserInfoActivityRepository instance;
     private List<Exercise> exerciseList = new ArrayList<>();
     private List<Workout> workoutList = new ArrayList<>();
+    private Boolean isSubscribed;
 
     public static UserInfoActivityRepository getInstance() {
         if (instance == null) {
@@ -37,7 +40,7 @@ public class UserInfoActivityRepository {
     }
 
     public MutableLiveData<List<Exercise>> getExercises(final String profileId) {
-        final MutableLiveData<List<Exercise>> data = new MutableLiveData<>();
+        final MutableLiveData<List<Exercise>> load = new MutableLiveData<>();
         exerciseList.clear();
         final Exercise exercise = new Exercise();
         DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference("excercises");
@@ -60,7 +63,8 @@ public class UserInfoActivityRepository {
                         }
                     }
                 }
-                data.setValue(exerciseList);
+                load.setValue(exerciseList);
+
             }
 
 
@@ -69,7 +73,8 @@ public class UserInfoActivityRepository {
                 Log.i(TAG, "onCancelled: " + databaseError.getMessage() + " %%% " + databaseError.getDetails());
             }
         });
-        return data;
+        load.setValue(exerciseList);
+        return load;
     }
 
 
@@ -112,9 +117,10 @@ public class UserInfoActivityRepository {
 
                         workoutList.add(workout);
                     }
+                    load.setValue(workoutList);
                 }
 
-                load.setValue(workoutList);
+
             }
 
             @Override
@@ -122,6 +128,73 @@ public class UserInfoActivityRepository {
 
             }
         });
+
+        return load;
+    }
+
+
+    public MutableLiveData<Boolean> followUnfollow(String profileId) {
+        final MutableLiveData<Boolean> load = new MutableLiveData<>();
+        Log.i(TAG, "followUnfollow: ");
+
+        //add logged in user id in the account of the clicked user
+
+        final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users").child(profileId);
+        profile.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("followersUID")) {
+                    //selected profile has list of followers we will check in it for the logged in user id
+                    profile.child("followersUID").addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            if (dataSnapshot.getValue().equals(MyConstant.loggedInUserId)) {
+                                Log.i(TAG, "onChildAdded:  isSubscribed=true; ");
+                                //this means logged in user already subscribed
+                                isSubscribed = true;
+
+                            } else {
+                                Log.i(TAG, "onChildAdded:   isSubscribed=false; ");
+                                isSubscribed = false;
+                            }
+
+                            load.setValue(isSubscribed);
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                } else {
+                    //selected profile has 0 followers
+                    isSubscribed = false;
+                    load.setValue(isSubscribed);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         return load;
     }
