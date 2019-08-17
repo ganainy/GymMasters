@@ -64,24 +64,23 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
 
     public LiveData<Boolean> getFollowState(String profileId) {
         Log.i(TAG, "getFollowState: ");
-       /* if (subscribeState != null) {
+        if (subscribeState != null) {
 
         } else {
-           */
             mRepo = UserInfoActivityRepository.getInstance();
         subscribeState = mRepo.getFollowState(profileId);
-        /*   }*/
+        }
         return subscribeState;
     }
 
     public LiveData<String> followUnfollow(Boolean isSubscribed, String profileId) {
         Log.i(TAG, "followUnfollow: ");
-      /*  if (notifyString != null) {
+        if (notifyString != null) {
 
-        } else {*/
+        } else {
         mRepo = UserInfoActivityRepository.getInstance();
         notifyString = mRepo.followUnfollow(isSubscribed, profileId);
-        /* }*/
+        }
         return notifyString;
     }
 

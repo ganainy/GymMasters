@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
@@ -14,7 +13,6 @@ import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -132,6 +130,7 @@ public class UserInfoActivityRepository {
 
 
     public MutableLiveData<Boolean> getFollowState(String profileId) {
+        Log.i(TAG, "getFollowState: ");
         final MutableLiveData<Boolean> load = new MutableLiveData<>();
 
         //add logged in user id in the account of the clicked user
@@ -141,33 +140,22 @@ public class UserInfoActivityRepository {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild("followersUID")) {
                     //selected profile has list of followers we will check in it for the logged in user id
-                    profile.child("followersUID").addChildEventListener(new ChildEventListener() {
+                    profile.child("followersUID").addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            if (dataSnapshot.getValue().equals(MyConstant.loggedInUserId)) {
-                                //this means logged in user already subscribed
-                                isSubscribed = true;
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                if (dataSnapshot1.getValue().equals(MyConstant.loggedInUserId)) {
+                                    //this means logged in user already subscribed
+                                    isSubscribed = true;
+                                    break;
 
-                            } else {
-                                isSubscribed = false;
+                                } else {
+                                    isSubscribed = false;
+                                }
+
+
                             }
-
                             load.setValue(isSubscribed);
-                        }
-
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
                         }
 
                         @Override
@@ -194,6 +182,7 @@ public class UserInfoActivityRepository {
     }
 
     public MutableLiveData<String> followUnfollow(Boolean isSubscribed, String profileId) {
+        Log.i(TAG, "followUnfollow: ");
         final MutableLiveData<String> load = new MutableLiveData<>();
 
         if (isSubscribed) {
