@@ -29,7 +29,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class UserInfoActivity extends AppCompatActivity {
-    private static final String TAG = "UserInfoActivity";
+    private static final String TAG = "UserInfoActivityy";
     @BindView(R.id.explainExerciseTextview)
     TextView explainExerciseTextview;
 
@@ -68,18 +68,32 @@ public class UserInfoActivity extends AppCompatActivity {
     TextView ratingTextView;
     private User user;
     private Boolean isSubscribed;
+    private Observer<Boolean> observer;
 
     @OnClick(R.id.followFab)
     void follow() {
-
-        //todo fix follow issue
+        mViewModel.getFollowState(user.getId()).removeObserver(observer);
+        //todo fix follow issue (can't follow then unfollow without leaving activity and coming back and vice-versa )
         mViewModel.followUnfollow(isSubscribed, user.getId()).observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
-                Log.i(TAG, "onChanged: string " + s);
+                Log.i(TAG, "fabClick: " + s);
+                updateFab2(s);
             }
         });
 
+    }
+
+    private void updateFab2(String s) {
+        //change photo and color of fab depending on follow state
+        if (s.equals("followdone")) {
+            followFab.setImageResource(R.drawable.ic_following);
+            followFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#98FB98")));
+        } else if (s.equals("unfollowdone")) {
+            followFab.setImageResource(R.drawable.ic_follow);
+            followFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1E90FF")));
+
+        }
     }
 
     @Override
@@ -117,14 +131,15 @@ public class UserInfoActivity extends AppCompatActivity {
                 }
             });
             //
-            mViewModel.getFollowState(user.getId()).observe(this, new Observer<Boolean>() {
+            observer = new Observer<Boolean>() {
                 @Override
                 public void onChanged(@Nullable Boolean aBoolean) {
-                    Log.i(TAG, "onChanged: Boolean" + aBoolean);
                     updateFab(aBoolean);
                     isSubscribed = aBoolean;
+                    Log.i(TAG, "onChangedoncreate: " + aBoolean);
                 }
-            });
+            };
+            mViewModel.getFollowState(user.getId()).observe(this, observer);
 
         }
     }

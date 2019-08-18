@@ -177,7 +177,7 @@ public class UserInfoActivityRepository {
             }
         });
 
-
+        Log.i(TAG, "getFollowState: " + load.getValue());
         return load;
     }
 
@@ -202,6 +202,7 @@ public class UserInfoActivityRepository {
 
                     }
                     load.setValue(test);
+
                 }
 
                 @Override
@@ -217,6 +218,7 @@ public class UserInfoActivityRepository {
             test = "followdone";
             load.setValue(test);
         }
+        Log.i(TAG, "followUnfollow: " + load.getValue());
         return load;
     }
 }

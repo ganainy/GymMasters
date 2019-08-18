@@ -6,7 +6,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.bumptech.glide.RequestBuilder;
 import com.example.myapplication.model.Exercise;
@@ -54,7 +53,6 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
         if (profilePhoto != null) {
 
         } else {
-            Log.i(TAG, "getUserPhoto: ");
             mRepo = UserInfoActivityRepository.getInstance();
             profilePhoto = mRepo.downloadUserPhoto(application, photo);
         }
@@ -63,7 +61,6 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
 
 
     public LiveData<Boolean> getFollowState(String profileId) {
-        Log.i(TAG, "getFollowState: ");
         if (subscribeState != null) {
 
         } else {
@@ -74,7 +71,6 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
     }
 
     public LiveData<String> followUnfollow(Boolean isSubscribed, String profileId) {
-        Log.i(TAG, "followUnfollow: ");
         if (notifyString != null) {
 
         } else {
