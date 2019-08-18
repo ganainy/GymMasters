@@ -88,8 +88,7 @@ public class MainFragmentHome extends Fragment {
         return view;
     }
 
-    private void downloadMyExercises() {
-        final List<DataSnapshot> list5ra = new ArrayList<>();
+    public void downloadMyExercises() {
         final DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference("excercises");
         exerciseNode.addValueEventListener(new ValueEventListener() {
             @Override
@@ -136,7 +135,7 @@ public class MainFragmentHome extends Fragment {
 
     }
 
-    private void downloadMyWorkout() {
+    public void downloadMyWorkout() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.child("workout").addValueEventListener(new ValueEventListener() {
             @Override

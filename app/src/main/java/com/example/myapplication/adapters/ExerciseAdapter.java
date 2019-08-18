@@ -18,6 +18,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.activities.ExercisesActivity;
 import com.example.myapplication.activities.MainActivity;
 import com.example.myapplication.activities.SpecificExerciseActivity;
+import com.example.myapplication.activities.UserInfoActivity;
 import com.example.myapplication.model.Exercise;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,7 +31,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>  implements Filterable {
-    private String fragmentName = null;
+    private String parentName = null;
     List<Exercise> exercisesList;
     List<Exercise> filteredNameList;
     List<Exercise> originalExerciseList;
@@ -43,8 +44,8 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
         this.originalExerciseList = exercisesList;
     }
 
-    public ExerciseAdapter(Context context, List<Exercise> exercisesList, String fragmentName) {
-        this.fragmentName = fragmentName;
+    public ExerciseAdapter(Context context, List<Exercise> exercisesList, String parentName) {
+        this.parentName = parentName;
         this.context = context;
         this.exercisesList = exercisesList;
         this.originalExerciseList = exercisesList;
@@ -62,7 +63,7 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
     public void onBindViewHolder(@NonNull ExerciseViewHolder exerciseViewHolder, int i) {
         exerciseViewHolder.exerciseName.setText(exercisesList.get(i).getName());
 
-        if (fragmentName == null) {
+        if (parentName == null) {
             exerciseViewHolder.exerciseImage.setImageBitmap(exercisesList.get(i).getPreviewBitmap());
         } else {
 
@@ -152,8 +153,8 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
                     itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
-                            if (fragmentName.equals("home")) {
+                            //Different intents depending on the fragment/activity which called this adapter
+                            if (parentName.equals("home")) {
                                 //adapter called by main fragment
                                 MainActivity mainActivity = (MainActivity) context;
                                 Intent intent = new Intent(context, SpecificExerciseActivity.class);
@@ -161,6 +162,14 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
                                 Exercise exercise = exercisesList.get(getAdapterPosition());
                                 intent.putExtra("exercise", exercise);
                                 context.startActivity(intent);
+                            } else if (parentName.equals("userInfo")) {
+                                UserInfoActivity userInfoActivity = (UserInfoActivity) context;
+                                Intent intent = new Intent(context, SpecificExerciseActivity.class);
+                                //parcelable have size limit so i wont pass image bitmap with the exercise
+                                Exercise exercise = exercisesList.get(getAdapterPosition());
+                                intent.putExtra("exercise", exercise);
+                                context.startActivity(intent);
+
                             } else {
                                 //adapter called by specficmuscle fragment which on exercise activity
                                 ExercisesActivity exercisesActivity = (ExercisesActivity) context;

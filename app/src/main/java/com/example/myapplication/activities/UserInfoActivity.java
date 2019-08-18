@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -16,9 +18,11 @@ import android.widget.TextView;
 import com.bumptech.glide.RequestBuilder;
 import com.example.myapplication.R;
 import com.example.myapplication.UserInfoActivityViewModel;
+import com.example.myapplication.adapters.ExerciseAdapter;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.Workout;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.List;
 
@@ -30,6 +34,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserInfoActivity extends AppCompatActivity {
     private static final String TAG = "UserInfoActivityy";
+    private List<Exercise> exerciseListt;
+
     @BindView(R.id.explainExerciseTextview)
     TextView explainExerciseTextview;
 
@@ -69,6 +75,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private User user;
     private Boolean isSubscribed;
     private Observer<Boolean> observer;
+    private ExerciseAdapter exerciseAdapter;
 
     @OnClick(R.id.followFab)
     void follow() {
@@ -78,13 +85,19 @@ public class UserInfoActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable String s) {
                 Log.i(TAG, "fabClick: " + s);
-                updateFab2(s);
+                updateFab(s);
             }
         });
 
     }
 
-    private void updateFab2(String s) {
+    @OnClick(R.id.cardView)
+    void showExerciseList() {
+
+        setupExerciseRecycler();
+    }
+
+    private void updateFab(String s) {
         //change photo and color of fab depending on follow state
         if (s.equals("followdone")) {
             followFab.setImageResource(R.drawable.ic_following);
@@ -107,12 +120,14 @@ public class UserInfoActivity extends AppCompatActivity {
             user = (User) getIntent().getParcelableExtra("user");
 
             showDataInView();
-
-            //
             mViewModel = ViewModelProviders.of(this).get(UserInfoActivityViewModel.class);
+            //
             mViewModel.getExercises(user.getId()).observe(this, new Observer<List<Exercise>>() {
+
+
                 @Override
                 public void onChanged(@Nullable List<Exercise> exerciseList) {
+                    exerciseListt = exerciseList;
                     updateProfileExercisesView(exerciseList);
                 }
             });
@@ -128,6 +143,7 @@ public class UserInfoActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(@Nullable List<Workout> workoutList) {
                     updateProfileWorkoutView(workoutList);
+
                 }
             });
             //
@@ -141,6 +157,18 @@ public class UserInfoActivity extends AppCompatActivity {
             };
             mViewModel.getFollowState(user.getId()).observe(this, observer);
 
+        }
+    }
+
+    private void setupExerciseRecycler() {
+        if (exerciseListt.size() == 0) {
+            FancyToast.makeText(this, "This user didn't create any custom exercises yet.", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
+        } else {
+            RecyclerView recyclerView = findViewById(R.id.exerciseRecycler);
+            exerciseAdapter = new ExerciseAdapter(this, exerciseListt, "userInfo");
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setAdapter(exerciseAdapter);
         }
     }
 

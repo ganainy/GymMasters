@@ -50,6 +50,7 @@ public class UserInfoActivityRepository {
                     for (DataSnapshot ds : dsBig.getChildren()) {
                         if (ds.child("creatorId").getValue().equals(profileId)) {
                             exercise.setExecution(ds.child("execution").getValue().toString());
+                            exercise.setName(ds.child("name").getValue().toString());
                             exercise.setPreparation(ds.child("preparation").getValue().toString());
                             exercise.setMechanism(ds.child("mechanism").getValue().toString());
                             exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
@@ -221,6 +222,8 @@ public class UserInfoActivityRepository {
         Log.i(TAG, "followUnfollow: " + load.getValue());
         return load;
     }
+
+
 }
 
 
