@@ -75,7 +75,7 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
 
         } else {
         mRepo = UserInfoActivityRepository.getInstance();
-        notifyString = mRepo.followUnfollow(isSubscribed, profileId);
+            notifyString = mRepo.followUnfollow(isSubscribed, profileId);
         }
         return notifyString;
     }

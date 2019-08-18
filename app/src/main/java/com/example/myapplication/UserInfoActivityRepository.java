@@ -131,6 +131,7 @@ public class UserInfoActivityRepository {
 
 
     public MutableLiveData<Boolean> getFollowState(String profileId) {
+
         Log.i(TAG, "getFollowState: ");
         final MutableLiveData<Boolean> load = new MutableLiveData<>();
 
@@ -178,11 +179,15 @@ public class UserInfoActivityRepository {
             }
         });
 
-        Log.i(TAG, "getFollowState: " + load.getValue());
+
         return load;
     }
 
     public MutableLiveData<String> followUnfollow(Boolean isSubscribed, String profileId) {
+        //
+
+        //
+
         Log.i(TAG, "followUnfollow: ");
         final MutableLiveData<String> load = new MutableLiveData<>();
 
@@ -198,14 +203,12 @@ public class UserInfoActivityRepository {
                             String key = dataSnapshot1.getKey();
                             profile.child(key).removeValue();
                             test = "unfollowdone";
+                            //decrease followers count for this user by 1
                             break;
                         }
-
                     }
                     load.setValue(test);
-
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                 }
@@ -224,6 +227,52 @@ public class UserInfoActivityRepository {
     }
 
 
+
+
+  /*  private void test()
+    {
+        //add logged in user id in the account of the clicked user
+        final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users").child(profileId);
+        profile.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("followersUID")) {
+                    //selected profile has list of followers we will check in it for the logged in user id
+                    profile.child("followersUID").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                                if (dataSnapshot1.getValue().equals(MyConstant.loggedInUserId)) {
+                                    //this means logged in user already subscribed
+                                    isSubscribed = true;
+                                    break;
+
+                                } else {
+                                    isSubscribed = false;
+                                }
+
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                } else {
+                    //selected profile has 0 followers
+                    isSubscribed = false;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }*/
 }
 
 

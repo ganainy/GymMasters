@@ -19,6 +19,7 @@ import com.bumptech.glide.RequestBuilder;
 import com.example.myapplication.R;
 import com.example.myapplication.UserInfoActivityViewModel;
 import com.example.myapplication.adapters.ExerciseAdapter;
+import com.example.myapplication.adapters.WorkoutAdapter;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.Workout;
@@ -72,10 +73,14 @@ public class UserInfoActivity extends AppCompatActivity {
 
     @BindView(R.id.ratingTextView)
     TextView ratingTextView;
+
+
     private User user;
     private Boolean isSubscribed;
     private Observer<Boolean> observer;
     private ExerciseAdapter exerciseAdapter;
+    private List<Workout> workoutListt;
+    private WorkoutAdapter workoutAdapter;
 
     @OnClick(R.id.followFab)
     void follow() {
@@ -86,6 +91,7 @@ public class UserInfoActivity extends AppCompatActivity {
             public void onChanged(@Nullable String s) {
                 Log.i(TAG, "fabClick: " + s);
                 updateFab(s);
+
             }
         });
 
@@ -93,9 +99,15 @@ public class UserInfoActivity extends AppCompatActivity {
 
     @OnClick(R.id.cardView)
     void showExerciseList() {
-
         setupExerciseRecycler();
     }
+
+    @OnClick(R.id.cardView2)
+    void showWorkoutList() {
+        setupWorkoutRecycler();
+    }
+
+
 
     private void updateFab(String s) {
         //change photo and color of fab depending on follow state
@@ -143,6 +155,7 @@ public class UserInfoActivity extends AppCompatActivity {
                 @Override
                 public void onChanged(@Nullable List<Workout> workoutList) {
                     updateProfileWorkoutView(workoutList);
+                    workoutListt = workoutList;
 
                 }
             });
@@ -170,6 +183,21 @@ public class UserInfoActivity extends AppCompatActivity {
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setAdapter(exerciseAdapter);
         }
+    }
+
+    private void setupWorkoutRecycler() {
+
+        if (workoutListt.size() == 0) {
+            FancyToast.makeText(this, "This user didn't create any custom workouts yet.", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
+        } else {
+            RecyclerView recyclerView = findViewById(R.id.workoutRecycler);
+            workoutAdapter = new WorkoutAdapter(this, "userInfo");
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(linearLayoutManager);
+            workoutAdapter.setDataSource(workoutListt);
+            recyclerView.setAdapter(workoutAdapter);
+        }
+
     }
 
     private void updateFab(Boolean aBoolean) {

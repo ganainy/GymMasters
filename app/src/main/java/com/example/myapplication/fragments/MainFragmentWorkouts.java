@@ -83,7 +83,7 @@ public class MainFragmentWorkouts extends Fragment {
 
     private void setupRecycler() {
         RecyclerView recyclerView = view.findViewById(R.id.workoutRecyclerView);
-        workoutAdapter = new WorkoutAdapter(getActivity());
+        workoutAdapter = new WorkoutAdapter(getActivity(), "fragmentWorkouts");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         workoutAdapter.setDataSource(workoutList);

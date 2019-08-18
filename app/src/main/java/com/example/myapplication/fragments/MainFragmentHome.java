@@ -168,7 +168,7 @@ public class MainFragmentHome extends Fragment {
             FancyToast.makeText(getActivity(), "You didn't create any custom workouts yet.", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
         } else {
             RecyclerView recyclerView = view.findViewById(R.id.customWorkoutRecycler);
-            workoutAdapter = new WorkoutAdapter(getActivity());
+            workoutAdapter = new WorkoutAdapter(getActivity(), "fragmentHome");
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
             recyclerView.setLayoutManager(linearLayoutManager);
             workoutAdapter.setDataSource(myCustomWorkoutList);

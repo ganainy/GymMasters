@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.activities.MainActivity;
 import com.example.myapplication.activities.SpecificWorkoutActivity;
+import com.example.myapplication.activities.UserInfoActivity;
 import com.example.myapplication.model.Workout;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,11 +28,13 @@ import java.util.List;
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder> {
     private static final String TAG = "WorkoutAdapter";
     final Context context;
+    private final String parent;
     private List<Workout> workoutList;
 
 
-    public WorkoutAdapter(Context context) {
+    public WorkoutAdapter(Context context, String parent) {
         this.context = context;
+        this.parent = parent;
     }
 
     @NonNull
@@ -97,11 +100,18 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    MainActivity mainActivity = (MainActivity) context;
-                    Intent intent = new Intent(WorkoutAdapter.this.context, SpecificWorkoutActivity.class);
-                    intent.putExtra("workout", workoutList.get(getAdapterPosition()));
-                    mainActivity.startActivity(intent);
+                    if (parent.equals("userInfo")) {
+                        UserInfoActivity userInfoActivity = (UserInfoActivity) context;
+                        Intent intent = new Intent(WorkoutAdapter.this.context, SpecificWorkoutActivity.class);
+                        intent.putExtra("workout", workoutList.get(getAdapterPosition()));
+                        userInfoActivity.startActivity(intent);
 
+                    } else if (parent.equals("fragmentWorkouts") | parent.equals("fragmentHome")) {
+                        MainActivity mainActivity = (MainActivity) context;
+                        Intent intent = new Intent(WorkoutAdapter.this.context, SpecificWorkoutActivity.class);
+                        intent.putExtra("workout", workoutList.get(getAdapterPosition()));
+                        mainActivity.startActivity(intent);
+                    }
 
                 }
             });
