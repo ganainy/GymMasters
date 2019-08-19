@@ -183,96 +183,29 @@ public class UserInfoActivityRepository {
         return load;
     }
 
-    public MutableLiveData<String> followUnfollow(Boolean isSubscribed, String profileId) {
-        //
-
-        //
-
-        Log.i(TAG, "followUnfollow: ");
-        final MutableLiveData<String> load = new MutableLiveData<>();
-
-        if (isSubscribed) {
-            //get key of the node where logged in user id is saved and delete it
-            final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
-                    .child(profileId).child("followersUID");
-            profile.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                        if (dataSnapshot1.getValue().equals(MyConstant.loggedInUserId)) {
-                            String key = dataSnapshot1.getKey();
-                            profile.child(key).removeValue();
-                            test = "unfollowdone";
-                            //decrease followers count for this user by 1
-                            break;
-                        }
-                    }
-                    load.setValue(test);
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
-
-        } else {
-            //subscribe
-            final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
-                    .child(profileId).child("followersUID");
-            profile.push().setValue(MyConstant.loggedInUserId);
-            test = "followdone";
-            load.setValue(test);
-        }
-        Log.i(TAG, "followUnfollow: " + load.getValue());
-        return load;
-    }
-
-
-
-
-  /*  private void test()
+    public MutableLiveData<String> getFollowersCount(String prfileId)
     {
-        //add logged in user id in the account of the clicked user
-        final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users").child(profileId);
-        profile.addValueEventListener(new ValueEventListener() {
+        final MutableLiveData<String> load = new MutableLiveData<>();
+        FirebaseDatabase.getInstance().getReference("users").child(prfileId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 if (dataSnapshot.hasChild("followersUID")) {
-                    //selected profile has list of followers we will check in it for the logged in user id
-                    profile.child("followersUID").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                if (dataSnapshot1.getValue().equals(MyConstant.loggedInUserId)) {
-                                    //this means logged in user already subscribed
-                                    isSubscribed = true;
-                                    break;
-
-                                } else {
-                                    isSubscribed = false;
-                                }
-
-
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
+                    load.setValue(String.valueOf(dataSnapshot.child("followersUID").getChildrenCount()));
                 } else {
-                    //selected profile has 0 followers
-                    isSubscribed = false;
+                    load.setValue("0");
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
-    }*/
+
+
+        return load;
+    }
+
 }
 
 

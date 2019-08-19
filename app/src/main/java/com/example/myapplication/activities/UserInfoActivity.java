@@ -150,8 +150,9 @@ public class UserInfoActivity extends AppCompatActivity {
             user = (User) getIntent().getParcelableExtra("user");
 
             showDataInView();
+
             mViewModel = ViewModelProviders.of(this).get(UserInfoActivityViewModel.class);
-            //
+            //download user exercises
             mViewModel.getExercises(user.getId()).observe(this, new Observer<List<Exercise>>() {
 
 
@@ -161,14 +162,14 @@ public class UserInfoActivity extends AppCompatActivity {
                     updateProfileExercisesView(exerciseList);
                 }
             });
-            //
+            //download user profile photo
             mViewModel.getUserPhoto(user.getPhoto()).observe(this, new Observer<RequestBuilder<Drawable>>() {
                 @Override
                 public void onChanged(@Nullable RequestBuilder<Drawable> drawableRequestBuilder) {
                     drawableRequestBuilder.into(profile_image);
                 }
             });
-            //
+            //get workouts list
             mViewModel.getWorkouts(user.getId()).observe(this, new Observer<List<Workout>>() {
                 @Override
                 public void onChanged(@Nullable List<Workout> workoutList) {
@@ -177,7 +178,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
                 }
             });
-            //
+            //get follow state first time we open activity
             observer = new Observer<Boolean>() {
                 @Override
                 public void onChanged(@Nullable Boolean aBoolean) {
@@ -187,6 +188,14 @@ public class UserInfoActivity extends AppCompatActivity {
                 }
             };
             mViewModel.getFollowState(user.getId()).observe(this, observer);
+            //get followers count
+            mViewModel.getFollowersCount(user.getId()).observe(this, new Observer<String>() {
+                @Override
+                public void onChanged(@Nullable String s) {
+                    followersTextView.setText(s);
+                }
+            });
+
 
         }
     }

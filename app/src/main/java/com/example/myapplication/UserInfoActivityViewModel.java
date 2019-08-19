@@ -21,7 +21,7 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
     private MutableLiveData<RequestBuilder<Drawable>> profilePhoto;
     private MutableLiveData<List<Workout>> workoutList;
     private MutableLiveData<Boolean> subscribeState;
-    private MutableLiveData<String> notifyString;
+    private MutableLiveData<String> followersCount;
 
     public UserInfoActivityViewModel(@NonNull Application application) {
         super(application);
@@ -70,15 +70,14 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
         return subscribeState;
     }
 
-    public LiveData<String> followUnfollow(Boolean isSubscribed, String profileId) {
-        if (notifyString != null) {
+
+    public LiveData<String> getFollowersCount(String profileId) {
+        if (followersCount != null) {
 
         } else {
-        mRepo = UserInfoActivityRepository.getInstance();
-            notifyString = mRepo.followUnfollow(isSubscribed, profileId);
+            mRepo = UserInfoActivityRepository.getInstance();
+            followersCount = mRepo.getFollowersCount(profileId);
         }
-        return notifyString;
+        return followersCount;
     }
-
-
 }
