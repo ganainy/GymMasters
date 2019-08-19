@@ -236,6 +236,7 @@ public class UserInfoActivityRepository {
 
 
     public MutableLiveData<Integer> getRatingsAvg(String profileId) {
+
         final MutableLiveData<Integer> load = new MutableLiveData<>();
         final DatabaseReference users = FirebaseDatabase.getInstance().getReference("users").child(profileId);
         users.addValueEventListener(new ValueEventListener() {

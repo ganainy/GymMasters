@@ -21,6 +21,11 @@ import com.example.myapplication.activities.UserInfoActivity;
 import com.example.myapplication.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -31,12 +36,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-//todo show right number of rating and followers
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> implements Filterable {
     private static final String TAG = "UserAdapter";
     private final List<User> userList;
     private List<User> userListFull;
     private final Context context;
+    private long sumRatings;
+    private int sumRaters;
 
     public UserAdapter(Context context, List<User> userList) {
         this.context = context;
@@ -55,9 +61,69 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder userViewHolder, int i) {
         User currentUser = userList.get(i);
-        userViewHolder.followersTextView.setText(currentUser.getFollowers() + " Followers");
         userViewHolder.nameTextView.setText(currentUser.getName());
         downloadAndShowUserImage(userViewHolder, currentUser.getPhoto());
+
+        getRatingAndFollowers(userViewHolder, i);
+
+
+    }
+
+
+    private void getRatingAndFollowers(final UserViewHolder userViewHolder, int i) {
+
+        //show followers count
+        FirebaseDatabase.getInstance().getReference("users").child(userList.get(i).getId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.hasChild("followersUID")) {
+                    userViewHolder.followersTextView.setText(String.valueOf(dataSnapshot.child("followersUID").getChildrenCount()));
+                } else {
+                    userViewHolder.followersTextView.setText("0");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        //show avg rating on rating bar
+        final DatabaseReference users = FirebaseDatabase.getInstance().getReference("users").child(userList.get(i).getId());
+        users.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("Ratings")) {
+                    users.child("Ratings").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            sumRatings = 0;
+                            sumRaters = 0;
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                sumRatings += (long) ds.getValue();
+                                sumRaters++;
+                            }
+                            userViewHolder.ratingBar.setRating(sumRatings / sumRaters);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                } else {
+                    userViewHolder.ratingBar.setRating(0);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        //
+
 
     }
 
