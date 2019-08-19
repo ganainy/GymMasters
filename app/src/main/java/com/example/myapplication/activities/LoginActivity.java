@@ -1,21 +1,18 @@
 package com.example.myapplication.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
-
-
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -86,6 +83,8 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             constraintLayout.setVisibility(View.GONE);
+                            //set loggedInUserId value which will be used later
+                            MyConstant.loggedInUserId = mAuth.getUid();
                             FancyToast.makeText(LoginActivity.this,"Login successful.",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,false).show();
                             startActivity(new Intent(LoginActivity.this,MainActivity.class));
                         } else {
@@ -97,7 +96,6 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
-
 
 
     }

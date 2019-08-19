@@ -78,9 +78,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 if (dataSnapshot.hasChild("followersUID")) {
-                    userViewHolder.followersTextView.setText(String.valueOf(dataSnapshot.child("followersUID").getChildrenCount()));
+                    userViewHolder.followersTextView.setText(dataSnapshot.child("followersUID").getChildrenCount() + " Followers");
                 } else {
-                    userViewHolder.followersTextView.setText("0");
+                    userViewHolder.followersTextView.setText("0 Followers");
                 }
             }
 

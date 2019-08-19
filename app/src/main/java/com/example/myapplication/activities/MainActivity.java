@@ -338,7 +338,7 @@ public class MainActivity extends AppCompatActivity
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                         public void onClick(DialogInterface arg0, int arg1) {
-                            //  MainActivity.super.onBackPressed();
+                            // Finish this activity as well as all activities immediately below it
                             finishAffinity();
                         }
                     }).create().show();
