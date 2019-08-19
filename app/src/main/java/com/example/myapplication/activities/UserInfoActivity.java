@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestBuilder;
+import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
 import com.example.myapplication.UserInfoActivityViewModel;
 import com.example.myapplication.adapters.ExerciseAdapter;
@@ -23,6 +25,11 @@ import com.example.myapplication.adapters.WorkoutAdapter;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.Workout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.List;
@@ -85,15 +92,37 @@ public class UserInfoActivity extends AppCompatActivity {
     @OnClick(R.id.followFab)
     void follow() {
         mViewModel.getFollowState(user.getId()).removeObserver(observer);
-        //todo fix follow issue (can't follow then unfollow without leaving activity and coming back and vice-versa )
-        mViewModel.followUnfollow(isSubscribed, user.getId()).observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                Log.i(TAG, "fabClick: " + s);
-                updateFab(s);
 
-            }
-        });
+        if (!isSubscribed) {
+            final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
+                    .child(user.getId()).child("followersUID");
+            profile.push().setValue(MyConstant.loggedInUserId);
+            isSubscribed = true;
+            updateFab(isSubscribed);
+        } else {
+            final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
+                    .child(user.getId()).child("followersUID");
+            profile.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren())
+                        if (ds.getValue().equals(MyConstant.loggedInUserId)) {
+                            Log.i(TAG, "onDataChange: sa7");
+                            String key = ds.getKey();
+                            profile.child(key).removeValue();
+                            //decrease followers count for this user by 1
+                        }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            isSubscribed = false;
+            updateFab(isSubscribed);
+        }
 
     }
 
@@ -109,17 +138,6 @@ public class UserInfoActivity extends AppCompatActivity {
 
 
 
-    private void updateFab(String s) {
-        //change photo and color of fab depending on follow state
-        if (s.equals("followdone")) {
-            followFab.setImageResource(R.drawable.ic_following);
-            followFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#98FB98")));
-        } else if (s.equals("unfollowdone")) {
-            followFab.setImageResource(R.drawable.ic_follow);
-            followFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1E90FF")));
-
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
