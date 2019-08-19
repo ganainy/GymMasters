@@ -2,9 +2,6 @@ package com.example.myapplication.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+//todo show right number of rating and followers
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> implements Filterable {
     private static final String TAG = "UserAdapter";
     private final List<User> userList;
@@ -59,14 +57,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         User currentUser = userList.get(i);
         userViewHolder.followersTextView.setText(currentUser.getFollowers() + " Followers");
         userViewHolder.nameTextView.setText(currentUser.getName());
-        if (currentUser.getRating().equals("-1")) {
-            userViewHolder.ratingBar.setVisibility(View.GONE);
-        } else {
-            userViewHolder.ratingBar.setRating(Integer.valueOf(currentUser.getRating()));
-            //change star color to blue
-            LayerDrawable stars = (LayerDrawable) userViewHolder.ratingBar.getProgressDrawable();
-            stars.getDrawable(2).setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP);
-        }
         downloadAndShowUserImage(userViewHolder, currentUser.getPhoto());
 
     }

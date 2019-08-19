@@ -34,11 +34,10 @@ public class MainActivityRepository {
                     profilePictureId=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("photo").getValue().toString();
                     name=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("name").getValue().toString();
                     email=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("email").getValue().toString();
-                    rating=dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("rating").getValue().toString();
                     id = dataSnapshot.child(mAuth.getCurrentUser().getUid()).child("id").getValue().toString();
 
 
-                    firebaseCallback.onCallback(new User(id, name, email, rating, profilePictureId));
+                    firebaseCallback.onCallback(new User(id, name, email, profilePictureId));
                 }
 
                 @Override

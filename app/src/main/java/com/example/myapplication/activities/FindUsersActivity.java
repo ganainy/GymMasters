@@ -48,7 +48,6 @@ public class FindUsersActivity extends AppCompatActivity {
                         user.setName(ds.child("name").getValue().toString());
                         user.setPhoto(ds.child("photo").getValue().toString());
                         user.setFollowers(ds.child("followers").getValue().toString());
-                        user.setRating(ds.child("rating").getValue().toString());
                         user.setFollowing(ds.child("following").getValue().toString());
                         user.setId(ds.child("id").getValue().toString());
                         userList.add(user);

@@ -22,17 +22,20 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
     private MutableLiveData<List<Workout>> workoutList;
     private MutableLiveData<Boolean> subscribeState;
     private MutableLiveData<String> followersCount;
+    private MutableLiveData<Integer> ratingsAvg;
+    private MutableLiveData<Long> myRate;
 
     public UserInfoActivityViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
+        mRepo = UserInfoActivityRepository.getInstance();
     }
 
 
     public LiveData<List<Exercise>> getExercises(String profileId) {
         if (exercisesList != null) {
         } else {
-            mRepo = UserInfoActivityRepository.getInstance();
+
             exercisesList = mRepo.getExercises(profileId);
         }
         return exercisesList;
@@ -41,7 +44,6 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
     public LiveData<List<Workout>> getWorkouts(String profileId) {
         if (workoutList != null) {
         } else {
-            mRepo = UserInfoActivityRepository.getInstance();
             workoutList = mRepo.getWorkouts(profileId);
         }
         return workoutList;
@@ -53,7 +55,6 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
         if (profilePhoto != null) {
 
         } else {
-            mRepo = UserInfoActivityRepository.getInstance();
             profilePhoto = mRepo.downloadUserPhoto(application, photo);
         }
         return profilePhoto;
@@ -64,8 +65,7 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
         if (subscribeState != null) {
 
         } else {
-            mRepo = UserInfoActivityRepository.getInstance();
-        subscribeState = mRepo.getFollowState(profileId);
+            subscribeState = mRepo.getFollowState(profileId);
         }
         return subscribeState;
     }
@@ -75,9 +75,33 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
         if (followersCount != null) {
 
         } else {
-            mRepo = UserInfoActivityRepository.getInstance();
             followersCount = mRepo.getFollowersCount(profileId);
         }
         return followersCount;
+    }
+
+
+    public LiveData<Integer> getRatingsAvg(String profileId) {
+        if (ratingsAvg != null) {
+
+        } else {
+            ratingsAvg = mRepo.getRatingsAvg(profileId);
+        }
+        return ratingsAvg;
+    }
+
+
+    public LiveData<Long> getMyRate(String profileId) {
+        if (myRate != null) {
+
+        } else {
+            myRate = mRepo.getMyRate(profileId);
+        }
+        return myRate;
+    }
+
+
+    public void setRate(Integer rating, String profileId) {
+        mRepo.setRate(rating, profileId);
     }
 }

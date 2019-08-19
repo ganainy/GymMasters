@@ -30,6 +30,8 @@ public class UserInfoActivityRepository {
     private List<Workout> workoutList = new ArrayList<>();
     private Boolean isSubscribed;
     private String test;
+    private int sumRatings;
+    private int sumRaters;
 
     public static UserInfoActivityRepository getInstance() {
         if (instance == null) {
@@ -132,7 +134,7 @@ public class UserInfoActivityRepository {
 
     public MutableLiveData<Boolean> getFollowState(String profileId) {
 
-        Log.i(TAG, "getFollowState: ");
+
         final MutableLiveData<Boolean> load = new MutableLiveData<>();
 
         //add logged in user id in the account of the clicked user
@@ -183,10 +185,9 @@ public class UserInfoActivityRepository {
         return load;
     }
 
-    public MutableLiveData<String> getFollowersCount(String prfileId)
-    {
+    public MutableLiveData<String> getFollowersCount(String profileId) {
         final MutableLiveData<String> load = new MutableLiveData<>();
-        FirebaseDatabase.getInstance().getReference("users").child(prfileId).addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference("users").child(profileId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -196,6 +197,7 @@ public class UserInfoActivityRepository {
                     load.setValue("0");
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -206,6 +208,77 @@ public class UserInfoActivityRepository {
         return load;
     }
 
+
+    public MutableLiveData<Long> getMyRate(String profileId) {
+        final MutableLiveData<Long> load = new MutableLiveData<>();
+
+
+        DatabaseReference ratings = FirebaseDatabase.getInstance().getReference("users").child(profileId).child("Ratings");
+
+        ratings.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(MyConstant.loggedInUserId)) {
+                    load.setValue((long) dataSnapshot.child(MyConstant.loggedInUserId).getValue());
+                } else {
+                    load.setValue((long) 0);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return load;
+
+    }
+
+
+    public MutableLiveData<Integer> getRatingsAvg(String profileId) {
+        final MutableLiveData<Integer> load = new MutableLiveData<>();
+        final DatabaseReference users = FirebaseDatabase.getInstance().getReference("users").child(profileId);
+        users.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("Ratings")) {
+                    users.child("Ratings").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            sumRatings = 0;
+                            sumRaters = 0;
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                sumRatings += (long) ds.getValue();
+                                sumRaters++;
+                            }
+                            load.setValue(sumRatings / sumRaters);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                } else {
+                    load.setValue(0);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        return load;
+    }
+
+
+    public void setRate(Integer rating, String profileId) {
+        FirebaseDatabase.getInstance().getReference("users").child(profileId).child("Ratings").child(MyConstant.loggedInUserId)
+                .setValue(rating);
+    }
 }
 
 

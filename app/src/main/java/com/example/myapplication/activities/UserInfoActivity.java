@@ -12,8 +12,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestBuilder;
@@ -81,6 +81,8 @@ public class UserInfoActivity extends AppCompatActivity {
     @BindView(R.id.ratingTextView)
     TextView ratingTextView;
 
+    @BindView(R.id.ratingBar)
+    RatingBar ratingBar;
 
     private User user;
     private Boolean isSubscribed;
@@ -107,7 +109,7 @@ public class UserInfoActivity extends AppCompatActivity {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot ds : dataSnapshot.getChildren())
                         if (ds.getValue().equals(MyConstant.loggedInUserId)) {
-                            Log.i(TAG, "onDataChange: sa7");
+
                             String key = ds.getKey();
                             profile.child(key).removeValue();
                             //decrease followers count for this user by 1
@@ -184,7 +186,7 @@ public class UserInfoActivity extends AppCompatActivity {
                 public void onChanged(@Nullable Boolean aBoolean) {
                     updateFab(aBoolean);
                     isSubscribed = aBoolean;
-                    Log.i(TAG, "onChangedoncreate: " + aBoolean);
+
                 }
             };
             mViewModel.getFollowState(user.getId()).observe(this, observer);
@@ -195,9 +197,38 @@ public class UserInfoActivity extends AppCompatActivity {
                     followersTextView.setText(s);
                 }
             });
+            //get rating average
+            mViewModel.getRatingsAvg(user.getId()).observe(this, new Observer<Integer>() {
+                @Override
+                public void onChanged(@Nullable Integer integer) {
+
+                    ratingTextView.setText(integer + "/5");
+                }
+            });
+
+            //rate user
+            rate();
+
+            //get my rating and show it on rating bar
+            mViewModel.getMyRate(user.getId()).observe(this, new Observer<Long>() {
+                @Override
+                public void onChanged(@Nullable Long aLong) {
+                    ratingBar.setRating(aLong);
+                }
+            });
 
 
         }
+    }
+
+    private void rate() {
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+
+                mViewModel.setRate((int) v, user.getId());
+            }
+        });
     }
 
     private void setupExerciseRecycler() {
@@ -264,11 +295,7 @@ public class UserInfoActivity extends AppCompatActivity {
     }
     private void showDataInView() {
         textViewName.setText(user.getName());
-        followersTextView.setText(user.getFollowers());
         followingTextView.setText(user.getFollowing());
-        if (user.getRating().equals("-1"))
-            ratingTextView.setText("No rates yet");
-        else
-            ratingTextView.setText(user.getRating() + "/5");
+
     }
 }

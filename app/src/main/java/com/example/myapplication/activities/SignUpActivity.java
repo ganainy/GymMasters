@@ -139,11 +139,11 @@ public class SignUpActivity extends AppCompatActivity {
         {
             //uploadImage to firebase storage
             uploadProfilePic(imageUri);
-            newUser = new User(uid, userName, email, "-1", imageUri.getLastPathSegment());
+            newUser = new User(uid, userName, email, imageUri.getLastPathSegment());
         }
         else
         {
-            newUser = new User(uid, userName, email, "-1", "-1");
+            newUser = new User(uid, userName, email, "-1");
         }
 
         myRef.child(uid).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
