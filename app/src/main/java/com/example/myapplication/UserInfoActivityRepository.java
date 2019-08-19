@@ -280,6 +280,30 @@ public class UserInfoActivityRepository {
         FirebaseDatabase.getInstance().getReference("users").child(profileId).child("Ratings").child(MyConstant.loggedInUserId)
                 .setValue(rating);
     }
+
+    public MutableLiveData<String> getFollowingCount(String profileId) {
+
+        final MutableLiveData<String> load = new MutableLiveData<>();
+        FirebaseDatabase.getInstance().getReference("users").child(profileId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.hasChild("followingUID")) {
+                    load.setValue(String.valueOf(dataSnapshot.child("followingUID").getChildrenCount()));
+                } else {
+                    load.setValue("0");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        return load;
+    }
 }
 
 

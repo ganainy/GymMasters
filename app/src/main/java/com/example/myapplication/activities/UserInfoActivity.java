@@ -96,9 +96,13 @@ public class UserInfoActivity extends AppCompatActivity {
         mViewModel.getFollowState(user.getId()).removeObserver(observer);
 
         if (!isSubscribed) {
+            //add id of logged in user in followersUID in profile account
             final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
                     .child(user.getId()).child("followersUID");
             profile.push().setValue(MyConstant.loggedInUserId);
+            //add id of profile account in followingUID of logged in account
+            FirebaseDatabase.getInstance().getReference("users").child(MyConstant.loggedInUserId).child("followingUID")
+                    .push().setValue(user.getId());
             isSubscribed = true;
             updateFab(isSubscribed);
         } else {
@@ -121,6 +125,26 @@ public class UserInfoActivity extends AppCompatActivity {
 
                 }
             });
+            //
+            final DatabaseReference followingUID = FirebaseDatabase.getInstance().
+                    getReference("users").child(MyConstant.loggedInUserId).child("followingUID");
+            followingUID.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        if (ds.getValue().equals(user.getId())) {
+                            String key = ds.getKey();
+                            followingUID.child(key).removeValue();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+            //
 
             isSubscribed = false;
             updateFab(isSubscribed);
@@ -205,6 +229,13 @@ public class UserInfoActivity extends AppCompatActivity {
                     ratingTextView.setText(integer + "/5");
                 }
             });
+            //get following count
+            mViewModel.getFollowingCount(user.getId()).observe(this, new Observer<String>() {
+                @Override
+                public void onChanged(@Nullable String s) {
+                    followingTextView.setText(s);
+                }
+            });
 
             //rate user
             rate();
@@ -230,6 +261,7 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void setupExerciseRecycler() {
         if (exerciseListt.size() == 0) {

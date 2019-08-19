@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.MainActivityViewModel;
+import com.example.myapplication.PostsActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.ViewPagerAdapterCreateWorkout;
 import com.example.myapplication.adapters.ViewPagerAdapterMainActivity;
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity
 
     private void handlePostsClick() {
 
+        startActivity(new Intent(MainActivity.this, PostsActivity.class));
     }
 
     private void handleFollowedClick() {
