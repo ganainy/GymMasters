@@ -261,7 +261,6 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_find) {
-            //todo add features of navigation menu items
         } else if (id == R.id.nav_followers) {
 
         } else if (id == R.id.nav_following) {

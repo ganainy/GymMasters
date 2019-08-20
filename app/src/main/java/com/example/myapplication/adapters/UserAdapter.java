@@ -202,7 +202,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //todo open user full profile with his workouts and exercises
                     Intent intent = new Intent(context, UserInfoActivity.class);
                     intent.putExtra("user", userList.get(getAdapterPosition()));
                     FindUsersActivity findUsersActivity = (FindUsersActivity) context;

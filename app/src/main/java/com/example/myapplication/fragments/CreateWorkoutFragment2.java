@@ -66,7 +66,7 @@ public class CreateWorkoutFragment2 extends Fragment {
 
     }
 
-    private void uploadWorkout() {//todo only add workout to mainlist if creatorId IS MY ID
+    private void uploadWorkout() {
         //save user id with the workout
         workout.setCreatorId(MyConstant.loggedInUserId);
         DatabaseReference workoutRef = FirebaseDatabase.getInstance().getReference("workout");

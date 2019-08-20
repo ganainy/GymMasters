@@ -142,7 +142,6 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        //todo save exercise with sets and reps in workout
                         addToExercisesOfWorkoutList(adapterPosition);
 
                     }

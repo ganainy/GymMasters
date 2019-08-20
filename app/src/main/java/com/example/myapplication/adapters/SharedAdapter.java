@@ -27,7 +27,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -124,11 +123,8 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private String formatDate(String mDate) {
-        //todo fix date
-        long foo = Long.parseLong(mDate);
-        Date date = new Date(foo);
-        DateFormat formatter = new SimpleDateFormat("yyyy-mm-dd hh:mm");
-        return (formatter.format(date));
+        Date date = new Date(Long.parseLong(mDate));
+        return DateFormat.getDateInstance().format(date);
     }
 
     private interface CallbackInterface {

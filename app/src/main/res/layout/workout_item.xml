@@ -3,101 +3,113 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="150dp"
     android:layout_margin="8dp"
 
-    android:elevation="10dp"
-    app:cardCornerRadius="8dp">
+    android:elevation="10dp">
 
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/round_bg">
+        android:background="@color/blue">
 
         <ImageView
             android:id="@+id/workoutImageView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:alpha=".5"
+            android:background="@color/text_shadow"
+            app:layout_constraintBottom_toBottomOf="@+id/workoutImageView"
+            tools:layout_editor_absoluteX="0dp" />
+
         <TextView
             android:id="@+id/textViewWorkoutName"
             style="@style/myTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
             android:shadowColor="@color/text_shadow"
             android:shadowDx="-1"
             android:shadowDy="-1"
             android:shadowRadius="1"
             android:textAllCaps="true"
             android:textColor="@color/light_font"
-            android:textSize="32sp"
+            android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageView2"
+            app:layout_constraintStart_toStartOf="@+id/imageView9"
+            app:layout_constraintTop_toTopOf="@+id/imageView9"
             tools:text="workout name" />
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="45dp"
-            android:layout_height="53dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_width="30dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
             android:src="@drawable/dumbell_white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewWorkoutName" />
+            app:layout_constraintEnd_toStartOf="@+id/textViewNumberOfExercises"
+            app:layout_constraintTop_toTopOf="@+id/imageView9" />
 
         <TextView
             android:id="@+id/textViewNumberOfExercises"
             style="@style/myTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:shadowColor="@color/text_shadow"
             android:shadowDx="-1"
             android:shadowDy="-1"
             android:shadowRadius="1"
             android:textColor="@color/light_font"
+            android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="@+id/imageView"
+            app:layout_constraintEnd_toEndOf="@+id/imageView9"
+            app:layout_constraintTop_toTopOf="@+id/imageView9"
             tools:text="10" />
 
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="45dp"
-            android:layout_height="53dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:src="@drawable/ic_access_time_black_24dp"
+            android:layout_width="30dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="4dp"
 
-            app:layout_constraintEnd_toStartOf="@+id/textViewReps"
-            app:layout_constraintTop_toBottomOf="@+id/textViewWorkoutName" />
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_access_time_black_24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView9"
+            app:layout_constraintEnd_toStartOf="@+id/textViewReps" />
 
         <TextView
             android:id="@+id/textViewReps"
             style="@style/myTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:shadowColor="@color/text_shadow"
             android:shadowDx="-1"
             android:shadowDy="-1"
             android:shadowRadius="1"
             android:textColor="@color/light_font"
+            android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView2"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView9"
+            app:layout_constraintEnd_toEndOf="@+id/imageView9"
             tools:text="45 Mins" />
 
 
