@@ -113,10 +113,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void handleFollowersClick() {
+        Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
+        i.putExtra("source", "followers");
+        startActivity(i);
     }
 
     private void handleFindClick() {
-        startActivity(new Intent(MainActivity.this, FindUsersActivity.class));
+        Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
+        i.putExtra("source", "find");
+        startActivity(i);
     }
 
     private void handlePostsClick() {
@@ -125,7 +130,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void handleFollowedClick() {
-
+        Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
+        i.putExtra("source", "following");
+        startActivity(i);
     }
 
     private void setupMainViewPager() {
@@ -236,7 +243,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_signout) {
            FirebaseAuth mAuth=   FirebaseAuth.getInstance();
            mAuth.signOut();
-
+            //finish this activity on log out so users won't be able to log in on back press in login
             Intent i = new Intent(MainActivity.this, LoginActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
