@@ -47,6 +47,7 @@
             tools:text="Amr mohammed" />
 
         <RatingBar
+            style="?android:attr/ratingBarStyleIndicator"
             android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -103,6 +103,8 @@ public class UserInfoActivity extends AppCompatActivity {
             //add id of profile account in followingUID of logged in account
             FirebaseDatabase.getInstance().getReference("users").child(MyConstant.loggedInUserId).child("followingUID")
                     .push().setValue(user.getId());
+            //show toast
+            FancyToast.makeText(UserInfoActivity.this, "Subscribed successfully.", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show();
             isSubscribed = true;
             updateFab(isSubscribed);
         } else {
@@ -145,6 +147,8 @@ public class UserInfoActivity extends AppCompatActivity {
                 }
             });
             //
+            //show toast
+            FancyToast.makeText(UserInfoActivity.this, "Unsubscribed successfully.", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show();
 
             isSubscribed = false;
             updateFab(isSubscribed);
@@ -173,7 +177,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
         //note: user refers to the view profile user and not logged in user
         if (getIntent().hasExtra("user")) {
-            user = (User) getIntent().getParcelableExtra("user");
+            user = getIntent().getParcelableExtra("user");
 
             showDataInView();
 

@@ -10,7 +10,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
@@ -25,6 +29,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class FindUsersActivity extends AppCompatActivity {
     private static final String TAG = "FindUsersActivity";
     List<User> userList = new ArrayList<>();
@@ -34,18 +42,39 @@ public class FindUsersActivity extends AppCompatActivity {
     private ArrayList<String> followingIdList = new ArrayList<>();
     private List<User> followingList = new ArrayList<>();
 
+    @BindView(R.id.notFoundTextView)
+    TextView notFoundTextView;
+
+    @BindView(R.id.button)
+    Button findButton;
+
+    @BindView(R.id.bgImageView)
+    ImageView bgImageView;
+
+    @OnClick(R.id.button)
+    void loadAllUsersList() {
+        loadAllUsers();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_users);
+        ButterKnife.bind(this);
 
         //this activity called from more than one source so we differ with intent
         if (getIntent().getStringExtra("source").equals("find"))
             loadAllUsers();
-        else if (getIntent().getStringExtra("source").equals("followers"))
+        else if (getIntent().getStringExtra("source").equals("followers")) {
             loadFollowers();
-        else if (getIntent().getStringExtra("source").equals("following"))
+            notFoundTextView.setText("No followers yet");
+        }
+
+        else if (getIntent().getStringExtra("source").equals("following")) {
             loadFollowing();
+            notFoundTextView.setText("Not following anyone yet");
+        }
+
     }
 
     private void loadFollowing() {
@@ -71,8 +100,12 @@ public class FindUsersActivity extends AppCompatActivity {
                         }
                     });
                 } else {
-                    //loged in user has no followers
+                    //loged in user has no ONE FOLLOWING HIM
                     Log.i(TAG, "onDataChange: no following");
+                    notFoundTextView.setVisibility(View.VISIBLE);
+                    findButton.setVisibility(View.VISIBLE);
+                    bgImageView.setVisibility(View.VISIBLE);
+
                 }
             }
 
@@ -141,6 +174,8 @@ public class FindUsersActivity extends AppCompatActivity {
                 } else {
                     //loged in user has no followers
                     Log.i(TAG, "onDataChange: no followers");
+                    notFoundTextView.setVisibility(View.VISIBLE);
+                    bgImageView.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -215,6 +250,10 @@ public class FindUsersActivity extends AppCompatActivity {
     }
 
     private void setupRecycler(String source) {
+
+        findButton.setVisibility(View.GONE);
+        notFoundTextView.setVisibility(View.GONE);
+        bgImageView.setVisibility(View.GONE);
 
         RecyclerView recyclerView = findViewById(R.id.usersRecycler);
         if (source.equals("getFollowersData")) {
