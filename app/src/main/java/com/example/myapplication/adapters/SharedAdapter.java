@@ -1,6 +1,7 @@
 package com.example.myapplication.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication.PostsActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.activities.SpecificExerciseActivity;
+import com.example.myapplication.activities.SpecificWorkoutActivity;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -139,14 +143,29 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         TextView exerciseNameEdittext;
         @BindView(R.id.exerciseImageView)
         CircleImageView exerciseImageView;
+        Exercise currentExercise;
 
 
         public PostExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            //open specific exercise activity
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(context, SpecificExerciseActivity.class);
+                    i.putExtra("exercise", currentExercise);
+                    PostsActivity postsActivity = (PostsActivity) context;
+                    postsActivity.startActivity(i);
+                }
+            });
+
+
         }
 
         public void setDetails(final Exercise exercise) {
+            currentExercise = exercise;
             exerciseNameEdittext.setText(exercise.getName());
             getCreatorName(exercise.getCreatorId(), new CallbackInterface() {
                 @Override
@@ -176,14 +195,27 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         TextView textViewNumberOfExercises;
         @BindView(R.id.textViewReps)
         TextView textViewReps;
-
+        Workout currentWorkout;
 
         public PostWorkoutViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            //open specific workout activity
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(context, SpecificWorkoutActivity.class);
+                    i.putExtra("workout", currentWorkout);
+                    PostsActivity postsActivity = (PostsActivity) context;
+                    postsActivity.startActivity(i);
+                }
+            });
+
         }
 
         public void setDetails(final Workout workout) {
+            currentWorkout = workout;
             textViewWorkoutName.setText(workout.getName());
             textViewNumberOfExercises.setText(workout.getExercisesNumber());
             textViewReps.setText(workout.getDuration());

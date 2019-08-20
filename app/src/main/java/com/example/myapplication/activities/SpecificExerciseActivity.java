@@ -115,7 +115,7 @@ public class SpecificExerciseActivity extends AppCompatActivity {
                     showInViews();
                 }
             });
-        } else if (i.hasExtra("exercise")) {//if true it means exercise is coming from Exercise adapter of ExerciseActivity
+        } else if (i.hasExtra("exercise")) {//if true it means exercise is coming from Exercise adapter of ExerciseActivity --or shared adapter of posts activity
             // exercise=new Exercise();
             exercise = i.getParcelableExtra("exercise");
             //change exerciseName in actionbar

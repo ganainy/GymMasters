@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.myapplication.activities.FindUsersActivity;
@@ -38,6 +39,11 @@ public class PostsActivity extends AppCompatActivity {
     Button button;
     @BindView(R.id.bgImageView)
     ImageView bgImageView;
+    @BindView(R.id.loadingTextView)
+    TextView loadingTextView;
+    @BindView(R.id.loadingProgressbar)
+    ProgressBar loadingProgressbar;
+
     private List<String> followingIdList = new ArrayList<>();
     private List<Exercise> exerciseList = new ArrayList<>();
     private List<Workout> workoutList = new ArrayList<>();
@@ -89,6 +95,9 @@ public class PostsActivity extends AppCompatActivity {
                     notFoundTextView.setVisibility(View.VISIBLE);
                     button.setVisibility(View.VISIBLE);
                     bgImageView.setVisibility(View.VISIBLE);
+                    //hide loading
+                    loadingTextView.setVisibility(View.GONE);
+                    loadingProgressbar.setVisibility(View.GONE);
                 }
             }
 
@@ -192,6 +201,9 @@ public class PostsActivity extends AppCompatActivity {
         notFoundTextView.setVisibility(View.INVISIBLE);
         button.setVisibility(View.INVISIBLE);
         bgImageView.setVisibility(View.INVISIBLE);
+        //hide loading
+        loadingTextView.setVisibility(View.GONE);
+        loadingProgressbar.setVisibility(View.GONE);
         //init recycler
         Collections.sort(dateList);
         RecyclerView recyclerView = findViewById(R.id.sharedRv);
