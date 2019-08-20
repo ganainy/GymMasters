@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CreateNewExerciseActivity extends AppCompatActivity {
-    private static final String TAG = "CreateNewExerciseActivity";
+    private static final String TAG = "CreateNewExerciseActivi";
     private static final int PICK_IMAGE = 101;
     private static final int PICK_IMAGE2 = 102;
     String newExerciseSelectedMuscle;
@@ -82,6 +82,7 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
                     executionTextView.getText().toString(), preparationTextView.getText().toString(),
                     newExerciseMechanic, newExerciseUtility, imageUri.getLastPathSegment(), image2Uri.getLastPathSegment(), "no_video");
             exercise.setCreatorId(MyConstant.loggedInUserId);
+            exercise.setDate(String.valueOf(System.currentTimeMillis()));
             uploadExercise(exercise);
 
         }

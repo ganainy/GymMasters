@@ -74,6 +74,7 @@ public class CreateWorkoutFragment2 extends Fragment {
         workout.setId(id);
         workout.setExercisesNumber(String.valueOf(exercisesOfWorkoutList.size()));
         workout.setWorkoutExerciseList(exercisesOfWorkoutList);
+        workout.setDate(String.valueOf(System.currentTimeMillis()));
         workoutRef.child(id).setValue(this.workout);
     }
 
@@ -95,7 +96,7 @@ public class CreateWorkoutFragment2 extends Fragment {
             @Override
             public void onBundleSelect(Bundle bundle) {
 
-                workout = (Workout) bundle.getParcelable("workout");
+                workout = bundle.getParcelable("workout");
 
                 hideThisView.setVisibility(View.GONE);
                 downloadAllExercises();

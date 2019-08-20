@@ -288,7 +288,9 @@ public class FindUsersActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                userAdapter.getFilter().filter(s);
+                //so app won't crash if no data in recycler
+                if (userAdapter != null)
+                    userAdapter.getFilter().filter(s);
                 return true;
             }
         });

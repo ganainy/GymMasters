@@ -16,7 +16,7 @@ public class Exercise implements Parcelable {
             return new Exercise[size];
         }
     };
-    String name, bodyPart, execution, preparation, mechanism, utility, previewPhoto1, previewPhoto2, videoLink, sets, reps, duration, creatorId;
+    private String name, bodyPart, execution, preparation, mechanism, utility, previewPhoto1, previewPhoto2, videoLink, sets, reps, duration, creatorId, date, creatorName;
 
     public String getCreatorId() {
         return creatorId;
@@ -169,6 +169,22 @@ public class Exercise implements Parcelable {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
     }
 
     @Override

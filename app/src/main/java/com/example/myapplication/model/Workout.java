@@ -26,6 +26,8 @@ public class Workout implements Parcelable {
     private String level;
     private String photoLink;
     private String creatorId;
+    private String date;
+    private String creatorName;
 
     public String getCreatorId() {
         return creatorId;
@@ -113,6 +115,21 @@ public class Workout implements Parcelable {
         this.id = id;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
 
     @Override
     public int describeContents() {
@@ -129,4 +146,6 @@ public class Workout implements Parcelable {
         parcel.writeString(photoLink);
         parcel.writeTypedList(workoutExerciseList);
     }
+
+
 }
