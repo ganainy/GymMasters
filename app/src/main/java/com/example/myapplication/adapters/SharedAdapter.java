@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.myapplication.PostsActivity;
 import com.example.myapplication.R;
+import com.example.myapplication.activities.PostsActivity;
 import com.example.myapplication.activities.SpecificExerciseActivity;
 import com.example.myapplication.activities.SpecificWorkoutActivity;
 import com.example.myapplication.model.Exercise;

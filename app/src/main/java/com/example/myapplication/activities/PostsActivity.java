@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.myapplication.activities.FindUsersActivity;
+import com.example.myapplication.MyConstant;
+import com.example.myapplication.R;
 import com.example.myapplication.adapters.SharedAdapter;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
@@ -49,6 +50,7 @@ public class PostsActivity extends AppCompatActivity {
     private List<Workout> workoutList = new ArrayList<>();
     private List<String> dateList = new ArrayList<>();
     private SharedAdapter sharedAdapter;
+    private boolean showNotification = false;
 
     @OnClick(R.id.button)
     void openFindUsers() {
@@ -62,7 +64,6 @@ public class PostsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posts);
         ButterKnife.bind(this);
-
 
         getFollowingUid();
 
@@ -109,6 +110,8 @@ public class PostsActivity extends AppCompatActivity {
 
 
     private void getExercises() {
+
+
         dateList.clear();
         //get exercises
         exerciseList.clear();
@@ -142,6 +145,9 @@ public class PostsActivity extends AppCompatActivity {
                 }
                 getWorkouts();
 
+
+                //
+
             }
 
             @Override
@@ -154,11 +160,14 @@ public class PostsActivity extends AppCompatActivity {
     }
 
     void getWorkouts() {
+
+
         Log.i(TAG, "getWorkouts: ");
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.child("workout").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.i(TAG, "onDataChangegetWorkouts: ");
                 workoutList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     //only show in main list the workouts that admin added
@@ -180,6 +189,7 @@ public class PostsActivity extends AppCompatActivity {
 
                     }
                 }
+
                 setupRecycler();
 
 
@@ -195,7 +205,6 @@ public class PostsActivity extends AppCompatActivity {
 
     private void setupRecycler() {
 
-        Log.i(TAG, "setupRecycler: " + dateList.size());
 
         //hide the view
         notFoundTextView.setVisibility(View.INVISIBLE);
@@ -211,6 +220,7 @@ public class PostsActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(PostsActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(sharedAdapter);
+
 
     }
 }

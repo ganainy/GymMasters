@@ -24,7 +24,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.MainActivityViewModel;
-import com.example.myapplication.PostsActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.ViewPagerAdapterCreateWorkout;
 import com.example.myapplication.adapters.ViewPagerAdapterMainActivity;
