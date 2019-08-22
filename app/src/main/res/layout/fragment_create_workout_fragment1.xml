@@ -13,14 +13,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="8dp"
-                android:layout_marginVertical="8dp"
-                android:elevation="3dp"
-                tools:layout_editor_absoluteX="8dp">
 
 
                 <LinearLayout
@@ -63,7 +55,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Duration: "
+                            android:text="Duration           :"
                             android:textColor="@color/textblack"
                             android:textSize="20sp" />
 
@@ -89,7 +81,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Level: "
+                            android:text="Level                 :"
                             android:textColor="@color/textblack"
                             android:textSize="20sp" />
 
@@ -106,6 +98,21 @@
                     </LinearLayout>
 
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="24dp"
+                        android:text="Select a photo describing your workout"
+                        android:textColor="@color/green"
+                        android:textSize="18sp" />
+
+                    <View
+                        android:layout_width="320dp"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="8dp"
+                        android:background="@color/green" />
+
                     <ImageView
                         android:id="@+id/addExercisePhoto"
                         android:layout_width="match_parent"
@@ -120,7 +127,6 @@
 
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/nextButton"
