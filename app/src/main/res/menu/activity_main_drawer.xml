@@ -18,7 +18,7 @@
                 <item
                     android:id="@+id/nav_followers"
                     android:icon="@drawable/ic_follow"
-                    android:title="Followers" />
+                    android:title="My Followers" />
                 <item
                     android:id="@+id/nav_following"
                     android:icon="@drawable/ic_following"

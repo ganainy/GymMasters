@@ -113,10 +113,7 @@ public class CreateWorkoutFragment1 extends Fragment {
     }
 
     private boolean checkInRange(String text) {
-        if (Integer.valueOf(text) > 0 && Integer.valueOf(text) < 120)
-            return true;
-        else
-            return false;
+        return Integer.valueOf(text) > 0 && Integer.valueOf(text) < 120;
     }
 
     private void levelSpinnerCode() {

@@ -1,5 +1,8 @@
 package com.example.myapplication.activities;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,18 +66,22 @@ public class FindUsersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_find_users);
         ButterKnife.bind(this);
 
-        //this activity called from more than one source so we differ with intent
-        if (getIntent().getStringExtra("source").equals("find"))
-            loadAllUsers();
-        else if (getIntent().getStringExtra("source").equals("followers")) {
-            loadFollowers();
-            notFoundTextView.setText("No followers yet");
+        if (!haveNetworkConnection())
+            FancyToast.makeText(FindUsersActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+        else {
+            //this activity called from more than one source so we differ with intent
+            if (getIntent().getStringExtra("source").equals("find"))
+                loadAllUsers();
+            else if (getIntent().getStringExtra("source").equals("followers")) {
+                loadFollowers();
+                notFoundTextView.setText("No followers yet");
+            } else if (getIntent().getStringExtra("source").equals("following")) {
+                loadFollowing();
+                notFoundTextView.setText("Not following anyone yet");
+            }
         }
 
-        else if (getIntent().getStringExtra("source").equals("following")) {
-            loadFollowing();
-            notFoundTextView.setText("Not following anyone yet");
-        }
+
 
     }
 
@@ -111,6 +119,8 @@ public class FindUsersActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                FancyToast.makeText(FindUsersActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+
             }
         });
     }
@@ -143,6 +153,7 @@ public class FindUsersActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                FancyToast.makeText(FindUsersActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
 
             }
         });
@@ -181,6 +192,7 @@ public class FindUsersActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                FancyToast.makeText(FindUsersActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
             }
         });
     }
@@ -215,6 +227,7 @@ public class FindUsersActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                FancyToast.makeText(FindUsersActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
 
             }
         });
@@ -244,6 +257,7 @@ public class FindUsersActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+                FancyToast.makeText(FindUsersActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
 
             }
         });
@@ -303,5 +317,25 @@ public class FindUsersActivity extends AppCompatActivity {
         super.onBackPressed();
         finish();
     }
+
+
+    private boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
+
+
 }
 

@@ -1,7 +1,10 @@
 package com.example.myapplication.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -96,13 +99,36 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             constraintLayout.setVisibility(View.GONE);
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            FancyToast.makeText(LoginActivity.this,"Login failed.",FancyToast.LENGTH_LONG,FancyToast.ERROR,false).show();
+                            if (!haveNetworkConnection()) {
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                FancyToast.makeText(LoginActivity.this, "Login failed, Check network connection", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                            } else {
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                FancyToast.makeText(LoginActivity.this, "Login failed, Check you email and pasword.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                            }
+
                         }
 
                     }
                 });
 
 
+    }
+
+    public boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
     }
 }

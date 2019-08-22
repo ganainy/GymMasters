@@ -16,12 +16,13 @@
 
 
         <Button
+
             android:id="@+id/createExercise"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/add_custom_bg"
+            android:layout_marginVertical="8dp"
+            android:background="@drawable/btn_add"
             android:gravity="left|center"
             android:paddingLeft="16dp"
             android:text="Create custom exercise"
@@ -29,11 +30,12 @@
             android:textColor="@color/textwhite"
             android:textSize="18sp" />
 
+
         <Button
             android:layout_height="50dp"
             android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/add_custom_bg"
+
+            android:background="@drawable/btn_add"
             android:gravity="left|center"
             android:paddingLeft="16dp"
             android:text="Create custom workout"
@@ -50,7 +52,7 @@
             android:layout_height="50dp"
             android:layout_marginHorizontal="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/show_custom_bg"
+            android:background="@drawable/btn_add"
             android:gravity="left|center"
             android:paddingLeft="16dp"
             android:text="Show my exercises"
@@ -71,7 +73,7 @@
             android:layout_height="50dp"
             android:layout_marginHorizontal="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/show_custom_bg"
+            android:background="@drawable/btn_add"
             android:gravity="left|center"
             android:paddingLeft="16dp"
             android:text="Show my workouts"
