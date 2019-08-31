@@ -1,131 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   >
+    android:layout_height="wrap_content"
+    android:background="@drawable/login_bg"
 
-    <LinearLayout
+    >
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-android:background="@drawable/login_bg"
-        android:orientation="vertical"
-        android:padding="8dp"
-        tools:context=".LoginActivity">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
-            android:fontFamily="@font/night_machine"
-            android:gravity="center"
-            android:text="@string/app_name"
-            android:textColor="@color/textblack"
-            android:textSize="52sp" />
-
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_marginTop="100dp"
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginHorizontal="4dp"
-            android:background="@drawable/empty_selector"
-            android:theme="@style/TextLabel"
-            app:errorEnabled="true"
-            app:errorTextAppearance="@color/colorPrimary">
-
-            <android.support.design.widget.TextInputEditText
-
-                android:id="@+id/emailEditText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableStart="@drawable/ic_account_circle_black_24dp"
-                android:drawableLeft="@drawable/ic_account_circle_black_24dp"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:hint="@string/login_email_edit_text_hint"
-                android:inputType="textEmailAddress"
-                android:paddingBottom="20dp"
-                android:textColor="@color/textblack"
-                android:textSize="16sp" />
-        </android.support.design.widget.TextInputLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="8dp"
-            android:background="@color/textblack"></View>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_marginTop="16dp"
-            android:layout_marginHorizontal="4dp"
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:theme="@style/TextLabel"
-            app:errorEnabled="true"
-            android:background="@drawable/empty_selector"
-            app:passwordToggleEnabled="true">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/passwordEditText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableStart="@drawable/ic_lock_outline_black_24dp"
-                android:drawableLeft="@drawable/ic_lock_outline_black_24dp"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:hint="@string/login_password_edit_text_hint"
-                android:inputType="textPassword"
-                android:paddingBottom="20dp"
-                android:singleLine="true"
-                android:textColor="@color/textblack"
-                android:textSize="16sp" />
-        </android.support.design.widget.TextInputLayout>
-
-
-        <Button
-            android:background="@drawable/button_selector_blue"
-            android:layout_margin="16dp"
-            android:id="@+id/loginButton"
-            android:textColor="@color/textwhite"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="50dp"
-            android:text="@string/login_login_button" />
-
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="250dp"
-            android:gravity="center_vertical|center_horizontal"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp"
+            tools:context=".LoginActivity">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/don_t_have_an_account"
-                android:textColor="@color/textwhite"
-                android:textSize="20sp" />
+                android:layout_marginTop="64dp"
+                android:fontFamily="@font/night_machine"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textColor="@color/textblack"
+                android:textSize="52sp" />
 
-            <TextView
-                android:id="@+id/signupTextView"
-                android:layout_width="wrap_content"
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginHorizontal="4dp"
+                android:layout_marginTop="100dp"
+                android:theme="@style/TextLabel"
+                app:errorEnabled="true"
+                app:errorTextAppearance="@color/colorPrimary">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/emailEditText"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:drawableStart="@drawable/ic_account_circle_black_24dp"
+                    android:drawableLeft="@drawable/ic_account_circle_black_24dp"
+                    android:drawablePadding="8dp"
+                    android:hint="@string/login_email_edit_text_hint"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/textblack"
+                    android:textSize="16sp" />
+            </android.support.design.widget.TextInputLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="@color/textblack"></View>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginHorizontal="4dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/empty_selector"
+                android:theme="@style/TextLabel"
+                app:errorEnabled="true"
+                app:passwordToggleEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableStart="@drawable/ic_lock_outline_black_24dp"
+                    android:drawableLeft="@drawable/ic_lock_outline_black_24dp"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
+                    android:hint="@string/login_password_edit_text_hint"
+                    android:inputType="textPassword"
+                    android:paddingBottom="20dp"
+                    android:singleLine="true"
+                    android:textColor="@color/textblack"
+                    android:textSize="16sp" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="signup"
-                android:paddingLeft="5dp"
-                android:text="@string/sign_up"
-                android:textColor="#4CAF50"
-                android:textSize="20sp" />
+                android:layout_margin="16dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="50dp"
+                android:background="@drawable/button_selector_yellow"
+                android:text="@string/login_login_button"
+                android:textColor="@color/textblack" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/don_t_have_an_account"
+                    android:textColor="@color/textwhite"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/signupTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="signup"
+                    android:paddingLeft="5dp"
+                    android:text="@string/sign_up"
+                    android:textColor="#FFEB3B"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+
         </LinearLayout>
-
-
-    </LinearLayout>
 
 
     <android.support.constraint.ConstraintLayout
@@ -152,5 +154,5 @@ android:background="@drawable/login_bg"
 
     </android.support.constraint.ConstraintLayout>
 
-
-</FrameLayout>
+    </FrameLayout>
+</ScrollView>
