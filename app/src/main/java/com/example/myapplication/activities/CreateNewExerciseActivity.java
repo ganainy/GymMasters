@@ -86,6 +86,86 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
             uploadExercise(exercise);
 
         }
+      /*  Exercise exercise = new Exercise();
+        exercise.setCreatorId("KMo0drWBZNNK1UpriR96G9NXEr32");
+        exercise.setName("Machine-assisted Chest Dip (kneeling)");
+        exercise.setBodyPart("Chest");
+        exercise.setExecution("Lower body by bending arms, allowing elbows to flare out to sides. When slight stretch is felt in chest or shoulders push body up until arms are straight. Repeat.");
+        exercise.setPreparation("Mount wide dip bar with oblique grip (bar dia" +
+                "gonal under palm), arms straight with shoulders above hands. Kneel on padded platform, lowering it down slightly so hips are slightly bent.");
+        exercise.setMechanism("Compound");
+        exercise.setUtility("Basic");
+        exercise.setPreviewPhoto1("dip_kneeling.png");
+        exercise.setPreviewPhoto2("dip_kneeling2.png");
+        exercise.setVideoLink("dip_kneeling.mp4");
+        exercise.setDate(String.valueOf(System.currentTimeMillis()));
+        uploadExercise(exercise);
+
+
+        Exercise exercise2 = new Exercise();
+        exercise2.setCreatorId("KMo0drWBZNNK1UpriR96G9NXEr32");
+        exercise2.setName("Barbell Bench Press");
+        exercise2.setBodyPart("Chest");
+        exercise2.setExecution("Lower weight to chest. Press bar upward until arms are extended. Repeat.");
+        exercise2.setPreparation("Lie supine on bench. Dismount barbell from rack over upper chest using wide oblique overhand grip.");
+        exercise2.setMechanism("Compound");
+        exercise2.setUtility("Basic");
+        exercise2.setPreviewPhoto1("BBBenchPress.png");
+        exercise2.setPreviewPhoto2("BBBenchPress2.png");
+        exercise2.setVideoLink("BBBenchPress.mp4");
+        exercise.setDate(String.valueOf(System.currentTimeMillis()));
+        uploadExercise(exercise2);
+
+
+
+        Exercise exercise3= new Exercise();
+        exercise3.setCreatorId("KMo0drWBZNNK1UpriR96G9NXEr32");
+        exercise3.setName("Barbell Decline Bench Press");
+        exercise3.setBodyPart("Chest");
+        exercise3.setExecution("Lower weight to chest. Press bar until arms are extended. Repeat.");
+        exercise3.setPreparation("Lie supine on decline bench with feet under leg brace. Dismount barbell from rack over chest using wide oblique overhand grip.");
+        exercise3.setMechanism("Compound");
+        exercise3.setUtility("Auxiliary");
+        exercise3.setPreviewPhoto1("BarbellDeclineBenchPress.png");
+        exercise3.setPreviewPhoto2("BarbellDeclineBenchPress2.png");
+        exercise3.setVideoLink("BarbellDeclineBenchPress.mp4");
+        exercise.setDate(String.valueOf(System.currentTimeMillis()));
+        uploadExercise(exercise3);
+
+
+
+        Exercise exercise4= new Exercise();
+        exercise4.setCreatorId("KMo0drWBZNNK1UpriR96G9NXEr32");
+        exercise4.setName("Machine-assisted Chest Dip (kneeling)");
+        exercise4.setBodyPart("Chest");
+        exercise4.setExecution("Lower body by bending arms, allowing elbows to flare out to sides. When slight stretch is felt in chest or shoulders push body up until arms are straight. Repeat.");
+        exercise4.setPreparation("Mount wide dip bar with oblique grip (bar dia" +
+                "gonal under palm), arms straight with shoulders above hands. Kneel on padded platform, lowering it down slightly so hips are slightly bent.");
+        exercise4.setMechanism("Compound");
+        exercise4.setUtility("Basic");
+        exercise4.setPreviewPhoto1("dip_kneeling.png");
+        exercise4.setPreviewPhoto2("dip_kneeling2.png");
+        exercise4.setVideoLink("dip_kneeling.mp4");
+        exercise.setDate(String.valueOf(System.currentTimeMillis()));
+        uploadExercise(exercise4);
+
+
+
+
+        Exercise exercise5= new Exercise();
+        exercise5.setCreatorId("KMo0drWBZNNK1UpriR96G9NXEr32");
+        exercise5.setName("Cable Decline Fly");
+        exercise5.setBodyPart("Chest");
+        exercise5.setExecution("Bring cable stirrups together above upper abdomen in hugging motion; elbows in fixed position and shoulders internally rotated so elbows are to sides. Return to starting position until chest is slightly stretched. Repeat.");
+        exercise5.setPreparation("Grasp two opposing high pulley dumbbell attachments. Lie supine on decline bench, in middle and perpendicular to both pulleys. Slightly bend elbows and internally rotate shoulders so elbows are back.");
+        exercise5.setMechanism("Isolated");
+        exercise5.setUtility("Auxiliary");
+        exercise5.setPreviewPhoto1("CableDeclineFly.png");
+        exercise5.setPreviewPhoto2("CableDeclineFly2.png");
+        exercise5.setVideoLink("CableDeclineFly.mp4");
+        exercise.setDate(String.valueOf(System.currentTimeMillis()));
+        uploadExercise(exercise5);*/
+
 
     }
 
