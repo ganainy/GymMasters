@@ -11,12 +11,10 @@
         android:roundIcon="@drawable/dumbbell"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <service
-            android:name=".activities.MyNotificationService"
-            android:enabled="true"
-            android:exported="true"></service>
 
-        <activity android:name=".activities.PostsActivity" />
+        <activity android:name=".activities.PostsActivity"
+
+            />
         <activity android:name=".activities.UserInfoActivity" />
         <activity android:name=".activities.FindUsersActivity" />
         <activity android:name=".activities.SpecificWorkoutActivity" />
@@ -31,10 +29,12 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:windowSoftInputMode="stateHidden"
             android:name=".activities.LoginActivity"
             android:theme="@style/NoActionBar" />
         <activity
             android:name=".activities.SignUpActivity"
+            android:windowSoftInputMode="stateHidden"
             android:theme="@style/NoActionBar" />
         <activity
             android:name=".activities.WelcomeActivity"
