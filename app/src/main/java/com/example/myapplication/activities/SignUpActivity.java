@@ -24,9 +24,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.shashank.sony.fancytoastlib.FancyToast;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -113,6 +119,9 @@ public class SignUpActivity extends AppCompatActivity {
                             String uid = mAuth.getCurrentUser().getUid();
                             saveUserInfoInRealtimeDb(uid);
 
+                            //save user data related to sending device to device notification later
+                            saveInFirestore(uid);
+
                         } else {
 
                             // If sign in fails, display a message to the user.
@@ -127,6 +136,26 @@ public class SignUpActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+
+    private void saveInFirestore(final String uid) {
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(SignUpActivity.this, new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String mToken = instanceIdResult.getToken();
+                Log.e("signupToken", mToken);
+
+
+                Map<String, Object> user = new HashMap<>();
+                user.put("id", uid);
+                user.put("device_token", mToken);
+                user.put("name", userNameEditText.getText().toString().trim());
+                FirebaseFirestore.getInstance().collection("users").document(uid).set(user);
+
+
+            }
+        });
+
     }
 
     private void saveUserInfoInRealtimeDb(String uid) {
