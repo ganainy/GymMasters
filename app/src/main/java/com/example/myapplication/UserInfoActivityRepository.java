@@ -104,22 +104,26 @@ public class UserInfoActivityRepository {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 workoutList.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    //only show in main list the workouts that admin added
-                    if (ds.child("creatorId").getValue().equals(profileId)) {
-                        Workout workout = new Workout();
-                        workout.setName(ds.child("name").getValue().toString());
-                        workout.setDuration(ds.child("duration").getValue().toString() + " mins");
-                        workout.setExercisesNumber(ds.child("exercisesNumber").getValue().toString());
-                        workout.setPhotoLink(ds.child("photoLink").getValue().toString());
-                        workout.setId(ds.child("id").getValue().toString());
-
-                        workoutList.add(workout);
-                    }
+                if (!dataSnapshot.exists()) {
                     load.setValue(workoutList);
+                } else {
+
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        //only show in main list the workouts that admin added
+                        if (ds.child("creatorId").getValue().equals(profileId)) {
+                            Workout workout = new Workout();
+                            workout.setName(ds.child("name").getValue().toString());
+                            workout.setDuration(ds.child("duration").getValue().toString() + " mins");
+                            workout.setExercisesNumber(ds.child("exercisesNumber").getValue().toString());
+                            workout.setPhotoLink(ds.child("photoLink").getValue().toString());
+                            workout.setId(ds.child("id").getValue().toString());
+
+                            workoutList.add(workout);
+                        }
+                        load.setValue(workoutList);
+                    }
+
                 }
-
-
             }
 
             @Override

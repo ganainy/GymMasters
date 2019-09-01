@@ -58,6 +58,7 @@ public class SpecificExerciseActivity extends AppCompatActivity {
     @BindView(R.id.preparationTextView)
     TextView preparationTextView;
 
+
     @BindView(R.id.mechanicTextView)
     TextView mechanicTextView;
 
@@ -388,7 +389,7 @@ public class SpecificExerciseActivity extends AppCompatActivity {
 
     private void showSwitchingPhotosAgain() {
         //  show swapping photos again and hide videoplayer
-        simpleExoPlayerView.setVisibility(View.GONE);
+        simpleExoPlayerView.setVisibility(View.INVISIBLE);
         exerciseImageView.setVisibility(View.VISIBLE);
         switchExercisePhotos();
     }

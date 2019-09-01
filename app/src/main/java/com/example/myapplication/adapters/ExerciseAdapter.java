@@ -31,7 +31,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>  implements Filterable {
-    private String parentName = null;
+    private String parentName = "";
     List<Exercise> exercisesList;
     List<Exercise> filteredNameList;
     List<Exercise> originalExerciseList;

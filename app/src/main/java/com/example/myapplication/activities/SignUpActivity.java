@@ -138,6 +138,8 @@ public class SignUpActivity extends AppCompatActivity {
                 });
     }
 
+
+    //todo continue notifications
     private void saveInFirestore(final String uid) {
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(SignUpActivity.this, new OnSuccessListener<InstanceIdResult>() {
             @Override

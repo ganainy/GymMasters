@@ -47,21 +47,35 @@
             tools:text="Amr mohammed" />
 
         <RatingBar
-            style="?android:attr/ratingBarStyleIndicator"
             android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:rating="1"
             android:stepSize="1"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewName" />
 
+        <TextView
+
+            android:id="@+id/rate_me_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#2196F3"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewName"
+            tools:text="click to rate amr" />
+
         <LinearLayout
 
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="80dp"
             android:background="#E2E2E2"
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/ratingBar"
@@ -165,8 +179,9 @@
                     android:id="@+id/textViewRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:layout_gravity="center_horizontal"
-                    android:text="Rating"
+                    android:text="Average rating"
                     android:textSize="18sp" />
 
             </LinearLayout>

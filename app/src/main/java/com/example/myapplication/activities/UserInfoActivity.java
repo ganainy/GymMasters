@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -32,6 +34,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -42,7 +45,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserInfoActivity extends AppCompatActivity {
     private static final String TAG = "UserInfoActivityy";
-    private List<Exercise> exerciseListt;
+    @BindView(R.id.rate_me_text_view)
+    TextView rate_me_text_view;
 
     @BindView(R.id.explainExerciseTextview)
     TextView explainExerciseTextview;
@@ -83,12 +87,13 @@ public class UserInfoActivity extends AppCompatActivity {
 
     @BindView(R.id.ratingBar)
     RatingBar ratingBar;
+    private List<Exercise> exerciseListt = new ArrayList<>();
 
     private User user;
     private Boolean isSubscribed;
     private Observer<Boolean> observer;
     private ExerciseAdapter exerciseAdapter;
-    private List<Workout> workoutListt;
+    private List<Workout> workoutListt = new ArrayList<>();
     private WorkoutAdapter workoutAdapter;
 
     @OnClick(R.id.followFab)
@@ -167,7 +172,11 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
 
-
+    @OnClick(R.id.rate_me_text_view)
+    void showRatingBar() {
+        rate_me_text_view.setVisibility(View.GONE);
+        ratingBar.setVisibility(View.VISIBLE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,6 +189,9 @@ public class UserInfoActivity extends AppCompatActivity {
             user = getIntent().getParcelableExtra("user");
 
             showDataInView();
+
+            //
+            //
 
             mViewModel = ViewModelProviders.of(this).get(UserInfoActivityViewModel.class);
             //download user exercises
@@ -248,7 +260,20 @@ public class UserInfoActivity extends AppCompatActivity {
             mViewModel.getMyRate(user.getId()).observe(this, new Observer<Long>() {
                 @Override
                 public void onChanged(@Nullable Long aLong) {
-                    ratingBar.setRating(aLong);
+                    if (aLong == 0)//viewing user didn't rate him before
+                    {
+                        rate_me_text_view.setVisibility(View.VISIBLE);
+                        ratingBar.setVisibility(View.INVISIBLE);
+                        rate_me_text_view.setText("Click to rate " + user.getName());
+                        rate_me_text_view.setPaintFlags(rate_me_text_view.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+
+                    } else//viewing user rated him
+                    {
+                        ratingBar.setRating(aLong);
+                        rate_me_text_view.setVisibility(View.GONE);
+                        ratingBar.setVisibility(View.VISIBLE);
+                    }
                 }
             });
 
@@ -260,7 +285,10 @@ public class UserInfoActivity extends AppCompatActivity {
         ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-
+                Log.i(TAG, "onRatingChanged: " + v);
+                if (v < 1) {
+                    return;
+                }
                 mViewModel.setRate((int) v, user.getId());
             }
         });
@@ -319,6 +347,7 @@ public class UserInfoActivity extends AppCompatActivity {
         exercisesCountTextView.setText(String.valueOf(exerciseList.size()));
     }
     private void updateProfileWorkoutView(List<Workout> workoutList) {
+        Log.i(TAG, "updateProfileWorkoutView: " + workoutList.size());
         if (workoutList.size() == 0) {
             explainExerciseTextview3.setText(user.getName() + " has no custom workouts yet");
             explainExerciseTextview4.setVisibility(View.GONE);

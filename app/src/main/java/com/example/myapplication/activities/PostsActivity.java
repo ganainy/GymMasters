@@ -54,7 +54,6 @@ public class PostsActivity extends AppCompatActivity {
     private List<Workout> workoutList = new ArrayList<>();
     private List<String> dateList = new ArrayList<>();
     private SharedAdapter sharedAdapter;
-    private boolean showNotification = false;
 
     @OnClick(R.id.button)
     void openFindUsers() {
@@ -214,13 +213,22 @@ public class PostsActivity extends AppCompatActivity {
     private void setupRecycler() {
 
 
+        //hide loading
+        loadingTextView.setVisibility(View.GONE);
+        loadingProgressbar.setVisibility(View.GONE);
+
+        Log.i(TAG, "setupRecycler: " + dateList.size());
+        if (dateList.size() == 0) {
+            notFoundTextView.setVisibility(View.VISIBLE);
+            button.setVisibility(View.VISIBLE);
+            bgImageView.setVisibility(View.VISIBLE);
+            return;
+        }
         //hide the view
         notFoundTextView.setVisibility(View.INVISIBLE);
         button.setVisibility(View.INVISIBLE);
         bgImageView.setVisibility(View.INVISIBLE);
-        //hide loading
-        loadingTextView.setVisibility(View.GONE);
-        loadingProgressbar.setVisibility(View.GONE);
+
         //init recycler
         Collections.sort(dateList);
         RecyclerView recyclerView = findViewById(R.id.sharedRv);
