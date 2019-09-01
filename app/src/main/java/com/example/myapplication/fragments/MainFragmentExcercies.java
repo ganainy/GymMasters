@@ -77,26 +77,7 @@ public class MainFragmentExcercies extends Fragment {
         startActivity(intent);
     }
 
-    @OnClick(R.id.forearm)
-    void qqqqqqq() {
-        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra("forearm", "forearm");
-        startActivity(intent);
-    }
 
-    @OnClick(R.id.upperleg)
-    void qqqqqqqq() {
-        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra("upperleg", "upperleg");
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.glutes)
-    void qqqqqqqqq() {
-        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra("glutes", "glutes");
-        startActivity(intent);
-    }
 
     @OnClick(R.id.cardio)
     void qqqqqqqqqq() {
@@ -105,10 +86,10 @@ public class MainFragmentExcercies extends Fragment {
         startActivity(intent);
     }
 
-    @OnClick(R.id.lowerleg)
+    @OnClick(R.id.leg)
     void qqqqqqqqqqq() {
         Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra("lowerleg", "lowerleg");
+        intent.putExtra("leg", "leg");
         startActivity(intent);
     }
 

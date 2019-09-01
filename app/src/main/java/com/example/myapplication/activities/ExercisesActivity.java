@@ -45,7 +45,6 @@ public class ExercisesActivity extends AppCompatActivity {
         if (getIntent().hasExtra("triceps")) {
             htab_header.setImageResource(R.drawable.triceps);
             this.muscle = "triceps";
-
         } else if (getIntent().hasExtra("chest")) {
             htab_header.setImageResource(R.drawable.chest);
             this.muscle = "chest";
@@ -64,19 +63,10 @@ public class ExercisesActivity extends AppCompatActivity {
         } else if (getIntent().hasExtra("back")) {
             htab_header.setImageResource(R.drawable.back);
             this.muscle = "back";
-        } else if (getIntent().hasExtra("forearm")) {
-            htab_header.setImageResource(R.drawable.forarm);
-            this.muscle = "forearm";
-        } else if (getIntent().hasExtra("upperleg")) {
-            htab_header.setImageResource(R.drawable.upperleg);
-            this.muscle = "upperleg";
-        } else if (getIntent().hasExtra("glutes")) {
-            htab_header.setImageResource(R.drawable.glutes);
-            this.muscle = "glutes";
         } else if (getIntent().hasExtra("cardio")) {
             htab_header.setImageResource(R.drawable.cardio);
             this.muscle = "cardio";
-        } else if (getIntent().hasExtra("lowerleg")) {
+        } else if (getIntent().hasExtra("leg")) {
             htab_header.setImageResource(R.drawable.lowerleg);
             this.muscle = "lowerleg";
         } else if (getIntent().hasExtra("showall")) {
