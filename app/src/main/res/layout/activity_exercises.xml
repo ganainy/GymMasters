@@ -6,7 +6,26 @@
     android:id="@+id/exercises_activity_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/activity_bg"
     android:fitsSystemWindows="true">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:backgroundTint="@color/textblack"
+        app:layout_anchor="@+id/collapse_toolbar"
+        app:layout_anchorGravity="center_horizontal|bottom"
+
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/htab_appbar"
@@ -18,13 +37,14 @@
 
         <android.support.design.widget.CollapsingToolbarLayout
 
-            android:id="@+id/htab_collapse_toolbar"
+            android:id="@+id/collapse_toolbar"
             android:layout_width="match_parent"
             android:layout_height="256dp"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="#3D3C3C"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:titleEnabled="false">
+
 
             <ImageView
                 android:id="@+id/htab_header"
@@ -41,13 +61,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="top"
-                android:layout_marginBottom="48dp"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 >
-                <android.support.constraint.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+
 
                     <android.support.v7.widget.SearchView
                         android:id="@+id/search_view"
@@ -60,26 +77,26 @@
 
                     </android.support.v7.widget.SearchView>
 
-                </android.support.constraint.ConstraintLayout>
-
             </android.support.v7.widget.Toolbar>
-
-
-
-
-
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/htab_viewpager"
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    </android.support.v4.view.ViewPager>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/exerciseRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            />
+
+    </android.support.v4.widget.NestedScrollView>
 
 
 </android.support.design.widget.CoordinatorLayout>
