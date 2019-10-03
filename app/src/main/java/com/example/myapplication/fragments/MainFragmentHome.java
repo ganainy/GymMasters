@@ -47,6 +47,13 @@ public class MainFragmentHome extends Fragment {
     Button viewMyWorkoutsButton;
     private View view;
     private ArrayList<Exercise> myCustomExercisesList = new ArrayList<>();
+    /**
+     * 1 shown ,0 didnt load ,2 hidden
+     */
+    private int exerciseFlag = 0;
+    private int workoutFlag = 0;
+    private RecyclerView recyclerView, recyclerView2;
+
 
     @OnClick(R.id.createWorkout)
     void createWorkout() {
@@ -67,22 +74,42 @@ public class MainFragmentHome extends Fragment {
     void viewExercises() {
 
         if (haveNetworkConnection())
-            downloadMyExercises();
-        else
-            FancyToast.makeText(getActivity(), "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+            if (exerciseFlag == 1) {
+                /**it means exercise is shown and i should hide them*/
+                recyclerView.setVisibility(View.GONE);
+                exerciseFlag = 2;
+            } else if (exerciseFlag == 2) {
+                /**recycler is hidden and i should show it*/
+                exerciseFlag = 1;
+                recyclerView.setVisibility(View.VISIBLE);
+            } else if (exerciseFlag == 0) {
+                /**didn't download exercises yet*/
+                downloadMyExercises();
+            } else
+                FancyToast.makeText(getActivity(), "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
     }
 
     @OnClick(R.id.viewMyWorkoutsButton)
     void viewWorkouts() {
 
         if (haveNetworkConnection())
-            downloadMyWorkout();
+            if (workoutFlag == 1) {
+                /**it means exercise is shown and i should hide them*/
+                recyclerView2.setVisibility(View.GONE);
+                workoutFlag = 2;
+            } else if (exerciseFlag == 2) {
+                /**recycler is hidden and i should show it*/
+                workoutFlag = 1;
+                recyclerView2.setVisibility(View.VISIBLE);
+            } else if (workoutFlag == 0) {
+                /**didn't download exercises yet*/
+                downloadMyWorkout();
+            }
         else
             FancyToast.makeText(getActivity(), "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
 
 
     }
-
 
 
     public MainFragmentHome() {
@@ -136,8 +163,10 @@ public class MainFragmentHome extends Fragment {
         if (myCustomExercisesList.size() == 0) {
             FancyToast.makeText(getActivity(), "You didn't create any custom exercises yet.", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
         } else {
+            exerciseFlag = 1;
             Log.i(TAG, "setupExercisesRecycler: " + myCustomExercisesList.size());
-            RecyclerView recyclerView = view.findViewById(R.id.customExerciseRecycler);
+            recyclerView = view.findViewById(R.id.customExerciseRecycler);
+            recyclerView.setVisibility(View.VISIBLE);
             exerciseAdapter = new ExerciseAdapter(getActivity(), myCustomExercisesList, "home");
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
             recyclerView.setLayoutManager(linearLayoutManager);
@@ -178,12 +207,14 @@ public class MainFragmentHome extends Fragment {
         if (myCustomWorkoutList.size() == 0) {
             FancyToast.makeText(getActivity(), "You didn't create any custom workouts yet.", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
         } else {
-            RecyclerView recyclerView = view.findViewById(R.id.customWorkoutRecycler);
+            workoutFlag = 1;
+            recyclerView2 = view.findViewById(R.id.customWorkoutRecycler);
+            recyclerView2.setVisibility(View.VISIBLE);
             workoutAdapter = new WorkoutAdapter(getActivity(), "fragmentHome");
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView2.setLayoutManager(linearLayoutManager);
             workoutAdapter.setDataSource(myCustomWorkoutList);
-            recyclerView.setAdapter(workoutAdapter);
+            recyclerView2.setAdapter(workoutAdapter);
         }
 
     }

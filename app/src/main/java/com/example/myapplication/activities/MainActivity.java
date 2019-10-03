@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity
     private CircleImageView imageView;
     FirebaseAuth mAuth;
     private String profilePictureId;
-    TextView nameNavigation,emailNavigation;
-    private String name,email,rating;
+    TextView nameNavigation, emailNavigation;
+    private String name, email, rating;
     private StorageReference storageRef;
 
 
@@ -165,7 +165,6 @@ public class MainActivity extends AppCompatActivity
         tabLayout.getTabAt(1).setText(("STEP2"));
 
 
-
     }
 
 
@@ -181,25 +180,23 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onCallback(User loggedInUser) {
                 NavigationView navigationView = findViewById(R.id.nav_view);
-                View hView =  navigationView.getHeaderView(0);
+                View hView = navigationView.getHeaderView(0);
                 imageView = hView.findViewById(R.id.imageViewProfile);
                 //set name and email in the navigationViews
-                nameNavigation=hView.findViewById(R.id.nameNavigation);
-                emailNavigation=hView.findViewById(R.id.emailNavigation);
+                nameNavigation = hView.findViewById(R.id.nameNavigation);
+                emailNavigation = hView.findViewById(R.id.emailNavigation);
 
                 nameNavigation.setText(loggedInUser.getName());
                 emailNavigation.setText(loggedInUser.getEmail());
 
-               //imageUri is not null if we come from signup activity so we can show image directly from uri without downloading again from firebase storage
-                if (getIntent().hasExtra("imageUri"))
-                {
+                //imageUri is not null if we come from signup activity so we can show image directly from uri without downloading again from firebase storage
+                if (getIntent().hasExtra("imageUri")) {
                     Uri myUri = Uri.parse(getIntent().getStringExtra("imageUri"));
                     Glide.with(MainActivity.this)
                             .load(myUri)
                             .into(imageView);
-                }else
-                {
-                     storageRef = FirebaseStorage.getInstance().getReference();
+                } else {
+                    storageRef = FirebaseStorage.getInstance().getReference();
                     //reference to logged in user profile image
 
                     StorageReference pathReference = storageRef.child("images/" + loggedInUser.getPhoto());
@@ -214,16 +211,13 @@ public class MainActivity extends AppCompatActivity
                         @Override
                         public void onFailure(@NonNull Exception exception) {
                             // Handle any errors
-                            Log.i(TAG, "onFailure: "+exception.getMessage());
+                            Log.i(TAG, "onFailure: " + exception.getMessage());
                         }
                     });
                 }
             }
         });
     }
-
-
-
 
 
     @Override
@@ -235,13 +229,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-      //sign out when menu item clicked
+        //sign out when menu item clicked
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_signout) {
-           FirebaseAuth mAuth=   FirebaseAuth.getInstance();
-           mAuth.signOut();
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            mAuth.signOut();
             //finish this activity on log out so users won't be able to log in on back press in login
             Intent i = new Intent(MainActivity.this, LoginActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -274,11 +268,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void setWorkout(Workout workout)
-    {
-        this.workout=workout;
-        Bundle bundle=new Bundle();
-        bundle.putParcelable("workout",workout);
+    public void setWorkout(Workout workout) {
+        this.workout = workout;
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("workout", workout);
         selectedBundle2.onBundleSelect(bundle);
     }
 
@@ -311,31 +304,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void getPhotoFromGallery() {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 103);
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 103);
     }
-
-
-    public interface FirebaseCallback{
-        void onCallback(User loggedInUser);
-    }
-
-
-    public interface SelectedBundle {
-        void onBundleSelect(Bundle bundle);
-    }
-    public interface SelectedBundle2 {
-        void onBundleSelect(Bundle bundle);
-    }
-
 
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (view_pager_create_workout.getCurrentItem() == 1 && view_pager_create_workout.isShown()) {
+            view_pager_create_workout.setCurrentItem(0);
+        } else if (view_pager_create_workout.getCurrentItem() == 0 && view_pager_create_workout.isShown()) {
+            finish();
+
         } else {
             new AlertDialog.Builder(this)
                     .setMessage("Are you sure you want to exit?")
@@ -349,6 +333,33 @@ public class MainActivity extends AppCompatActivity
                     }).create().show();
         }
 
+/*
 
+        Log.i(TAG, "view_pager_create_workout.getCurrentItem()=="+view_pager_create_workout.getCurrentItem());
+        Log.i(TAG, "view_pager_main.getCurrentItem()=="+view_pager_main.getCurrentItem());
+
+
+        if (view_pager_create_workout.getCurrentItem() == 1) {
+            view_pager_create_workout.setCurrentItem(0);
+        }else{
+            finish();
+        }
+*/
+
+
+    }
+
+
+    public interface SelectedBundle {
+        void onBundleSelect(Bundle bundle);
+    }
+
+    public interface SelectedBundle2 {
+        void onBundleSelect(Bundle bundle);
+    }
+
+
+    public interface FirebaseCallback {
+        void onCallback(User loggedInUser);
     }
 }

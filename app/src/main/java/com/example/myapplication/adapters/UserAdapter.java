@@ -133,14 +133,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Glide.with(context).load(uri).into(userViewHolder.userImageView);
-
-
+                if (context != null) {
+                    Glide.with(context).load(uri).into(userViewHolder.userImageView);
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "workout photo download failed " + e.getMessage());
+                Log.i(TAG, "user photo download failed " + e.getMessage());
             }
         });
 
@@ -198,6 +198,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
