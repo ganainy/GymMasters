@@ -11,7 +11,9 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
@@ -37,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         login=findViewById(R.id.loginButton);
         signup=findViewById(R.id.signupTextView);
-
+        passwordEditText = findViewById(R.id.passwordEditText);
 
 
         //open signup activity
@@ -52,22 +54,43 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Hide keyboard
-                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-               checkEmailAndPassword();
+                //Hide keyboard and login
+                login();
             }
         });
 
 
+        /**after pressing done on keyboard after writing password it will login*/
+        loginWithDone();
     }
 
+    private void login() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+        checkEmailAndPassword();
+    }
+
+    private void loginWithDone() {
+        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    /* Write your logic here that will be executed when user taps next button */
+                    login();
+
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
+    }
 
 
     private void checkEmailAndPassword() {
 
         emailEditText =findViewById(R.id.emailEditText);
-        passwordEditText =findViewById(R.id.passwordEditText);
         String fillhere = getResources().getString((R.string.fillhere_signuplogin_error));
         if (emailEditText.getText().toString().trim().isEmpty() || emailEditText.getText().toString().trim().equals(" "))
             emailEditText.setError(fillhere);
@@ -131,4 +154,6 @@ public class LoginActivity extends AppCompatActivity {
         }
         return haveConnectedWifi || haveConnectedMobile;
     }
+
+
 }

@@ -61,7 +61,9 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
         storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Glide.with(context).load(uri).into(workoutViewHolder.workoutImageView);
+                if (context != null) {
+                    Glide.with(context).load(uri).into(workoutViewHolder.workoutImageView);
+                }
 
 
             }
