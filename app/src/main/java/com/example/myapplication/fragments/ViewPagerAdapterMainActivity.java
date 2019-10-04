@@ -1,12 +1,8 @@
-package com.example.myapplication.adapters;
+package com.example.myapplication.fragments;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-
-import com.example.myapplication.fragments.MainFragmentExcercies;
-import com.example.myapplication.fragments.MainFragmentHome;
-import com.example.myapplication.fragments.MainFragmentWorkouts;
 
 public class ViewPagerAdapterMainActivity extends FragmentPagerAdapter {
     private static final String TAG = "ViewPagerAdapterMainAct";

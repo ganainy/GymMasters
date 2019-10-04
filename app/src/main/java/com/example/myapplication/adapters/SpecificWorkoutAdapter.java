@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.activities.SpecificExerciseActivity;
-import com.example.myapplication.activities.SpecificWorkoutActivity;
 import com.example.myapplication.model.Exercise;
+import com.example.myapplication.ui.SpecificExerciseActivity;
+import com.example.myapplication.ui.SpecificWorkoutActivity;
 
 import java.util.List;
 
@@ -20,6 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = "SpecificWorkoutAdapter";
     private static final int TYPE_REPS = 1;
     private static final int TYPE_TIME = 2;
     final Context context;
@@ -33,12 +34,12 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view;
-        if (viewType == TYPE_REPS) { // for call layout
+        if (viewType == TYPE_REPS) { // for TYPE_REPS layout
 
             view = LayoutInflater.from(context).inflate(R.layout.inside_workout_item_reps, viewGroup, false);
             return new RepsExerciseViewHolder(view);
 
-        } else { // for email layout
+        } else { // for TYPE_TIME layout
             view = LayoutInflater.from(context).inflate(R.layout.inside_workout_item_duration, viewGroup, false);
             return new TimedExerciseViewHolder(view);
         }

@@ -1,4 +1,4 @@
-package com.example.myapplication.activities;
+package com.example.myapplication.ui;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.bumptech.glide.RequestBuilder;
 import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
-import com.example.myapplication.UserInfoActivityViewModel;
 import com.example.myapplication.adapters.ExerciseAdapter;
 import com.example.myapplication.adapters.WorkoutAdapter;
 import com.example.myapplication.model.Exercise;

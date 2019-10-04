@@ -1,11 +1,8 @@
-package com.example.myapplication.adapters;
+package com.example.myapplication.fragments;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-
-import com.example.myapplication.fragments.CreateWorkoutFragment1;
-import com.example.myapplication.fragments.CreateWorkoutFragment2;
 
 public class ViewPagerAdapterCreateWorkout extends FragmentPagerAdapter {
 

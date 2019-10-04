@@ -78,11 +78,9 @@
                     android:layout_height="match_parent"
                     android:drawableStart="@drawable/ic_lock_outline_black_24dp"
                     android:drawableLeft="@drawable/ic_lock_outline_black_24dp"
-                    android:drawablePadding="8dp"
                     android:gravity="center_vertical"
                     android:hint="@string/login_password_edit_text_hint"
                     android:inputType="textPassword"
-                    android:paddingBottom="20dp"
                     android:singleLine="true"
                     android:textColor="@color/textblack"
                     android:textSize="16sp" />

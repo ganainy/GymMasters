@@ -1,4 +1,4 @@
-package com.example.myapplication.activities;
+package com.example.myapplication.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
@@ -23,10 +23,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.myapplication.MainActivityViewModel;
 import com.example.myapplication.R;
-import com.example.myapplication.adapters.ViewPagerAdapterCreateWorkout;
-import com.example.myapplication.adapters.ViewPagerAdapterMainActivity;
+import com.example.myapplication.fragments.ViewPagerAdapterCreateWorkout;
+import com.example.myapplication.fragments.ViewPagerAdapterMainActivity;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.Workout;
 import com.google.android.gms.tasks.OnFailureListener;

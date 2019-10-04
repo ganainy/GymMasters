@@ -16,9 +16,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
-import com.example.myapplication.activities.FindUsersActivity;
-import com.example.myapplication.activities.UserInfoActivity;
 import com.example.myapplication.model.User;
+import com.example.myapplication.ui.FindUsersActivity;
+import com.example.myapplication.ui.UserInfoActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;

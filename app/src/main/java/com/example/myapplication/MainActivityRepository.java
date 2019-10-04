@@ -3,8 +3,8 @@ package com.example.myapplication;
 import android.app.Application;
 import android.support.annotation.NonNull;
 
-import com.example.myapplication.activities.MainActivity;
 import com.example.myapplication.model.User;
+import com.example.myapplication.ui.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

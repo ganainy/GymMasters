@@ -14,11 +14,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
-import com.example.myapplication.activities.PostsActivity;
-import com.example.myapplication.activities.SpecificExerciseActivity;
-import com.example.myapplication.activities.SpecificWorkoutActivity;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
+import com.example.myapplication.ui.PostsActivity;
+import com.example.myapplication.ui.SpecificExerciseActivity;
+import com.example.myapplication.ui.SpecificWorkoutActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

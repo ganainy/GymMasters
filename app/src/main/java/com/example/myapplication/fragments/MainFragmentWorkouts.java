@@ -3,6 +3,7 @@ package com.example.myapplication.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,6 +33,7 @@ public class MainFragmentWorkouts extends Fragment {
     private List<Workout> workoutList = new ArrayList<>();
     private View view;
     private WorkoutAdapter workoutAdapter;
+    ConstraintLayout loading_workouts;
 
     public MainFragmentWorkouts() {
         // Required empty public constructor
@@ -45,6 +47,8 @@ public class MainFragmentWorkouts extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main_fragment_workouts, container, false);
         this.view = view;
 
+        /**loading layout to show while workouts are loading*/
+        loading_workouts = view.findViewById(R.id.loading_workouts);
         downloadWorkout();
 
         return view;
@@ -82,6 +86,7 @@ public class MainFragmentWorkouts extends Fragment {
 
 
     private void setupRecycler() {
+        loading_workouts.setVisibility(View.GONE);
         RecyclerView recyclerView = view.findViewById(R.id.workoutRecyclerView);
         workoutAdapter = new WorkoutAdapter(getActivity(), "fragmentWorkouts");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());

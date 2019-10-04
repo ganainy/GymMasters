@@ -12,32 +12,32 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".activities.PostsActivity"
+        <activity android:name=".ui.PostsActivity"
 
             />
-        <activity android:name=".activities.UserInfoActivity" />
-        <activity android:name=".activities.FindUsersActivity" />
-        <activity android:name=".activities.SpecificWorkoutActivity" />
-        <activity android:name=".activities.CreateNewExerciseActivity" />
-        <activity android:name=".activities.SpecificExerciseActivity" />
+        <activity android:name=".ui.UserInfoActivity" />
+        <activity android:name=".ui.FindUsersActivity" />
+        <activity android:name=".ui.SpecificWorkoutActivity" />
+        <activity android:name=".ui.CreateNewExerciseActivity" />
+        <activity android:name=".ui.SpecificExerciseActivity" />
         <activity
-            android:name=".activities.ExercisesActivity"
+            android:name=".ui.ExercisesActivity"
             android:label="@string/title_activity_exercises"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:windowSoftInputMode="stateHidden"
-            android:name=".activities.LoginActivity"
+            android:name=".ui.LoginActivity"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".activities.SignUpActivity"
+            android:name=".ui.SignUpActivity"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".activities.WelcomeActivity"
+            android:name=".ui.WelcomeActivity"
             android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

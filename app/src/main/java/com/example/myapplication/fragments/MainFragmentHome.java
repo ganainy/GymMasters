@@ -17,12 +17,12 @@ import android.widget.Button;
 
 import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
-import com.example.myapplication.activities.CreateNewExerciseActivity;
-import com.example.myapplication.activities.MainActivity;
 import com.example.myapplication.adapters.ExerciseAdapter;
 import com.example.myapplication.adapters.WorkoutAdapter;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
+import com.example.myapplication.ui.CreateNewExerciseActivity;
+import com.example.myapplication.ui.MainActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

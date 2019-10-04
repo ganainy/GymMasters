@@ -15,8 +15,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.example.myapplication.R;
-import com.example.myapplication.activities.MainActivity;
 import com.example.myapplication.model.Workout;
+import com.example.myapplication.ui.MainActivity;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.shashank.sony.fancytoastlib.FancyToast;

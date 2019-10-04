@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.ui;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 
 import com.bumptech.glide.RequestBuilder;
+import com.example.myapplication.UserInfoActivityRepository;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
 

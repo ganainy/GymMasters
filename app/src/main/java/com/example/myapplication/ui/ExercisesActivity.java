@@ -1,4 +1,4 @@
-package com.example.myapplication.activities;
+package com.example.myapplication.ui;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.example.myapplication.ExerciseActivityViewModel;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.ExerciseAdapter;
 import com.example.myapplication.model.Exercise;

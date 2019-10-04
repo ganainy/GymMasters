@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.myapplication.R;
-import com.example.myapplication.activities.ExercisesActivity;
+import com.example.myapplication.ui.ExercisesActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

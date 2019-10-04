@@ -1,10 +1,10 @@
-package com.example.myapplication;
+package com.example.myapplication.ui;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
-import com.example.myapplication.activities.MainActivity;
+import com.example.myapplication.MainActivityRepository;
 
 public class MainActivityViewModel extends AndroidViewModel {
 

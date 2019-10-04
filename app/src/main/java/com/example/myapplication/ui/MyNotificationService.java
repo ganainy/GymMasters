@@ -1,4 +1,4 @@
-package com.example.myapplication.activities;
+package com.example.myapplication.ui;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;

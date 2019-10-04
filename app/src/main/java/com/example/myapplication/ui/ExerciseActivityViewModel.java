@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.ui;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 
+import com.example.myapplication.MyConstant;
 import com.example.myapplication.model.Exercise;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

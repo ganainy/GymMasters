@@ -1,13 +1,9 @@
-package com.example.myapplication.adapters;
+package com.example.myapplication.fragments;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
-
-import com.example.myapplication.fragments.LoginFragment1;
-import com.example.myapplication.fragments.LoginFragment2;
-import com.example.myapplication.fragments.LoginFragment3;
 
 
 public class ViewPagerAdapterWelcomeActivity extends FragmentPagerAdapter {

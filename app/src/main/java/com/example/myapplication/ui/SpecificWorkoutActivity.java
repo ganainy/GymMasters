@@ -1,4 +1,4 @@
-package com.example.myapplication.activities;
+package com.example.myapplication.ui;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,7 +27,6 @@ public class SpecificWorkoutActivity extends AppCompatActivity {
     private static final String TAG = "SpecificWorkoutActivity";
     @BindView(R.id.specificWorkoutRecycler)
     RecyclerView specificWorkoutRecycler;
-    private Exercise exercise;
     private List<Exercise> workoutExerciseList;
 
 
@@ -47,9 +46,9 @@ public class SpecificWorkoutActivity extends AppCompatActivity {
         reference.child("workout").child(workout.getId()).child("workoutExerciseList").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                exercise = new Exercise();
                 workoutExerciseList = new ArrayList<>();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Exercise exercise = new Exercise();
                     exercise.setName(ds.child("name").getValue().toString());
                     exercise.setSets(ds.child("sets").getValue().toString());
                     exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
@@ -57,9 +56,9 @@ public class SpecificWorkoutActivity extends AppCompatActivity {
                         exercise.setReps(ds.child("reps").getValue().toString());
                     if (ds.hasChild("duration"))
                         exercise.setDuration(ds.child("duration").getValue().toString());
+                    Log.i(TAG, "onDataChange: " + exercise.toString());
                     workoutExerciseList.add(exercise);
                 }
-                Log.i(TAG, "onDataChange: " + workoutExerciseList.size());
                 setupRecycler();
             }
 
