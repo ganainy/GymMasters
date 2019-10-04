@@ -1,9 +1,6 @@
 package com.example.myapplication.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -15,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.ExerciseAdapter;
 import com.example.myapplication.adapters.WorkoutAdapter;
@@ -23,6 +19,7 @@ import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
 import com.example.myapplication.ui.CreateNewExerciseActivity;
 import com.example.myapplication.ui.MainActivity;
+import com.example.myapplication.utils.MyConstant;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -73,7 +70,6 @@ public class MainFragmentHome extends Fragment {
     @OnClick(R.id.viewMyExercisesButton)
     void viewExercises() {
 
-        if (haveNetworkConnection())
             if (exerciseFlag == 1) {
                 /**it means exercise is shown and i should hide them*/
                 recyclerView.setVisibility(View.GONE);
@@ -85,14 +81,12 @@ public class MainFragmentHome extends Fragment {
             } else if (exerciseFlag == 0) {
                 /**didn't download exercises yet*/
                 downloadMyExercises();
-            } else
-                FancyToast.makeText(getActivity(), "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+            }
     }
 
     @OnClick(R.id.viewMyWorkoutsButton)
     void viewWorkouts() {
 
-        if (haveNetworkConnection())
             if (workoutFlag == 1) {
                 /**it means exercise is shown and i should hide them*/
                 recyclerView2.setVisibility(View.GONE);
@@ -105,8 +99,6 @@ public class MainFragmentHome extends Fragment {
                 /**didn't download exercises yet*/
                 downloadMyWorkout();
             }
-        else
-            FancyToast.makeText(getActivity(), "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
 
 
     }
@@ -219,21 +211,6 @@ public class MainFragmentHome extends Fragment {
 
     }
 
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
 
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
-    }
 
 }

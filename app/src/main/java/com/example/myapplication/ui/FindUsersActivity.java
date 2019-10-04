@@ -1,8 +1,7 @@
 package com.example.myapplication.ui;
 
-import android.content.Context;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -19,10 +18,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.UserAdapter;
 import com.example.myapplication.model.User;
+import com.example.myapplication.utils.MyConstant;
+import com.example.myapplication.utils.NetworkChangeReceiver;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +39,8 @@ import butterknife.OnClick;
 
 public class FindUsersActivity extends AppCompatActivity {
     private static final String TAG = "FindUsersActivity";
+    public NetworkChangeReceiver receiver;
+    Boolean bl = true;
     List<User> userList = new ArrayList<>();
     private UserAdapter userAdapter;
     private ArrayList<String> followersIdList = new ArrayList<>();
@@ -66,9 +68,7 @@ public class FindUsersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_find_users);
         ButterKnife.bind(this);
 
-        if (!haveNetworkConnection())
-            FancyToast.makeText(FindUsersActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-        else {
+        checkInternet();
             //this activity called from more than one source so we differ with intent
             if (getIntent().getStringExtra("source").equals("find"))
                 loadAllUsers();
@@ -83,7 +83,6 @@ public class FindUsersActivity extends AppCompatActivity {
 
 
 
-    }
 
     private void loadFollowing() {
         final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(MyConstant.loggedInUserId);
@@ -313,23 +312,23 @@ public class FindUsersActivity extends AppCompatActivity {
     }
 
 
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
-
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
+    public void checkInternet() {
+        //todo add this needed activities+unreigster on onpause
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkChangeReceiver(this);
+        registerReceiver(receiver, filter);
+        bl = receiver.is_connected();
+        Log.d("Boolean ", bl.toString());
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            unregisterReceiver(receiver);
+        } catch (Exception e) {
 
+        }
+    }
 }
 

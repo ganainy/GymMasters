@@ -19,13 +19,13 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestBuilder;
-import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.ExerciseAdapter;
 import com.example.myapplication.adapters.WorkoutAdapter;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.Workout;
+import com.example.myapplication.utils.MyConstant;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

@@ -14,9 +14,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Exercise;
+import com.example.myapplication.utils.MyConstant;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;

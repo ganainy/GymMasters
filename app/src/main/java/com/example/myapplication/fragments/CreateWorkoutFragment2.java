@@ -14,12 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.ExerciseAdapterAdvanced;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
 import com.example.myapplication.ui.MainActivity;
+import com.example.myapplication.utils.MyConstant;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

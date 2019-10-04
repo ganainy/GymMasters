@@ -6,8 +6,8 @@ import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.example.myapplication.MyConstant;
 import com.example.myapplication.model.Workout;
+import com.example.myapplication.utils.MyConstant;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

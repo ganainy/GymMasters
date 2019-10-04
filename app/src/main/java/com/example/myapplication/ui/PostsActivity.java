@@ -1,9 +1,8 @@
 package com.example.myapplication.ui;
 
-import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,17 +15,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.SharedAdapter;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
+import com.example.myapplication.utils.MyConstant;
+import com.example.myapplication.utils.NetworkChangeReceiver;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,6 +37,8 @@ import butterknife.OnClick;
 
 public class PostsActivity extends AppCompatActivity {
     private static final String TAG = "PostsActivity";
+    public NetworkChangeReceiver receiver;
+    Boolean bl = true;
     @BindView(R.id.notFoundTextView)
     TextView notFoundTextView;
     @BindView(R.id.button)
@@ -68,10 +69,8 @@ public class PostsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_posts);
         ButterKnife.bind(this);
 
-        if (haveNetworkConnection())
             getFollowingUid();
-        else
-            FancyToast.makeText(PostsActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+        checkInternet();
 
     }
 
@@ -240,20 +239,25 @@ public class PostsActivity extends AppCompatActivity {
 
     }
 
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
 
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
+    public void checkInternet() {
+        //todo add this needed activities+unreigster on onpause
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkChangeReceiver(this);
+        registerReceiver(receiver, filter);
+        bl = receiver.is_connected();
+        Log.d("Boolean ", bl.toString());
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            unregisterReceiver(receiver);
+        } catch (Exception e) {
+
+        }
+    }
+
+
 }

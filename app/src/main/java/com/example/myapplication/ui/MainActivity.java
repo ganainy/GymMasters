@@ -3,6 +3,8 @@ package com.example.myapplication.ui;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,6 +30,7 @@ import com.example.myapplication.fragments.ViewPagerAdapterCreateWorkout;
 import com.example.myapplication.fragments.ViewPagerAdapterMainActivity;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.Workout;
+import com.example.myapplication.utils.NetworkChangeReceiver;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +43,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    public NetworkChangeReceiver receiver;
+    Boolean bl = true;
+
 
     SelectedBundle selectedBundle;
     SelectedBundle2 selectedBundle2;
@@ -108,6 +114,9 @@ public class MainActivity extends AppCompatActivity
         {
 
         }
+
+
+        checkInternet();
     }
 
     private void handleFollowersClick() {
@@ -332,18 +341,7 @@ public class MainActivity extends AppCompatActivity
                     }).create().show();
         }
 
-/*
 
-        Log.i(TAG, "view_pager_create_workout.getCurrentItem()=="+view_pager_create_workout.getCurrentItem());
-        Log.i(TAG, "view_pager_main.getCurrentItem()=="+view_pager_main.getCurrentItem());
-
-
-        if (view_pager_create_workout.getCurrentItem() == 1) {
-            view_pager_create_workout.setCurrentItem(0);
-        }else{
-            finish();
-        }
-*/
 
 
     }
@@ -361,4 +359,28 @@ public class MainActivity extends AppCompatActivity
     public interface FirebaseCallback {
         void onCallback(User loggedInUser);
     }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        super.onPause();
+        try {
+            unregisterReceiver(receiver);
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    public void checkInternet() {
+        //todo add this needed activities+unreigster on onpause
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkChangeReceiver(this);
+        registerReceiver(receiver, filter);
+        bl = receiver.is_connected();
+        Log.d("Boolean ", bl.toString());
+    }
+
 }

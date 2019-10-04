@@ -1,10 +1,9 @@
 package com.example.myapplication.ui;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -18,8 +17,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.myapplication.MyConstant;
 import com.example.myapplication.R;
+import com.example.myapplication.utils.MyConstant;
+import com.example.myapplication.utils.NetworkChangeReceiver;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -28,6 +28,8 @@ import com.shashank.sony.fancytoastlib.FancyToast;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
+    public NetworkChangeReceiver receiver;
+    Boolean bl = true;
     private FirebaseAuth mAuth;
     private TextInputEditText emailEditText, passwordEditText;
     private Button login;
@@ -40,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         login=findViewById(R.id.loginButton);
         signup=findViewById(R.id.signupTextView);
         passwordEditText = findViewById(R.id.passwordEditText);
-
+        checkInternet();
 
         //open signup activity
         signup.setOnClickListener(new View.OnClickListener() {
@@ -122,13 +124,8 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             constraintLayout.setVisibility(View.GONE);
-                            if (!haveNetworkConnection()) {
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
                                 FancyToast.makeText(LoginActivity.this, "Login failed, Check network connection", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-                            } else {
-                                Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                FancyToast.makeText(LoginActivity.this, "Login failed, Check you email and pasword.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-                            }
 
                         }
 
@@ -138,22 +135,24 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
 
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
+    public void checkInternet() {
+        //todo add this needed activities+unreigster on onpause
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkChangeReceiver(this);
+        registerReceiver(receiver, filter);
+        bl = receiver.is_connected();
+        Log.d("Boolean ", bl.toString());
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            unregisterReceiver(receiver);
+        } catch (Exception e) {
+
+        }
+    }
 
 }
