@@ -67,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login() {
+        /**hide keyboard*/
         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         checkEmailAndPassword();
@@ -115,7 +116,6 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
 
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
                             constraintLayout.setVisibility(View.GONE);
                             //set loggedInUserId value which will be used later
                             MyConstant.loggedInUserId = mAuth.getUid();
@@ -124,8 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             constraintLayout.setVisibility(View.GONE);
-                                Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                FancyToast.makeText(LoginActivity.this, "Login failed, Check network connection", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                            FancyToast.makeText(LoginActivity.this, task.getException() + "", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
 
                         }
 
@@ -137,7 +136,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public void checkInternet() {
-        //todo add this needed activities+unreigster on onpause
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new NetworkChangeReceiver(this);
         registerReceiver(receiver, filter);

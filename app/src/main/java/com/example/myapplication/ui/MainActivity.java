@@ -375,7 +375,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void checkInternet() {
-        //todo add this needed activities+unreigster on onpause
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new NetworkChangeReceiver(this);
         registerReceiver(receiver, filter);

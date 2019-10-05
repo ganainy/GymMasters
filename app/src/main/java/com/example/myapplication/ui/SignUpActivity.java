@@ -24,15 +24,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.shashank.sony.fancytoastlib.FancyToast;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -45,26 +39,20 @@ public class SignUpActivity extends AppCompatActivity {
     Button signUp;
     ProgressBar progressBar;
     FloatingActionButton addProfilePhoto;
-    //private DatabaseReference databaseReference;
     private FirebaseAuth mAuth;
-    private String userName,email;
-    // private StorageReference mStorageRef;
-
-
-
+    private String userName, email;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        profileImage =findViewById(R.id.profile_image);
+        profileImage = findViewById(R.id.profile_image);
         addProfilePhoto = findViewById(R.id.addProfilePhoto);
-        signUp=findViewById(R.id.signupButton);
+        signUp = findViewById(R.id.signupButton);
         progressBar = findViewById(R.id.progressBar);
-        
-        selectPhoto();
 
+        selectPhoto();
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,15 +60,13 @@ public class SignUpActivity extends AppCompatActivity {
                 checkUserNameAndEmailAndPassword();
             }
         });
-
-
     }
 
     private void checkUserNameAndEmailAndPassword() {
 
-        emailEditText=findViewById(R.id.emailEditText);
-        passwordEditText=findViewById(R.id.passwordEditText);
-        userNameEditText=findViewById(R.id.userNameEditText);
+        emailEditText = findViewById(R.id.emailEditText);
+        passwordEditText = findViewById(R.id.passwordEditText);
+        userNameEditText = findViewById(R.id.userNameEditText);
         userName = userNameEditText.getText().toString().trim();
         email = emailEditText.getText().toString().trim();
         final String password = passwordEditText.getText().toString().trim();
@@ -90,14 +76,14 @@ public class SignUpActivity extends AppCompatActivity {
             userNameEditText.setError(fillhere);
         else if (email.isEmpty() || email.equals(" "))
             emailEditText.setError(fillhere);
-        else if(password.isEmpty()||password.equals(" "))
+        else if (password.isEmpty() || password.equals(" "))
             passwordEditText.setError(fillhere);
         else
-        auth(email,password);
+            auth(email, password);
     }
 
-    private void auth(String email,String password) {
-        final ConstraintLayout constraintLayout=findViewById(R.id.constraint);
+    private void auth(String email, String password) {
+        final ConstraintLayout constraintLayout = findViewById(R.id.constraint);
         constraintLayout.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         mAuth = FirebaseAuth.getInstance();
@@ -110,26 +96,21 @@ public class SignUpActivity extends AppCompatActivity {
                             constraintLayout.setVisibility(View.GONE);
                             progressBar.setVisibility(View.GONE);
 
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FancyToast.makeText(SignUpActivity.this,"Registration successful.",FancyToast.LENGTH_LONG,FancyToast.SUCCESS,false).show();
-                            Intent intent=new Intent(SignUpActivity.this,MainActivity.class);
-                            if (imageUri!=null)
-                            intent.putExtra("imageUri",imageUri.toString());
+                            FancyToast.makeText(SignUpActivity.this, "Registration successful.", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
+                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                            if (imageUri != null)
+                                intent.putExtra("imageUri", imageUri.toString());
                             startActivity(intent);
                             String uid = mAuth.getCurrentUser().getUid();
                             saveUserInfoInRealtimeDb(uid);
-
                             //save user data related to sending device to device notification later
-                            saveInFirestore(uid);
 
                         } else {
 
                             // If sign in fails, display a message to the user.
                             constraintLayout.setVisibility(View.GONE);
                             progressBar.setVisibility(View.GONE);
-
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            FancyToast.makeText(SignUpActivity.this,"Registration failed.",FancyToast.LENGTH_LONG,FancyToast.ERROR,false).show();
+                            FancyToast.makeText(SignUpActivity.this, task.getException() + "", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
 
                         }
 
@@ -139,41 +120,17 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
 
-    //todo continue notifications
-    private void saveInFirestore(final String uid) {
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(SignUpActivity.this, new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String mToken = instanceIdResult.getToken();
-                Log.e("signupToken", mToken);
-
-
-                Map<String, Object> user = new HashMap<>();
-                user.put("id", uid);
-                user.put("device_token", mToken);
-                user.put("name", userNameEditText.getText().toString().trim());
-                FirebaseFirestore.getInstance().collection("users").document(uid).set(user);
-
-
-            }
-        });
-
-    }
-
     private void saveUserInfoInRealtimeDb(String uid) {
 
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users");
         User newUser;
-        if (imageUri!=null)
-        {
+        if (imageUri != null) {
             //uploadImage to firebase storage
             uploadProfilePic(imageUri);
             newUser = new User(uid, userName, email, imageUri.getLastPathSegment());
-        }
-        else
-        {
+        } else {
             newUser = new User(uid, userName, email, "-1");
         }
 
@@ -185,22 +142,17 @@ public class SignUpActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "onFailure: "+e.getMessage());
+                Log.i(TAG, "onFailure: " + e.getMessage());
             }
         });
 
     }
 
-    private void  uploadProfilePic(Uri imageUri) {
+    private void uploadProfilePic(Uri imageUri) {
         // Create a storage reference from our app
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-
-
-        final StorageReference imagesRef = storageRef.child("images/"+imageUri.getLastPathSegment());
+        final StorageReference imagesRef = storageRef.child("images/" + imageUri.getLastPathSegment());
         imagesRef.putFile(imageUri);
-
-
-
     }
 
     private void selectPhoto() {

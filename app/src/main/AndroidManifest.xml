@@ -29,7 +29,7 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:windowSoftInputMode="stateHidden"
+            android:windowSoftInputMode="adjustNothing"
             android:name=".ui.LoginActivity"
             android:theme="@style/NoActionBar" />
         <activity

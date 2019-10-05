@@ -18,7 +18,6 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
 
     public NetworkChangeReceiver(Activity a) {
-        // TODO Auto-generated constructor stub
         parent = a;
     }
 

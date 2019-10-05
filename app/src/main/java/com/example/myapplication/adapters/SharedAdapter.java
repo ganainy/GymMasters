@@ -77,7 +77,6 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    //todo fix bug same exercise shows again and again
     @Override
     public int getItemCount() {
         return dateList.size();

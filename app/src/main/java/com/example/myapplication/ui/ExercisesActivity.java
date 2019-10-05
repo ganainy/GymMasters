@@ -99,7 +99,7 @@ public class ExercisesActivity extends AppCompatActivity {
             this.muscle = "cardio";
         } else if (getIntent().hasExtra("leg")) {
             htab_header.setImageResource(R.drawable.lowerleg);
-            this.muscle = "lowerleg";
+            this.muscle = "leg";
         } else if (getIntent().hasExtra("showall")) {
             htab_header.setImageResource(R.drawable.showall);
             this.muscle = "showall";
