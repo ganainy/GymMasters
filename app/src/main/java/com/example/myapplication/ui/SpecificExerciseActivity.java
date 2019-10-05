@@ -439,7 +439,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
         YoutubeApi youtubeApi = retrofit.create(YoutubeApi.class);
 
 
-        /** hidden api key, replace with your key that supports youtube data api for youtube playing videos feature to work*/
+        /** hidden api key, replace with your key that supports youtube data api for youtube playing videos feature to work**/
         Call<Example> call = youtubeApi.getParentObject("snippet", q, "video", BuildConfig.API_KEY);
         call.enqueue(new Callback<Example>() {
             @Override
