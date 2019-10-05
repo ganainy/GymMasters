@@ -59,7 +59,6 @@ public class UserInfoActivityRepository {
                             exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
                             exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
                             exercise.setUtility(ds.child("utility").getValue().toString());
-                            exercise.setVideoLink(ds.child("videoLink").getValue().toString());
                             exerciseList.add(exercise);
                         }
                     }

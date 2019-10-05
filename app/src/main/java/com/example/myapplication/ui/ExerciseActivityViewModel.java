@@ -38,6 +38,7 @@ public class ExerciseActivityViewModel extends ViewModel {
             return load;
         }
 
+        load = new MutableLiveData<>();
         final DatabaseReference exercisesNode = FirebaseDatabase.getInstance().getReference("excercises");
         DatabaseReference myRef = null;
 
@@ -76,36 +77,73 @@ public class ExerciseActivityViewModel extends ViewModel {
                 break;
             }
             case "showall": {
-                myRef = exercisesNode.child("showall");
+                myRef = exercisesNode;
+                loadAllExercises(myRef);
                 break;
             }
 
 
         }
-        //once we selected the right muscle group node this could will be the same for all exercises info
-        load = new MutableLiveData<>();
+
+        /** could within if should only execute if selected muscle is not "showall"*/
+        if (!myRef.equals(exercisesNode)) {
+            //once we selected the right muscle group node this could will be the same for all exercises info
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        //only show in main list the exercises that admin added
+                        if (ds.child("creatorId").getValue().equals(MyConstant.AdminId)) {
+                            Exercise exercise = new Exercise();
+                            exercise.setName(ds.child("name").getValue().toString());
+                            exercise.setExecution(ds.child("execution").getValue().toString());
+                            exercise.setPreparation(ds.child("preparation").getValue().toString());
+                            exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
+                            exercise.setMechanism(ds.child("mechanism").getValue().toString());
+                            exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
+                            exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
+                            exercise.setUtility(ds.child("utility").getValue().toString());
+                            exerciseList.add(exercise);
+                        }
+                    }
+
+                    load.setValue(exerciseList);
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+        return load;
+    }
+
+    private void loadAllExercises(DatabaseReference myRef) {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    //only show in main list the exercises that admin added
-                    if (ds.child("creatorId").getValue().equals(MyConstant.AdminId)) {
-                        Exercise exercise = new Exercise();
-                        exercise.setName(ds.child("name").getValue().toString());
-                        exercise.setExecution(ds.child("execution").getValue().toString());
-                        exercise.setPreparation(ds.child("preparation").getValue().toString());
-                        exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
-                        exercise.setMechanism(ds.child("mechanism").getValue().toString());
-                        exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
-                        exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
-                        exercise.setUtility(ds.child("utility").getValue().toString());
-                        exercise.setVideoLink(ds.child("videoLink").getValue().toString());
-                        exerciseList.add(exercise);
+                for (DataSnapshot dsBig : dataSnapshot.getChildren()) {
+                    for (DataSnapshot ds : dsBig.getChildren()) {
+                        //only show in main list the exercises that admin added
+                        if (ds.child("creatorId").getValue().equals(MyConstant.AdminId)) {
+                            Exercise exercise = new Exercise();
+                            exercise.setName(ds.child("name").getValue().toString());
+                            exercise.setExecution(ds.child("execution").getValue().toString());
+                            exercise.setPreparation(ds.child("preparation").getValue().toString());
+                            exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
+                            exercise.setMechanism(ds.child("mechanism").getValue().toString());
+                            exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
+                            exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
+                            exercise.setUtility(ds.child("utility").getValue().toString());
+                            exerciseList.add(exercise);
+                        }
                     }
                 }
-
                 load.setValue(exerciseList);
 
             }
@@ -116,7 +154,6 @@ public class ExerciseActivityViewModel extends ViewModel {
             }
         });
 
-        return load;
     }
 
     public LiveData<List<Exercise>> downloadExercisesImages(final List<Exercise> exerciseList) {

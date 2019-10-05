@@ -16,7 +16,7 @@ public class Exercise implements Parcelable {
             return new Exercise[size];
         }
     };
-    private String name, bodyPart, execution, preparation, mechanism, utility, previewPhoto1, previewPhoto2, videoLink, sets, reps, duration, creatorId, date, creatorName;
+    private String name, bodyPart, execution, preparation, mechanism, utility, previewPhoto1, previewPhoto2, sets, reps, duration, creatorId, date, creatorName;
 
     public String getCreatorId() {
         return creatorId;
@@ -37,7 +37,6 @@ public class Exercise implements Parcelable {
         this.utility = utility;
         this.previewPhoto1 = previewPhoto1;
         this.previewPhoto2 = previewPhoto2;
-        this.videoLink = videoLink;
         this.bodyPart = bodyPart;
     }
     Bitmap previewBitmap, preview2Bitmap;
@@ -51,7 +50,6 @@ public class Exercise implements Parcelable {
         utility = in.readString();
         previewPhoto1 = in.readString();
         previewPhoto2 = in.readString();
-        videoLink = in.readString();
         sets = in.readString();
         reps = in.readString();
         duration = in.readString();
@@ -139,13 +137,7 @@ public class Exercise implements Parcelable {
         this.previewPhoto2 = previewPhoto2;
     }
 
-    public String getVideoLink() {
-        return videoLink;
-    }
 
-    public void setVideoLink(String videoLink) {
-        this.videoLink = videoLink;
-    }
 
     public String getSets() {
         return sets;
@@ -202,7 +194,6 @@ public class Exercise implements Parcelable {
         parcel.writeString(utility);
         parcel.writeString(previewPhoto1);
         parcel.writeString(previewPhoto2);
-        parcel.writeString(videoLink);
         parcel.writeString(sets);
         parcel.writeString(reps);
         parcel.writeString(duration);

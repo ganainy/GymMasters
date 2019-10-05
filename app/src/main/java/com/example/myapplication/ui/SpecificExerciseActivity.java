@@ -6,28 +6,28 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.example.myapplication.BuildConfig;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Exercise;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
+import com.example.myapplication.youtube_model.Example;
+import com.example.myapplication.youtube_model.Id;
+import com.example.myapplication.youtube_model.Item;
+import com.example.myapplication.youtube_model.YoutubeApi;
+import com.example.myapplication.youtube_model.YoutubeConfig;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,18 +39,23 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-public class SpecificExerciseActivity extends AppCompatActivity {
+public class SpecificExerciseActivity extends YouTubeBaseActivity {
     private static final String TAG = "hehe";
 
-    @BindView(R.id.exo_playerview)
-    PlayerView simpleExoPlayerView;
 
     @BindView(R.id.executionTextView)
     TextView executionTextView;
@@ -68,19 +73,17 @@ public class SpecificExerciseActivity extends AppCompatActivity {
     @BindView(R.id.exerciseImageView)
     ImageView exerciseImageView;
 
-    @BindView(R.id.showVideoFAB)
-    FloatingActionButton showVideoFAB;
+
+    @BindView(R.id.youTubePlayerView)
+    YouTubePlayerView youTubePlayerView;
+
     private boolean b;
     private Timer timer;
     public Exercise exercise;
     private String exerciseName;
-
-    @OnClick(R.id.showVideoFAB)
-    void hidePhotoShowVideo() {
-        showVideoFAB.hide();
-        exerciseImageView.setVisibility(View.INVISIBLE);
-        showVideoFromStorage(exercise.getVideoLink());
-    }
+    YouTubePlayer.OnInitializedListener onInitializedListener;
+    private List<String> videoPlaylist = new ArrayList<>();
+    private ScrollView parent;
 
 
     @OnClick(R.id.mechanicInfo)
@@ -107,8 +110,7 @@ public class SpecificExerciseActivity extends AppCompatActivity {
         if (i.hasExtra("name")) { //if true it means exercise is coming from inside a workout
             exerciseName = i.getStringExtra("name");
             targetMuscle = i.getStringExtra("targetMuscle");
-            //change exerciseName in actionbar
-            setTitle(exerciseName);
+
             downloadExercise(new CallbackInterface() {
                 @Override
                 public void callbackMethod(Exercise exercisee) {
@@ -119,13 +121,45 @@ public class SpecificExerciseActivity extends AppCompatActivity {
         } else if (i.hasExtra("exercise")) {//if true it means exercise is coming from Exercise adapter of ExerciseActivity --or shared adapter of posts activity
             // exercise=new Exercise();
             exercise = i.getParcelableExtra("exercise");
-            //change exerciseName in actionbar
-            setTitle(exercise.getName());
             showInViews();
-
-
         }
 
+
+        /**snack bar to ask user if he wants video instead of photos*/
+        parent = findViewById(R.id.parent);
+        showFirstSnackbar();
+
+
+    }
+
+    private void showFirstSnackbar() {
+        Snackbar snackbar = Snackbar
+                .make(parent, "Show video instead?", Snackbar.LENGTH_INDEFINITE)
+                .setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        exerciseImageView.setVisibility(View.GONE);
+                        showYoutubePlayer();
+
+
+                        showSecondSnackbar();
+                    }
+                });
+        snackbar.show();
+    }
+
+    private void showSecondSnackbar() {
+        /**snack bar to ask user if he wants photos instead of video again*/
+        Snackbar snackbar = Snackbar.make(parent, "Return to showing images?", Snackbar.LENGTH_INDEFINITE)
+                .setAction("OK", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showFirstSnackbar();
+                        showSwitchingPhotosAgain();
+                    }
+                });
+        snackbar.show();
     }
 
     private void showInViews() {
@@ -151,7 +185,6 @@ public class SpecificExerciseActivity extends AppCompatActivity {
                         exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
                         exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
                         exercise.setUtility(ds.child("utility").getValue().toString());
-                        exercise.setVideoLink(ds.child("videoLink").getValue().toString());
 
 
                     }
@@ -318,45 +351,34 @@ public class SpecificExerciseActivity extends AppCompatActivity {
     }
 
 
-    private void showVideoFromStorage(String videoLink) {
+    private void showYoutubePlayer() {
 
         //stop timer from working in background
         if (timer != null)
             timer.cancel();
 
+
+        //get video id for the exercise name using youtube data api
+        //exercise.getName() might be null if iam coming from inside a workout so i will use exerciseName instead
+        retrofit(exercise.getName() != null ? exercise.getName() : exerciseName);
+
         //show hidden view then play video
-        simpleExoPlayerView.setVisibility(View.VISIBLE);
-
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference pathReference = storageRef.child(videoLink);
-        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        youTubePlayerView.setVisibility(View.VISIBLE);
+        //init youtube player
+        onInitializedListener = new YouTubePlayer.OnInitializedListener() {
             @Override
-            public void onSuccess(Uri uri) {
-
-                TrackSelector trackSelector = new DefaultTrackSelector();
-
-                SimpleExoPlayer exoPlayer = ExoPlayerFactory.newSimpleInstance(SpecificExerciseActivity.this, trackSelector);
-
-                simpleExoPlayerView.setPlayer(exoPlayer);
-
-                exoPlayer.setPlayWhenReady(true);
-
-                DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(SpecificExerciseActivity.this, Util.getUserAgent(SpecificExerciseActivity.this, "VideoPlayer"));
-
-                MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
-
-                exoPlayer.prepare(videoSource);
-                exoPlayer.setPlayWhenReady(true);
-
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+                Log.i(TAG, "onInitializationSuccess: ");
+                if (videoPlaylist.size() > 1) youTubePlayer.loadVideos(videoPlaylist);
+                else openAlertDialog();
             }
-        }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception exception) {
-                // if firebase storage video not working ,ask to play on youtube instead
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+                Log.i(TAG, "onInitializationFailure: ");
                 openAlertDialog();
-                Log.i(TAG, exception.getMessage());
             }
-        });
+        };
+
 
 
     }
@@ -364,7 +386,7 @@ public class SpecificExerciseActivity extends AppCompatActivity {
     private void openAlertDialog() {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(this);
-        builder.setMessage("Show video from youtube instead?").setTitle("Error playing video :/");
+        builder.setMessage("In app play failed ,Show video inside youtube app instead?").setTitle("Error playing video :/");
 
 
         builder.setCancelable(false)
@@ -388,8 +410,8 @@ public class SpecificExerciseActivity extends AppCompatActivity {
     }
 
     private void showSwitchingPhotosAgain() {
-        //  show swapping photos again and hide videoplayer
-        simpleExoPlayerView.setVisibility(View.INVISIBLE);
+        //  show swapping photos again and hide youtube player
+        youTubePlayerView.setVisibility(View.INVISIBLE);
         exerciseImageView.setVisibility(View.VISIBLE);
         switchExercisePhotos();
     }
@@ -405,6 +427,45 @@ public class SpecificExerciseActivity extends AppCompatActivity {
 
     private interface CallbackInterface {
         void callbackMethod(Exercise exercise);
+    }
+
+
+    private void retrofit(String q) {
+        String mBaseUrl = "https://www.googleapis.com/youtube/v3/";
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(mBaseUrl)
+                .addConverterFactory(GsonConverterFactory.create()).build();
+
+        YoutubeApi youtubeApi = retrofit.create(YoutubeApi.class);
+
+
+        /** hidden api key, replace with your key that supports youtube data api for youtube playing videos feature to work*/
+        Call<Example> call = youtubeApi.getParentObject("snippet", q, "video", BuildConfig.API_KEY);
+        call.enqueue(new Callback<Example>() {
+            @Override
+            public void onResponse(Call<Example> call, Response<Example> response) {
+                if (response.isSuccessful()) {
+                    Example body = response.body();
+                    List<Item> items = body.getItems();
+                    for (Item item : items) {
+                        Id id = item.getId();
+                        String videoId = id.getVideoId();
+                        videoPlaylist.add(videoId);
+                        Log.i(TAG, "onResponse: " + videoId);
+                    }
+
+                    youTubePlayerView.initialize(YoutubeConfig.getApiKey(), onInitializedListener);
+
+                } else {
+                    Log.i(TAG, "onResponse: " + response.code() + response.errorBody());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Example> call, Throwable t) {
+                Log.i(TAG, "onFailure: " + t.getMessage());
+            }
+        });
     }
 }
 
