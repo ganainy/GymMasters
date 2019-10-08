@@ -1,11 +1,12 @@
 package com.example.myapplication;
 
 import android.app.Application;
-import android.arch.lifecycle.MutableLiveData;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
