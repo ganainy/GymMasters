@@ -1,45 +1,36 @@
 {
   "project_info": {
-    "project_number": "316904056049",
-    "firebase_url": "https://gymmasters-d56bb.firebaseio.com",
-    "project_id": "gymmasters-d56bb",
-    "storage_bucket": "gymmasters-d56bb.appspot.com"
+    "project_number": "224559312783",
+    "firebase_url": "https://quantum-yen-238215.firebaseio.com",
+    "project_id": "quantum-yen-238215",
+    "storage_bucket": "quantum-yen-238215.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:316904056049:android:13c3c6a65bcbec53",
+        "mobilesdk_app_id": "1:224559312783:android:6a4a1dada32f18638fa5fa",
         "android_client_info": {
           "package_name": "com.example.myapplication"
         }
       },
       "oauth_client": [
         {
-          "client_id": "316904056049-qf2jtroja6hasdarlb4cakisglv23l8a.apps.googleusercontent.com",
+          "client_id": "224559312783-mob2iscmdk3vdpv77mld9dth6glkfg01.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.myapplication",
-            "certificate_hash": "78216473c04b3cc5c0c88b3cca6cfe60e4bacbd6"
+            "certificate_hash": "1f29cedfbcb2d585872c912a29365093050e7570"
           }
-        },
-        {
-          "client_id": "316904056049-9ug77a8hdsuo0sa6tfcp3fnggj759vak.apps.googleusercontent.com",
-          "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBgnPkbgdGyrBsi57L8ZpE7BFEfnNGBIq0"
+          "current_key": "AIzaSyA1aKIpmSn_Eq7rpNbbEwrNz-POMCNBInQ"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "316904056049-9ug77a8hdsuo0sa6tfcp3fnggj759vak.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

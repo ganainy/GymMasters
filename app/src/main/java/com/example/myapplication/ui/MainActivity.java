@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
@@ -30,12 +31,9 @@ import com.example.myapplication.fragments.ViewPagerAdapterMainActivity;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.Workout;
 import com.example.myapplication.utils.NetworkChangeReceiver;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import butterknife.BindView;
@@ -45,9 +43,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public NetworkChangeReceiver receiver;
+    MainActivityViewModel mViewModel;
     Boolean bl = true;
-
-
     SelectedBundle selectedBundle;
     SelectedBundle2 selectedBundle2;
     Workout workout;
@@ -182,52 +179,47 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showUserDataInNavigationMenu() {
-        //used callback so we only try to show the image  after the id is retreived from the database otherwise it would be null
-        MainActivityViewModel mViewModel;
+
+        /** setup views*/
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View hView = navigationView.getHeaderView(0);
+        imageView = hView.findViewById(R.id.imageViewProfile);
+        nameNavigation = hView.findViewById(R.id.nameNavigation);
+        emailNavigation = hView.findViewById(R.id.emailNavigation);
+
+        /**get user data*/
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
-        mViewModel.getUserData(new FirebaseCallback() {
+        mViewModel.getUserData().observe(this, new Observer<User>() {
             @Override
-            public void onCallback(User loggedInUser) {
-                NavigationView navigationView = findViewById(R.id.nav_view);
-                View hView = navigationView.getHeaderView(0);
-                imageView = hView.findViewById(R.id.imageViewProfile);
-                //set name and email in the navigationViews
-                nameNavigation = hView.findViewById(R.id.nameNavigation);
-                emailNavigation = hView.findViewById(R.id.emailNavigation);
-
-                nameNavigation.setText(loggedInUser.getName());
-                emailNavigation.setText(loggedInUser.getEmail());
-
-                //imageUri is not null if we come from signup activity so we can show image directly from uri without downloading again from firebase storage
-                if (getIntent().hasExtra("imageUri")) {
-                    Uri myUri = Uri.parse(getIntent().getStringExtra("imageUri"));
-                    Glide.with(MainActivity.this)
-                            .load(myUri)
-                            .into(imageView);
-                } else {
-                    storageRef = FirebaseStorage.getInstance().getReference();
-                    //reference to logged in user profile image
-
-                    StorageReference pathReference = storageRef.child("images/" + loggedInUser.getPhoto());
-                    pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            //download image with glide then show it in the navigation menu
-                            Glide.with(getApplicationContext()).load(uri.toString()).into(imageView);
-                            Log.i(TAG, "onSuccess: loaded from storage");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle any errors
-                            Log.i(TAG, "onFailure: " + exception.getMessage());
-                        }
-                    });
-                }
+            public void onChanged(User user) {
+                nameNavigation.setText(user.getName());
+                emailNavigation.setText(user.getEmail());
+                loadUserImage(user);
             }
         });
-    }
 
+
+
+            }
+
+
+    private void loadUserImage(User user) {
+        /**user coming from sign up page so we have the uri of image and will show it directly*/
+        if (getIntent().hasExtra("imageUri")) {
+            Uri myUri = Uri.parse(getIntent().getStringExtra("imageUri"));
+            Glide.with(MainActivity.this)
+                    .load(myUri)
+                    .into(imageView);
+        } else {
+            /**get image uri from storage and show it using glide*/
+            mViewModel.getUserPhoto(user).observe(this, new Observer<Uri>() {
+                @Override
+                public void onChanged(Uri uri) {
+                    Glide.with(getApplicationContext()).load(uri.toString()).into(imageView);
+                }
+            });
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

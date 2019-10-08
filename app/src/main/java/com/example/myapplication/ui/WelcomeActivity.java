@@ -2,6 +2,7 @@ package com.example.myapplication.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -13,10 +14,13 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.myapplication.R;
 import com.example.myapplication.fragments.ViewPagerAdapterWelcomeActivity;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class WelcomeActivity extends AppCompatActivity {
+    private static final String TAG = "WelcomeActivityh";
     ViewPager viewPager;
     Button signUp;
     TextView login;
@@ -97,13 +101,19 @@ public class WelcomeActivity extends AppCompatActivity {
 
     public void onStart() {
         super.onStart();
+
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         // Check if user is signed in and open app with asking him to login again
         FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() != null) {
+        if (mAuth.getCurrentUser() != null || account != null) {
             // User is signed in (getCurrentUser() will be null if not signed in)
-            startActivity(new Intent(WelcomeActivity.this,MainActivity.class));
+            Log.i(TAG, "onStart: account!=null");
+            startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
         }
+
     }
 
 }

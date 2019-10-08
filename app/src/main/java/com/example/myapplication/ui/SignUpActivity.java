@@ -15,6 +15,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.User;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,9 +37,10 @@ import com.shashank.sony.fancytoastlib.FancyToast;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "SignUpActivity";
     private static final int PICK_IMAGE = 101;
+    private static final int RC_SIGN_IN = 102;
     CircleImageView profileImage;
     private TextInputEditText userNameEditText, emailEditText, passwordEditText;
     private Uri imageUri;
@@ -42,6 +49,7 @@ public class SignUpActivity extends AppCompatActivity {
     FloatingActionButton addProfilePhoto;
     private FirebaseAuth mAuth;
     private String userName, email;
+    private GoogleSignInClient mGoogleSignInClient;
 
 
     @Override
@@ -61,6 +69,23 @@ public class SignUpActivity extends AppCompatActivity {
                 checkUserNameAndEmailAndPassword();
             }
         });
+
+
+        // Configure sign-in to request the user's ID, email address, and basic
+// profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+
+        // Build a GoogleSignInClient with the options specified by gso.
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+
+        // Set the dimensions of the sign-in button.
+        SignInButton signInButton = findViewById(R.id.sign_in_button);
+        signInButton.setOnClickListener(this);
+        signInButton.setSize(SignInButton.SIZE_WIDE);
     }
 
     private void checkUserNameAndEmailAndPassword() {
@@ -182,16 +207,66 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data == null)
-            return;
-        if (requestCode == PICK_IMAGE) {
+
+        if (data != null && requestCode == PICK_IMAGE) {
             imageUri = data.getData();
             profileImage.setImageURI(imageUri);
         }
+        if (requestCode == RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+
     }
 
     public void onStart() {
         super.onStart();
 
     }
+
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            // Signed in successfully, show authenticated UI.
+            updateUI(account);
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+            updateUI(null);
+        }
+    }
+
+
+    private void updateUI(GoogleSignInAccount account) {
+        if (account == null) {
+            //ask user to login
+            Log.i(TAG, "updateUI: account is null");
+            FancyToast.makeText(SignUpActivity.this, "Error signing in with google account ,\n please sign up with Gym master account instead.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+        } else {
+            //user already added his google account
+            Log.i(TAG, "updateUI: " + account.getDisplayName()
+                    + "\ngetIdToken" + account.getIdToken()
+                    + "\ngetId" + account.getId()
+                    + "\ngetEmail" + account.getEmail()
+                    + "\ngetDisplayName" + account.getDisplayName()
+                    + "\ngetPhotoUrl" + account.getPhotoUrl());
+
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        /**google sign in clicked*/
+        if (view.getId() == R.id.sign_in_button) {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+
+        }
+    }
+    //todo fix google sign in then add loged in user data same as app sign up to real time db
 }
