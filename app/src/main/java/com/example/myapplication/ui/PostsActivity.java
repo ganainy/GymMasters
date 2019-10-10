@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,6 +51,8 @@ public class PostsActivity extends AppCompatActivity {
     TextView loadingTextView;
     @BindView(R.id.loadingProgressbar)
     ProgressBar loadingProgressbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private List<String> followingIdList = new ArrayList<>();
     private List<Exercise> exerciseList = new ArrayList<>();
@@ -70,7 +73,15 @@ public class PostsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_posts);
         ButterKnife.bind(this);
 
-            getFollowingUid();
+
+        /**setting up custom toolbar*/
+        setSupportActionBar(toolbar);
+        setTitle("News feed");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+        getFollowingUid();
         checkInternet();
 
     }
@@ -258,5 +269,14 @@ public class PostsActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * handle back press from toolbar
+     */
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
 }

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,6 +44,8 @@ public class FindUsersActivity extends AppCompatActivity {
     public NetworkChangeReceiver receiver;
     Boolean bl = true;
     List<User> userList = new ArrayList<>();
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private UserAdapter userAdapter;
     private ArrayList<String> followersIdList = new ArrayList<>();
     private List<User> followersList = new ArrayList<>();
@@ -69,20 +72,25 @@ public class FindUsersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_find_users);
         ButterKnife.bind(this);
 
+        /**setting up custom toolbar*/
+        setSupportActionBar(toolbar);
+        setTitle("Users List");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
         checkInternet();
-            //this activity called from more than one source so we differ with intent
-            if (getIntent().getStringExtra("source").equals("find"))
-                loadAllUsers();
-            else if (getIntent().getStringExtra("source").equals("followers")) {
-                loadFollowers();
-                notFoundTextView.setText("No followers yet");
-            } else if (getIntent().getStringExtra("source").equals("following")) {
-                loadFollowing();
-                notFoundTextView.setText("Not following anyone yet");
-            }
+        //this activity called from more than one source so we differ with intent
+        if (getIntent().getStringExtra("source").equals("find"))
+            loadAllUsers();
+        else if (getIntent().getStringExtra("source").equals("followers")) {
+            loadFollowers();
+            notFoundTextView.setText("No followers yet");
+        } else if (getIntent().getStringExtra("source").equals("following")) {
+            loadFollowing();
+            notFoundTextView.setText("Not following anyone yet");
         }
-
-
+    }
 
 
     private void loadFollowing() {
@@ -330,5 +338,16 @@ public class FindUsersActivity extends AppCompatActivity {
 
         }
     }
+
+
+    /**
+     * handle back press from toolbar
+     */
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
 }
 
