@@ -6,17 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".fragments.CreateWorkoutFragment2">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="74dp"></androidx.recyclerview.widget.RecyclerView>
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="60dp"></androidx.recyclerview.widget.RecyclerView>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

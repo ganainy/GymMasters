@@ -21,6 +21,8 @@ import com.example.myapplication.model.Workout;
 import com.example.myapplication.ui.CreateNewExerciseActivity;
 import com.example.myapplication.ui.MainActivity;
 import com.example.myapplication.utils.MyConstant;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -116,7 +118,15 @@ public class MainFragmentHome extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main_fragment_home, container, false);
         ButterKnife.bind(this, view);
+        setLoggedInUserId();
         return view;
+    }
+
+    private void setLoggedInUserId() {
+        if (FirebaseAuth.getInstance().getUid() != null)
+            MyConstant.loggedInUserId = FirebaseAuth.getInstance().getUid();
+        else if (GoogleSignIn.getLastSignedInAccount(getActivity()) != null)
+            MyConstant.loggedInUserId = GoogleSignIn.getLastSignedInAccount(getActivity()).getId();
     }
 
     public void downloadMyExercises() {
@@ -128,7 +138,7 @@ public class MainFragmentHome extends Fragment {
                 for (DataSnapshot dsBig : dataSnapshot.getChildren()) {
                     for (DataSnapshot ds : dsBig.getChildren()) {
                         Exercise exercise = new Exercise();
-                        Log.i(TAG, "onChildAdded: " + MyConstant.loggedInUserId);
+                        Log.i(TAG, "onChildAdded: " + MyConstant.loggedInUserId + "---" + ds.child("creatorId").getValue());
                         if (ds.child("creatorId").getValue().equals(MyConstant.loggedInUserId)) {
                             exercise.setName(ds.child("name").getValue().toString());
                             exercise.setExecution(ds.child("execution").getValue().toString());

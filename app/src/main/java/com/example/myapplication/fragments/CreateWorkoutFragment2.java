@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,6 +52,7 @@ public class CreateWorkoutFragment2 extends Fragment {
     private ExerciseAdapterAdvanced exerciseAdapter;
     private Workout workout;
     private List<Exercise> exercisesOfWorkoutList;
+    private SearchView searchView;
 
 
     @OnClick(R.id.finishButton)
@@ -91,6 +96,30 @@ public class CreateWorkoutFragment2 extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_workout_fragment2, container, false);
         ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
+    /*  Toolbar toolbar = view.findViewById(R.id.toolbar2);
+        ((MainActivity) getActivity()).getSupportActionBar().hide();
+       // ((MainActivity) getActivity()).setSupportActionBar(toolbar);*/
+
+/*
+
+        SearchView searchView=view.findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //so app won't crash if no data in recycler
+                if (exerciseAdapter != null)
+                    exerciseAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+*/
+
 
 
         ((MainActivity) getActivity()).setOnBundleSelected2(new MainActivity.SelectedBundle2() {
@@ -152,13 +181,7 @@ public class CreateWorkoutFragment2 extends Fragment {
     }
 
 
-     /*   private void downloadExercisesImages(List<Exercise> exerciseList) {
 
-
-        setupRecycler();
-        setupSearchView();
-        }
-      */
 
 
     private void setupRecycler() {
@@ -170,4 +193,33 @@ public class CreateWorkoutFragment2 extends Fragment {
         recycler.setAdapter(exerciseAdapter);
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.i(TAG, "onCreateOptionsMenu: ");
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.search_exercise_menu, menu);
+        menu.findItem(R.id.search).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_search_black_24dp));
+        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                Log.i(TAG, "onQueryTextChange: " + s);
+                //so app won't crash if no data in recycler
+                if (exerciseAdapter != null)
+                    exerciseAdapter.getFilter().filter(s);
+                return true;
+            }
+        });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                return false;
+            }
+        });
+    }
 }

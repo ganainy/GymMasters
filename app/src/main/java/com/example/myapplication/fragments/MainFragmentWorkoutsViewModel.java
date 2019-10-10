@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.myapplication.model.Workout;
-import com.example.myapplication.utils.MyConstant;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,8 +35,8 @@ public class MainFragmentWorkoutsViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 workoutList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    //only show in main list the workouts that admin added
-                    if (ds.child("creatorId").getValue().equals(MyConstant.AdminId)) {
+                    //TODO only show in main list the workouts that admin added(remove comment)
+                    /*  if (ds.child("creatorId").getValue().equals(MyConstant.AdminId)) {*/
                         Workout workout = new Workout();
                         workout.setName(ds.child("name").getValue().toString());
                         workout.setDuration(ds.child("duration").getValue().toString() + " mins");
@@ -47,7 +46,7 @@ public class MainFragmentWorkoutsViewModel extends ViewModel {
 
                         workoutList.add(workout);
                     }
-                }
+                /* }*/
                 loadWorkoutList.setValue(workoutList);
 
             }

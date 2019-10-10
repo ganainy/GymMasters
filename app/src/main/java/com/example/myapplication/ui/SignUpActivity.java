@@ -249,14 +249,37 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             FancyToast.makeText(SignUpActivity.this, "Error signing in with google account ,\n please sign up with Gym master account instead.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
         } else {
             //user already added his google account
-            Log.i(TAG, "updateUI: " + account.getDisplayName()
-                    + "\ngetIdToken" + account.getIdToken()
-                    + "\ngetId" + account.getId()
-                    + "\ngetEmail" + account.getEmail()
-                    + "\ngetDisplayName" + account.getDisplayName()
-                    + "\ngetPhotoUrl" + account.getPhotoUrl());
+            addGoogleUserToDB(account);
+
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            FancyToast.makeText(SignUpActivity.this, "Login Successful.", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
+
+            startActivity(intent);
+            finish();
 
         }
+    }
+
+    private void addGoogleUserToDB(GoogleSignInAccount account) {
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users");
+        User newUser;
+
+        newUser = new User(account.getId(), account.getDisplayName(), account.getEmail(), null);
+
+
+        myRef.child(account.getId()).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.i(TAG, "onSuccess: ");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: " + e.getMessage());
+            }
+        });
     }
 
     @Override
@@ -268,5 +291,4 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         }
     }
-    //todo fix google sign in then add loged in user data same as app sign up to real time db
 }

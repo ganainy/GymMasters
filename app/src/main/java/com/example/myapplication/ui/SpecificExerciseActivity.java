@@ -223,6 +223,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
+                    Log.i(TAG, "onFailure: " + exception.getMessage());
                     // Handle any errors
                 }
             });
@@ -259,6 +260,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
                     // Handle any errors
+                    Log.i(TAG, "onFailure2: " + exception.getMessage());
                 }
             });
 
@@ -458,7 +460,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
                     youTubePlayerView.initialize(YoutubeConfig.getApiKey(), onInitializedListener);
 
                 } else {
-                    Log.i(TAG, "onResponse: " + response.code() + response.errorBody());
+                    Log.i(TAG, "onResponse: " + response.code() + response.errorBody().toString());
                 }
             }
 

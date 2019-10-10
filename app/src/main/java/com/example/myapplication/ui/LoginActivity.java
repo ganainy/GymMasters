@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.myapplication.R;
+import com.example.myapplication.model.User;
 import com.example.myapplication.utils.MyConstant;
 import com.example.myapplication.utils.NetworkChangeReceiver;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -27,10 +28,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -195,14 +200,40 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else {
             //user already added his google account
 
-            Log.i(TAG, "updateUI: " + account.getDisplayName()
-                    + "\ngetIdToken" + account.getIdToken()
-                    + "\ngetId" + account.getId()
-                    + "\ngetEmail" + account.getEmail()
-                    + "\ngetDisplayName" + account.getDisplayName()
-                    + "\ngetPhotoUrl" + account.getPhotoUrl());
+            addGoogleUserToDB(account);
+
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            FancyToast.makeText(LoginActivity.this, "Login Successful.", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
+
+            startActivity(intent);
+            finish();
+
         }
     }
+
+
+    private void addGoogleUserToDB(GoogleSignInAccount account) {
+        // Write a message to the database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users");
+        User newUser;
+
+        newUser = new User(account.getId(), account.getDisplayName(), account.getEmail(), null);
+
+
+        myRef.child(account.getId()).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.i(TAG, "onSuccess: ");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: " + e.getMessage());
+            }
+        });
+    }
+
 
     @Override
     public void onClick(View view) {

@@ -31,6 +31,11 @@ import com.example.myapplication.fragments.ViewPagerAdapterMainActivity;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.Workout;
 import com.example.myapplication.utils.NetworkChangeReceiver;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -65,6 +70,7 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
+    private GoogleSignInClient mGoogleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,20 +193,30 @@ public class MainActivity extends AppCompatActivity
         nameNavigation = hView.findViewById(R.id.nameNavigation);
         emailNavigation = hView.findViewById(R.id.emailNavigation);
 
-        /**get user data*/
-        mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
-        mViewModel.getUserData().observe(this, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                nameNavigation.setText(user.getName());
-                emailNavigation.setText(user.getEmail());
-                loadUserImage(user);
-            }
-        });
+
+        if (GoogleSignIn.getLastSignedInAccount(this) != null) {
+            /**this means user signed in with google account*/
+            GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(this);
+            nameNavigation.setText(lastSignedInAccount.getDisplayName());
+            emailNavigation.setText(lastSignedInAccount.getEmail());
+            if (lastSignedInAccount.getPhotoUrl() != null)
+                Glide.with(MainActivity.this).load(lastSignedInAccount.getPhotoUrl()).into(imageView);
+        } else {
+            /**user logged in/signed up with normal email/password*/
+            /**get user data*/
+            mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+            mViewModel.getUserData().observe(this, new Observer<User>() {
+                @Override
+                public void onChanged(User user) {
+                    nameNavigation.setText(user.getName());
+                    emailNavigation.setText(user.getEmail());
+                    loadUserImage(user);
+                }
+            });
+        }
 
 
-
-            }
+    }
 
 
     private void loadUserImage(User user) {
@@ -236,16 +252,31 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_signout) {
             FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            mAuth.signOut();
-            //finish this activity on log out so users won't be able to log in on back press in login
-            Intent i = new Intent(MainActivity.this, LoginActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
-            finish();
+            if (mAuth != null) {
+                mAuth.signOut();
+                openLoginActivity();
+            } else {
+                mGoogleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        openLoginActivity();
+                    }
+                });
+            }
+
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void openLoginActivity() {
+        //finish this activity on log out so users won't be able to log in on back press in login
+        Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+        finish();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -333,8 +364,6 @@ public class MainActivity extends AppCompatActivity
                         }
                     }).create().show();
         }
-
-
 
 
     }

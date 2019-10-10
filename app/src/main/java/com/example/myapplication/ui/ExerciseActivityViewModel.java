@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.myapplication.model.Exercise;
-import com.example.myapplication.utils.MyConstant;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -95,8 +94,8 @@ public class ExerciseActivityViewModel extends ViewModel {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        //only show in main list the exercises that admin added
-                        if (ds.child("creatorId").getValue().equals(MyConstant.AdminId)) {
+                        //TODO only show in main list the exercises that admin added(remove comment)
+                        /*  if (ds.child("creatorId").getValue().equals(MyConstant.AdminId)) {*/
                             Exercise exercise = new Exercise();
                             exercise.setName(ds.child("name").getValue().toString());
                             exercise.setExecution(ds.child("execution").getValue().toString());
@@ -108,7 +107,7 @@ public class ExerciseActivityViewModel extends ViewModel {
                             exercise.setUtility(ds.child("utility").getValue().toString());
                             exerciseList.add(exercise);
                         }
-                    }
+                    /* }*/
 
                     load.setValue(exerciseList);
 
@@ -130,8 +129,8 @@ public class ExerciseActivityViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dsBig : dataSnapshot.getChildren()) {
                     for (DataSnapshot ds : dsBig.getChildren()) {
-                        //only show in main list the exercises that admin added
-                        if (ds.child("creatorId").getValue().equals(MyConstant.AdminId)) {
+                        //TODO only show in main list the exercises that admin added(remove comment)
+                        /*  if (ds.child("creatorId").getValue().equals(MyConstant.AdminId)) {*/
                             Exercise exercise = new Exercise();
                             exercise.setName(ds.child("name").getValue().toString());
                             exercise.setExecution(ds.child("execution").getValue().toString());
@@ -143,7 +142,7 @@ public class ExerciseActivityViewModel extends ViewModel {
                             exercise.setUtility(ds.child("utility").getValue().toString());
                             exerciseList.add(exercise);
                         }
-                    }
+                    /* }*/
                 }
                 load.setValue(exerciseList);
 

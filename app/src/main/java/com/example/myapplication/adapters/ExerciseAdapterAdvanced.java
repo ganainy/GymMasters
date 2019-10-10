@@ -35,10 +35,11 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
     private static final String TAG = "ExerciseAdapterAdvanced";
     private final Context context;
 
-    private List<Exercise> exercisesList;
     private List<Exercise> ExercisesOfWorkoutList = new ArrayList<>();
     private StorageReference storageRef;
     private String sets, reps;
+    private List<Exercise> filteredNameList = new ArrayList<>();
+    private List<Exercise> exerciseList, finalExerciseList;
 
     public ExerciseAdapterAdvanced(Context context) {
         this.context = context;
@@ -56,7 +57,7 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ExerciseViewHolder exerciseViewHolder, int i) {
-        exerciseViewHolder.exerciseName.setText(exercisesList.get(i).getName());
+        exerciseViewHolder.exerciseName.setText(exerciseList.get(i).getName());
         storageRef = FirebaseStorage.getInstance().getReference();
         //reference to exercise image
         downloadAndShowExerciseImage(exerciseViewHolder, i);
@@ -65,7 +66,7 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
     }
 
     private void downloadAndShowExerciseImage(final ExerciseViewHolder exerciseViewHolder, int i) {
-        StorageReference pathReference = storageRef.child("exerciseImages/" + exercisesList.get(i).getPreviewPhoto1());
+        StorageReference pathReference = storageRef.child("exerciseImages/" + exerciseList.get(i).getPreviewPhoto1());
         pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -84,26 +85,27 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
 
     @Override
     public int getItemCount() {
-        return exercisesList.size();
+        return exerciseList.size();
     }
 
     public void setDataSource(List<Exercise> exerciseList) {
-        this.exercisesList = exerciseList;
+        this.exerciseList = exerciseList;
+        if (finalExerciseList == null) this.finalExerciseList = exerciseList;
     }
 
 
     @Override
     public Filter getFilter() {
-        return null; /*new Filter() {
+        return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-                Log.i(TAG, "performFiltering: ");
+
                 String charSequenceString = constraint.toString();
                 if (charSequenceString.isEmpty()) {
-                    filteredNameList = originalExerciseList;
+                    filteredNameList = finalExerciseList;
                 } else {
                     List<Exercise> filteredList = new ArrayList<>();
-                    for (Exercise exercise : originalExerciseList) {
+                    for (Exercise exercise : finalExerciseList) {
                         if (exercise.getName().toLowerCase().contains(charSequenceString.toLowerCase())) {
                             filteredList.add(exercise);
                         }
@@ -122,7 +124,7 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
                 notifyDataSetChanged();
 
             }
-        };*/
+        };
     }
 
     private void openSetsAndRepsAlertDialog(final int adapterPosition) {
@@ -183,9 +185,9 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
     }
 
     private void addToExercisesOfWorkoutList(int adapterPosition) {
-        exercisesList.get(adapterPosition).setSets(sets);
-        exercisesList.get(adapterPosition).setReps(reps);
-        ExercisesOfWorkoutList.add(exercisesList.get(adapterPosition));
+        exerciseList.get(adapterPosition).setSets(sets);
+        exerciseList.get(adapterPosition).setReps(reps);
+        ExercisesOfWorkoutList.add(exerciseList.get(adapterPosition));
         Log.i(TAG, "addToExercisesOfWorkoutList: " + ExercisesOfWorkoutList.size());
     }
 
