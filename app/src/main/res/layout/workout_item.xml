@@ -55,7 +55,6 @@
             tools:text="workout name" />
 
         <ImageView
-            android:id="@+id/imageView"
             android:layout_width="30dp"
             android:layout_height="35dp"
             android:layout_marginTop="8dp"

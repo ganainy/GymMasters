@@ -2,18 +2,21 @@ package com.example.myapplication.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.example.myapplication.BuildConfig;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Exercise;
@@ -22,8 +25,9 @@ import com.example.myapplication.youtube_model.Id;
 import com.example.myapplication.youtube_model.Item;
 import com.example.myapplication.youtube_model.YoutubeApi;
 import com.example.myapplication.youtube_model.YoutubeConfig;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -34,12 +38,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -77,6 +78,8 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
 
     @BindView(R.id.youTubePlayerView)
     YouTubePlayerView youTubePlayerView;
+    @BindView(R.id.loadingImageProgressBar)
+    ProgressBar loadingImageProgressBar;
 
     private boolean b;
     private Timer timer;
@@ -85,6 +88,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
     YouTubePlayer.OnInitializedListener onInitializedListener;
     private List<String> videoPlaylist = new ArrayList<>();
     private ScrollView parent;
+    private RequestBuilder<Drawable> load, load2;
 
 
     @OnClick(R.id.mechanicInfo)
@@ -207,71 +211,50 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
     private void downloadPreviewImage() {
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("exerciseImages/").child(exercise.getPreviewPhoto1());
-        File localFile = null;
-        try {
-            localFile = File.createTempFile("images", "jpg");
 
-            final File finalLocalFile = localFile;
+        storageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
 
-            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    // Local temp file has been createed
-                    exercise.setPreviewBitmap(BitmapFactory.decodeFile(finalLocalFile.getAbsolutePath()));
-                    downloadPreviewImage2();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Log.i(TAG, "onFailure: " + exception.getMessage());
-                    // Handle any errors
-                }
-            });
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-//
-
+                load = Glide.with(getApplicationContext()).load(task.getResult());
+                downloadPreviewImage2();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "glideError: " + e.getMessage());
+                exerciseImageView.setImageResource(R.drawable.ic_error_404);
+                loadingImageProgressBar.setVisibility(View.GONE);
+            }
+        });
 //
 
     }
 
     private void downloadPreviewImage2() {
         StorageReference storageRef2 = FirebaseStorage.getInstance().getReference().child("exerciseImages/").child(exercise.getPreviewPhoto2());
-        File localFile2 = null;
+        storageRef2.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                load2 = Glide.with(getApplicationContext()).load(task.getResult());
+                //  load2.into(exerciseImageView);
+                switchExercisePhotos();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "glideError: " + e.getMessage());
+            }
+        });
 
-
-        try {
-            localFile2 = File.createTempFile("images", "jpg");
-
-            final File finalLocalFile2 = localFile2;
-            storageRef2.getFile(localFile2).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    // Local temp file has been createed
-                    exercise.setPreview2Bitmap(BitmapFactory.decodeFile(finalLocalFile2.getAbsolutePath()));
-                    switchExercisePhotos();
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                    Log.i(TAG, "onFailure2: " + exception.getMessage());
-                }
-            });
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void switchExercisePhotos() {
 
+        if (load == null || load2 == null) {
+            return;
+        }
+        loadingImageProgressBar.setVisibility(View.GONE);
         //switch exercise photos every 1.5 seconds
         timer = new Timer();
         TimerTask timerTask = new TimerTask() {
@@ -283,7 +266,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            exerciseImageView.setImageBitmap(SpecificExerciseActivity.this.exercise.getPreviewBitmap());
+                            load.into(exerciseImageView);
                         }
                     });
 
@@ -292,7 +275,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            exerciseImageView.setImageBitmap(SpecificExerciseActivity.this.exercise.getPreview2Bitmap());
+                            load2.into(exerciseImageView);
                         }
                     });
 
@@ -355,7 +338,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
 
 
     private void showYoutubePlayer() {
-
+        loadingImageProgressBar.setVisibility(View.GONE);
         //stop timer from working in background
         if (timer != null)
             timer.cancel();
@@ -375,13 +358,13 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
                 if (videoPlaylist.size() > 1) youTubePlayer.loadVideos(videoPlaylist);
                 else openAlertDialog();
             }
+
             @Override
             public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
                 Log.i(TAG, "onInitializationFailure: ");
                 openAlertDialog();
             }
         };
-
 
 
     }

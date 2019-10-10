@@ -80,7 +80,6 @@
         tools:text="30 Secs" />
 
     <ImageView
-        android:id="@+id/imageView8"
         android:layout_width="35dp"
         android:layout_height="24dp"
         android:src="@drawable/ic_access_time_realblack_24dp"

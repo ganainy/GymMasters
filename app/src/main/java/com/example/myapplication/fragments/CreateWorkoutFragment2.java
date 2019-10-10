@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -198,7 +197,6 @@ public class CreateWorkoutFragment2 extends Fragment {
         Log.i(TAG, "onCreateOptionsMenu: ");
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.search_exercise_menu, menu);
-        menu.findItem(R.id.search).setIcon(ContextCompat.getDrawable(getActivity(), R.drawable.ic_search_black_24dp));
         searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
