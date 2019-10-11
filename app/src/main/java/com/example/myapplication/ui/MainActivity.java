@@ -109,6 +109,9 @@ public class MainActivity extends AppCompatActivity
                     case R.id.nav_following:
                         handleFollowedClick();
                         break;
+                    case R.id.nav_timer:
+                        handleTimerClick();
+                        break;
 
 
                 }
@@ -121,6 +124,11 @@ public class MainActivity extends AppCompatActivity
 
 
         checkInternet();
+    }
+
+    private void handleTimerClick() {
+        Intent i = new Intent(MainActivity.this, TimerActivity.class);
+        startActivity(i);
     }
 
     private void handleFollowersClick() {

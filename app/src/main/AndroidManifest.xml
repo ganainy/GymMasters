@@ -6,15 +6,16 @@
 
     <application
         android:allowBackup="true"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
         android:icon="@mipmap/file_download"
+        android:label="@string/app_name"
         android:roundIcon="@mipmap/file_download_round"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".ui.PostsActivity"
-
-            />
+        <activity
+            android:name=".ui.TimerActivity"
+            android:label="@string/title_activity_timer"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".ui.PostsActivity" />
         <activity android:name=".ui.UserInfoActivity" />
         <activity android:name=".ui.FindUsersActivity" />
         <activity android:name=".ui.SpecificWorkoutActivity" />
@@ -29,13 +30,13 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:windowSoftInputMode="adjustNothing"
             android:name=".ui.LoginActivity"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar"
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".ui.SignUpActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.WelcomeActivity"
             android:theme="@style/NoActionBar">
@@ -45,6 +46,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

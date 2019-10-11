@@ -7,8 +7,6 @@ localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 android {
 
 
-
-
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.myapplication"

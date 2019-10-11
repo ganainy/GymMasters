@@ -19,76 +19,86 @@
 
             android:id="@+id/createExercise"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="64dp"
             android:layout_marginHorizontal="8dp"
             android:layout_marginVertical="8dp"
             android:background="@drawable/btn_add"
+            android:fontFamily="@font/unica_one"
             android:gravity="left|center"
-            android:paddingLeft="16dp"
             android:text="Create custom exercise"
+            android:textAlignment="center"
+
             android:textAllCaps="false"
             android:textColor="@color/textwhite"
-            android:textSize="18sp" />
+            android:textSize="28sp" />
 
 
         <Button
-            android:layout_height="50dp"
-            android:layout_marginHorizontal="8dp"
 
-            android:background="@drawable/btn_add"
-            android:gravity="left|center"
-            android:paddingLeft="16dp"
-            android:text="Create custom workout"
-            android:textAllCaps="false"
-            android:textColor="@color/textwhite"
             android:id="@+id/createWorkout"
             android:layout_width="match_parent"
-            android:textSize="18sp" />
+            android:layout_height="64dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginVertical="8dp"
+            android:background="@drawable/btn_add"
+            android:fontFamily="@font/unica_one"
+            android:gravity="left|center"
+            android:text="Create custom workout"
+            android:textAlignment="center"
+
+            android:textAllCaps="false"
+            android:textColor="@color/textwhite"
+            android:textSize="28sp" />
 
 
         <Button
+
             android:id="@+id/viewMyExercisesButton"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="64dp"
             android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginVertical="8dp"
             android:background="@drawable/btn_add"
+            android:fontFamily="@font/unica_one"
             android:gravity="left|center"
-            android:paddingLeft="16dp"
-            android:text="Show my exercises"
+            android:text="My exercises"
+            android:textAlignment="center"
+
             android:textAllCaps="false"
             android:textColor="@color/textwhite"
-            android:textSize="18sp" />
+            android:textSize="28sp" />
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/customExerciseRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="4dp">
+            android:layout_marginHorizontal="4dp" />
 
-        </androidx.recyclerview.widget.RecyclerView>
 
         <Button
+
             android:id="@+id/viewMyWorkoutsButton"
-            android:layout_height="50dp"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/btn_add"
-            android:gravity="left|center"
-            android:paddingLeft="16dp"
-            android:text="Show my workouts"
-            android:textAllCaps="false"
             android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginVertical="8dp"
+            android:background="@drawable/btn_add"
+            android:fontFamily="@font/unica_one"
+            android:gravity="left|center"
+            android:text="My workouts"
+            android:textAlignment="center"
+
+            android:textAllCaps="false"
             android:textColor="@color/textwhite"
-            android:textSize="18sp" />
+            android:textSize="28sp" />
 
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/customWorkoutRecycler"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            android:layout_height="wrap_content" />
 
-        </androidx.recyclerview.widget.RecyclerView>
 
 
     </LinearLayout>
