@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class User implements Parcelable {
-    private String name, email, followers, following;
+    private String name, email, followers, following, about_me;
     String id;
     private String photo;
 
@@ -18,26 +18,9 @@ public class User implements Parcelable {
         this.id = id;
     }
 
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
 
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 
-    protected User(Parcel in) {
-        name = in.readString();
-        email = in.readString();
-        followers = in.readString();
-        following = in.readString();
-        id = in.readString();
-        photo = in.readString();
-    }
+
 
     public String getFollowers() {
         return followers;
@@ -88,6 +71,15 @@ public class User implements Parcelable {
         this.id = id;
     }
 
+    public String getAbout_me() {
+        return about_me;
+    }
+
+    public void setAbout_me(String about_me) {
+        this.about_me = about_me;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
@@ -95,11 +87,6 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(name);
-        parcel.writeString(email);
-        parcel.writeString(followers);
-        parcel.writeString(following);
-        parcel.writeString(id);
-        parcel.writeString(photo);
+
     }
 }

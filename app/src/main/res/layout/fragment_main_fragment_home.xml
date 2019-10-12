@@ -44,6 +44,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -54,11 +55,12 @@
                     tools:text="Amr mohammed" />
 
                 <TextView
+                    android:id="@+id/email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/proximanovaregular"
                     android:textSize="14sp"
-                    tools:text="Android Developer" />
+                    tools:text="amr@gmail.com" />
 
 
             </LinearLayout>
@@ -218,6 +220,7 @@
                         android:layout_weight="1" />
 
                     <TextView
+                        android:id="@+id/edit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
@@ -228,6 +231,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/about_me_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"

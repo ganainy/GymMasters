@@ -2,14 +2,17 @@ package com.example.myapplication.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,20 +20,15 @@ import com.example.myapplication.R;
 import com.example.myapplication.adapters.ExerciseAdapter;
 import com.example.myapplication.adapters.WorkoutAdapter;
 import com.example.myapplication.model.Exercise;
+import com.example.myapplication.model.User;
 import com.example.myapplication.model.Workout;
 import com.example.myapplication.ui.CreateNewExerciseActivity;
 import com.example.myapplication.ui.MainActivity;
 import com.example.myapplication.utils.MyConstant;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -45,14 +43,21 @@ public class MainFragmentHome extends Fragment {
     Button viewMyExercisesButton;
     @BindView(R.id.viewMyWorkoutsButton)
     Button viewMyWorkoutsButton;
+    @BindView(R.id.name)
+    TextView name;
+    @BindView(R.id.email)
+    TextView email;
+    @BindView(R.id.about_me_text)
+    TextView aboutMeText;
     private View view;
-    private ArrayList<Exercise> myCustomExercisesList = new ArrayList<>();
     /**
      * 1 shown ,0 didnt load ,2 hidden
      */
     private int exerciseFlag = 0;
     private int workoutFlag = 0;
-    private RecyclerView recyclerView, recyclerView2;
+    private RecyclerView recyclerViewExercise, recyclerViewWorkout;
+    private MainFragmentHomeViewModel mainFragmentHomeViewModel;
+    private Button saveAlertDialog, cancelAlertDialog;
 
 
     @OnClick(R.id.createWorkout)
@@ -62,7 +67,6 @@ public class MainFragmentHome extends Fragment {
 
     }
 
-    private List<Workout> myCustomWorkoutList = new ArrayList<>();
     private WorkoutAdapter workoutAdapter;
 
     @OnClick(R.id.createExercise)
@@ -73,35 +77,44 @@ public class MainFragmentHome extends Fragment {
     @OnClick(R.id.viewMyExercisesButton)
     void viewExercises() {
 
-            if (exerciseFlag == 1) {
-                /**it means exercise is shown and i should hide them*/
-                recyclerView.setVisibility(View.GONE);
-                exerciseFlag = 2;
-            } else if (exerciseFlag == 2) {
-                /**recycler is hidden and i should show it*/
-                exerciseFlag = 1;
-                recyclerView.setVisibility(View.VISIBLE);
-            } else if (exerciseFlag == 0) {
-                /**didn't download exercises yet*/
-                downloadMyExercises();
-            }
+        if (exerciseFlag == 1) {
+            /**it means exercise is shown and i should hide them*/
+            recyclerViewExercise.setVisibility(View.GONE);
+            exerciseFlag = 2;
+        } else if (exerciseFlag == 2) {
+            /**recycler is hidden and i should show it*/
+            exerciseFlag = 1;
+            recyclerViewExercise.setVisibility(View.VISIBLE);
+        } else if (exerciseFlag == 0) {
+            /**didn't download exercises yet*/
+            mainFragmentHomeViewModel.downloadMyExercises().observe(this, new Observer<List<Exercise>>() {
+                @Override
+                public void onChanged(List<Exercise> exercises) {
+                    setupExercisesRecycler(exercises);
+                }
+            });
+        }
     }
 
     @OnClick(R.id.viewMyWorkoutsButton)
     void viewWorkouts() {
-
-            if (workoutFlag == 1) {
-                /**it means exercise is shown and i should hide them*/
-                recyclerView2.setVisibility(View.GONE);
-                workoutFlag = 2;
-            } else if (exerciseFlag == 2) {
-                /**recycler is hidden and i should show it*/
-                workoutFlag = 1;
-                recyclerView2.setVisibility(View.VISIBLE);
-            } else if (workoutFlag == 0) {
-                /**didn't download exercises yet*/
-                downloadMyWorkout();
-            }
+        if (workoutFlag == 1) {
+            /**it means exercise is shown and i should hide them*/
+            recyclerViewWorkout.setVisibility(View.GONE);
+            workoutFlag = 2;
+        } else if (exerciseFlag == 2) {
+            /**recycler is hidden and i should show it*/
+            workoutFlag = 1;
+            recyclerViewWorkout.setVisibility(View.VISIBLE);
+        } else if (workoutFlag == 0) {
+            /**didn't download exercises yet*/
+            mainFragmentHomeViewModel.downloadMyWorkout().observe(this, new Observer<List<Workout>>() {
+                @Override
+                public void onChanged(List<Workout> workouts) {
+                    setupWorkoutRecycler(workouts);
+                }
+            });
+        }
 
 
     }
@@ -118,109 +131,124 @@ public class MainFragmentHome extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main_fragment_home, container, false);
         ButterKnife.bind(this, view);
+
+        mainFragmentHomeViewModel = ViewModelProviders.of(this).get(MainFragmentHomeViewModel.class);
+
         setLoggedInUserId();
+
+
         return view;
     }
 
     private void setLoggedInUserId() {
-        if (FirebaseAuth.getInstance().getUid() != null)
+        if (FirebaseAuth.getInstance().getUid() != null) {
             MyConstant.loggedInUserId = FirebaseAuth.getInstance().getUid();
-        else if (GoogleSignIn.getLastSignedInAccount(getActivity()) != null)
+        } else if (GoogleSignIn.getLastSignedInAccount(getActivity()) != null) {
             MyConstant.loggedInUserId = GoogleSignIn.getLastSignedInAccount(getActivity()).getId();
+        }
+        setUserData(MyConstant.loggedInUserId);
+
     }
 
-    public void downloadMyExercises() {
-        final DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference("excercises");
-        exerciseNode.addValueEventListener(new ValueEventListener() {
+    private void setUserData(String id) {
+        mainFragmentHomeViewModel.getUserData(id).observe(this, new Observer<User>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                myCustomExercisesList.clear();
-                for (DataSnapshot dsBig : dataSnapshot.getChildren()) {
-                    for (DataSnapshot ds : dsBig.getChildren()) {
-                        Exercise exercise = new Exercise();
-                        Log.i(TAG, "onChildAdded: " + MyConstant.loggedInUserId + "---" + ds.child("creatorId").getValue());
-                        if (ds.child("creatorId").getValue().equals(MyConstant.loggedInUserId)) {
-                            exercise.setName(ds.child("name").getValue().toString());
-                            exercise.setExecution(ds.child("execution").getValue().toString());
-                            exercise.setPreparation(ds.child("preparation").getValue().toString());
-                            exercise.setMechanism(ds.child("mechanism").getValue().toString());
-                            exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
-                            exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
-                            exercise.setUtility(ds.child("utility").getValue().toString());
-                            myCustomExercisesList.add(exercise);
-                        }
-                    }
-                }
-                setupExercisesRecycler();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            public void onChanged(User user) {
+                name.setText(user.getName());
+                email.setText(user.getEmail());
+                aboutMeText.setText(user.getAbout_me());
             }
         });
     }
 
-    private void setupExercisesRecycler() {
-        if (myCustomExercisesList.size() == 0) {
+
+    private void setupExercisesRecycler(List<Exercise> exercises) {
+        if (exercises.size() == 0) {
             FancyToast.makeText(getActivity(), "You didn't create any custom exercises yet.", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
         } else {
             exerciseFlag = 1;
-            Log.i(TAG, "setupExercisesRecycler: " + myCustomExercisesList.size());
-            recyclerView = view.findViewById(R.id.customExerciseRecycler);
-            recyclerView.setVisibility(View.VISIBLE);
-            exerciseAdapter = new ExerciseAdapter(getActivity(), myCustomExercisesList, "home");
+            recyclerViewExercise = view.findViewById(R.id.customExerciseRecycler);
+            recyclerViewExercise.setVisibility(View.VISIBLE);
+            exerciseAdapter = new ExerciseAdapter(getActivity(), exercises, "home");
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-            recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.setAdapter(exerciseAdapter);
+            recyclerViewExercise.setLayoutManager(linearLayoutManager);
+            recyclerViewExercise.setAdapter(exerciseAdapter);
         }
 
     }
 
-    public void downloadMyWorkout() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        reference.child("workout").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                myCustomWorkoutList.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds.child("creatorId").getValue().equals(MyConstant.loggedInUserId)) {
-                        Workout workout = new Workout();
-                        workout.setName(ds.child("name").getValue().toString());
-                        workout.setDuration(ds.child("duration").getValue().toString() + " mins");
-                        workout.setExercisesNumber(ds.child("exercisesNumber").getValue().toString());
-                        workout.setPhotoLink(ds.child("photoLink").getValue().toString());
-                        workout.setId(ds.child("id").getValue().toString());
 
-                        myCustomWorkoutList.add(workout);
-                    }
-                }
-                setupWorkoutRecycler();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void setupWorkoutRecycler() {
-        if (myCustomWorkoutList.size() == 0) {
+    private void setupWorkoutRecycler(List<Workout> workouts) {
+        if (workouts.size() == 0) {
             FancyToast.makeText(getActivity(), "You didn't create any custom workouts yet.", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
         } else {
             workoutFlag = 1;
-            recyclerView2 = view.findViewById(R.id.customWorkoutRecycler);
-            recyclerView2.setVisibility(View.VISIBLE);
+            recyclerViewWorkout = view.findViewById(R.id.customWorkoutRecycler);
+            recyclerViewWorkout.setVisibility(View.VISIBLE);
             workoutAdapter = new WorkoutAdapter(getActivity(), "fragmentHome");
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-            recyclerView2.setLayoutManager(linearLayoutManager);
-            workoutAdapter.setDataSource(myCustomWorkoutList);
-            recyclerView2.setAdapter(workoutAdapter);
+            recyclerViewWorkout.setLayoutManager(linearLayoutManager);
+            workoutAdapter.setDataSource(workouts);
+            recyclerViewWorkout.setAdapter(workoutAdapter);
         }
 
     }
 
+
+    @OnClick(R.id.edit)
+    public void onViewClicked() {
+        showAlertDialog();
+    }
+
+    private void showAlertDialog() {
+
+        final View alertDialogView = getLayoutInflater().inflate(R.layout.edit_view, null);
+
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()
+        )
+
+                .setView(alertDialogView)
+                .show();
+
+
+        saveAlertDialog = alertDialogView.findViewById(R.id.save_action);
+        cancelAlertDialog = alertDialogView.findViewById(R.id.cancel_action);
+
+
+        saveAlertDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText editText = alertDialogView.findViewById(R.id.editText);
+                final String s = editText.getText().toString();
+                updateAboutMe(s);
+                alertDialog.dismiss();
+            }
+        });
+
+        cancelAlertDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+
+    }
+
+    private void updateAboutMe(final String s) {
+        mainFragmentHomeViewModel.updateAboutMe(s).observe(MainFragmentHome.this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    FancyToast.makeText(getActivity(), "Update successful.", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+                    aboutMeText.setText(s);
+
+                } else {
+                    FancyToast.makeText(getActivity(), "Update failed.\n an error occured", FancyToast.LENGTH_SHORT, FancyToast.ERROR, false).show();
+                }
+            }
+        });
+    }
 
 
 }
