@@ -26,6 +26,7 @@
     <string name="sign_out">Sign out</string>
     <string name="title_activity_exercises">ExercisesActivity</string>
     <string name="title_activity_timer">TimerActivity</string>
+    <string name="about_me">About me</string>
 
 
 </resources>
