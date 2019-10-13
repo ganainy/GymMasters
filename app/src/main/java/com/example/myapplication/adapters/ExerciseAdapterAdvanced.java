@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,8 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ExerciseViewHolder exerciseViewHolder, int i) {
+        //todo show the user that exercise is add (perhaps change + sign to success sign ) and give user ability to remove exercise after adding
+
         exerciseViewHolder.exerciseName.setText(exerciseList.get(i).getName());
         storageRef = FirebaseStorage.getInstance().getReference();
         //reference to exercise image
@@ -146,6 +149,8 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         addToExercisesOfWorkoutList(adapterPosition);
+                        FancyToast.makeText(context, "Added exercise", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+
 
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

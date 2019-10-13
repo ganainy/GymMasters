@@ -277,7 +277,7 @@
                 tools:layout_editor_absoluteX="0dp">
 
                 <ImageView
-                    android:id="@+id/addExercisePhoto"
+                    android:id="@+id/workoutImageView"
                     android:layout_width="0dp"
                     android:layout_height="200dp"
                     android:layout_margin="8dp"

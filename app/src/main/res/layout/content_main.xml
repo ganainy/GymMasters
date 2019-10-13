@@ -48,13 +48,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager_create_workout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="50dp"
-        android:visibility="gone"
-
-        />
-
 </FrameLayout>

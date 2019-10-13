@@ -61,7 +61,7 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
     @BindView(R.id.additionalNotesEditText)
     TextView additionalNotesEditText;
 
-    @BindView(R.id.addExercisePhoto)
+    @BindView(R.id.workoutImageView)
     ImageView addExercisePhoto;
 
     @BindView(R.id.addExercisePhoto2)
@@ -210,7 +210,7 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.addExercisePhoto)
+    @OnClick(R.id.workoutImageView)
     void getPhotoFromGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");

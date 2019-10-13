@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -73,9 +74,10 @@ public class MainFragmentHome extends Fragment {
 
     @OnClick(R.id.createWorkout)
     void createWorkout() {
+        CreateWorkoutFragment createWorkoutFragment = new CreateWorkoutFragment();
         MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.setupViewPagerForCreateWorkout();
-
+        FragmentTransaction fragmentTransaction = mainActivity.getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.parent_container, createWorkoutFragment).commit();
     }
 
     private WorkoutAdapter workoutAdapter;

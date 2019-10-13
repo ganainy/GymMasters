@@ -26,10 +26,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
-import com.example.myapplication.fragments.ViewPagerAdapterCreateWorkout;
 import com.example.myapplication.fragments.ViewPagerAdapterMainActivity;
 import com.example.myapplication.model.User;
-import com.example.myapplication.model.Workout;
 import com.example.myapplication.utils.NetworkChangeReceiver;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -39,7 +37,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.StorageReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,22 +48,14 @@ public class MainActivity extends AppCompatActivity
     MainActivityViewModel mViewModel;
     Boolean bl = true;
     SelectedBundle selectedBundle;
-    SelectedBundle2 selectedBundle2;
-    Workout workout;
     private static final String TAG = "MainActivity";
     private CircleImageView imageView;
-    FirebaseAuth mAuth;
-    private String profilePictureId;
     TextView nameNavigation, emailNavigation;
-    private String name, email, rating;
-    private StorageReference storageRef;
 
 
     @BindView(R.id.view_pager_main)
     ViewPager view_pager_main;
 
-    @BindView(R.id.view_pager_create_workout)
-    ViewPager view_pager_create_workout;
 
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
@@ -171,26 +160,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void setupViewPagerForCreateWorkout() {
-
-        view_pager_create_workout.setVisibility(View.VISIBLE);
-        view_pager_main.setVisibility(View.GONE);
 
 
-        view_pager_create_workout.setAdapter(new ViewPagerAdapterCreateWorkout(getSupportFragmentManager()));
-        tabLayout.setupWithViewPager(view_pager_create_workout, true);
-        tabLayout.getTabAt(0).setText(("STEP1"));
 
 
-        tabLayout.getTabAt(1).setText(("STEP2"));
-
-
-    }
-
-
-    public void gotoNextTab() {
-        tabLayout.getTabAt(1).select();
-    }
 
     private void showUserDataInNavigationMenu() {
 
@@ -308,14 +281,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void setWorkout(Workout workout) {
-        this.workout = workout;
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("workout", workout);
-        selectedBundle2.onBundleSelect(bundle);
-    }
-
-
     //result coming from createWorkoutFragment1
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -339,9 +304,6 @@ public class MainActivity extends AppCompatActivity
         this.selectedBundle = selectedBundle;
     }
 
-    public void setOnBundleSelected2(SelectedBundle2 selectedBundle2) {
-        this.selectedBundle2 = selectedBundle2;
-    }
 
     public void getPhotoFromGallery() {
         Intent intent = new Intent();
@@ -355,10 +317,6 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (view_pager_create_workout.getCurrentItem() == 1 && view_pager_create_workout.isShown()) {
-            view_pager_create_workout.setCurrentItem(0);
-        } else if (view_pager_create_workout.getCurrentItem() == 0 && view_pager_create_workout.isShown()) {
-            finish();
 
         } else {
             new AlertDialog.Builder(this)
@@ -379,15 +337,6 @@ public class MainActivity extends AppCompatActivity
 
     public interface SelectedBundle {
         void onBundleSelect(Bundle bundle);
-    }
-
-    public interface SelectedBundle2 {
-        void onBundleSelect(Bundle bundle);
-    }
-
-
-    public interface FirebaseCallback {
-        void onCallback(User loggedInUser);
     }
 
 

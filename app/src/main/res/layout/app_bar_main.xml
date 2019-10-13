@@ -6,33 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+
+    <LinearLayout
+        android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
-
-
-            android:id="@+id/toolbar"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" >
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-            <TextView
-                android:id="@+id/logo"
-                android:fontFamily="@font/night_machine"
-                android:gravity="center"
-                android:text="Gym Masters"
-                android:textColor="@color/textwhite"
-                android:lines="1"
-                android:textSize="24sp"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"/>
-        </androidx.appcompat.widget.Toolbar>
+            <androidx.appcompat.widget.Toolbar
 
-    </com.google.android.material.appbar.AppBarLayout>
+
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+                <TextView
+                    android:id="@+id/logo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/night_machine"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:text="Gym Masters"
+                    android:textColor="@color/textwhite"
+                    android:textSize="24sp" />
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+    </LinearLayout>
 
     <include layout="@layout/content_main" />
 
