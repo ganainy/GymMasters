@@ -99,12 +99,12 @@ public class ExerciseActivityViewModel extends ViewModel {
                             Exercise exercise = new Exercise();
                             exercise.setName(ds.child("name").getValue().toString());
                             exercise.setExecution(ds.child("execution").getValue().toString());
-                            exercise.setPreparation(ds.child("preparation").getValue().toString());
+                        if (ds.hasChild("additional_notes"))
+                            exercise.setAdditional_notes(ds.child("additional_notes").getValue().toString());
                             exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
                             exercise.setMechanism(ds.child("mechanism").getValue().toString());
                             exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
                             exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
-                            exercise.setUtility(ds.child("utility").getValue().toString());
                             exerciseList.add(exercise);
                         }
                     /* }*/
@@ -134,12 +134,12 @@ public class ExerciseActivityViewModel extends ViewModel {
                             Exercise exercise = new Exercise();
                             exercise.setName(ds.child("name").getValue().toString());
                             exercise.setExecution(ds.child("execution").getValue().toString());
-                            exercise.setPreparation(ds.child("preparation").getValue().toString());
+                        if (ds.hasChild("additional_notes"))
+                            exercise.setAdditional_notes(ds.child("additional_notes").getValue().toString());
                             exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
                             exercise.setMechanism(ds.child("mechanism").getValue().toString());
                             exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
                             exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
-                            exercise.setUtility(ds.child("utility").getValue().toString());
                             exerciseList.add(exercise);
                         }
                     /* }*/

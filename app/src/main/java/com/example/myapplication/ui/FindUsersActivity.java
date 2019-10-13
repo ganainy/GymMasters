@@ -146,7 +146,8 @@ public class FindUsersActivity extends AppCompatActivity {
                         if (followingIdList.get(i).equals(ds.getKey())) {
                             User user = new User();
                             user.setName(ds.child("name").getValue().toString());
-                            user.setPhoto(ds.child("photo").getValue().toString());
+                            if (ds.hasChild("photo"))
+                                user.setPhoto(ds.child("photo").getValue().toString());
                             user.setId(ds.child("id").getValue().toString());
                             followingList.add(user);
                         }
@@ -248,7 +249,8 @@ public class FindUsersActivity extends AppCompatActivity {
                     } else {
                         User user = new User();
                         user.setName(ds.child("name").getValue().toString());
-                        user.setPhoto(ds.child("photo").getValue().toString());
+                        if (ds.hasChild("photo"))
+                            user.setPhoto(ds.child("photo").getValue().toString());
                         user.setId(ds.child("id").getValue().toString());
                         userList.add(user);
                     }

@@ -218,7 +218,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         DatabaseReference myRef = database.getReference("users");
         User newUser;
 
-        newUser = new User(account.getId(), account.getDisplayName(), account.getEmail(), null);
+        newUser = new User(account.getId(), account.getDisplayName(), account.getEmail(),
+                account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
 
 
         myRef.child(account.getId()).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {

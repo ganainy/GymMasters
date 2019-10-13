@@ -129,6 +129,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     private void downloadAndShowUserImage(final UserViewHolder userViewHolder, String photo) {
+        if (photo == null) {
+            return;
+        }
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("images/").child(photo);
 
         storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -187,7 +190,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         @BindView(R.id.userImageView)
         CircleImageView userImageView;
 
-        @BindView(R.id.nameTextView)
+        @BindView(R.id.nameEditText)
         TextView nameTextView;
 
         @BindView(R.id.followersTextView)

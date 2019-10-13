@@ -1,5 +1,6 @@
 package com.example.myapplication.fragments;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -13,12 +14,14 @@ import com.example.myapplication.model.Workout;
 import com.example.myapplication.utils.MyConstant;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,7 @@ public class MainFragmentHomeViewModel extends ViewModel {
     private List<Exercise> myCustomExercisesList;
     private List<Workout> myCustomWorkoutList;
     private User user;
+    private long sumRatings, sumRaters;
 
 
     public LiveData<List<Exercise>> downloadMyExercises() {
@@ -52,11 +56,11 @@ public class MainFragmentHomeViewModel extends ViewModel {
                         if (ds.child("creatorId").getValue().equals(MyConstant.loggedInUserId)) {
                             exercise.setName(ds.child("name").getValue().toString());
                             exercise.setExecution(ds.child("execution").getValue().toString());
-                            exercise.setPreparation(ds.child("preparation").getValue().toString());
+                            if (ds.hasChild("additional_notes"))
+                                exercise.setAdditional_notes(ds.child("additional_notes").getValue().toString());
                             exercise.setMechanism(ds.child("mechanism").getValue().toString());
                             exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
                             exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
-                            exercise.setUtility(ds.child("utility").getValue().toString());
                             myCustomExercisesList.add(exercise);
                         }
                     }
@@ -129,6 +133,10 @@ public class MainFragmentHomeViewModel extends ViewModel {
                 user.setName(name);
                 String email = dataSnapshot.child("email").getValue().toString();
                 user.setEmail(email);
+                if (dataSnapshot.hasChild("photo")) {
+                    String photo = dataSnapshot.child("photo").getValue().toString();
+                    user.setPhoto(photo);
+                }
                 if (dataSnapshot.hasChild("about_me")) {
                     String about_me = dataSnapshot.child("about_me").getValue().toString();
                     user.setAbout_me(about_me);
@@ -161,4 +169,116 @@ public class MainFragmentHomeViewModel extends ViewModel {
         });
         return load;
     }
+
+
+    public MutableLiveData<Uri> downloadUserPhoto(final String photo) {
+        final MutableLiveData<Uri> load = new MutableLiveData<>();
+        FirebaseStorage.getInstance().getReference().child("images/").child(photo).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+
+                load.setValue(uri);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: " + e.getMessage());
+                /**if the photo is from google account it will be cause method to fail since it's not in storge*/
+                load.setValue(Uri.parse(photo));
+            }
+        });
+
+        return load;
+    }
+
+
+    public MutableLiveData<String> getFollowersCount() {
+        final MutableLiveData<String> load = new MutableLiveData<>();
+        FirebaseDatabase.getInstance().getReference("users").child(MyConstant.loggedInUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.hasChild("followersUID")) {
+                    load.setValue(String.valueOf(dataSnapshot.child("followersUID").getChildrenCount()));
+                } else {
+                    load.setValue("0");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        return load;
+    }
+
+    public MutableLiveData<Long> getRatingsAvg() {
+
+        final MutableLiveData<Long> load = new MutableLiveData<>();
+        final DatabaseReference users = FirebaseDatabase.getInstance().getReference("users").child(MyConstant.loggedInUserId);
+        users.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild("Ratings")) {
+                    users.child("Ratings").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            sumRatings = 0;
+                            sumRaters = 0;
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                sumRatings += (long) ds.getValue();
+                                sumRaters++;
+                            }
+                            load.setValue(sumRatings / sumRaters);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                } else {
+                    load.setValue(0l);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        return load;
+    }
+
+    public MutableLiveData<String> getFollowingCount() {
+
+        final MutableLiveData<String> load = new MutableLiveData<>();
+        FirebaseDatabase.getInstance().getReference("users").child(MyConstant.loggedInUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.hasChild("followingUID")) {
+                    load.setValue(String.valueOf(dataSnapshot.child("followingUID").getChildrenCount()));
+                } else {
+                    load.setValue("0");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+        return load;
+    }
+
+
+
 }

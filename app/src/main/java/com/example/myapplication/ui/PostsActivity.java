@@ -145,11 +145,11 @@ public class PostsActivity extends AppCompatActivity {
                             if (ds.child("creatorId").getValue().equals(followingIdList.get(i))) {
                                 exercise.setExecution(ds.child("execution").getValue().toString());
                                 exercise.setName(ds.child("name").getValue().toString());
-                                exercise.setPreparation(ds.child("preparation").getValue().toString());
+                                if (ds.hasChild("additional_notes"))
+                                    exercise.setAdditional_notes(ds.child("additional_notes").getValue().toString());
                                 exercise.setMechanism(ds.child("mechanism").getValue().toString());
                                 exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
                                 exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
-                                exercise.setUtility(ds.child("utility").getValue().toString());
                                 exercise.setDate(ds.child("date").getValue().toString());
                                 exercise.setCreatorId(ds.child("creatorId").getValue().toString());
 

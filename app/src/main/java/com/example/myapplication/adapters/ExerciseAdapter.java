@@ -70,7 +70,6 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
 
             downloadAndShowExerciseImage(exerciseViewHolder, i);
         }
-        Log.i(TAG, "onBindViewHolder: "+exercisesList.get(i).getPreviewBitmap());
 
     }
 

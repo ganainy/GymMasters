@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -21,11 +22,14 @@ import com.example.myapplication.utils.MyConstant;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.shashank.sony.fancytoastlib.FancyToast;
+
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +40,6 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
     private static final int PICK_IMAGE = 101;
     private static final int PICK_IMAGE2 = 102;
     String newExerciseSelectedMuscle;
-    String newExerciseUtility;
     String newExerciseMechanic;
 
 
@@ -46,25 +49,25 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
     @BindView(R.id.mechanicSpinner)
     Spinner mechanicSpinner;
 
-    @BindView(R.id.utilitySpinner)
-    Spinner utilitySpinner;
 
-    @BindView(R.id.nameTextView)
-    TextView nameTextView;
+    @BindView(R.id.nameEditText)
+    TextView nameEditText;
 
 
-    @BindView(R.id.executionTextView)
-    TextView executionTextView;
+    @BindView(R.id.executionEditText)
+    TextView executionEditText;
 
 
-    @BindView(R.id.preparationTextView)
-    TextView preparationTextView;
+    @BindView(R.id.additionalNotesEditText)
+    TextView additionalNotesEditText;
 
     @BindView(R.id.addExercisePhoto)
     ImageView addExercisePhoto;
 
     @BindView(R.id.addExercisePhoto2)
     ImageView addExercisePhoto2;
+    @BindView(R.id.parentScroll)
+    ScrollView parentScroll;
 
 
     private Uri imageUri, image2Uri;
@@ -72,18 +75,35 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
     @OnClick(R.id.saveButton)
     void saveExercise() {
 
-        if (nameTextView.getText().length() < 6 || executionTextView.getText().length() < 6 || preparationTextView.getText().length() < 6) {
-            FancyToast.makeText(CreateNewExerciseActivity.this, "Please fill fields with minimum of 6 letters each.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-
+        if (nameEditText.getText().length() < 6) {
+            FancyToast.makeText(CreateNewExerciseActivity.this, "Exercise name must be at least 6 letters", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+        } else if (executionEditText.getText().length() < 6) {
+            FancyToast.makeText(CreateNewExerciseActivity.this, "Exercise execution must be at least 6 letters", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+        } else if (newExerciseMechanic.equals("")) {
+            FancyToast.makeText(CreateNewExerciseActivity.this, "Press arrow to select mechanic", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+        } else if (newExerciseSelectedMuscle.equals("")) {
+            FancyToast.makeText(CreateNewExerciseActivity.this, "Press arrow to select targeted muscle", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
         } else if (imageUri == null || image2Uri == null) {
             FancyToast.makeText(CreateNewExerciseActivity.this, "Please select two photos describing exercise movement.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
         } else {
-            uploadExercisePhotos();
-            Exercise exercise = new Exercise(nameTextView.getText().toString(), newExerciseSelectedMuscle,
-                    executionTextView.getText().toString(), preparationTextView.getText().toString(),
-                    newExerciseMechanic, newExerciseUtility, imageUri.getLastPathSegment(), image2Uri.getLastPathSegment(), "no_video");
+
+
+            /**add time in millis with image name to make it unique*/
+            Date date = new Date();
+            long timeMilli = date.getTime();
+
+
+            uploadExercisePhotos(timeMilli);
+
+            Exercise exercise = new Exercise(nameEditText.getText().toString(), newExerciseSelectedMuscle, executionEditText.getText().toString()
+                    , newExerciseMechanic, imageUri.getLastPathSegment() + timeMilli, image2Uri.getLastPathSegment() + timeMilli);
+
             exercise.setCreatorId(MyConstant.loggedInUserId);
+
+            if (!additionalNotesEditText.getText().equals(""))
+                exercise.setAdditional_notes(additionalNotesEditText.getText().toString());
             exercise.setDate(String.valueOf(System.currentTimeMillis()));
+
             uploadExercise(exercise);
 
         }
@@ -212,32 +232,17 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_new_exercise);
         ButterKnife.bind(this);
 
+
+        Snackbar snackbar = Snackbar.make(parentScroll, "Fields with orange dots are mandatory", Snackbar.LENGTH_LONG);
+        snackbar.show();
+
         muscleSpinnerCode();
         mechanicSpinnerCode();
-        utilitySpinnerCode();
     }
 
-    private void utilitySpinnerCode() {
-        final String[] utility = {"Basic", "Auxiliary"};
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, utility);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Setting the ArrayAdapter data on the Spinner
-        utilitySpinner.setAdapter(arrayAdapter);
-        utilitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                newExerciseUtility = utility[i];
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-    }
 
     private void mechanicSpinnerCode() {
-        final String[] mechanic = {"Compound", "Isolated"};
+        final String[] mechanic = {"", "Compound", "Isolated"};
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mechanic);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
@@ -256,7 +261,8 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
     }
 
     private void muscleSpinnerCode() {
-        final String[] muscles = {"Chest", "Triceps", "Shoulders", "Biceps", "Abs", "Back", "Forearm", "Upper leg", "Glutes", "Cardio", "Lower leg", "Other"};
+
+        final String[] muscles = {"", "Chest", "Triceps", "Shoulders", "Biceps", "Abs", "Back", "Leg", "Cardio", "Other"};
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, muscles);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
@@ -291,16 +297,21 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
     }
 
 
-    private void uploadExercisePhotos() {
+    private void uploadExercisePhotos(long timeMilli) {
         // Create a storage reference from our app
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference imagesRef = storageRef.child("exerciseImages/" + imageUri.getLastPathSegment());
+        final StorageReference imagesRef = storageRef.child("exerciseImages/" + imageUri.getLastPathSegment() + timeMilli);
         imagesRef.putFile(imageUri);
-        final StorageReference imagesRef2 = storageRef.child("exerciseImages/" + image2Uri.getLastPathSegment());
+        final StorageReference imagesRef2 = storageRef.child("exerciseImages/" + image2Uri.getLastPathSegment() + timeMilli);
         imagesRef2.putFile(image2Uri);
 
     }
 
+
+    @OnClick(R.id.backArrowImageView)
+    public void onViewClicked() {
+        super.onBackPressed();
+    }
 
 
 }

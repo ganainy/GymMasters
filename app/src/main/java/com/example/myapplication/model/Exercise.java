@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Exercise implements Parcelable {
+
     public static final Creator<Exercise> CREATOR = new Creator<Exercise>() {
         @Override
         public Exercise createFromParcel(Parcel in) {
@@ -16,7 +17,39 @@ public class Exercise implements Parcelable {
             return new Exercise[size];
         }
     };
-    private String name, bodyPart, execution, preparation, mechanism, utility, previewPhoto1, previewPhoto2, sets, reps, duration, creatorId, date, creatorName;
+    Bitmap previewBitmap;
+
+
+    public Exercise() {
+    }
+
+    private String name, bodyPart, execution, mechanism, previewPhoto1, previewPhoto2, sets, reps, duration, creatorId, date, creatorName, additional_notes;
+
+    public Exercise(String name, String bodyPart, String execution, String mechanism, String previewPhoto1, String previewPhoto2) {
+        this.name = name;
+        this.execution = execution;
+        this.mechanism = mechanism;
+        this.previewPhoto1 = previewPhoto1;
+        this.previewPhoto2 = previewPhoto2;
+        this.bodyPart = bodyPart;
+    }
+
+    protected Exercise(Parcel in) {
+        name = in.readString();
+        bodyPart = in.readString();
+        execution = in.readString();
+        mechanism = in.readString();
+        previewPhoto1 = in.readString();
+        previewPhoto2 = in.readString();
+        sets = in.readString();
+        reps = in.readString();
+        duration = in.readString();
+        creatorId = in.readString();
+        date = in.readString();
+        creatorName = in.readString();
+        additional_notes = in.readString();
+        previewBitmap = in.readParcelable(Bitmap.class.getClassLoader());
+    }
 
     public String getCreatorId() {
         return creatorId;
@@ -26,44 +59,6 @@ public class Exercise implements Parcelable {
         this.creatorId = creatorId;
     }
 
-    public Exercise() {
-    }
-
-    public Exercise(String name, String bodyPart, String execution, String preparation, String mechanism, String utility, String previewPhoto1, String previewPhoto2, String videoLink) {
-        this.name = name;
-        this.execution = execution;
-        this.preparation = preparation;
-        this.mechanism = mechanism;
-        this.utility = utility;
-        this.previewPhoto1 = previewPhoto1;
-        this.previewPhoto2 = previewPhoto2;
-        this.bodyPart = bodyPart;
-    }
-    Bitmap previewBitmap, preview2Bitmap;
-
-    protected Exercise(Parcel in) {
-        name = in.readString();
-        bodyPart = in.readString();
-        execution = in.readString();
-        preparation = in.readString();
-        mechanism = in.readString();
-        utility = in.readString();
-        previewPhoto1 = in.readString();
-        previewPhoto2 = in.readString();
-        sets = in.readString();
-        reps = in.readString();
-        duration = in.readString();
-        previewBitmap = in.readParcelable(Bitmap.class.getClassLoader());
-        preview2Bitmap = in.readParcelable(Bitmap.class.getClassLoader());
-    }
-
-    public Bitmap getPreview2Bitmap() {
-        return preview2Bitmap;
-    }
-
-    public void setPreview2Bitmap(Bitmap preview2Bitmap) {
-        this.preview2Bitmap = preview2Bitmap;
-    }
 
     public Bitmap getPreviewBitmap() {
         return previewBitmap;
@@ -97,13 +92,7 @@ public class Exercise implements Parcelable {
         this.execution = execution;
     }
 
-    public String getPreparation() {
-        return preparation;
-    }
 
-    public void setPreparation(String preparation) {
-        this.preparation = preparation;
-    }
 
     public String getMechanism() {
         return mechanism;
@@ -113,13 +102,7 @@ public class Exercise implements Parcelable {
         this.mechanism = mechanism;
     }
 
-    public String getUtility() {
-        return utility;
-    }
 
-    public void setUtility(String utility) {
-        this.utility = utility;
-    }
 
     public String getPreviewPhoto1() {
         return previewPhoto1;
@@ -179,6 +162,14 @@ public class Exercise implements Parcelable {
         this.creatorName = creatorName;
     }
 
+    public String getAdditional_notes() {
+        return additional_notes;
+    }
+
+    public void setAdditional_notes(String additional_notes) {
+        this.additional_notes = additional_notes;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -189,15 +180,16 @@ public class Exercise implements Parcelable {
         parcel.writeString(name);
         parcel.writeString(bodyPart);
         parcel.writeString(execution);
-        parcel.writeString(preparation);
         parcel.writeString(mechanism);
-        parcel.writeString(utility);
         parcel.writeString(previewPhoto1);
         parcel.writeString(previewPhoto2);
         parcel.writeString(sets);
         parcel.writeString(reps);
         parcel.writeString(duration);
+        parcel.writeString(creatorId);
+        parcel.writeString(date);
+        parcel.writeString(creatorName);
+        parcel.writeString(additional_notes);
         parcel.writeParcelable(previewBitmap, i);
-        parcel.writeParcelable(preview2Bitmap, i);
     }
 }

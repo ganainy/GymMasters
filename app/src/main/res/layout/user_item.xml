@@ -25,7 +25,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/nameTextView"
+            android:id="@+id/nameEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -42,7 +42,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="4dp"
             app:layout_constraintStart_toEndOf="@+id/userImageView"
-            app:layout_constraintTop_toBottomOf="@+id/nameTextView"
+            app:layout_constraintTop_toBottomOf="@+id/nameEditText"
             tools:text="3 Followers" />
 
         <RatingBar

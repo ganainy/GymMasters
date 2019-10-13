@@ -1,12 +1,14 @@
 package com.example.myapplication.fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -16,6 +18,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.ExerciseAdapter;
 import com.example.myapplication.adapters.WorkoutAdapter;
@@ -49,6 +52,14 @@ public class MainFragmentHome extends Fragment {
     TextView email;
     @BindView(R.id.about_me_text)
     TextView aboutMeText;
+    @BindView(R.id.profile_image)
+    ImageView profileImage;
+    @BindView(R.id.followersTextView)
+    TextView followersTextView;
+    @BindView(R.id.followingTextView)
+    TextView followingTextView;
+    @BindView(R.id.ratingTextView)
+    TextView ratingTextView;
     private View view;
     /**
      * 1 shown ,0 didnt load ,2 hidden
@@ -157,6 +168,35 @@ public class MainFragmentHome extends Fragment {
                 name.setText(user.getName());
                 email.setText(user.getEmail());
                 aboutMeText.setText(user.getAbout_me());
+                mainFragmentHomeViewModel.downloadUserPhoto(user.getPhoto()).observe(MainFragmentHome.this, new Observer<Uri>() {
+                    @Override
+                    public void onChanged(Uri uri) {
+                        Glide.with(MainFragmentHome.this).load(uri).into(profileImage);
+                    }
+                });
+            }
+        });
+
+
+        mainFragmentHomeViewModel.getFollowersCount().observe(MainFragmentHome.this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                followersTextView.setText(s);
+            }
+        });
+
+        mainFragmentHomeViewModel.getFollowingCount().observe(MainFragmentHome.this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                followingTextView.setText(s);
+            }
+        });
+
+
+        mainFragmentHomeViewModel.getRatingsAvg().observe(MainFragmentHome.this, new Observer<Long>() {
+            @Override
+            public void onChanged(Long l) {
+                ratingTextView.setText(l + "/5");
             }
         });
     }

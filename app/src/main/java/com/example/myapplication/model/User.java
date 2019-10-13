@@ -19,8 +19,27 @@ public class User implements Parcelable {
     }
 
 
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
 
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
+    protected User(Parcel in) {
+        name = in.readString();
+        email = in.readString();
+        followers = in.readString();
+        following = in.readString();
+        about_me = in.readString();
+        id = in.readString();
+        photo = in.readString();
+    }
 
     public String getFollowers() {
         return followers;
@@ -87,6 +106,12 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-
+        parcel.writeString(name);
+        parcel.writeString(email);
+        parcel.writeString(followers);
+        parcel.writeString(following);
+        parcel.writeString(about_me);
+        parcel.writeString(id);
+        parcel.writeString(photo);
     }
 }

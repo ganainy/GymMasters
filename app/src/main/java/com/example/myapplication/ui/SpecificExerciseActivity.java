@@ -27,6 +27,7 @@ import com.example.myapplication.youtube_model.YoutubeApi;
 import com.example.myapplication.youtube_model.YoutubeConfig;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -59,27 +60,26 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
     private static final String TAG = "hehe";
 
 
-    @BindView(R.id.executionTextView)
-    TextView executionTextView;
-
-    @BindView(R.id.preparationTextView)
-    TextView preparationTextView;
-
-
-    @BindView(R.id.mechanicTextView)
-    TextView mechanicTextView;
-
-    @BindView(R.id.utilityTextView)
-    TextView utilityTextView;
-
     @BindView(R.id.exerciseImageView)
     ImageView exerciseImageView;
 
-
     @BindView(R.id.youTubePlayerView)
     YouTubePlayerView youTubePlayerView;
+
     @BindView(R.id.loadingImageProgressBar)
     ProgressBar loadingImageProgressBar;
+
+
+    @BindView(R.id.nameTextView)
+    TextView nameTextView;
+    @BindView(R.id.executionTextView)
+    TextView executionTextView;
+    @BindView(R.id.additionalNotesTextView)
+    TextView additionalNotesTextView;
+    @BindView(R.id.mechanicTextView)
+    TextView mechanicTextView;
+    @BindView(R.id.targetedMuscleTextView)
+    TextView targetedMuscleTextView;
 
     private boolean b;
     private Timer timer;
@@ -91,16 +91,11 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
     private RequestBuilder<Drawable> load, load2;
 
 
-    @OnClick(R.id.mechanicInfo)
+    @OnClick(R.id.mechanicQuestionMark)
     void showMechanicInfo() {
         showAlertDialog(mechanicTextView.getText().toString().toLowerCase());
     }
 
-
-    @OnClick(R.id.utilityInfo)
-    void showUtilityInfo() {
-        showAlertDialog(utilityTextView.getText().toString().toLowerCase());
-    }
 
     private String targetMuscle;
 
@@ -119,6 +114,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
             downloadExercise(new CallbackInterface() {
                 @Override
                 public void callbackMethod(Exercise exercisee) {
+                    exercisee.setBodyPart(targetMuscle);
                     exercise = exercisee;
                     showInViews();
                 }
@@ -168,10 +164,13 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
     }
 
     private void showInViews() {
+        nameTextView.setText(exercise.getName());
         executionTextView.setText(exercise.getExecution());
-        preparationTextView.setText(exercise.getPreparation());
         mechanicTextView.setText(exercise.getMechanism());
-        utilityTextView.setText(exercise.getUtility());
+        targetedMuscleTextView.setText(exercise.getBodyPart());
+
+        if (exercise.getAdditional_notes().equals("")) additionalNotesTextView.setText("None");
+        else additionalNotesTextView.setText(exercise.getAdditional_notes());
 
         downloadPreviewImage();
     }
@@ -185,11 +184,11 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (ds.child("name").getValue().equals(exerciseName)) {
                         exercise.setExecution(ds.child("execution").getValue().toString());
-                        exercise.setPreparation(ds.child("preparation").getValue().toString());
+                        if (ds.hasChild("additional_notes"))
+                            exercise.setAdditional_notes(ds.child("additional_notes").getValue().toString());
                         exercise.setMechanism(ds.child("mechanism").getValue().toString());
                         exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
                         exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
-                        exercise.setUtility(ds.child("utility").getValue().toString());
 
 
                     }
@@ -212,18 +211,18 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("exerciseImages/").child(exercise.getPreviewPhoto1());
 
-        storageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
-            public void onComplete(@NonNull Task<Uri> task) {
+            public void onSuccess(Uri uri) {
 
-                load = Glide.with(getApplicationContext()).load(task.getResult());
+                load = Glide.with(getApplicationContext()).load(uri);
                 downloadPreviewImage2();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "glideError: " + e.getMessage());
-                exerciseImageView.setImageResource(R.drawable.ic_error_404);
+                Log.i(TAG, "glideError: " + e.getMessage() + exercise.getPreviewPhoto1());
+                exerciseImageView.setImageResource(R.drawable.ic_error_black_24dp);
                 loadingImageProgressBar.setVisibility(View.GONE);
             }
         });

@@ -14,117 +14,212 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ProgressBar
-            android:id="@+id/loadingImageProgressBar"
-            android:layout_width="wrap_content"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="90dp"
-            app:layout_constraintEnd_toEndOf="@+id/youTubePlayerView"
-            app:layout_constraintStart_toStartOf="@+id/youTubePlayerView"
-            app:layout_constraintTop_toTopOf="@+id/youTubePlayerView"></ProgressBar>
+            android:layout_margin="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/circularbordersolid"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="8dp">
 
-        <com.google.android.youtube.player.YouTubePlayerView
-            android:id="@+id/youTubePlayerView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:visibility="invisible">
+            <ProgressBar
+                android:id="@+id/loadingImageProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="90dp"
+                app:layout_constraintEnd_toEndOf="@+id/youTubePlayerView"
+                app:layout_constraintStart_toStartOf="@+id/youTubePlayerView"
+                app:layout_constraintTop_toTopOf="@+id/youTubePlayerView"></ProgressBar>
 
-        </com.google.android.youtube.player.YouTubePlayerView>
+            <com.google.android.youtube.player.YouTubePlayerView
+                android:id="@+id/youTubePlayerView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:visibility="invisible">
 
-        <ImageView
-            android:id="@+id/exerciseImageView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:fadingEdge="horizontal"
-            android:scaleType="centerCrop" />
+            </com.google.android.youtube.player.YouTubePlayerView>
 
+            <ImageView
+                android:id="@+id/exerciseImageView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:fadingEdge="horizontal"
+                android:scaleType="centerCrop" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/circularbordersolid"
             android:orientation="vertical"
-            android:padding="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/youTubePlayerView">
+            app:layout_constraintTop_toBottomOf="@+id/topView"
+            tools:layout_editor_absoluteX="8dp">
 
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Execution: "
-                android:textColor="@color/textblack"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/executionTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text=" dd" />
+                android:orientation="vertical">
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Preparation: "
-                android:textColor="@color/textblack"
-                android:textSize="20sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
 
-            <TextView
-                android:id="@+id/preparationTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text=" dd" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/proximanovaregular"
+                        android:text="Exercise name : "
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
 
+                    <TextView
+                        android:id="@+id/nameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mechanic: "
-                android:textColor="@color/textblack"
-                android:textSize="20sp" />
+                </LinearLayout>
 
-            <TextView
-                android:id="@+id/mechanicTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text=" dd" />
-
-            <ImageView
-                android:id="@+id/mechanicInfo"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/question_mark" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey" />
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Utility: "
-                android:textColor="@color/textblack"
-                android:textSize="20sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
 
-            <TextView
-                android:id="@+id/utilityTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text=" dd" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/proximanovaregular"
+                        android:text="Execution : "
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/utilityInfo"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/question_mark" />
+                    <TextView
+                        android:id="@+id/executionTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/proximanovaregular"
+                        android:text="Additional notes : "
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/additionalNotesTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/proximanovaregular"
+                        android:text="Mechanic : "
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/mechanicTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/mechanicQuestionMark"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginTop="4dp"
+                        android:src="@drawable/question_mark" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/proximanovaregular"
+                        android:text="Targeted muscle : "
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/targetedMuscleTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
 
 
         </LinearLayout>
