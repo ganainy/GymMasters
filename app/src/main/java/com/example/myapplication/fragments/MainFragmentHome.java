@@ -77,7 +77,7 @@ public class MainFragmentHome extends Fragment {
         CreateWorkoutFragment createWorkoutFragment = new CreateWorkoutFragment();
         MainActivity mainActivity = (MainActivity) getActivity();
         FragmentTransaction fragmentTransaction = mainActivity.getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.parent_container, createWorkoutFragment).commit();
+        fragmentTransaction.add(R.id.parent_container, createWorkoutFragment).addToBackStack("createWorkoutFragment").commit();
     }
 
     private WorkoutAdapter workoutAdapter;

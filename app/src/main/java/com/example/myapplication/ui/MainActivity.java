@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        // setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -159,10 +159,6 @@ public class MainActivity extends AppCompatActivity
 
 
     }
-
-
-
-
 
 
     private void showUserDataInNavigationMenu() {
@@ -281,7 +277,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    //result coming from createWorkoutFragment1
+    //result coming from gallery requested by createWorkoutFragment
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
@@ -290,7 +286,7 @@ public class MainActivity extends AppCompatActivity
             return;
         if (requestCode == 103) {
             Log.i(TAG, "requestCode: ok");
-            //pass image uri to the createworkoutfragment1
+            //pass image uri to the createworkoutfragment
             Bundle bundle = new Bundle();
             bundle.putString("imageString", String.valueOf(data.getData()));
             selectedBundle.onBundleSelect(bundle);
@@ -314,10 +310,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-
+        } else if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
+            /**if there is fragment in back stack close it only*/
+            super.onBackPressed();
         } else {
             new AlertDialog.Builder(this)
                     .setMessage("Are you sure you want to exit?")

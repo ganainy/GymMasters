@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/activity_bg"
     android:fitsSystemWindows="true">
 
@@ -88,6 +89,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/exerciseRecyclerView"
+            android:layout_margin="8dp"
+            android:background="@drawable/circularbordersolid"
+            tools:listitem="@layout/excercise_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 

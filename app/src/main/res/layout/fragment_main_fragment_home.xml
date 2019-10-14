@@ -331,10 +331,8 @@
                     android:textSize="14sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:background="@drawable/circular_blue_bordersolid"
                     android:visibility="gone"
                     android:layout_margin="8dp"
-                    android:padding="8dp"
                     android:id="@+id/customWorkoutRecycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

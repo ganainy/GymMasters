@@ -17,7 +17,6 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -62,11 +61,7 @@ public class CreateWorkoutFragment extends Fragment {
 
     @BindView(R.id.workoutImageView)
     ImageView workoutImage;
-    @BindView(R.id.backArrowImageView)
-    ImageView backArrowImageView;
 
-   /* @BindView(R.id.workoutImageView)
-    ImageView workoutImageView;*/
 
     @BindView(R.id.exercisesRecycler)
     RecyclerView exercisesRecycler;
@@ -276,39 +271,14 @@ public class CreateWorkoutFragment extends Fragment {
     }
 
 
-    @OnClick(R.id.backArrowImageView)
-    public void onViewClicked() {
-        //startActivity(new Intent(getActivity(), MainActivity.class));
-        MainActivity mainActivity = (MainActivity) getActivity();
-        FragmentTransaction fragmentTransaction = mainActivity.getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.remove(this).commit();
-    }
-
     @OnClick(R.id.uploadButton)
     public void onuploadClicked() {
         uploadWorkout();
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        /**hide toolbar in this fragment*/
-        (getActivity()).findViewById(R.id.toolbarLayout).setVisibility(View.GONE);
 
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        //todo fix this not getting called
-        /**show toolbar again of main activity on fragment destruction*/
-        (getActivity()).findViewById(R.id.toolbarLayout).setVisibility(View.VISIBLE);
-    }
-
-
-
+//todo add search
     /*    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.i(TAG, "onCreateOptionsMenu: ");
