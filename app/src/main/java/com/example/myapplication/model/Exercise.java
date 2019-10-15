@@ -6,6 +6,11 @@ import android.os.Parcelable;
 
 public class Exercise implements Parcelable {
 
+
+    public Exercise() {
+    }
+
+    private String name, bodyPart, execution, mechanism, previewPhoto1, previewPhoto2, sets, reps, duration, creatorId, date, creatorName, additional_notes;
     public static final Creator<Exercise> CREATOR = new Creator<Exercise>() {
         @Override
         public Exercise createFromParcel(Parcel in) {
@@ -17,13 +22,7 @@ public class Exercise implements Parcelable {
             return new Exercise[size];
         }
     };
-    Bitmap previewBitmap;
-
-
-    public Exercise() {
-    }
-
-    private String name, bodyPart, execution, mechanism, previewPhoto1, previewPhoto2, sets, reps, duration, creatorId, date, creatorName, additional_notes;
+    private Boolean isAddedToWorkout;
 
     public Exercise(String name, String bodyPart, String execution, String mechanism, String previewPhoto1, String previewPhoto2) {
         this.name = name;
@@ -33,6 +32,8 @@ public class Exercise implements Parcelable {
         this.previewPhoto2 = previewPhoto2;
         this.bodyPart = bodyPart;
     }
+
+    private Bitmap previewBitmap;
 
     protected Exercise(Parcel in) {
         name = in.readString();
@@ -48,6 +49,8 @@ public class Exercise implements Parcelable {
         date = in.readString();
         creatorName = in.readString();
         additional_notes = in.readString();
+        byte tmpIsAddedToWorkout = in.readByte();
+        isAddedToWorkout = tmpIsAddedToWorkout == 0 ? null : tmpIsAddedToWorkout == 1;
         previewBitmap = in.readParcelable(Bitmap.class.getClassLoader());
     }
 
@@ -170,6 +173,14 @@ public class Exercise implements Parcelable {
         this.additional_notes = additional_notes;
     }
 
+    public Boolean getIsAddedToWorkout() {
+        return isAddedToWorkout;
+    }
+
+    public void setIsAddedToWorkout(Boolean isAddedToWorkout) {
+        this.isAddedToWorkout = isAddedToWorkout;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -190,6 +201,7 @@ public class Exercise implements Parcelable {
         parcel.writeString(date);
         parcel.writeString(creatorName);
         parcel.writeString(additional_notes);
+        parcel.writeByte((byte) (isAddedToWorkout == null ? 0 : isAddedToWorkout ? 1 : 2));
         parcel.writeParcelable(previewBitmap, i);
     }
 }

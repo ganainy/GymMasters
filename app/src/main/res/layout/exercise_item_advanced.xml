@@ -7,52 +7,86 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    android:id="@+id/parentConstraint"
     android:background="@drawable/circular_grey_bordersolid">
 
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:padding="8dp"
         android:id="@+id/exerciseImageView"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:padding="8dp"
         android:src="@drawable/ic_exercise_placeholder"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="@id/parentConstraint"
+        app:layout_constraintTop_toTopOf="@id/exerciseNameEdittext" />
+
 
     <TextView
         android:id="@+id/exerciseNameEdittext"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
         android:ellipsize="end"
         android:fontFamily="@font/proximanovaregular"
         android:gravity="center_vertical"
         android:maxLines="2"
         android:textColor="@color/textblack"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintBottom_toTopOf="@id/AlreadyaddedLayout"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewDelete"
         app:layout_constraintStart_toEndOf="@+id/exerciseImageView"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         tools:text="Barbell bench press " />
 
-
     <ImageView
-        android:id="@+id/imageViewPlus"
+        android:id="@+id/imageViewDelete"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:src="@drawable/ic_plus_black_symbol"
+        app:layout_constraintBottom_toBottomOf="@+id/exerciseNameEdittext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/exerciseNameEdittext" />
+
+
+    <LinearLayout
+        android:id="@+id/AlreadyaddedLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:padding="4dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exerciseImageView"
+        tools:visibility="visible">
 
+        <TextView
+            android:id="@+id/AlreadyaddedTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/proximanovaregular"
+            android:text="Already added but can be added again or deleted "
+            android:textColor="@color/textblack" />
+
+        <ImageView
+            android:id="@+id/deleteImageView"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="4dp"
+            android:src="@drawable/ic_delete_black_24dp" />
+
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

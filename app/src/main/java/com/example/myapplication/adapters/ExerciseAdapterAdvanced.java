@@ -10,11 +10,13 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -58,7 +60,17 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ExerciseViewHolder exerciseViewHolder, int i) {
-        //todo show the user that exercise is add (perhaps change + sign to success sign ) and give user ability to remove exercise after adding
+
+
+        if (finalExerciseList.get(i).getIsAddedToWorkout() != null && finalExerciseList.get(i).getIsAddedToWorkout()) {
+            exerciseViewHolder.parentConstraint.setBackgroundResource(R.drawable.circular_green_bordersolid);
+            exerciseViewHolder.AlreadyaddedLayout.setVisibility(View.VISIBLE);
+            exerciseViewHolder.imageViewPlus.setVisibility(View.GONE);
+        } else {
+            exerciseViewHolder.parentConstraint.setBackgroundResource(R.drawable.circular_grey_bordersolid);
+            exerciseViewHolder.AlreadyaddedLayout.setVisibility(View.GONE);
+            exerciseViewHolder.imageViewPlus.setVisibility(View.VISIBLE);
+        }
 
         exerciseViewHolder.exerciseName.setText(exerciseList.get(i).getName());
         storageRef = FirebaseStorage.getInstance().getReference();
@@ -75,7 +87,6 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
             public void onSuccess(Uri uri) {
                 //download image with glide then show it in the navigation menu
                 Glide.with(context).load(uri.toString()).into(exerciseViewHolder.exerciseImage);
-                Log.i(TAG, "onSuccess: loaded from storage");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -99,6 +110,7 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
 
     @Override
     public Filter getFilter() {
+        //todo fix search+view all exercises not working properly
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
@@ -151,6 +163,9 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
                         addToExercisesOfWorkoutList(adapterPosition);
                         FancyToast.makeText(context, "Added exercise", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
 
+                        finalExerciseList.get(adapterPosition).setIsAddedToWorkout(true);
+                        notifyItemChanged(adapterPosition);
+
 
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -192,8 +207,7 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
     private void addToExercisesOfWorkoutList(int adapterPosition) {
         exerciseList.get(adapterPosition).setSets(sets);
         exerciseList.get(adapterPosition).setReps(reps);
-        ExercisesOfWorkoutList.add(exerciseList.get(adapterPosition));
-        Log.i(TAG, "addToExercisesOfWorkoutList: " + ExercisesOfWorkoutList.size());
+        ExercisesOfWorkoutList.add(finalExerciseList.get(adapterPosition));
     }
 
 
@@ -205,20 +219,35 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
     class ExerciseViewHolder extends RecyclerView.ViewHolder {
         CircleImageView exerciseImage;
         TextView exerciseName;
-        ImageView imageViewPlus;
+        ImageView imageViewPlus, deleteImageView;
+        ConstraintLayout parentConstraint;
+        LinearLayout AlreadyaddedLayout;
+
 
 
         ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
             exerciseImage = itemView.findViewById(R.id.exerciseImageView);
+            deleteImageView = itemView.findViewById(R.id.deleteImageView);
             exerciseName = itemView.findViewById(R.id.exerciseNameEdittext);
-            imageViewPlus = itemView.findViewById(R.id.imageViewPlus);
+            imageViewPlus = itemView.findViewById(R.id.imageViewDelete);
+            parentConstraint = itemView.findViewById(R.id.parentConstraint);
+            AlreadyaddedLayout = itemView.findViewById(R.id.AlreadyaddedLayout);
 
             //open full exercise info when exercise from recycler is clicked
             imageViewPlus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     openSetsAndRepsAlertDialog(getAdapterPosition());
+                }
+            });
+
+            deleteImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finalExerciseList.get(getAdapterPosition()).setIsAddedToWorkout(false);
+                    notifyItemChanged(getAdapterPosition());
+                    ExercisesOfWorkoutList.remove(finalExerciseList.get(getAdapterPosition()));
                 }
             });
         }
