@@ -128,7 +128,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     }
 
-    private void downloadAndShowUserImage(final UserViewHolder userViewHolder, String photo) {
+    private void downloadAndShowUserImage(final UserViewHolder userViewHolder, final String photo) {
         if (photo == null) {
             return;
         }
@@ -145,6 +145,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i(TAG, "user photo download failed " + e.getMessage());
+                try {
+                    if (context != null) {
+                        Glide.with(context).load(Uri.parse(photo)).into(userViewHolder.userImageView);
+                    }
+                } catch (Exception ex) {
+                    Log.i(TAG, "Exception: " + ex.getMessage());
+                }
             }
         });
 

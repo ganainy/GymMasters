@@ -172,7 +172,12 @@ public class MainFragmentHomeViewModel extends ViewModel {
 
 
     public MutableLiveData<Uri> downloadUserPhoto(final String photo) {
+
         final MutableLiveData<Uri> load = new MutableLiveData<>();
+
+        if (photo == null) {
+            return load;
+        }
         FirebaseStorage.getInstance().getReference().child("images/").child(photo).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {

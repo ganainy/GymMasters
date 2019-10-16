@@ -51,12 +51,11 @@ public class TimerActivity extends AppCompatActivity implements Chronometer.OnCh
         ButterKnife.bind(this);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Exercise timer");
 
 
     }
 
-    @OnClick({R.id.imageView, R.id.view, R.id.view2})
+    @OnClick({R.id.imageView, R.id.view, R.id.view2, R.id.backArrowImageView})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.imageView:
@@ -71,6 +70,9 @@ public class TimerActivity extends AppCompatActivity implements Chronometer.OnCh
             case R.id.view2:
                 /**prompt user to choose time and play audio when finished*/
                 openSetTimerAlertDialog();
+                break;
+            case R.id.backArrowImageView:
+                onBackPressed();
                 break;
         }
     }

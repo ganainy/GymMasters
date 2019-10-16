@@ -56,6 +56,7 @@
                         android:fontFamily="@font/proximanovaregular"
                         android:textColor="#424242"
                         android:textSize="21sp"
+                        android:layout_gravity="center"
                         android:textStyle="bold"
                         tools:text="Amr mohammed" />
 

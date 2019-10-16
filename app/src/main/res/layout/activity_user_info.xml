@@ -1,422 +1,484 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:background="@color/activity_bg"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.UserInfoActivity">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/AppTheme.PopupOverlay">
 
 
-        <!--top profile-->
-        <LinearLayout
-            android:id="@+id/top_profile"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/circularbordersolid"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="16dp"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="8dp">
+            android:layout_height="match_parent">
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="150dp"
-                android:layout_height="90dp"
-                app:cardCornerRadius="6dp"
-                app:cardElevation="0dp">
+            <ImageView
+                android:id="@+id/backArrowImageView"
+                android:layout_width="40dp"
 
-                <ImageView
-                    android:id="@+id/profile_image"
-                    android:layout_width="150dp"
-                    android:layout_height="90dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/anonymous_profile" />
+                android:layout_height="40dp"
+                android:src="@drawable/ic_arrow_back_white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            </androidx.cardview.widget.CardView>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:gravity="center"
+                android:lines="1"
+                android:text="User profile"
+                android:textColor="@color/textwhite"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/textViewName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/proximanovaregular"
-                    android:textColor="#424242"
-                    android:textSize="21sp"
-                    android:textStyle="bold"
-                    tools:text="Amr mohammed" />
-
-                <TextView
-                    android:id="@+id/email"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:fontFamily="@font/proximanovaregular"
-                    android:textSize="14sp"
-                    tools:text="amr@gmail.com" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <Button
-                        android:id="@+id/followButton"
-                        android:layout_width="0dp"
-                        android:layout_height="20dp"
-                        android:layout_margin="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/btn_add"
-                        android:fontFamily="@font/proximanovaregular"
-                        android:gravity="left|center"
-                        android:text="follow"
-                        android:textAlignment="center"
-                        android:textAllCaps="false"
-                        android:textColor="@color/green" />
-
-                    <Button
-                        android:id="@+id/rateButton"
-                        android:layout_width="0dp"
-                        android:layout_height="20dp"
-                        android:layout_margin="8dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/btn_add"
-                        android:fontFamily="@font/proximanovaregular"
-                        android:gravity="left|center"
-                        android:text="rate"
-                        android:textAlignment="center"
-                        android:textAllCaps="false"
-                        android:textColor="@color/green" />
-
-                </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.appcompat.widget.Toolbar>
 
 
-            </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:paddingBottom="10dp">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:background="@drawable/circular_grey_bordersolid"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_following" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/followersTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            tools:text="35K" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:lines="1"
-                            android:text="follower"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:background="@drawable/circular_grey_bordersolid"
-                        android:padding="10dp"
-                        android:src="@drawable/follow" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/followingTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            tools:text="205" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:lines="1"
-                            android:text="following"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:padding="8dp">
-
-                    <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:background="@drawable/circular_grey_bordersolid"
-                        android:padding="10dp"
-                        android:src="@drawable/ic_star" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/ratingTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            tools:text="4.8/5" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="rating"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-        </LinearLayout>
-
-
-        <!--About Me Card-->
-        <LinearLayout
-            android:id="@+id/about_me"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@drawable/circularbordersolid"
-            android:orientation="vertical"
-            android:padding="16dp"
-            app:layout_constraintTop_toBottomOf="@id/top_profile">
+            android:layout_height="match_parent">
 
+
+            <!--top profile-->
             <LinearLayout
+                android:id="@+id/top_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/circularbordersolid"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:layout_editor_absoluteX="8dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="150dp"
+                    android:layout_height="90dp"
+                    app:cardCornerRadius="6dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:id="@+id/profile_image"
+                        android:layout_width="150dp"
+                        android:layout_height="90dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/anonymous_profile" />
+
+                </androidx.cardview.widget.CardView>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/proximanovaregular"
+                        android:textColor="#424242"
+                        android:textSize="21sp"
+                        android:textStyle="bold"
+                        tools:text="Amr mohammed" />
+
+                    <TextView
+                        android:id="@+id/email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/proximanovaregular"
+                        android:textSize="14sp"
+                        tools:text="amr@gmail.com" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <Button
+                            android:id="@+id/followButton"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_margin="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/btn_add"
+                            android:fontFamily="@font/proximanovaregular"
+                            android:gravity="left|center"
+                            android:text="follow"
+                            android:padding="4dp"
+                            android:textAlignment="center"
+                            android:textAllCaps="false"
+                            android:textColor="@color/black" />
+
+                        <Button
+                            android:id="@+id/rateButton"
+                            android:layout_width="0dp"
+                            android:layout_height="30dp"
+                            android:layout_margin="8dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/btn_add"
+                            android:fontFamily="@font/proximanovaregular"
+                            android:gravity="left|center"
+                            android:text="rate"
+                            android:padding="4dp"
+                            android:textAlignment="center"
+                            android:textAllCaps="false"
+                            android:textColor="@color/black" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/proximanovaregular"
-                        android:text="@string/about_me"
-                        android:textSize="17sp"
-                        android:textStyle="bold" />
-
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/about_me_text"
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    tools:text="Description goes here" />
+                    android:paddingBottom="10dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:background="@drawable/circular_grey_bordersolid"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_following" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/followersTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                tools:text="35K" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:lines="1"
+                                android:text="follower"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:background="@drawable/circular_grey_bordersolid"
+                            android:padding="10dp"
+                            android:src="@drawable/follow" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/followingTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                tools:text="205" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:lines="1"
+                                android:text="following"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:padding="8dp">
+
+                        <ImageView
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:background="@drawable/circular_grey_bordersolid"
+                            android:padding="10dp"
+                            android:src="@drawable/ic_star" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/ratingTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                tools:text="4.8/5" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="rating"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
             </LinearLayout>
 
-        </LinearLayout>
 
-        <androidx.cardview.widget.CardView
-
-            android:id="@+id/cardView"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_margin="16dp"
-            android:layout_marginTop="8dp"
-            android:elevation="3dp"
-            app:layout_constraintTop_toBottomOf="@+id/about_me"
-            tools:layout_editor_absoluteX="-25dp">
-
+            <!--About Me Card-->
             <LinearLayout
+                android:id="@+id/about_me"
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
-
-
-                android:orientation="horizontal"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="299dp">
-
-                <TextView
-                    android:id="@+id/exercisesCountTextView"
-                    android:layout_width="70dp"
-                    android:layout_height="match_parent"
-                    android:background="#5692DD"
-                    android:gravity="center"
-                    android:textColor="@color/textwhite"
-                    android:textSize="24sp"
-                    tools:text="3" />
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/circularbordersolid"
+                android:orientation="vertical"
+                android:padding="16dp"
+                app:layout_constraintTop_toBottomOf="@id/top_profile">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/explainExerciseTextview"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="8dp"
-                        android:paddingTop="8dp"
-                        android:textColor="@color/textblack"
-                        android:textSize="18sp"
-                        tools:text="Amr created 3 custom exercises" />
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/proximanovaregular"
+                            android:text="@string/about_me"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/explainExerciseTextview2"
-                        android:layout_width="match_parent"
+                        android:id="@+id/about_me_text"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="8dp"
-                        android:text="Click to view" />
+                        android:layout_marginTop="10dp"
+                        tools:text="Description goes here" />
                 </LinearLayout>
-
-                <TextView
-                    android:layout_width="4dp"
-                    android:layout_height="match_parent"
-                    android:background="#5692DD" />
 
             </LinearLayout>
 
+            <androidx.cardview.widget.CardView
 
-        </androidx.cardview.widget.CardView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            tools:listitem="@layout/excercise_item"
-            android:id="@+id/exerciseRecycler"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/cardView"
-            app:layout_constraintStart_toStartOf="@+id/cardView"
-            app:layout_constraintTop_toBottomOf="@+id/cardView">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <androidx.cardview.widget.CardView
-
-            android:id="@+id/cardView2"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_margin="16dp"
-            android:layout_marginTop="8dp"
-            android:elevation="3dp"
-            app:layout_constraintTop_toBottomOf="@+id/exerciseRecycler"
-            tools:layout_editor_absoluteX="-25dp">
-
-            <LinearLayout
+                android:id="@+id/cardView"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-
-
-                android:orientation="horizontal"
-                tools:layout_editor_absoluteX="16dp"
-                tools:layout_editor_absoluteY="299dp">
-
-                <TextView
-                    android:id="@+id/workoutCountTextView"
-                    android:layout_width="70dp"
-                    android:layout_height="match_parent"
-                    android:background="#9F64C9"
-                    android:gravity="center"
-                    android:textColor="@color/textwhite"
-                    android:textSize="24sp"
-                    tools:text="2" />
+                android:layout_margin="16dp"
+                android:layout_marginTop="8dp"
+                android:elevation="3dp"
+                app:layout_constraintTop_toBottomOf="@+id/about_me"
+                tools:layout_editor_absoluteX="-25dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+
+
+                    android:orientation="horizontal"
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="299dp">
 
                     <TextView
-                        android:id="@+id/explainExerciseTextview3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="8dp"
-                        android:paddingTop="8dp"
-                        android:textColor="@color/textblack"
-                        android:textSize="18sp"
-                        tools:text="Amr created 2 custom workouts" />
+                        android:id="@+id/exercisesCountTextView"
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:background="#5692DD"
+                        android:fontFamily="@font/proximanovaregular"
+                        android:gravity="center"
+                        android:textColor="@color/textwhite"
+                        android:textSize="24sp"
+                        tools:text="3" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:fontFamily="@font/proximanovaregular"
+                            android:id="@+id/explainExerciseTextview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="8dp"
+                            android:paddingTop="8dp"
+                            android:textColor="@color/textblack"
+                            android:textSize="18sp"
+                            tools:text="Amr created 3 custom exercises" />
+
+                        <TextView
+                            android:fontFamily="@font/proximanovaregular"
+                            android:id="@+id/explainExerciseTextview2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="8dp"
+                            android:text="Click to view" />
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/explainExerciseTextview4"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="8dp"
-                        android:text="Click to view" />
+                        android:layout_width="4dp"
+                        android:layout_height="match_parent"
+                        android:background="#5692DD" />
+
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="4dp"
-                    android:layout_height="match_parent"
-                    android:background="#9F64C9" />
 
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            tools:listitem="@layout/workout_item"
-            android:id="@+id/workoutRecycler"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/cardView2"
-            app:layout_constraintStart_toStartOf="@+id/cardView2"
-            app:layout_constraintTop_toBottomOf="@+id/cardView2">
+            <androidx.recyclerview.widget.RecyclerView
+                tools:listitem="@layout/excercise_item"
+                android:layout_margin="4dp"
+                android:background="@drawable/circularbordersolid"
+                android:id="@+id/exerciseRecycler"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@+id/cardView"
+                app:layout_constraintStart_toStartOf="@+id/cardView"
+                app:layout_constraintTop_toBottomOf="@+id/cardView">
 
-        </androidx.recyclerview.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <androidx.cardview.widget.CardView
+
+                android:id="@+id/cardView2"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_margin="16dp"
+                android:layout_marginTop="8dp"
+                android:elevation="3dp"
+                app:layout_constraintTop_toBottomOf="@+id/exerciseRecycler"
+                tools:layout_editor_absoluteX="-25dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+                    android:orientation="horizontal"
+                    tools:layout_editor_absoluteX="16dp"
+                    tools:layout_editor_absoluteY="299dp">
+
+                    <TextView
+                        android:id="@+id/workoutCountTextView"
+                        android:layout_width="70dp"
+                        android:layout_height="match_parent"
+                        android:background="#9F64C9"
+                        android:gravity="center"
+                        android:fontFamily="@font/proximanovaregular"
+                        android:textColor="@color/textwhite"
+                        android:textSize="24sp"
+                        tools:text="2" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/explainExerciseTextview3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="8dp"
+                            android:paddingTop="8dp"
+                            android:textColor="@color/textblack"
+                            android:fontFamily="@font/proximanovaregular"
+                            android:textSize="18sp"
+                            tools:text="Amr created 2 custom workouts" />
+
+                        <TextView
+                            android:id="@+id/explainExerciseTextview4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/proximanovaregular"
+                            android:paddingLeft="8dp"
+                            android:text="Click to view" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="4dp"
+                        android:layout_height="match_parent"
+                        android:background="#9F64C9" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_margin="4dp"
+                android:background="@drawable/circularbordersolid"
+                tools:listitem="@layout/workout_item"
+                android:id="@+id/workoutRecycler"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@+id/cardView2"
+                app:layout_constraintStart_toStartOf="@+id/cardView2"
+                app:layout_constraintTop_toBottomOf="@+id/cardView2">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</LinearLayout>

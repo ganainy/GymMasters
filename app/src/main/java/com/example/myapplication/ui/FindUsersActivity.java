@@ -74,9 +74,7 @@ public class FindUsersActivity extends AppCompatActivity {
 
         /**setting up custom toolbar*/
         setSupportActionBar(toolbar);
-        setTitle("Users List");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
 
         checkInternet();
@@ -149,6 +147,10 @@ public class FindUsersActivity extends AppCompatActivity {
                             if (ds.hasChild("photo"))
                                 user.setPhoto(ds.child("photo").getValue().toString());
                             user.setId(ds.child("id").getValue().toString());
+                            if (ds.hasChild("about_me"))
+                                user.setAbout_me(ds.child("about_me").getValue().toString());
+                            if (ds.hasChild("email"))
+                                user.setEmail(ds.child("email").getValue().toString());
                             followingList.add(user);
                         }
                     }
@@ -219,8 +221,13 @@ public class FindUsersActivity extends AppCompatActivity {
 
                             User user = new User();
                             user.setName(ds.child("name").getValue().toString());
-                            user.setPhoto(ds.child("photo").getValue().toString());
+                            if (ds.hasChild("photo"))
+                                user.setPhoto(ds.child("photo").getValue().toString());
                             user.setId(ds.child("id").getValue().toString());
+                            if (ds.hasChild("about_me"))
+                                user.setAbout_me(ds.child("about_me").getValue().toString());
+                            if (ds.hasChild("email"))
+                                user.setEmail(ds.child("email").getValue().toString());
                             followersList.add(user);
                         }
                     }
@@ -346,14 +353,11 @@ public class FindUsersActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * handle back press from toolbar
+    /** handle back press from toolbar
      */
-    @Override
-    public boolean onSupportNavigateUp() {
+    @OnClick(R.id.backArrowImageView)
+    public void onViewClicked() {
         onBackPressed();
-        return true;
     }
-
 }
 

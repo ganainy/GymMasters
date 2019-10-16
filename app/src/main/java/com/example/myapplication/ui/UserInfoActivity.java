@@ -1,7 +1,6 @@
 package com.example.myapplication.ui;
 
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -207,9 +206,8 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void setMyRate(@Nullable Long aLong) {
-        rateButton.setBackgroundColor(Color.parseColor("#49B03E"));
-        rateButton.setTextColor(Color.parseColor("#E9EAEE"));
-        rateButton.setText("my rate " + aLong + "/5");
+        rateButton.setBackgroundResource(R.drawable.circular_green_bordersolid); //green
+        rateButton.setText("i rated: " + aLong + "/5");
     }
 
 
@@ -242,13 +240,11 @@ public class UserInfoActivity extends AppCompatActivity {
 
     private void ChangeFollowButtonColors(Boolean aBoolean) {
         if (aBoolean == true) {
-            followButton.setBackgroundColor(Color.parseColor("#49B03E"));
-            followButton.setTextColor(Color.parseColor("#E9EAEE"));
-            followButton.setText("followed");
+            followButton.setBackgroundResource(R.drawable.circular_green_bordersolid); //green
+            followButton.setText("following");
 
         } else {
-            followButton.setBackgroundColor(Color.parseColor("#49B03E"));
-            followButton.setTextColor(Color.parseColor("#4CAF50b"));
+            followButton.setBackgroundResource(R.drawable.btn_add);
             followButton.setText("follow");
 
         }
@@ -401,5 +397,10 @@ public class UserInfoActivity extends AppCompatActivity {
                 rate();
                 break;
         }
+    }
+
+    @OnClick(R.id.backArrowImageView)
+    public void onViewClicked() {
+        super.onBackPressed();
     }
 }

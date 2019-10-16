@@ -4,13 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,17 +16,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.fragments.ViewPagerAdapterMainActivity;
-import com.example.myapplication.model.User;
 import com.example.myapplication.utils.NetworkChangeReceiver;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,17 +30,13 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public NetworkChangeReceiver receiver;
-    MainActivityViewModel mViewModel;
     Boolean bl = true;
     SelectedBundle selectedBundle;
     private static final String TAG = "MainActivity";
-    private CircleImageView imageView;
-    TextView nameNavigation, emailNavigation;
 
 
     @BindView(R.id.view_pager_main)
@@ -79,7 +65,6 @@ public class MainActivity extends AppCompatActivity
 
 
         setupMainViewPager();
-        showUserDataInNavigationMenu();
 
         //handle click on navigation view items
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -101,6 +86,9 @@ public class MainActivity extends AppCompatActivity
                     case R.id.nav_timer:
                         handleTimerClick();
                         break;
+                    case R.id.nav_sign_out:
+                        handleSignoutClick();
+                        break;
 
 
                 }
@@ -113,6 +101,21 @@ public class MainActivity extends AppCompatActivity
 
 
         checkInternet();
+    }
+
+    private void handleSignoutClick() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (mAuth != null) {
+            mAuth.signOut();
+            openLoginActivity();
+        } else {
+            mGoogleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    openLoginActivity();
+                }
+            });
+        }
     }
 
     private void handleTimerClick() {
@@ -160,93 +163,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
-    private void showUserDataInNavigationMenu() {
-
-        /** setup views*/
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        View hView = navigationView.getHeaderView(0);
-        imageView = hView.findViewById(R.id.imageViewProfile);
-        nameNavigation = hView.findViewById(R.id.nameNavigation);
-        emailNavigation = hView.findViewById(R.id.emailNavigation);
-
-
-        if (GoogleSignIn.getLastSignedInAccount(this) != null) {
-            /**this means user signed in with google account*/
-            GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(this);
-            nameNavigation.setText(lastSignedInAccount.getDisplayName());
-            emailNavigation.setText(lastSignedInAccount.getEmail());
-            if (lastSignedInAccount.getPhotoUrl() != null)
-                Glide.with(MainActivity.this).load(lastSignedInAccount.getPhotoUrl()).into(imageView);
-        } else {
-            /**user logged in/signed up with normal email/password*/
-            /**get user data*/
-            mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
-            mViewModel.getUserData().observe(this, new Observer<User>() {
-                @Override
-                public void onChanged(User user) {
-                    nameNavigation.setText(user.getName());
-                    emailNavigation.setText(user.getEmail());
-                    loadUserImage(user);
-                }
-            });
-        }
-
-
-    }
-
-
-    private void loadUserImage(User user) {
-        /**user coming from sign up page so we have the uri of image and will show it directly*/
-        if (getIntent().hasExtra("imageUri")) {
-            Uri myUri = Uri.parse(getIntent().getStringExtra("imageUri"));
-            Glide.with(MainActivity.this)
-                    .load(myUri)
-                    .into(imageView);
-        } else {
-            /**get image uri from storage and show it using glide*/
-            mViewModel.getUserPhoto(user).observe(this, new Observer<Uri>() {
-                @Override
-                public void onChanged(Uri uri) {
-                    Glide.with(getApplicationContext()).load(uri.toString()).into(imageView);
-                }
-            });
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //sign out when menu item clicked
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_signout) {
-            FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            if (mAuth != null) {
-                mAuth.signOut();
-                openLoginActivity();
-            } else {
-                mGoogleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        openLoginActivity();
-                    }
-                });
-            }
-
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     private void openLoginActivity() {
         //finish this activity on log out so users won't be able to log in on back press in login

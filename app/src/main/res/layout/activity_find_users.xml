@@ -9,12 +9,60 @@
     tools:context=".ui.FindUsersActivity">
 
 
+    <!--  <androidx.appcompat.widget.Toolbar
+          android:id="@+id/toolbar"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="#3F527C"
+          app:titleTextColor="#eee">
+
+          <ImageView
+              android:id="@+id/backArrowImageView"
+              android:layout_width="40dp"
+              android:layout_height="40dp"
+              android:src="@drawable/ic_arrow_back_white"/>
+
+      </androidx.appcompat.widget.Toolbar>-->
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#1B88DF"
-        app:titleTextColor="#eee"></androidx.appcompat.widget.Toolbar>
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/AppTheme.PopupOverlay">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/backArrowImageView"
+                android:layout_width="40dp"
+
+                android:layout_height="40dp"
+                android:src="@drawable/ic_arrow_back_white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lines="1"
+                android:text="Users list"
+                android:textColor="@color/textwhite"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="60dp"

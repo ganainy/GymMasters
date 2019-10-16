@@ -61,6 +61,7 @@
                 android:layout_gravity="top"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:background="?attr/colorPrimary"
                 >
 
 

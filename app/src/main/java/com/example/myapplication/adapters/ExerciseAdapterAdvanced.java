@@ -110,7 +110,7 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
 
     @Override
     public Filter getFilter() {
-        //todo fix search+view all exercises not working properly
+        //todo fix search
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
