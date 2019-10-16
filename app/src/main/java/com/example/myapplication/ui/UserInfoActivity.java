@@ -1,17 +1,19 @@
 package com.example.myapplication.ui;
 
-import android.content.res.ColorStateList;
+import android.content.DialogInterface;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -26,7 +28,6 @@ import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.Workout;
 import com.example.myapplication.utils.MyConstant;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,13 +41,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class UserInfoActivity extends AppCompatActivity {
     private static final String TAG = "UserInfoActivityy";
-    @BindView(R.id.rate_me_text_view)
-    TextView rate_me_text_view;
+
 
     @BindView(R.id.explainExerciseTextview)
     TextView explainExerciseTextview;
@@ -56,7 +55,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
 
     @BindView(R.id.profile_image)
-    CircleImageView profile_image;
+    ImageView profile_image;
 
 
     @BindView(R.id.textViewName)
@@ -69,14 +68,23 @@ public class UserInfoActivity extends AppCompatActivity {
     @BindView(R.id.explainExerciseTextview4)
     TextView explainExerciseTextview4;
 
-    @BindView(R.id.followFab)
-    FloatingActionButton followFab;
 
     @BindView(R.id.exercisesCountTextView)
     TextView exercisesCountTextView;
 
     @BindView(R.id.workoutCountTextView)
     TextView workoutCountTextView;
+
+    @BindView(R.id.followButton)
+    Button followButton;
+
+    @BindView(R.id.rateButton)
+    Button rateButton;
+    @BindView(R.id.email)
+    TextView email;
+    @BindView(R.id.about_me_text)
+    TextView aboutMeText;
+
     private UserInfoActivityViewModel mViewModel;
 
     @BindView(R.id.followingTextView)
@@ -85,8 +93,7 @@ public class UserInfoActivity extends AppCompatActivity {
     @BindView(R.id.ratingTextView)
     TextView ratingTextView;
 
-    @BindView(R.id.ratingBar)
-    RatingBar ratingBar;
+
     private List<Exercise> exerciseListt = new ArrayList<>();
 
     private User user;
@@ -95,71 +102,8 @@ public class UserInfoActivity extends AppCompatActivity {
     private ExerciseAdapter exerciseAdapter;
     private List<Workout> workoutListt = new ArrayList<>();
     private WorkoutAdapter workoutAdapter;
+    private int rating;
 
-    @OnClick(R.id.followFab)
-    void follow() {
-        mViewModel.getFollowState(user.getId()).removeObserver(observer);
-
-        if (!isSubscribed) {
-            //add id of logged in user in followersUID in profile account
-            final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
-                    .child(user.getId()).child("followersUID");
-            profile.push().setValue(MyConstant.loggedInUserId);
-            //add id of profile account in followingUID of logged in account
-            FirebaseDatabase.getInstance().getReference("users").child(MyConstant.loggedInUserId).child("followingUID")
-                    .push().setValue(user.getId());
-            //show toast
-            FancyToast.makeText(UserInfoActivity.this, "Subscribed successfully.", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show();
-            isSubscribed = true;
-            updateFab(isSubscribed);
-        } else {
-            final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
-                    .child(user.getId()).child("followersUID");
-            profile.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot ds : dataSnapshot.getChildren())
-                        if (ds.getValue().equals(MyConstant.loggedInUserId)) {
-
-                            String key = ds.getKey();
-                            profile.child(key).removeValue();
-                            //decrease followers count for this user by 1
-                        }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-            //
-            final DatabaseReference followingUID = FirebaseDatabase.getInstance().
-                    getReference("users").child(MyConstant.loggedInUserId).child("followingUID");
-            followingUID.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        if (ds.getValue().equals(user.getId())) {
-                            String key = ds.getKey();
-                            followingUID.child(key).removeValue();
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-            //
-            //show toast
-            FancyToast.makeText(UserInfoActivity.this, "Unsubscribed successfully.", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show();
-
-            isSubscribed = false;
-            updateFab(isSubscribed);
-        }
-
-    }
 
     @OnClick(R.id.cardView)
     void showExerciseList() {
@@ -171,12 +115,6 @@ public class UserInfoActivity extends AppCompatActivity {
         setupWorkoutRecycler();
     }
 
-
-    @OnClick(R.id.rate_me_text_view)
-    void showRatingBar() {
-        rate_me_text_view.setVisibility(View.GONE);
-        ratingBar.setVisibility(View.VISIBLE);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,7 +162,7 @@ public class UserInfoActivity extends AppCompatActivity {
             observer = new Observer<Boolean>() {
                 @Override
                 public void onChanged(@Nullable Boolean aBoolean) {
-                    updateFab(aBoolean);
+                    ChangeFollowButtonColors(aBoolean);
                     isSubscribed = aBoolean;
 
                 }
@@ -253,27 +191,14 @@ public class UserInfoActivity extends AppCompatActivity {
                 }
             });
 
-            //rate user
-            rate();
 
             //get my rating and show it on rating bar
             mViewModel.getMyRate(user.getId()).observe(this, new Observer<Long>() {
                 @Override
                 public void onChanged(@Nullable Long aLong) {
-                    if (aLong == 0)//viewing user didn't rate him before
-                    {
-                        rate_me_text_view.setVisibility(View.VISIBLE);
-                        ratingBar.setVisibility(View.INVISIBLE);
-                        rate_me_text_view.setText("Click to rate " + user.getName());
-                        rate_me_text_view.setPaintFlags(rate_me_text_view.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    //make rate button green since user rated him before
+                    setMyRate(aLong);
 
-
-                    } else//viewing user rated him
-                    {
-                        ratingBar.setRating(aLong);
-                        rate_me_text_view.setVisibility(View.GONE);
-                        ratingBar.setVisibility(View.VISIBLE);
-                    }
                 }
             });
 
@@ -281,17 +206,10 @@ public class UserInfoActivity extends AppCompatActivity {
         }
     }
 
-    private void rate() {
-        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                Log.i(TAG, "onRatingChanged: " + v);
-                if (v < 1) {
-                    return;
-                }
-                mViewModel.setRate((int) v, user.getId());
-            }
-        });
+    private void setMyRate(@Nullable Long aLong) {
+        rateButton.setBackgroundColor(Color.parseColor("#49B03E"));
+        rateButton.setTextColor(Color.parseColor("#E9EAEE"));
+        rateButton.setText("my rate " + aLong + "/5");
     }
 
 
@@ -322,14 +240,16 @@ public class UserInfoActivity extends AppCompatActivity {
 
     }
 
-    private void updateFab(Boolean aBoolean) {
-        //change photo and color of fab depending on follow state
+    private void ChangeFollowButtonColors(Boolean aBoolean) {
         if (aBoolean == true) {
-            followFab.setImageResource(R.drawable.ic_following);
-            followFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#98FB98")));
+            followButton.setBackgroundColor(Color.parseColor("#49B03E"));
+            followButton.setTextColor(Color.parseColor("#E9EAEE"));
+            followButton.setText("followed");
+
         } else {
-            followFab.setImageResource(R.drawable.ic_follow);
-            followFab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#1E90FF")));
+            followButton.setBackgroundColor(Color.parseColor("#49B03E"));
+            followButton.setTextColor(Color.parseColor("#4CAF50b"));
+            followButton.setText("follow");
 
         }
 
@@ -346,6 +266,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
         exercisesCountTextView.setText(String.valueOf(exerciseList.size()));
     }
+
     private void updateProfileWorkoutView(List<Workout> workoutList) {
         Log.i(TAG, "updateProfileWorkoutView: " + workoutList.size());
         if (workoutList.size() == 0) {
@@ -358,9 +279,127 @@ public class UserInfoActivity extends AppCompatActivity {
 
         workoutCountTextView.setText(String.valueOf(workoutList.size()));
     }
+
     private void showDataInView() {
         textViewName.setText(user.getName());
+        email.setText(user.getEmail());
+        if (user.getAbout_me() != null && !user.getAbout_me().equals("")) {
+            aboutMeText.setText(user.getAbout_me());
+        } else {
+            aboutMeText.setText(user.getName() + " didn't add this information yet");
+        }
         followingTextView.setText(user.getFollowing());
 
+    }
+
+    private void rate() {
+        final View rate_view = getLayoutInflater().inflate(R.layout.rate_view, null);
+
+        final RatingBar ratingBar = rate_view.findViewById(R.id.ratingBar);
+
+   /*     ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                rating = v;
+            }
+        });*/
+
+
+        new AlertDialog.Builder(UserInfoActivity.this)
+                .setTitle("Rate " + user.getName())
+                .setView(rate_view)
+                .setPositiveButton("Rate", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        rating = ratingBar.getProgress();
+                        mViewModel.setRate(rating, user.getId()).observe(UserInfoActivity.this, new Observer<Boolean>() {
+                            @Override
+                            public void onChanged(Boolean aBoolean) {
+                                if (aBoolean) setMyRate((long) rating);
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void follow() {
+        {
+            mViewModel.getFollowState(user.getId()).removeObserver(observer);
+
+            if (!isSubscribed) {
+                //add id of logged in user in followersUID in profile account
+                final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
+                        .child(user.getId()).child("followersUID");
+                profile.push().setValue(MyConstant.loggedInUserId);
+                //add id of profile account in followingUID of logged in account
+                FirebaseDatabase.getInstance().getReference("users").child(MyConstant.loggedInUserId).child("followingUID")
+                        .push().setValue(user.getId());
+                //show toast
+                FancyToast.makeText(UserInfoActivity.this, "Subscribed successfully", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+                isSubscribed = true;
+                ChangeFollowButtonColors(isSubscribed);
+            } else {
+                final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
+                        .child(user.getId()).child("followersUID");
+                profile.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ds : dataSnapshot.getChildren())
+                            if (ds.getValue().equals(MyConstant.loggedInUserId)) {
+
+                                String key = ds.getKey();
+                                profile.child(key).removeValue();
+                                //decrease followers count for this user by 1
+                            }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                //
+                final DatabaseReference followingUID = FirebaseDatabase.getInstance().
+                        getReference("users").child(MyConstant.loggedInUserId).child("followingUID");
+                followingUID.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            if (ds.getValue().equals(user.getId())) {
+                                String key = ds.getKey();
+                                followingUID.child(key).removeValue();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                //
+                //show toast
+                FancyToast.makeText(UserInfoActivity.this, "Unsubscribed successfully.", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show();
+
+                isSubscribed = false;
+                ChangeFollowButtonColors(isSubscribed);
+            }
+
+        }
+    }
+
+
+    @OnClick({R.id.followButton, R.id.rateButton})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.followButton:
+                follow();
+                break;
+            case R.id.rateButton:
+                rate();
+                break;
+        }
     }
 }

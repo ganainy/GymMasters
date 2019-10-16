@@ -252,6 +252,10 @@ public class FindUsersActivity extends AppCompatActivity {
                         if (ds.hasChild("photo"))
                             user.setPhoto(ds.child("photo").getValue().toString());
                         user.setId(ds.child("id").getValue().toString());
+                        if (ds.hasChild("about_me"))
+                            user.setAbout_me(ds.child("about_me").getValue().toString());
+                        if (ds.hasChild("email"))
+                            user.setEmail(ds.child("email").getValue().toString());
                         userList.add(user);
                     }
 

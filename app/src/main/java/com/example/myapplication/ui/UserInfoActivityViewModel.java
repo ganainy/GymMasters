@@ -27,6 +27,7 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
     private MutableLiveData<Integer> ratingsAvg;
     private MutableLiveData<Long> myRate;
     private MutableLiveData<String> followingCount;
+    private MutableLiveData<Boolean> isRateUpdated;
 
     public UserInfoActivityViewModel(@NonNull Application application) {
         super(application);
@@ -104,9 +105,13 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
     }
 
 
-    public void setRate(Integer rating, String profileId) {
-        mRepo.setRate(rating, profileId);
+    public LiveData<Boolean> setRate(Integer rating, String profileId) {
+
+
+        isRateUpdated = mRepo.setRate(rating, profileId);
+        return isRateUpdated;
     }
+
 
     public LiveData<String> getFollowingCount(String profileId) {
 

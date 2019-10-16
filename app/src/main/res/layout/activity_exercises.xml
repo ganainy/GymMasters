@@ -89,11 +89,10 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/exerciseRecyclerView"
-            android:layout_margin="8dp"
             android:background="@drawable/circularbordersolid"
             tools:listitem="@layout/excercise_item"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
 
             />
 

@@ -85,7 +85,7 @@ public class ExerciseActivityViewModel extends ViewModel {
 
         }
 
-        /** could within if should only execute if selected muscle is not "showall"*/
+        /** code inside if should only execute if selected muscle is not "showall"*/
         if (!myRef.equals(exercisesNode)) {
             //once we selected the right muscle group node this could will be the same for all exercises info
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {

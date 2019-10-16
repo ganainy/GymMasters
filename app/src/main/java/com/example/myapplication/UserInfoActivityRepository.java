@@ -229,8 +229,6 @@ public class UserInfoActivityRepository {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(MyConstant.loggedInUserId)) {
                     load.setValue((long) dataSnapshot.child(MyConstant.loggedInUserId).getValue());
-                } else {
-                    load.setValue((long) 0);
                 }
             }
 
@@ -285,9 +283,16 @@ public class UserInfoActivityRepository {
     }
 
 
-    public void setRate(Integer rating, String profileId) {
+    public MutableLiveData<Boolean> setRate(Integer rating, String profileId) {
+        final MutableLiveData<Boolean> load = new MutableLiveData<>();
         FirebaseDatabase.getInstance().getReference("users").child(profileId).child("Ratings").child(MyConstant.loggedInUserId)
-                .setValue(rating);
+                .setValue(rating).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                load.setValue(true);
+            }
+        });
+        return load;
     }
 
     public MutableLiveData<String> getFollowingCount(String profileId) {
