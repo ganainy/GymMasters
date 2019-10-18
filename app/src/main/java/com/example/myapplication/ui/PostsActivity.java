@@ -76,9 +76,6 @@ public class PostsActivity extends AppCompatActivity {
 
         /**setting up custom toolbar*/
         setSupportActionBar(toolbar);
-        setTitle("News feed");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
         getFollowingUid();
@@ -273,10 +270,10 @@ public class PostsActivity extends AppCompatActivity {
     /**
      * handle back press from toolbar
      */
-    @Override
-    public boolean onSupportNavigateUp() {
+    @OnClick(R.id.backArrowImageView)
+    public void onViewClicked() {
         onBackPressed();
-        return true;
     }
+
 
 }
