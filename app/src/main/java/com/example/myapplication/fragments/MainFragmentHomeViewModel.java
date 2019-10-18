@@ -12,10 +12,8 @@ import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.User;
 import com.example.myapplication.model.Workout;
 import com.example.myapplication.utils.MyConstant;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -61,6 +59,8 @@ public class MainFragmentHomeViewModel extends ViewModel {
                             exercise.setMechanism(ds.child("mechanism").getValue().toString());
                             exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
                             exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
+                            if (ds.hasChild("bodyPart"))
+                                exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
                             myCustomExercisesList.add(exercise);
                         }
                     }
@@ -156,9 +156,9 @@ public class MainFragmentHomeViewModel extends ViewModel {
 
     public LiveData<Boolean> updateAboutMe(String s) {
         final MutableLiveData<Boolean> load = new MutableLiveData<>();
-        FirebaseDatabase.getInstance().getReference("users").child(MyConstant.loggedInUserId).child("about_me").setValue(s).addOnCompleteListener(new OnCompleteListener<Void>() {
+        FirebaseDatabase.getInstance().getReference("users").child(MyConstant.loggedInUserId).child("about_me").setValue(s).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public void onSuccess(Void aVoid) {
                 load.setValue(true);
             }
         }).addOnFailureListener(new OnFailureListener() {

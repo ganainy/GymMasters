@@ -18,7 +18,6 @@ import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.ui.ExercisesActivity;
-import com.example.myapplication.ui.MainActivity;
 import com.example.myapplication.ui.SpecificExerciseActivity;
 import com.example.myapplication.ui.UserInfoActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -156,7 +155,6 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
                             //Different intents depending on the fragment/activity which called this adapter
                             if (parentName.equals("home")) {
                                 //adapter called by main fragment
-                                MainActivity mainActivity = (MainActivity) context;
                                 Intent intent = new Intent(context, SpecificExerciseActivity.class);
                                 //parcelable have size limit so i wont pass image bitmap with the exercise
                                 Exercise exercise = exercisesList.get(getAdapterPosition());

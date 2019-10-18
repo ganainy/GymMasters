@@ -14,31 +14,79 @@
         <activity
             android:name=".ui.TimerActivity"
             android:label="@string/title_activity_timer"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".ui.PostsActivity" />
-        <activity android:name=".ui.UserInfoActivity" />
-        <activity android:name=".ui.FindUsersActivity" />
-        <activity android:name=".ui.SpecificWorkoutActivity" />
-        <activity android:name=".ui.CreateNewExerciseActivity" />
-        <activity android:name=".ui.SpecificExerciseActivity" />
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".ui.PostsActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.UserInfoActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".ui.FindUsersActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".ui.SpecificWorkoutActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".ui.CreateNewExerciseActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+
+
+        <activity
+            android:name=".ui.SpecificExerciseActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+
+
         <activity
             android:name=".ui.ExercisesActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_exercises"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+
         <activity
             android:name=".ui.MainActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
+
         <activity
             android:name=".ui.LoginActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/NoActionBar"
             android:windowSoftInputMode="adjustNothing" />
+
+
         <activity
             android:name=".ui.SignUpActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/NoActionBar"
             android:windowSoftInputMode="stateHidden" />
+
+
         <activity
             android:name=".ui.WelcomeActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

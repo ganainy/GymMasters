@@ -107,7 +107,6 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 @Override
                 public void onClick(View view) {
                     openSpecificExerciseActivity(getAdapterPosition());
-                    //todo check when adding exercise name is unique
 
                 }
             });

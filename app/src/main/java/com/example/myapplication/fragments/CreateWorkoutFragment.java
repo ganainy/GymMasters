@@ -4,6 +4,8 @@ package com.example.myapplication.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +67,8 @@ public class CreateWorkoutFragment extends Fragment {
 
     @BindView(R.id.exercisesRecycler)
     RecyclerView exercisesRecycler;
+    @BindView(R.id.searchView)
+    EditText searchView;
 
 
     private String newWorkoutLevel;
@@ -196,6 +200,30 @@ public class CreateWorkoutFragment extends Fragment {
         exerciseAdapter.setDataSource(exerciseList);
         exercisesRecycler.setLayoutManager(linearLayoutManager);
         exercisesRecycler.setAdapter(exerciseAdapter);
+
+        addSearchFunctionality();
+    }
+
+    private void addSearchFunctionality() {
+        searchView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                Log.i(TAG, "onQueryTextChange: " + editable);
+                //so app won't crash if no data in recycler
+                if (exerciseAdapter != null)
+                    exerciseAdapter.getFilter().filter(editable);
+            }
+        });
     }
 
     private void uploadWorkout() {
@@ -278,33 +306,5 @@ public class CreateWorkoutFragment extends Fragment {
     }
 
 
-//todo add search
-    /*    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.i(TAG, "onCreateOptionsMenu: ");
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.search_exercise_menu, menu);
-        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                Log.i(TAG, "onQueryTextChange: " + s);
-                //so app won't crash if no data in recycler
-                if (exerciseAdapter != null)
-                    exerciseAdapter.getFilter().filter(s);
-                return true;
-            }
-        });
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                return false;
-            }
-        });
-    }*/
 }

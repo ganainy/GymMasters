@@ -25,10 +25,8 @@ import com.example.myapplication.youtube_model.Id;
 import com.example.myapplication.youtube_model.Item;
 import com.example.myapplication.youtube_model.YoutubeApi;
 import com.example.myapplication.youtube_model.YoutubeConfig;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
@@ -216,7 +214,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
             public void onSuccess(Uri uri) {
 
                 load = Glide.with(getApplicationContext()).load(uri);
-                downloadPreviewImage2();
+                downloadPreviewImage2(load);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -230,19 +228,22 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
 
     }
 
-    private void downloadPreviewImage2() {
+    private void downloadPreviewImage2(final RequestBuilder<Drawable> load) {
         StorageReference storageRef2 = FirebaseStorage.getInstance().getReference().child("exerciseImages/").child(exercise.getPreviewPhoto2());
-        storageRef2.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+        storageRef2.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                load2 = Glide.with(getApplicationContext()).load(task.getResult());
-                //  load2.into(exerciseImageView);
+            public void onSuccess(Uri uri) {
+                load2 = Glide.with(getApplicationContext()).load(uri);
                 switchExercisePhotos();
             }
+
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i(TAG, "glideError: " + e.getMessage());
+                /**if downloading second image failed just preview first one*/
+                loadingImageProgressBar.setVisibility(View.GONE);
+                load.into(exerciseImageView);
             }
         });
 
@@ -452,6 +453,9 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
             }
         });
     }
+
+
+    //todo fix muscle not showing when iam coming to exercise from profile
 }
 
 

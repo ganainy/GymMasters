@@ -3,7 +3,6 @@ package com.example.myapplication.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,21 +11,16 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.utils.MyConstant;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.Date;
@@ -69,8 +63,13 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
     @BindView(R.id.parentScroll)
     ScrollView parentScroll;
 
+    @BindView(R.id.loadingLayout)
+    ConstraintLayout constraintLayout;
+
 
     private Uri imageUri, image2Uri;
+    private CreateNewExerciseViewModel createNewExerciseViewModel;
+    private Observer<Boolean> mObserver;
 
     @OnClick(R.id.saveButton)
     void saveExercise() {
@@ -86,16 +85,15 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
         } else if (imageUri == null || image2Uri == null) {
             FancyToast.makeText(CreateNewExerciseActivity.this, "Please select two photos describing exercise movement.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
         } else {
+            constraintLayout.setVisibility(View.VISIBLE);
 
 
             /**add time in millis with image name to make it unique*/
             Date date = new Date();
-            long timeMilli = date.getTime();
+            final long timeMilli = date.getTime();
 
 
-            uploadExercisePhotos(timeMilli);
-
-            Exercise exercise = new Exercise(nameEditText.getText().toString(), newExerciseSelectedMuscle, executionEditText.getText().toString()
+            final Exercise exercise = new Exercise(nameEditText.getText().toString(), newExerciseSelectedMuscle, executionEditText.getText().toString()
                     , newExerciseMechanic, imageUri.getLastPathSegment() + timeMilli, image2Uri.getLastPathSegment() + timeMilli);
 
             exercise.setCreatorId(MyConstant.loggedInUserId);
@@ -104,7 +102,54 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
                 exercise.setAdditional_notes(additionalNotesEditText.getText().toString());
             exercise.setDate(String.valueOf(System.currentTimeMillis()));
 
-            uploadExercise(exercise);
+
+            //view model
+            createNewExerciseViewModel = ViewModelProviders.of(this).get(CreateNewExerciseViewModel.class);
+            mObserver = new Observer<Boolean>() {
+                @Override
+                public void onChanged(Boolean aBoolean) {
+                    if (aBoolean) {
+                        FancyToast.makeText(getApplicationContext(), "Exercise with same name already exists \n your exercise was not added",
+                                FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+
+
+                        constraintLayout.setVisibility(View.GONE);
+                    } else {
+                        /**exercise name is not repeated*/
+                        createNewExerciseViewModel.uploadExercise(exercise).observe(CreateNewExerciseActivity.this, new Observer<Boolean>() {
+                            @Override
+                            public void onChanged(Boolean aBoolean) {
+                                if (aBoolean) {
+                                    /**means exercise added to database now we should add images*/
+                                    createNewExerciseViewModel.uploadExercisePhotos(imageUri, image2Uri, timeMilli).observe(CreateNewExerciseActivity.this, new Observer<Boolean>() {
+                                        @Override
+                                        public void onChanged(Boolean aBoolean) {
+                                            if (aBoolean) { /**means both photos uploaded successfully*/
+                                                FancyToast.makeText(CreateNewExerciseActivity.this, "Added successfully.", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+                                                constraintLayout.setVisibility(View.GONE);
+                                                finish();
+                                            } else {
+                                                constraintLayout.setVisibility(View.GONE);
+                                            }
+
+                                        }
+                                    });
+                                } else {
+                                    constraintLayout.setVisibility(View.GONE);
+                                    /**error happened while  adding exercise*/
+                                    FancyToast.makeText(CreateNewExerciseActivity.this, "Something went wrong , check connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                                }
+                            }
+                        });
+                    }
+
+                }
+            };
+
+
+            /**check if there is an exercise with same name in DB exists*/
+            createNewExerciseViewModel.checkRepeation(exercise.getName()).observe(this, mObserver);
+
 
         }
       /*  Exercise exercise = new Exercise();
@@ -190,25 +235,6 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
 
     }
 
-    private void uploadExercise(Exercise exercise) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Task<Void> excercises = reference.child("excercises").child(exercise.getBodyPart().toLowerCase()).push().setValue(exercise);
-        excercises.addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                FancyToast.makeText(CreateNewExerciseActivity.this, "Added successfully.", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
-                finish();
-            }
-
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                FancyToast.makeText(CreateNewExerciseActivity.this, "Something went wrong , check connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-                Log.i(TAG, "onFailure: " + e.getMessage());
-            }
-        });
-
-    }
 
     @OnClick(R.id.workoutImageView)
     void getPhotoFromGallery() {
@@ -297,15 +323,7 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
     }
 
 
-    private void uploadExercisePhotos(long timeMilli) {
-        // Create a storage reference from our app
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference imagesRef = storageRef.child("exerciseImages/" + imageUri.getLastPathSegment() + timeMilli);
-        imagesRef.putFile(imageUri);
-        final StorageReference imagesRef2 = storageRef.child("exerciseImages/" + image2Uri.getLastPathSegment() + timeMilli);
-        imagesRef2.putFile(image2Uri);
 
-    }
 
 
     @OnClick(R.id.backArrowImageView)
