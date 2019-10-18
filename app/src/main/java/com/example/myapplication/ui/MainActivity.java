@@ -1,12 +1,17 @@
 package com.example.myapplication.ui;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,10 +19,12 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.myapplication.MapsActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.fragments.ViewPagerAdapterMainActivity;
 import com.example.myapplication.utils.NetworkChangeReceiver;
@@ -27,6 +34,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -86,6 +99,9 @@ public class MainActivity extends AppCompatActivity
                     case R.id.nav_timer:
                         handleTimerClick();
                         break;
+                    case R.id.nav_map:
+                        handleMapClick();
+                        break;
                     case R.id.nav_sign_out:
                         handleSignoutClick();
                         break;
@@ -101,6 +117,50 @@ public class MainActivity extends AppCompatActivity
 
 
         checkInternet();
+    }
+
+    private void handleMapClick() {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+        } else {
+            Dexter.withActivity(this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    .withListener(new PermissionListener() {
+                        @Override
+                        public void onPermissionGranted(PermissionGrantedResponse response) {
+                            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                        }
+
+                        @Override
+                        public void onPermissionDenied(PermissionDeniedResponse response) {
+                            if (response.isPermanentlyDenied()) {
+                                //show alert dialog with custom view
+                                new AlertDialog.Builder(MainActivity.this)
+                                        .setTitle("Permission required")
+                                        .setMessage("You permanently denied permission ,but it can be changed from settings")
+                                        .setIcon(R.drawable.ic_location_on_black_24dp)
+                                        .setPositiveButton("Change", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent i = new Intent();
+                                                i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                                i.setData(Uri.fromParts("package", getPackageName(), null));
+                                            }
+                                        })
+                                        .setNegativeButton("Cancel", null)
+                                        .show();
+                            } else {
+                                Toast.makeText(MainActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                            token.continuePermissionRequest();
+                        }
+                    }).check();
+            /*  //*/
+
+        }
     }
 
     private void handleSignoutClick() {

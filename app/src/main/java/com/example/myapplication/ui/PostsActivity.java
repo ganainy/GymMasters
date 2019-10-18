@@ -237,7 +237,9 @@ public class PostsActivity extends AppCompatActivity {
         bgImageView.setVisibility(View.INVISIBLE);
 
         //init recycler
+
         Collections.sort(dateList);
+
         RecyclerView recyclerView = findViewById(R.id.sharedRv);
         sharedAdapter = new SharedAdapter(PostsActivity.this, dateList, exerciseList, workoutList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(PostsActivity.this);

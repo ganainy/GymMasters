@@ -60,4 +60,13 @@ dependencies {
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     //google sign in
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    //dexter for runtime permission
+    implementation 'com.karumi:dexter:5.0.0'
+    //material search bar
+    implementation 'com.github.mancj:MaterialSearchBar:0.8.2'
+    //places
+    implementation 'com.google.android.libraries.places:places:2.0.0'
+    //map
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
 }
