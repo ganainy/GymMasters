@@ -20,6 +20,7 @@ import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
@@ -141,11 +142,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
                 /**it means location is enabled on device*/
+                Log.i(TAG, "onSuccess: ");
                 getDeviceLocation();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure: e instanceof ResolvableApiException" + (e instanceof ResolvableApiException));
                 /**location is disabled*/
                 if (e instanceof ResolvableApiException) {
                     ResolvableApiException resolvableApiException = (ResolvableApiException) e;
@@ -153,7 +156,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         /**this is like an implicit intent that will show dialogue asking user to enable location (GPS)*/
                         resolvableApiException.startResolutionForResult(MapsActivity.this, 101);
                     } catch (IntentSender.SendIntentException ex) {
-                        ex.printStackTrace();
+                        Log.i(TAG, "onFailure: " + ex.getMessage());
                     }
                 }
             }
@@ -166,6 +169,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101) {
+            Log.i(TAG, "onActivityResult: " + resultCode);
             if (resultCode == RESULT_OK) {
                 /**user enabled location*/
                 getDeviceLocation();
@@ -184,8 +188,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onSuccess(Location location) {
                 mLastKnownLocation = location;
                 if (mLastKnownLocation != null) {
-                    //move camera to the location
+                    /**successful move camera to result location*/
                     mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                } else {
+                    /**last known location not found*/
+                    final LocationRequest locationRequest = LocationRequest.create();
+                    locationRequest.setInterval(10000);
+                    locationRequest.setFastestInterval(5000);
+                    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                    mLocationCallback = new LocationCallback() {
+                        @Override
+                        public void onLocationResult(LocationResult locationResult) {
+                            super.onLocationResult(locationResult);
+                            if (locationRequest != null) {
+                                mLastKnownLocation = locationResult.getLastLocation();
+                                mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                                mFusedLocationProviderClient.removeLocationUpdates(mLocationCallback); //to get location only once and remove updates
+                            }
+                        }
+                    };
+
+                    mFusedLocationProviderClient.requestLocationUpdates(locationRequest, mLocationCallback, null);
+
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
