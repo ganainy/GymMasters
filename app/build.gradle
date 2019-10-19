@@ -68,5 +68,7 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:2.0.0'
     //map
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    //ripple effect library
+    compile 'com.skyfishjy.ripplebackground:library:1.0.1'
 
 }

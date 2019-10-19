@@ -455,7 +455,6 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
     }
 
 
-    //todo fix muscle not showing when iam coming to exercise from profile
 }
 
 
