@@ -28,12 +28,15 @@ import com.example.myapplication.MapsActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.fragments.ViewPagerAdapterMainActivity;
 import com.example.myapplication.utils.NetworkChangeReceiver;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -165,14 +168,22 @@ public class MainActivity extends AppCompatActivity
 
     private void handleSignoutClick() {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        if (mAuth != null) {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
             mAuth.signOut();
             openLoginActivity();
         } else {
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestEmail()
+                    .build();
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
             mGoogleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    openLoginActivity();
+                    if (task.isSuccessful()) openLoginActivity();
+                    else
+                        Toast.makeText(MainActivity.this, "Error logging out: " + task.getException(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
