@@ -69,6 +69,6 @@ dependencies {
     //map
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     //ripple effect library
-    compile 'com.skyfishjy.ripplebackground:library:1.0.1'
+    implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
 
 }

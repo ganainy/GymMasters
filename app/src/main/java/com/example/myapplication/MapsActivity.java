@@ -27,7 +27,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.myapplication.places_model.Candidate;
 import com.example.myapplication.places_model.Candidates;
 import com.example.myapplication.places_model.Geometry;
-import com.example.myapplication.places_model.OpeningHours;
 import com.example.myapplication.places_model.PlacesApi;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -83,9 +82,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     ImageView markerImage;
     @BindView(R.id.textViewName)
     TextView textViewName;
-    @BindView(R.id.textViewAddress)
+    @BindView(R.id.textView8)
     TextView textViewAddress;
-    @BindView(R.id.textViewOpeningHours)
+    @BindView(R.id.textView12)
     TextView textViewOpeningHours;
     @BindView(R.id.textViewRate)
     TextView textViewRate;
@@ -129,6 +128,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         //initialize places sdk
+        //todo remove api key
         Places.initialize(this, "AIzaSyClhPxc6zqy5FNwxzEHXOMcFweroMnskM8");
         mPlacesClient = Places.createClient(this);
         final AutocompleteSessionToken autocompleteSessionToken = AutocompleteSessionToken.newInstance();
@@ -148,7 +148,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onSearchConfirmed(CharSequence text) {
-                // startSearch(text.toString(),true,null,true);
+                startSearch(text.toString(), true, null, true);
             }
 
             @Override
@@ -276,13 +276,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mGoogleMap.setMyLocationEnabled(true);
         // mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        /**changing location of MyLocationButton because it was under searchview*/
+        /**changing location of MyLocationButton because it was top right under searchview*/
         if (mapView != null && mapView.findViewById(Integer.parseInt("1")) != null) {
             View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);//false
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, -1);//true
-            layoutParams.setMargins(0, 0, 40, 180);
+            layoutParams.setMargins(0, 0, 16, 8);
         }
 
 
@@ -440,7 +440,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Double lng = geometry.getLocation().getLng();
                 String formatted_address = candidate.getFormattedAddress();
                 String name = candidate.getName();
-                OpeningHours openingHours = candidate.getOpeningHours();
+                Boolean openNow = candidate.getOpeningHours().getOpenNow();
                 Double rating = candidate.getRating();
 
 
@@ -454,7 +454,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 constraintLayout.setVisibility(View.VISIBLE);
                 textViewAddress.setText(formatted_address);
                 textViewName.setText(name);
-                textViewOpeningHours.setText(openingHours.toString());
+                textViewOpeningHours.setText(openNow ? "Open right now" : "Closed right now");
                 textViewRate.setText(rating + "/5");
 
 
