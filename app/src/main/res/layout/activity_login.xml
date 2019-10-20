@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/login_bg"
-
+    android:layout_height="match_parent"
+    android:background="@color/activity_bg"
+    android:fillViewport="true"
     >
 
     <FrameLayout
@@ -16,13 +16,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp"
             tools:context=".LoginActivity">
+
+
+            <com.github.florent37.shapeofview.shapes.ArcView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:elevation="4dp"
+                app:shape_arc_cropDirection="outside"
+                app:shape_arc_height="20dp"
+                app:shape_arc_position="bottom"
+
+                >
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/login_bg"
+                    android:scaleType="centerCrop" />
+                <!-- YOUR CONTENT -->
+
+            </com.github.florent37.shapeofview.shapes.ArcView>
+
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="64dp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/night_machine"
                 android:gravity="center"
                 android:text="@string/app_name"
@@ -35,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginHorizontal="4dp"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="40dp"
                 android:theme="@style/TextLabel"
                 app:errorEnabled="true"
                 app:errorTextAppearance="@color/colorPrimary">
@@ -95,9 +115,21 @@
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="50dp"
-                android:background="@drawable/button_selector_yellow"
                 android:text="@string/login_login_button"
-                android:textColor="@color/textblack" />
+                android:background="@drawable/button_selector_blue"
+                android:textColor="@color/textwhite"
+                android:textSize="16sp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/proximanovaregular"
+                android:text="Or login with google account"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/sign_in_button"
@@ -107,6 +139,7 @@
                 android:layout_marginBottom="8dp" />
 
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -114,10 +147,12 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_gravity="bottom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/don_t_have_an_account"
-                    android:textColor="@color/textwhite"
+                    android:fontFamily="@font/proximanovaregular"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <TextView
@@ -126,8 +161,10 @@
                     android:layout_height="wrap_content"
                     android:onClick="signup"
                     android:paddingLeft="5dp"
+                    android:layout_gravity="bottom"
                     android:text="@string/sign_up"
-                    android:textColor="#FFEB3B"
+                    android:fontFamily="@font/proximanovaregular"
+                    android:textColor="@color/blue"
                     android:textSize="20sp" />
             </LinearLayout>
 
