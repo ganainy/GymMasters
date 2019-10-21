@@ -3,15 +3,14 @@
 An app where you can find workouts , exercises and create custom workouts , exercises with images and videos which your followers can see or you can find and 
 follow other users to try their custom workouts , exercises ,find gym nearby user location or any location on map
 
-Used technologies:
+Used technologies:<br>
 -------------------
- <br>
-firebasee Authentication  <br> <br> <br> <br>
-firebase Realtime DB   <br> <br> <br>
-Firebase storage  <br> <br>
+firebasee Authentication  <br> 
+firebase Realtime DB   <br> 
+Firebase storage  <br> 
 Youtube player and Youtube Data API <br>
-Sign in with google account <br> <br> <br>
-Maps Api to get user location <br> <br>
+Sign in with google account <br> 
+Maps Api to get user location <br>
 Places Api to get nearby place (gym) location and info <br>
 MVVM architecture <br>
 Fragments ,View pager , recycler view , navigation bar , bottom sheet ,material search bar <br>
