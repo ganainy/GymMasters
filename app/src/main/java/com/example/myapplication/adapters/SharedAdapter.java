@@ -3,7 +3,6 @@ package com.example.myapplication.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Exercise;
+import com.example.myapplication.model.SharedExerciseWorkout;
 import com.example.myapplication.model.Workout;
 import com.example.myapplication.ui.PostsActivity;
 import com.example.myapplication.ui.SpecificExerciseActivity;
@@ -40,16 +40,11 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int TYPE_WORKOUT = 0;
     private static final int TYPE_EXERCISE = 1;
     private final Context context;
-    private final List<String> dateList;
-    private final List<Exercise> exerciseList;
-    private final List<Workout> workoutList;
-    private int currentJ;
+    List<SharedExerciseWorkout> sharedExerciseWorkoutList;
 
-    public SharedAdapter(Context context, List<String> dateList, List<Exercise> exerciseList, List<Workout> workoutList) {
+    public SharedAdapter(Context context, List<SharedExerciseWorkout> sharedExerciseWorkoutList) {
         this.context = context;
-        this.dateList = dateList;
-        this.exerciseList = exerciseList;
-        this.workoutList = workoutList;
+        this.sharedExerciseWorkoutList = sharedExerciseWorkoutList;
 
     }
 
@@ -72,36 +67,25 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         if (getItemViewType(position) == TYPE_EXERCISE) {
-            ((PostExerciseViewHolder) viewHolder).setDetails(exerciseList.get(currentJ));
+            ((PostExerciseViewHolder) viewHolder).setDetails(sharedExerciseWorkoutList.get(position).getExercise());
         } else {
-            ((PostWorkoutViewHolder) viewHolder).setDetails(workoutList.get(currentJ));
+            ((PostWorkoutViewHolder) viewHolder).setDetails(sharedExerciseWorkoutList.get(position).getWorkout());
         }
     }
 
     @Override
     public int getItemCount() {
-        return dateList.size();
+        return sharedExerciseWorkoutList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        for (int j = 0; j < workoutList.size(); j++) {
-            Log.i(TAG, "getItemViewType: " + dateList.get(position) + "-----" + workoutList.get(j).getDate());
-            if (dateList.get(position).equals(workoutList.get(j).getDate())) {
-                currentJ = j;
-                return TYPE_WORKOUT;
-            }
+        if (sharedExerciseWorkoutList.get(position).getEntityType() == 0) {
+            return TYPE_EXERCISE;
+        } else {
+            return TYPE_WORKOUT;
         }
-        //
-        for (int j = 0; j < exerciseList.size(); j++) {
-            Log.i(TAG, "getItemViewType: " + dateList.get(position) + "-----" + exerciseList.get(j).getDate());
-            if (dateList.get(position).equals(exerciseList.get(j).getDate())) {
-                currentJ = j;
-                return TYPE_EXERCISE;
-            }
-        }
-        //
-        return 3;
+
     }
 
     private void getCreatorName(final String creatorId, final CallbackInterface callbackInterface) {

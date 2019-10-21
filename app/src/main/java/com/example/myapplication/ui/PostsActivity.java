@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.SharedAdapter;
 import com.example.myapplication.model.Exercise;
+import com.example.myapplication.model.SharedExerciseWorkout;
 import com.example.myapplication.model.Workout;
 import com.example.myapplication.utils.MyConstant;
 import com.example.myapplication.utils.NetworkChangeReceiver;
@@ -31,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -55,9 +57,7 @@ public class PostsActivity extends AppCompatActivity {
     Toolbar toolbar;
 
     private List<String> followingIdList = new ArrayList<>();
-    private List<Exercise> exerciseList = new ArrayList<>();
-    private List<Workout> workoutList = new ArrayList<>();
-    private List<String> dateList = new ArrayList<>();
+    private List<SharedExerciseWorkout> sharedExerciseWorkoutList = new ArrayList<>();
     private SharedAdapter sharedAdapter;
 
     @OnClick(R.id.button)
@@ -88,6 +88,7 @@ public class PostsActivity extends AppCompatActivity {
         users.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 followingIdList.clear();
                 if (dataSnapshot.hasChild("followingUID")) {
                     users.child("followingUID").addValueEventListener(new ValueEventListener() {
@@ -127,10 +128,7 @@ public class PostsActivity extends AppCompatActivity {
     private void getExercises() {
 
 
-        dateList.clear();
-        //get exercises
-        exerciseList.clear();
-        final Exercise exercise = new Exercise();
+
         DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference("excercises");
         exerciseNode.addValueEventListener(new ValueEventListener() {
             @Override
@@ -138,8 +136,8 @@ public class PostsActivity extends AppCompatActivity {
                 for (DataSnapshot dsBig : dataSnapshot.getChildren()) {
                     for (DataSnapshot ds : dsBig.getChildren()) {
                         for (int i = 0; i < followingIdList.size(); i++) {
-
                             if (ds.child("creatorId").getValue().equals(followingIdList.get(i))) {
+                                Exercise exercise = new Exercise();
                                 exercise.setExecution(ds.child("execution").getValue().toString());
                                 exercise.setName(ds.child("name").getValue().toString());
                                 if (ds.hasChild("additional_notes"))
@@ -150,8 +148,7 @@ public class PostsActivity extends AppCompatActivity {
                                 exercise.setDate(ds.child("date").getValue().toString());
                                 exercise.setCreatorId(ds.child("creatorId").getValue().toString());
 
-                                dateList.add(ds.child("date").getValue().toString());
-                                exerciseList.add(exercise);
+                                sharedExerciseWorkoutList.add(new SharedExerciseWorkout(exercise, 0, Long.valueOf(exercise.getDate())));
 
                             }
                         }
@@ -182,7 +179,7 @@ public class PostsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.i(TAG, "onDataChangegetWorkouts: ");
-                workoutList.clear();
+
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     //only show in main list the workouts that admin added
                     for (int i = 0; i < followingIdList.size(); i++) {
@@ -197,8 +194,7 @@ public class PostsActivity extends AppCompatActivity {
                             workout.setDate(ds.child("date").getValue().toString());
                             workout.setCreatorId(ds.child("creatorId").getValue().toString());
 
-                            dateList.add(ds.child("date").getValue().toString());
-                            workoutList.add(workout);
+                            sharedExerciseWorkoutList.add(new SharedExerciseWorkout(workout, 1, Long.valueOf(workout.getDate())));
                         }
 
                     }
@@ -224,9 +220,8 @@ public class PostsActivity extends AppCompatActivity {
         loadingTextView.setVisibility(View.GONE);
         loadingProgressbar.setVisibility(View.GONE);
 
-        Log.i(TAG, "setupRecycler: " + dateList.size());
 
-        if (dateList.size() == 0) {
+        if (sharedExerciseWorkoutList.size() == 0) {
             notFoundTextView.setVisibility(View.VISIBLE);
             button.setVisibility(View.VISIBLE);
             bgImageView.setVisibility(View.VISIBLE);
@@ -239,10 +234,24 @@ public class PostsActivity extends AppCompatActivity {
 
         //init recycler
 
-        Collections.sort(dateList);
+
+        Collections.sort(sharedExerciseWorkoutList, new Comparator<SharedExerciseWorkout>() {
+
+            @Override
+            public int compare(SharedExerciseWorkout s1, SharedExerciseWorkout s2) {
+                return s2.getDateStamp().compareTo(s1.getDateStamp());
+            }
+        });
+
+
+       /* for (int i = 0; i < sharedExerciseWorkoutList.size(); i++) {
+            Log.i(TAG, "sharedExerciseWorkoutList: "+sharedExerciseWorkoutList.get(i).getDateStamp()+"----entity"+sharedExerciseWorkoutList.get(i)
+            .getEntityType());
+        }*/
+
 
         RecyclerView recyclerView = findViewById(R.id.sharedRv);
-        sharedAdapter = new SharedAdapter(PostsActivity.this, dateList, exerciseList, workoutList);
+        sharedAdapter = new SharedAdapter(PostsActivity.this, sharedExerciseWorkoutList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(PostsActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(sharedAdapter);
