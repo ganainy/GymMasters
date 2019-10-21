@@ -134,8 +134,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         //initialize places sdk
-        //todo remove api key
-        Places.initialize(this, "AIzaSyClhPxc6zqy5FNwxzEHXOMcFweroMnskM8");
+        Places.initialize(this, String.valueOf(R.string.google_maps_key)
+        );
         mPlacesClient = Places.createClient(this);
         final AutocompleteSessionToken autocompleteSessionToken = AutocompleteSessionToken.newInstance();
 
@@ -178,6 +178,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Log.i(TAG, "afterTextChanged: " + editable);
                 FindAutocompletePredictionsRequest predictionsRequest = FindAutocompletePredictionsRequest.builder()
                         .setTypeFilter(TypeFilter.ADDRESS)
                         .setCountry(getCountry())
@@ -318,7 +319,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (e instanceof ResolvableApiException) {
                     ResolvableApiException resolvableApiException = (ResolvableApiException) e;
                     try {
-                        /**this is like an implicit intent that will show dialogue asking user to enable location (GPS)*/
+                        /**this will show dialogue asking user to enable location (GPS) and then onActivityResult will be called*/
                         resolvableApiException.startResolutionForResult(MapsActivity.this, 101);
                     } catch (IntentSender.SendIntentException ex) {
                         Log.i(TAG, "onFailure: " + ex.getMessage());
@@ -398,17 +399,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-    @OnClick({R.id.searchBar, R.id.imageView9, R.id.button2})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.searchBar:
-                break;
-            case R.id.imageView9:
-                break;
-            case R.id.button2:
-                findNearbyGyms();
-                break;
-        }
+    @OnClick(R.id.button2)
+    public void handleFindGymClick() {
+        findNearbyGyms();
     }
 
     private void findNearbyGyms() {
@@ -427,10 +420,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         /**call places api to find gyms in radius of 5km from my location*/
-        /** add your own Api key**/
-        //todo remove api key before uploading to github
         Call<Candidates> call = placesApi.getParentObject("gym", "textquery",
-                "geometry/location,formatted_address,name,opening_hours,rating", "circle:5000@" + latLng.latitude + "," + latLng.longitude, "AIzaSyClhPxc6zqy5FNwxzEHXOMcFweroMnskM8");
+                "geometry/location,formatted_address,name,opening_hours,rating", "circle:5000@" + latLng.latitude + "," + latLng.longitude, String.valueOf(R.string.google_maps_key)
+        );
         call.enqueue(new Callback<Candidates>() {
             @Override
             public void onResponse(Call<Candidates> call, Response<Candidates> response) {

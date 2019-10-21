@@ -23,7 +23,6 @@ import com.example.myapplication.youtube_model.Example;
 import com.example.myapplication.youtube_model.Id;
 import com.example.myapplication.youtube_model.Item;
 import com.example.myapplication.youtube_model.YoutubeApi;
-import com.example.myapplication.youtube_model.YoutubeConfig;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
@@ -415,8 +414,8 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
         YoutubeApi youtubeApi = retrofit.create(YoutubeApi.class);
 
 
-        //todo remove this api key
-        Call<Example> call = youtubeApi.getParentObject("snippet", q, "video", "AIzaSyClhPxc6zqy5FNwxzEHXOMcFweroMnskM8"
+        Call<Example> call = youtubeApi.getParentObject("snippet", q, "video", String.valueOf(R.string.google_maps_key)
+
         );
         call.enqueue(new Callback<Example>() {
             @Override
@@ -431,7 +430,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
                         Log.i(TAG, "onResponse: " + videoId);
                     }
 
-                    youTubePlayerView.initialize(YoutubeConfig.getApiKey(), onInitializedListener);
+                    youTubePlayerView.initialize(String.valueOf(R.string.google_maps_key), onInitializedListener);
 
                 } else {
                     Log.i(TAG, "onResponse: " + response.code() + response.errorBody().toString());
