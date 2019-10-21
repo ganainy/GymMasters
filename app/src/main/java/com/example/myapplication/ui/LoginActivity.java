@@ -16,6 +16,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.User;
@@ -28,14 +31,16 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -51,6 +56,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //todo fix login with google deletes data of user and recreates it
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         login = findViewById(R.id.loginButton);
@@ -199,40 +205,64 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             FancyToast.makeText(LoginActivity.this, "Error signing in with google account ,\n please login with Gym master account instead.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
         } else {
             //user already added his google account
+            /**live data to observe and return when user data is saved */
+            addGoogleUserToDB(account).observe(this, new Observer<Boolean>() {
+                @Override
+                public void onChanged(Boolean aBoolean) {
+                    if (aBoolean) {
+                        /**executes if account was added to db or not added if already existed*/
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        FancyToast.makeText(LoginActivity.this, "Login Successful.", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
 
-            addGoogleUserToDB(account);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        /**onCancelled called when adding or checking if google account is in db*/
+                        FancyToast.makeText(LoginActivity.this, "Error signing in with google account ,\n please login with Gym master account instead.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                    }
+                }
+            });
 
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            FancyToast.makeText(LoginActivity.this, "Login Successful.", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
 
-            startActivity(intent);
-            finish();
 
         }
     }
 
 
-    private void addGoogleUserToDB(GoogleSignInAccount account) {
+    private LiveData<Boolean> addGoogleUserToDB(final GoogleSignInAccount account) {
+        final MutableLiveData<Boolean> load = new MutableLiveData<>();
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users");
-        User newUser;
+        final DatabaseReference myRef = database.getReference("users");
+        final User newUser;
 
         newUser = new User(account.getId(), account.getDisplayName(), account.getEmail(),
                 account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
 
+        Log.i(TAG, "addGoogleUserToDB: " + account.getEmail());
 
-        myRef.child(account.getId()).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onSuccess(Void aVoid) {
-                Log.i(TAG, "onSuccess: ");
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.hasChild(account.getId())) {
+                    myRef.child(account.getId()).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            load.setValue(true);
+                        }
+                    });
+                } else {
+                    load.setValue(true);
+                }
             }
-        }).addOnFailureListener(new OnFailureListener() {
+
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "onFailure: " + e.getMessage());
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                load.setValue(false);
             }
         });
+
+        return load;
     }
 
 

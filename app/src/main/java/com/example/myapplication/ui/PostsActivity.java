@@ -225,6 +225,7 @@ public class PostsActivity extends AppCompatActivity {
         loadingProgressbar.setVisibility(View.GONE);
 
         Log.i(TAG, "setupRecycler: " + dateList.size());
+
         if (dateList.size() == 0) {
             notFoundTextView.setVisibility(View.VISIBLE);
             button.setVisibility(View.VISIBLE);
