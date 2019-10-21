@@ -6,5 +6,5 @@ Made using firebasee Authentication , Realtime DB , Firebase storage ,Youtube pl
 Libraries used: glide , butter knife , fancy toast , retrofit2
 
 
-#Note : you will have to add your own key that supports Youtube Data API for youtube playing videos feature to work(inside SpecificExerciseActivity.java)
-
+#Note : you will have to add your own key that supports Youtube Data API , places API and maps API for their related features to work properly (ADD YOUR API KEY IN STRINGS FILE) 
+![alt text] https://cdn.discordapp.com/attachments/566581417606119424/635922674425528330/unknown.png
