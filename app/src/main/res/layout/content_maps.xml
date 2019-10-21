@@ -36,14 +36,6 @@
         app:mt_placeholder="Search places"
         app:mt_speechMode="false" />
 
-    <!--place_info_card-->
-    <include
-        android:id="@+id/place_info_card"
-        layout="@layout/place_info_card"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@+id/map"
-        app:layout_constraintStart_toStartOf="@+id/map"
-        app:layout_constraintTop_toBottomOf="@+id/searchBar" />
 
     <com.skyfishjy.library.RippleBackground
         android:id="@+id/rippleBackground"

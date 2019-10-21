@@ -286,7 +286,8 @@
                         android:layout_height="200dp"
                         android:layout_margin="8dp"
                         android:layout_weight="1"
-                        android:background="@drawable/startexercise" />
+                        android:background="@drawable/startexercise"
+                        android:scaleType="centerCrop" />
 
                     <ImageView
                         android:layout_width="40dp"
@@ -300,6 +301,7 @@
                         android:layout_height="200dp"
                         android:layout_margin="8dp"
                         android:layout_weight="1"
+                        android:scaleType="centerCrop"
                         android:background="@drawable/endexercise" />
 
                 </LinearLayout>

@@ -17,7 +17,6 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
-import com.example.myapplication.BuildConfig;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.youtube_model.Example;
@@ -314,16 +313,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
                 builder.setMessage("An exercise that involves two or more joint movements. ");
                 break;
             }
-            case "auxiliary": {
-                builder.setMessage("An optional exercise that may supplement a basic exercise. Auxiliary exercises may place greater relative intensity on a specific muscle or a head of a muscle.");
-                break;
-            }
-            case "isolated": {
-                builder.setMessage("An exercise that involves just one discernible joint movement. ");
-                break;
-            }
-            default:
-                builder.setMessage("No info about that yet, Sorry. ");
+
 
         }
 
@@ -425,8 +415,9 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
         YoutubeApi youtubeApi = retrofit.create(YoutubeApi.class);
 
 
-        /** hidden api key, replace with your key that supports youtube data api for youtube playing videos feature to work**/
-        Call<Example> call = youtubeApi.getParentObject("snippet", q, "video", BuildConfig.API_KEY);
+        //todo remove this api key
+        Call<Example> call = youtubeApi.getParentObject("snippet", q, "video", "AIzaSyClhPxc6zqy5FNwxzEHXOMcFweroMnskM8"
+        );
         call.enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {

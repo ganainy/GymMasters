@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/proximanovaregular"
-            android:text="Already added but can be added again or deleted "
+            android:text="Already added ,click icon to remove"
             android:textColor="@color/textblack" />
 
         <ImageView

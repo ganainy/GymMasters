@@ -181,10 +181,10 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
         NumberPicker setsPicker = view.findViewById(R.id.setsPicker);
         NumberPicker repsPicker = view.findViewById(R.id.repsPicker);
 
-        setsPicker.setMinValue(1);
+        setsPicker.setMinValue(4);
         setsPicker.setMaxValue(12);
 
-        repsPicker.setMinValue(1);
+        repsPicker.setMinValue(10);
         repsPicker.setMaxValue(100);
 
 

@@ -56,6 +56,7 @@ import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
 import com.skyfishjy.library.RippleBackground;
@@ -97,6 +98,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private View mapView;
     private RippleBackground rippleBackground;
     private ConstraintLayout constraintLayout;
+    private BottomSheetBehavior mBottomSheetBehavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +119,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
+
+        //init bottomsheet
+        View bottomSheet = findViewById(R.id.bottom_sheet);
+        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
 
         //show map fragment on activity
         SupportMapFragment mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -450,12 +456,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
                 /**show info card*/
-                constraintLayout = findViewById(R.id.place_info_card);
-                constraintLayout.setVisibility(View.VISIBLE);
+
                 textViewAddress.setText(formatted_address);
                 textViewName.setText(name);
                 textViewOpeningHours.setText(openNow ? "Open right now" : "Closed right now");
                 textViewRate.setText(rating + "/5");
+
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
 
             }
@@ -472,6 +479,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @OnClick(R.id.closeImage)
     public void onViewClicked() {
-        constraintLayout.setVisibility(View.GONE);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 }
