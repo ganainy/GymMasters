@@ -148,6 +148,7 @@ public class PostsActivity extends AppCompatActivity {
                                 exercise.setDate(ds.child("date").getValue().toString());
                                 exercise.setCreatorId(ds.child("creatorId").getValue().toString());
 
+
                                 sharedExerciseWorkoutList.add(new SharedExerciseWorkout(exercise, 0, Long.valueOf(exercise.getDate())));
 
                             }
@@ -193,6 +194,8 @@ public class PostsActivity extends AppCompatActivity {
                             workout.setId(ds.child("id").getValue().toString());
                             workout.setDate(ds.child("date").getValue().toString());
                             workout.setCreatorId(ds.child("creatorId").getValue().toString());
+                            workout.setLevel(ds.child("level").getValue().toString());
+
 
                             sharedExerciseWorkoutList.add(new SharedExerciseWorkout(workout, 1, Long.valueOf(workout.getDate())));
                         }

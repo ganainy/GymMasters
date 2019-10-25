@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -42,6 +43,7 @@ import butterknife.OnClick;
 
 public class MainFragmentHome extends Fragment {
     private static final String TAG = "MainFragmentHome";
+    ScrollView scrollView;
     ExerciseAdapter exerciseAdapter;
     @BindView(R.id.viewMyExercisesButton)
     Button viewMyExercisesButton;
@@ -98,6 +100,8 @@ public class MainFragmentHome extends Fragment {
             /**recycler is hidden and i should show it*/
             exerciseFlag = 1;
             recyclerViewExercise.setVisibility(View.VISIBLE);
+            //move screen to recycler
+            recyclerViewExercise.requestFocus();
         } else if (exerciseFlag == 0) {
             /**didn't download exercises yet*/
             mainFragmentHomeViewModel.downloadMyExercises().observe(this, new Observer<List<Exercise>>() {
@@ -115,10 +119,12 @@ public class MainFragmentHome extends Fragment {
             /**it means exercise is shown and i should hide them*/
             recyclerViewWorkout.setVisibility(View.GONE);
             workoutFlag = 2;
-        } else if (exerciseFlag == 2) {
+        } else if (workoutFlag == 2) {
             /**recycler is hidden and i should show it*/
             workoutFlag = 1;
             recyclerViewWorkout.setVisibility(View.VISIBLE);
+            //move screen to recycler
+            recyclerViewWorkout.requestFocus();
         } else if (workoutFlag == 0) {
             /**didn't download exercises yet*/
             mainFragmentHomeViewModel.downloadMyWorkout().observe(this, new Observer<List<Workout>>() {
@@ -144,6 +150,9 @@ public class MainFragmentHome extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main_fragment_home, container, false);
         ButterKnife.bind(this, view);
+
+        recyclerViewWorkout = view.findViewById(R.id.customWorkoutRecycler);
+        scrollView = view.findViewById(R.id.scrollView);
 
         mainFragmentHomeViewModel = ViewModelProviders.of(this).get(MainFragmentHomeViewModel.class);
 
@@ -215,6 +224,11 @@ public class MainFragmentHome extends Fragment {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
             recyclerViewExercise.setLayoutManager(linearLayoutManager);
             recyclerViewExercise.setAdapter(exerciseAdapter);
+
+
+            //move screen to recycler
+            recyclerViewExercise.requestFocus();
+
         }
 
     }
@@ -225,13 +239,15 @@ public class MainFragmentHome extends Fragment {
             FancyToast.makeText(getActivity(), "You didn't create any custom workouts yet.", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
         } else {
             workoutFlag = 1;
-            recyclerViewWorkout = view.findViewById(R.id.customWorkoutRecycler);
             recyclerViewWorkout.setVisibility(View.VISIBLE);
             workoutAdapter = new WorkoutAdapter(getActivity(), "fragmentHome");
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
             recyclerViewWorkout.setLayoutManager(linearLayoutManager);
             workoutAdapter.setDataSource(workouts);
             recyclerViewWorkout.setAdapter(workoutAdapter);
+
+            //move screen to recycler
+            recyclerViewWorkout.requestFocus();
         }
 
     }

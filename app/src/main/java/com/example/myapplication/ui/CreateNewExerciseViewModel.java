@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -79,36 +80,49 @@ public class CreateNewExerciseViewModel extends ViewModel {
     }
 
 
-    public MutableLiveData<Boolean> uploadExercisePhotos(Uri imageUri, final Uri image2Uri, final long timeMilli) {
-        final MutableLiveData<Boolean> load = new MutableLiveData<>();
+    public MutableLiveData<Integer> uploadExercisePhotos(Uri imageUri, final Uri image2Uri, final long timeMilli) {
+        final MutableLiveData<Integer> load = new MutableLiveData<>();
         // Create a storage reference from our app
         final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference imagesRef = storageRef.child("exerciseImages/" + imageUri.getLastPathSegment() + timeMilli);
-        imagesRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                try {
-                    final StorageReference imagesRef2 = storageRef.child("exerciseImages/" + image2Uri.getLastPathSegment() + timeMilli);
-                    imagesRef2.putFile(image2Uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            load.setValue(true);
+        final StorageReference firstImageRef = storageRef.child("exerciseImages/" + imageUri.getLastPathSegment() + timeMilli);
+
+
+        try {
+            firstImageRef.putFile(imageUri).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    //returns half of the real progress since this is only one image of two
+                    double progress = (50.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                    Log.i(TAG, "onProgress1: " + progress);
+                    load.setValue((int) progress);
+
+                    //upload second image when first is done
+                    if (progress == 50) {
+                        try {
+                            final StorageReference secondImageRef = storageRef.child("exerciseImages/" + image2Uri.getLastPathSegment() + timeMilli);
+                            secondImageRef.putFile(image2Uri).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                    double progress = (50.0 + (50.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
+                                    Log.i(TAG, "onProgress2: " + progress);
+                                    load.setValue((int) progress);
+                                }
+                            });
+                        } catch (Exception e) {
+                            //delete first image since exercise won't be uploaded
+                            firstImageRef.delete();
+
+                            Log.i(TAG, "Exception: " + e.getMessage());
                         }
-                    });
-                } catch (Exception e) {
-                    Log.i(TAG, " failed uploading second photo" + e.getMessage());
-                    load.setValue(false);
+                    }
                 }
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "onFailure: " + e.getMessage());
-                load.setValue(false);
-            }
-        });
-
+            });
+        } catch (Exception e) {
+            Log.i(TAG, "Exception: " + e.getMessage());
+        }
         return load;
     }
 }
+
+
+

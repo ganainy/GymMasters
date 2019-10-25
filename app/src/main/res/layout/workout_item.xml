@@ -12,102 +12,129 @@
         <ImageView
             android:id="@+id/workoutImageView"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/shadowImageView"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:alpha=".5"
-            android:background="@color/text_shadow"
-            app:layout_constraintBottom_toBottomOf="@+id/workoutImageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <ImageView
+        android:id="@+id/shadowImageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/shadowImageView">
+        android:layout_height="80dp"
+        android:alpha=".5"
+        android:background="@color/text_shadow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+    </ImageView>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/textViewWorkoutName"
             style="@style/myTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginStart="4dp"
+            android:ellipsize="end"
             android:fontFamily="@font/proximanovaregular"
+            android:maxLines="1"
             android:textAllCaps="true"
             android:textColor="@color/light_font"
             android:textSize="24sp"
-            tools:text="workout name" />
+            app:layout_constraintEnd_toStartOf="@+id/textViewNumberOfExercises"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="workout nameworkout nameworkout nameworkout name  " />
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
 
         <ImageView
+            android:id="@+id/imageView14"
             android:layout_width="30dp"
             android:layout_height="35dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="4dp"
-            android:src="@drawable/dumbell_white" />
+            android:src="@drawable/dumbell_white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textViewNumberOfExercises"
             style="@style/myTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="2dp"
             android:fontFamily="@font/proximanovaregular"
             android:shadowColor="@color/text_shadow"
             android:textColor="@color/light_font"
             android:textSize="24sp"
             android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/imageView14"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="10" />
 
-    </LinearLayout>
 
-
-    <ImageView
+        <ImageView
             android:id="@+id/imageView2"
             android:layout_width="30dp"
             android:layout_height="35dp"
 
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp"
             android:src="@drawable/ic_access_time_black_24dp"
-        app:layout_constraintEnd_toStartOf="@+id/textViewReps"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView14" />
 
-
-    <TextView
+        <TextView
             android:id="@+id/textViewReps"
             style="@style/myTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-        android:fontFamily="@font/proximanovaregular"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:fontFamily="@font/proximanovaregular"
             android:shadowColor="@color/text_shadow"
             android:shadowDx="-1"
+
             android:shadowDy="-1"
             android:shadowRadius="1"
+
             android:textColor="@color/light_font"
             android:textSize="24sp"
-
             android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintEnd_toStartOf="@+id/imageView2"
+            app:layout_constraintTop_toBottomOf="@+id/imageView14"
             tools:text="45 Mins" />
+
+        <TextView
+            android:id="@+id/textViewDifficulty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/easy_bg"
+            android:fontFamily="@font/proximanovaregular"
+            android:paddingLeft="8dp"
+            android:paddingTop="4dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="4dp"
+            android:textColor="#eee"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewWorkoutName"
+            tools:text="difficulty" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

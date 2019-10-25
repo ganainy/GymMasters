@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.utils.MyConstant;
+import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
 import com.google.android.material.snackbar.Snackbar;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
@@ -64,7 +65,9 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
     ScrollView parentScroll;
 
     @BindView(R.id.loadingLayout)
-    ConstraintLayout constraintLayout;
+    ConstraintLayout loadingLayout;
+    @BindView(R.id.circle_loading_view)
+    AnimatedCircleLoadingView circleLoadingView;
 
 
     private Uri imageUri, image2Uri;
@@ -85,8 +88,10 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
         } else if (imageUri == null || image2Uri == null) {
             FancyToast.makeText(CreateNewExerciseActivity.this, "Please select two photos describing exercise movement.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
         } else {
-            constraintLayout.setVisibility(View.VISIBLE);
 
+            //show loading layout
+            loadingLayout.setVisibility(View.VISIBLE);
+            circleLoadingView.startDeterminate();
 
             /**add time in millis with image name to make it unique*/
             Date date = new Date();
@@ -107,49 +112,48 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
             createNewExerciseViewModel = ViewModelProviders.of(this).get(CreateNewExerciseViewModel.class);
             mObserver = new Observer<Boolean>() {
                 @Override
-                public void onChanged(Boolean aBoolean) {
-                    if (aBoolean) {
+                public void onChanged(Boolean isExerciseNameRepeated) {
+                    if (isExerciseNameRepeated) {
                         FancyToast.makeText(getApplicationContext(), "Exercise with same name already exists \n your exercise was not added",
                                 FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
 
+                        loadingLayout.setVisibility(View.GONE);
 
-                        constraintLayout.setVisibility(View.GONE);
                     } else {
-                        /**exercise name is not repeated*/
-                        createNewExerciseViewModel.uploadExercise(exercise).observe(CreateNewExerciseActivity.this, new Observer<Boolean>() {
-                            @Override
-                            public void onChanged(Boolean aBoolean) {
-                                if (aBoolean) {
-                                    /**means exercise added to database now we should add images*/
-                                    createNewExerciseViewModel.uploadExercisePhotos(imageUri, image2Uri, timeMilli).observe(CreateNewExerciseActivity.this, new Observer<Boolean>() {
-                                        @Override
-                                        public void onChanged(Boolean aBoolean) {
-                                            if (aBoolean) { /**means both photos uploaded successfully*/
-                                                FancyToast.makeText(CreateNewExerciseActivity.this, "Added successfully.", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
-                                                constraintLayout.setVisibility(View.GONE);
-                                                finish();
-                                            } else {
-                                                constraintLayout.setVisibility(View.GONE);
-                                            }
+                        //name is not repaeated
+                        createNewExerciseViewModel.uploadExercisePhotos(imageUri, image2Uri, timeMilli).observe
+                                (CreateNewExerciseActivity.this, new Observer<Integer>() {
+                                    @Override
+                                    public void onChanged(Integer progress) {
 
+                                        circleLoadingView.setPercent(progress);
+
+                                        if (progress == 100) { //means both images uploaded successfully
+                                            createNewExerciseViewModel.uploadExercise(exercise).
+                                                    observe(CreateNewExerciseActivity.this, new Observer<Boolean>() {
+                                                        @Override
+                                                        public void onChanged(Boolean isExerciseUploaded) {
+                                                            if (isExerciseUploaded) {
+                                                                FancyToast.makeText(CreateNewExerciseActivity.this, "Added Exercise successfully.", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+                                                                finish();
+                                                            } else {
+                                                                loadingLayout.setVisibility(View.GONE);
+                                                                FancyToast.makeText(CreateNewExerciseActivity.this, "Something went wrong, check connection and try again.", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+                                                                //error happened while  adding exercise
+                                                            }
+                                                        }
+                                                    });
                                         }
-                                    });
-                                } else {
-                                    constraintLayout.setVisibility(View.GONE);
-                                    /**error happened while  adding exercise*/
-                                    FancyToast.makeText(CreateNewExerciseActivity.this, "Something went wrong , check connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-                                }
-                            }
-                        });
-                    }
+                                    }
 
+                                });
+                    }
                 }
             };
 
 
             /**check if there is an exercise with same name in DB exists*/
             createNewExerciseViewModel.checkRepeation(exercise.getName()).observe(this, mObserver);
-
 
         }
    /*    Exercise exercise = new Exercise();
@@ -252,9 +256,6 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
             addExercisePhoto2.setImageURI(image2Uri);
         }
     }
-
-
-
 
 
     @OnClick(R.id.backArrowImageView)

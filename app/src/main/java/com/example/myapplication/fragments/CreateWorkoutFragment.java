@@ -18,6 +18,7 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +29,7 @@ import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
 import com.example.myapplication.ui.MainActivity;
 import com.example.myapplication.utils.MyConstant;
+import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -36,7 +38,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.ArrayList;
@@ -69,6 +73,8 @@ public class CreateWorkoutFragment extends Fragment {
     RecyclerView exercisesRecycler;
     @BindView(R.id.searchView)
     EditText searchView;
+    @BindView(R.id.circle_loading_view)
+    AnimatedCircleLoadingView circleLoadingView;
 
 
     private String newWorkoutLevel;
@@ -77,16 +83,63 @@ public class CreateWorkoutFragment extends Fragment {
     private ExerciseAdapterAdvanced exerciseAdapter;
     private List<Exercise> exercisesOfWorkoutList;
 
+    private ConstraintLayout loadingLayout;
+
 
     public CreateWorkoutFragment() {
         // Required empty public constructor
     }
 
 
-    private void uploadWorkoutImage(long timeMilli) {
+    private void uploadWorkoutImage() {
+
+        /**this list contains exercises i added to the work out and each one has sets and reps*/
+        exercisesOfWorkoutList = exerciseAdapter.getExercisesOfWorkoutList();
+
+        if (!validateInputs()) {
+            return;
+        }
+
+
+        /**unique number to attach to image path */
+        Date date = new Date();
+        final long timeMilli = date.getTime();
+
+        /**show loading layout*/
+        loadingLayout.setVisibility(View.VISIBLE);
+        circleLoadingView.startDeterminate();
+
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         final StorageReference imagesRef = storageRef.child("workoutImages/" + imageUri.getLastPathSegment() + timeMilli);
-        imagesRef.putFile(imageUri);
+        imagesRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.i(TAG, "isAdded: " + isAdded() + isVisible() + getUserVisibleHint());
+                if (isAdded() && isVisible() && getUserVisibleHint()) {
+                    //check if fragment is visible
+                    uploadWorkout(timeMilli);
+                } else {
+                    //delete uploaded photo since workout wont be uploaded
+                    imagesRef.delete();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                loadingLayout.setVisibility(View.GONE);
+                Log.i(TAG, "onFailure: " + e.getMessage());
+                FancyToast.makeText(getActivity(), "Uploading failed , check connection and try again", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                //calculating progress percentage
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                //displaying percentage in circleLoadingView
+                circleLoadingView.setPercent((int) progress);
+            }
+        });
     }
 
     private boolean validateInputs() {
@@ -139,6 +192,7 @@ public class CreateWorkoutFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_workout_fragment1, container, false);
+        loadingLayout = view.findViewById(R.id.loading_layout);
         // setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
 
@@ -226,23 +280,7 @@ public class CreateWorkoutFragment extends Fragment {
         });
     }
 
-    private void uploadWorkout() {
-
-        /**this list contains exercises i added to the work out and each one has sets and reps*/
-        exercisesOfWorkoutList = exerciseAdapter.getExercisesOfWorkoutList();
-
-
-        if (!validateInputs()) {
-            return;
-        }
-
-
-        /**unique number to attach to image path */
-        Date date = new Date();
-        long timeMilli = date.getTime();
-
-        /**upload workout image to storge*/
-        uploadWorkoutImage(timeMilli);
+    private void uploadWorkout(long timeMilli) {
 
 
         DatabaseReference workoutRef = FirebaseDatabase.getInstance().getReference("workout");
@@ -265,6 +303,7 @@ public class CreateWorkoutFragment extends Fragment {
         workoutRef.child(id).setValue(workout).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                loadingLayout.setVisibility(View.GONE);
                 startActivity(new Intent(getActivity(), MainActivity.class));
                 FancyToast.makeText(getActivity(), "Workout uploaded", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
             }
@@ -272,7 +311,7 @@ public class CreateWorkoutFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Exception e) {
                 FancyToast.makeText(getActivity(), "Uploading failed , check connection and retry", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-
+                loadingLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -301,10 +340,11 @@ public class CreateWorkoutFragment extends Fragment {
 
     @OnClick(R.id.uploadButton)
     public void onuploadClicked() {
-        uploadWorkout();
+        /**upload workout image to storge*/
+        uploadWorkoutImage();
+
 
     }
-
 
 
 }

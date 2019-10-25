@@ -51,6 +51,15 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
         workoutViewHolder.textViewWorkoutName.setText(workoutList.get(i).getName());
         workoutViewHolder.textViewNumberOfExercises.setText(workoutList.get(i).getExercisesNumber());
         workoutViewHolder.textViewTime.setText(workoutList.get(i).getDuration());
+        workoutViewHolder.difficultyTextView.setText(workoutList.get(i).getLevel());
+        //change bg color of difficultyTextView
+        if (workoutList.get(i).getLevel().toLowerCase().equals("beginner")) {
+            workoutViewHolder.difficultyTextView.setBackgroundResource(R.drawable.easy_bg);
+        } else if (workoutList.get(i).getLevel().toLowerCase().equals("intermediate")) {
+            workoutViewHolder.difficultyTextView.setBackgroundResource(R.drawable.intermediate_bg);
+        } else if (workoutList.get(i).getLevel().toLowerCase().equals("professional")) {
+            workoutViewHolder.difficultyTextView.setBackgroundResource(R.drawable.difficult_bg);
+        }
         //download photo with glide then show it
         downloadWorkoutImage(workoutList.get(i).getPhotoLink(), workoutViewHolder);
 
@@ -62,11 +71,8 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
         storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                if (context != null) {
+                if (context != null)
                     Glide.with(context).load(uri).into(workoutViewHolder.workoutImageView);
-                }
-
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -89,7 +95,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
 
     //viewHolder
     class WorkoutViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewWorkoutName, textViewNumberOfExercises, textViewTime;
+        TextView textViewWorkoutName, textViewNumberOfExercises, textViewTime, difficultyTextView;
         ImageView workoutImageView;
 
 
@@ -99,6 +105,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
             textViewNumberOfExercises = itemView.findViewById(R.id.textViewNumberOfExercises);
             textViewTime = itemView.findViewById(R.id.textViewReps);
             workoutImageView = itemView.findViewById(R.id.workoutImageView);
+            difficultyTextView = itemView.findViewById(R.id.textViewDifficulty);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

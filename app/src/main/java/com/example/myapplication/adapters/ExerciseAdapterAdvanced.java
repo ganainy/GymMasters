@@ -86,7 +86,8 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
             @Override
             public void onSuccess(Uri uri) {
                 //download image with glide then show it in the navigation menu
-                Glide.with(context).load(uri.toString()).into(exerciseViewHolder.exerciseImage);
+                if (context != null)
+                    Glide.with(context).load(uri.toString()).into(exerciseViewHolder.exerciseImage);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

@@ -9,6 +9,7 @@
     tools:context=".fragments.MainFragmentHome">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbarAlwaysDrawVerticalTrack="true"
@@ -112,7 +113,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:lines="1"
-                                android:text="follower"
+                                android:text="follower(s)"
                                 android:textSize="12sp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -315,6 +316,8 @@
                     android:id="@+id/customExerciseRecycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:layout_marginHorizontal="4dp" />
 
 
@@ -337,7 +340,9 @@
                     android:layout_margin="8dp"
                     android:id="@+id/customWorkoutRecycler"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true" />
 
 
             </LinearLayout>

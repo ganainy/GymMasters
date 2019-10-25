@@ -12,12 +12,15 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.crashlytics.android.Crashlytics;
 import com.example.myapplication.R;
 import com.example.myapplication.fragments.ViewPagerAdapterWelcomeActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+
+import io.fabric.sdk.android.Fabric;
 
 public class WelcomeActivity extends AppCompatActivity {
     private static final String TAG = "WelcomeActivityh";
@@ -27,6 +30,7 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_welcome);
         viewPager=findViewById(R.id.view_pager);
         signUp=findViewById(R.id.sign_up);

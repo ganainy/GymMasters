@@ -1,15 +1,11 @@
 package com.example.myapplication;
 
-import android.app.Application;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
 import com.example.myapplication.utils.MyConstant;
@@ -45,7 +41,7 @@ public class UserInfoActivityRepository {
     public MutableLiveData<List<Exercise>> getExercises(final String profileId) {
         final MutableLiveData<List<Exercise>> load = new MutableLiveData<>();
         exerciseList.clear();
-        final Exercise exercise = new Exercise();
+
         DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference("excercises");
         exerciseNode.addValueEventListener(new ValueEventListener() {
             @Override
@@ -53,6 +49,7 @@ public class UserInfoActivityRepository {
                 for (DataSnapshot dsBig : dataSnapshot.getChildren()) {
                     for (DataSnapshot ds : dsBig.getChildren()) {
                         if (ds.child("creatorId").getValue().equals(profileId)) {
+                            final Exercise exercise = new Exercise();
                             exercise.setExecution(ds.child("execution").getValue().toString());
                             exercise.setName(ds.child("name").getValue().toString());
                             if (ds.hasChild("additional_notes"))
@@ -79,8 +76,8 @@ public class UserInfoActivityRepository {
     }
 
 
-    public MutableLiveData<RequestBuilder<Drawable>> downloadUserPhoto(final Application application, String photo) {
-        final MutableLiveData<RequestBuilder<Drawable>> load = new MutableLiveData<>();
+    public MutableLiveData<Uri> downloadUserPhoto(final String photo) {
+        final MutableLiveData<Uri> load = new MutableLiveData<>();
 
         if (photo == null) {
             return load;
@@ -88,13 +85,13 @@ public class UserInfoActivityRepository {
         FirebaseStorage.getInstance().getReference().child("images/").child(photo).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                RequestBuilder<Drawable> load1 = Glide.with(application.getApplicationContext()).load(uri.toString());
-                load.setValue(load1);
+                load.setValue(uri);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i(TAG, "onFailure: " + e.getMessage());
+                load.setValue(Uri.parse(photo));//photo itself is url(google image)
             }
         });
 
@@ -122,6 +119,7 @@ public class UserInfoActivityRepository {
                             workout.setExercisesNumber(ds.child("exercisesNumber").getValue().toString());
                             workout.setPhotoLink(ds.child("photoLink").getValue().toString());
                             workout.setId(ds.child("id").getValue().toString());
+                            workout.setLevel(ds.child("level").getValue().toString());
 
                             workoutList.add(workout);
                         }

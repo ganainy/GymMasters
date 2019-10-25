@@ -1,14 +1,13 @@
 package com.example.myapplication.ui;
 
 import android.app.Application;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.bumptech.glide.RequestBuilder;
 import com.example.myapplication.UserInfoActivityRepository;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
@@ -17,10 +16,9 @@ import java.util.List;
 
 public class UserInfoActivityViewModel extends AndroidViewModel {
     private static final String TAG = "UserInfoActivityViewMod";
-    private final Application application;
     private MutableLiveData<List<Exercise>> exercisesList;
     private UserInfoActivityRepository mRepo;
-    private MutableLiveData<RequestBuilder<Drawable>> profilePhoto;
+    private MutableLiveData<Uri> profilePhoto;
     private MutableLiveData<List<Workout>> workoutList;
     private MutableLiveData<Boolean> subscribeState;
     private MutableLiveData<String> followersCount;
@@ -31,7 +29,6 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
 
     public UserInfoActivityViewModel(@NonNull Application application) {
         super(application);
-        this.application = application;
         mRepo = UserInfoActivityRepository.getInstance();
     }
 
@@ -54,12 +51,12 @@ public class UserInfoActivityViewModel extends AndroidViewModel {
     }
 
 
-    public LiveData<RequestBuilder<Drawable>> getUserPhoto(String photo) {
+    public LiveData<Uri> getUserPhoto(String photo) {
 
         if (profilePhoto != null) {
 
         } else {
-            profilePhoto = mRepo.downloadUserPhoto(application, photo);
+            profilePhoto = mRepo.downloadUserPhoto(photo);
         }
         return profilePhoto;
     }

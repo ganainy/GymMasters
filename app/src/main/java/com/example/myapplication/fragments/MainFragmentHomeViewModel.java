@@ -102,6 +102,7 @@ public class MainFragmentHomeViewModel extends ViewModel {
                         workout.setExercisesNumber(ds.child("exercisesNumber").getValue().toString());
                         workout.setPhotoLink(ds.child("photoLink").getValue().toString());
                         workout.setId(ds.child("id").getValue().toString());
+                        workout.setLevel(ds.child("level").getValue().toString());
 
                         myCustomWorkoutList.add(workout);
                     }

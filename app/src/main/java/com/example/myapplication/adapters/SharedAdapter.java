@@ -124,6 +124,8 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         TextView exerciseNameEdittext;
         @BindView(R.id.exerciseImageView)
         CircleImageView exerciseImageView;
+
+
         Exercise currentExercise;
 
 
@@ -157,7 +159,7 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             FirebaseStorage.getInstance().getReference("exerciseImages/").child(exercise.getPreviewPhoto1()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    Glide.with(itemView).load(uri).into(exerciseImageView);
+                    if (context != null) Glide.with(itemView).load(uri).into(exerciseImageView);
                 }
             });
 
@@ -176,6 +178,9 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         TextView textViewNumberOfExercises;
         @BindView(R.id.textViewReps)
         TextView textViewReps;
+        @BindView(R.id.textViewDifficulty)
+        TextView textViewDifficulty;
+
         Workout currentWorkout;
 
         public PostWorkoutViewHolder(@NonNull View itemView) {
@@ -197,6 +202,17 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public void setDetails(final Workout workout) {
             currentWorkout = workout;
+            textViewDifficulty.setText(workout.getLevel());
+            //change bg color of difficultyTextView
+            if (currentWorkout.getLevel().toLowerCase().equals("beginner")) {
+                textViewDifficulty.setBackgroundResource(R.drawable.easy_bg);
+            } else if (currentWorkout.getLevel().toLowerCase().equals("intermediate")) {
+                textViewDifficulty.setBackgroundResource(R.drawable.intermediate_bg);
+            } else if (currentWorkout.getLevel().toLowerCase().equals("professional")) {
+                textViewDifficulty.setBackgroundResource(R.drawable.difficult_bg);
+            }
+
+//todo if user leaves activity image keeps downloading and glide crashes
             textViewWorkoutName.setText(workout.getName());
             textViewNumberOfExercises.setText(workout.getExercisesNumber());
             textViewReps.setText(workout.getDuration());
@@ -210,7 +226,7 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             FirebaseStorage.getInstance().getReference().child(workout.getPhotoLink()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    Glide.with(itemView).load(uri).into(workoutImageView);
+                    if (context != null) Glide.with(itemView).load(uri).into(workoutImageView);
                 }
             });
 

@@ -197,5 +197,4 @@ public class TimerActivity extends AppCompatActivity implements Chronometer.OnCh
     }
 
 
-    //todo move chronometer and audio to a service to keep chronometer running in bg and voice works even if user left app
 }

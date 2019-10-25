@@ -134,7 +134,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         //initialize places sdk
-        Places.initialize(this, String.valueOf(R.string.google_maps_key)
+        Places.initialize(this, getString(R.string.google_maps_key)
         );
         mPlacesClient = Places.createClient(this);
         final AutocompleteSessionToken autocompleteSessionToken = AutocompleteSessionToken.newInstance();
@@ -421,16 +421,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         /**call places api to find gyms in radius of 5km from my location*/
         Call<Candidates> call = placesApi.getParentObject("gym", "textquery",
-                "geometry/location,formatted_address,name,opening_hours,rating", "circle:5000@" + latLng.latitude + "," + latLng.longitude, String.valueOf(R.string.google_maps_key)
+                "geometry/location,formatted_address,name,opening_hours,rating", "circle:5000@" + latLng.latitude + "," + latLng.longitude, getString(R.string.google_maps_key)
         );
         call.enqueue(new Callback<Candidates>() {
             @Override
             public void onResponse(Call<Candidates> call, Response<Candidates> response) {
 
-                if (!response.isSuccessful()) {
-                    Toast.makeText(MapsActivity.this, "Sorry , couldn't find any nearby gyms", Toast.LENGTH_LONG).show();
-                    return;
-                }
+
+                try {
                 Candidates body = response.body();
                 Candidate candidate = body.getCandidates().get(0);
                 Geometry geometry = candidate.getGeometry();
@@ -455,7 +453,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 textViewRate.setText(rating + "/5");
 
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
+                } catch (Exception e) {
+                    rippleBackground.stopRippleAnimation();
+                    Toast.makeText(MapsActivity.this, "Sorry , couldn't find any nearby gyms", Toast.LENGTH_LONG).show();
+                    Log.i(TAG, "Exception: " + e.getMessage());
+                }
 
             }
 
@@ -463,6 +465,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onFailure(Call<Candidates> call, Throwable t) {
                 Log.i(TAG, "onFailure: " + t.getMessage());
                 rippleBackground.stopRippleAnimation();
+                Toast.makeText(MapsActivity.this, "Sorry , couldn't find any nearby gyms", Toast.LENGTH_LONG).show();
+
             }
         });
 

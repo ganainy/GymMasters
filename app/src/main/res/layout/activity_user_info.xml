@@ -127,8 +127,8 @@
                             android:background="@drawable/btn_add"
                             android:fontFamily="@font/proximanovaregular"
                             android:gravity="left|center"
-                            android:text="follow"
                             android:padding="4dp"
+                            android:text="follow"
                             android:textAlignment="center"
                             android:textAllCaps="false"
                             android:textColor="@color/black" />
@@ -142,8 +142,8 @@
                             android:background="@drawable/btn_add"
                             android:fontFamily="@font/proximanovaregular"
                             android:gravity="left|center"
-                            android:text="rate"
                             android:padding="4dp"
+                            android:text="rate"
                             android:textAlignment="center"
                             android:textAllCaps="false"
                             android:textColor="@color/black" />
@@ -193,7 +193,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:lines="1"
-                                android:text="follower"
+                                android:text="follower(s)"
                                 android:textSize="12sp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -356,10 +356,10 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:fontFamily="@font/proximanovaregular"
                             android:id="@+id/explainExerciseTextview"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/proximanovaregular"
                             android:paddingHorizontal="8dp"
                             android:paddingTop="8dp"
                             android:textColor="@color/textblack"
@@ -367,10 +367,10 @@
                             tools:text="Amr created 3 custom exercises" />
 
                         <TextView
-                            android:fontFamily="@font/proximanovaregular"
                             android:id="@+id/explainExerciseTextview2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/proximanovaregular"
                             android:paddingLeft="8dp"
                             android:text="Click to view" />
                     </LinearLayout>
@@ -386,14 +386,15 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.recyclerview.widget.RecyclerView
-                tools:listitem="@layout/excercise_item"
-                android:layout_margin="4dp"
-                android:background="@drawable/circularbordersolid"
                 android:id="@+id/exerciseRecycler"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="@+id/cardView"
-                app:layout_constraintStart_toStartOf="@+id/cardView"
+                android:layout_margin="16dp"
+                android:background="@drawable/circularbordersolid"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardView">
 
             </androidx.recyclerview.widget.RecyclerView>
@@ -423,8 +424,8 @@
                         android:layout_width="70dp"
                         android:layout_height="match_parent"
                         android:background="#9F64C9"
-                        android:gravity="center"
                         android:fontFamily="@font/proximanovaregular"
+                        android:gravity="center"
                         android:textColor="@color/textwhite"
                         android:textSize="24sp"
                         tools:text="2" />
@@ -439,10 +440,10 @@
                             android:id="@+id/explainExerciseTextview3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/proximanovaregular"
                             android:paddingHorizontal="8dp"
                             android:paddingTop="8dp"
                             android:textColor="@color/textblack"
-                            android:fontFamily="@font/proximanovaregular"
                             android:textSize="18sp"
                             tools:text="Amr created 2 custom workouts" />
 
@@ -464,14 +465,15 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_margin="4dp"
-                android:background="@drawable/circularbordersolid"
-                tools:listitem="@layout/workout_item"
                 android:id="@+id/workoutRecycler"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@drawable/circularbordersolid"
                 app:layout_constraintEnd_toEndOf="@+id/cardView2"
                 app:layout_constraintStart_toStartOf="@+id/cardView2"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 app:layout_constraintTop_toBottomOf="@+id/cardView2">
 
             </androidx.recyclerview.widget.RecyclerView>

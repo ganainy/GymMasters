@@ -1,7 +1,7 @@
 package com.example.myapplication.ui;
 
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +19,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.adapters.ExerciseAdapter;
 import com.example.myapplication.adapters.WorkoutAdapter;
@@ -102,16 +102,23 @@ public class UserInfoActivity extends AppCompatActivity {
     private List<Workout> workoutListt = new ArrayList<>();
     private WorkoutAdapter workoutAdapter;
     private int rating;
+    private boolean loadedExercisesBefore, loadedWorkoutsBefore;
 
 
     @OnClick(R.id.cardView)
     void showExerciseList() {
+        //only download once
+        if (loadedExercisesBefore) return;
         setupExerciseRecycler();
+        loadedExercisesBefore = true;
     }
 
     @OnClick(R.id.cardView2)
     void showWorkoutList() {
+        //only download once
+        if (loadedWorkoutsBefore) return;
         setupWorkoutRecycler();
+        loadedWorkoutsBefore = true;
     }
 
 
@@ -142,10 +149,10 @@ public class UserInfoActivity extends AppCompatActivity {
                 }
             });
             //download user profile photo
-            mViewModel.getUserPhoto(user.getPhoto()).observe(this, new Observer<RequestBuilder<Drawable>>() {
+            mViewModel.getUserPhoto(user.getPhoto()).observe(this, new Observer<Uri>() {
                 @Override
-                public void onChanged(@Nullable RequestBuilder<Drawable> drawableRequestBuilder) {
-                    drawableRequestBuilder.into(profile_image);
+                public void onChanged(Uri profileImageUri) {
+                    Glide.with(UserInfoActivity.this).load(profileImageUri).into(profile_image);
                 }
             });
             //get workouts list
@@ -220,6 +227,8 @@ public class UserInfoActivity extends AppCompatActivity {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.setAdapter(exerciseAdapter);
+
+            recyclerView.requestFocus();
         }
     }
 
@@ -234,6 +243,8 @@ public class UserInfoActivity extends AppCompatActivity {
             recyclerView.setLayoutManager(linearLayoutManager);
             workoutAdapter.setDataSource(workoutListt);
             recyclerView.setAdapter(workoutAdapter);
+
+            recyclerView.requestFocus();
         }
 
     }

@@ -345,20 +345,20 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
                 Log.i(TAG, "onInitializationSuccess: ");
                 if (videoPlaylist.size() > 1) youTubePlayer.loadVideos(videoPlaylist);
-                else openAlertDialog();
+                else openInYoutubeAlertDialog();
             }
 
             @Override
             public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
                 Log.i(TAG, "onInitializationFailure: ");
-                openAlertDialog();
+                openInYoutubeAlertDialog();
             }
         };
 
 
     }
 
-    private void openAlertDialog() {
+    private void openInYoutubeAlertDialog() {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(this);
         builder.setMessage("In app play failed ,Show video inside youtube app instead?").setTitle("Error playing video :/");
@@ -414,7 +414,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
         YoutubeApi youtubeApi = retrofit.create(YoutubeApi.class);
 
 
-        Call<Example> call = youtubeApi.getParentObject("snippet", q, "video", String.valueOf(R.string.google_maps_key)
+        Call<Example> call = youtubeApi.getParentObject("snippet", q, "video", getString(R.string.google_maps_key)
 
         );
         call.enqueue(new Callback<Example>() {
@@ -430,10 +430,11 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
                         Log.i(TAG, "onResponse: " + videoId);
                     }
 
-                    youTubePlayerView.initialize(String.valueOf(R.string.google_maps_key), onInitializedListener);
+                    youTubePlayerView.initialize(getString(R.string.google_maps_key), onInitializedListener);
 
                 } else {
-                    Log.i(TAG, "onResponse: " + response.code() + response.errorBody().toString());
+                    Log.i(TAG, "onResponse: " + response.code());
+                    openInYoutubeAlertDialog();
                 }
             }
 
