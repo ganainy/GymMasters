@@ -1,6 +1,5 @@
 package com.example.myapplication.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
@@ -9,13 +8,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -33,6 +33,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,15 +44,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 101;
     public NetworkChangeReceiver receiver;
     Boolean bl = true;
+    @BindView(R.id.parentScroll)
+    ScrollView parentScroll;
     private FirebaseAuth mAuth;
     private TextInputEditText emailEditText, passwordEditText;
     private Button login;
-    TextView signup;
     private GoogleSignInClient mGoogleSignInClient;
 
     @Override
@@ -59,26 +64,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
         login = findViewById(R.id.loginButton);
-        signup = findViewById(R.id.signupTextView);
         passwordEditText = findViewById(R.id.passwordEditText);
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         checkInternet();
 
-        //open signup activity
-        signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
-            }
-        });
 
+        showMoveToSignUpSnackbar();
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Hide keyboard and login
-                login();
+                checkEmailAndPassword();
             }
         });
 
@@ -104,12 +102,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         signInButton.setSize(SignInButton.SIZE_ICON_ONLY);
     }
 
-    private void login() {
-        /**hide keyboard*/
-        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-        checkEmailAndPassword();
+    private void showMoveToSignUpSnackbar() {
+        Snackbar snackbar = Snackbar
+                .make(parentScroll, "Don't have an account?", Snackbar.LENGTH_INDEFINITE)
+                .setAction("Sign up", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+                    }
+                });
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        snackbar.show();
+
     }
+
+
+
+
 
     private void loginWithDone() {
         passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -118,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     /* Write your logic here that will be executed when user taps next button */
-                    login();
+                    checkEmailAndPassword();
 
                     handled = true;
                 }
@@ -222,7 +231,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }
             });
-
 
 
         }

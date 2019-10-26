@@ -176,6 +176,7 @@ public class MainFragmentHomeViewModel extends ViewModel {
 
         final MutableLiveData<Uri> load = new MutableLiveData<>();
 
+
         if (photo == null) {
             return load;
         }
@@ -189,7 +190,7 @@ public class MainFragmentHomeViewModel extends ViewModel {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i(TAG, "onFailure: " + e.getMessage());
-                /**if the photo is from google account it will be cause method to fail since it's not in storge*/
+                /**if the photo is from google account it will be cause method to fail since it's not in storage*/
                 load.setValue(Uri.parse(photo));
             }
         });

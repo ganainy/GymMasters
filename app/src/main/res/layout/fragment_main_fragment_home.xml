@@ -23,11 +23,16 @@
                 android:id="@+id/top_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/circularbordersolid"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="150dp"
@@ -53,19 +58,19 @@
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_marginTop="10dp"
                         android:fontFamily="@font/proximanovaregular"
                         android:textColor="#424242"
                         android:textSize="21sp"
-                        android:layout_gravity="center"
                         android:textStyle="bold"
                         tools:text="Amr mohammed" />
 
                     <TextView
                         android:id="@+id/email"
                         android:layout_width="wrap_content"
-                        android:layout_gravity="center"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:fontFamily="@font/proximanovaregular"
                         android:textSize="14sp"
                         tools:text="amr@gmail.com" />
@@ -77,15 +82,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="16dp"
                     android:paddingBottom="10dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:gravity="center"
-                        android:padding="8dp">
+                        android:gravity="center">
 
                         <ImageView
                             android:layout_width="35dp"
@@ -122,8 +126,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:gravity="center"
-                        android:padding="8dp">
+                        android:gravity="center">
 
                         <ImageView
                             android:layout_width="35dp"
@@ -160,8 +163,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:gravity="center"
-                        android:padding="8dp">
+                        android:gravity="center">
 
                         <ImageView
                             android:layout_width="35dp"

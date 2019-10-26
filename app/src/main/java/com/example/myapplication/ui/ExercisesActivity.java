@@ -82,7 +82,7 @@ public class ExercisesActivity extends AppCompatActivity {
         if (getIntent().hasExtra("triceps")) {
             htab_header.setImageResource(R.drawable.triceps);
             this.muscle = "triceps";
-            s
+
         } else if (getIntent().hasExtra("chest")) {
             htab_header.setImageResource(R.drawable.chest);
             this.muscle = "chest";

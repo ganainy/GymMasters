@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void handleMapClick() {
-
+        //check permissions before opening map activity
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             startActivity(new Intent(getApplicationContext(), MapsActivity.class));
         } else {

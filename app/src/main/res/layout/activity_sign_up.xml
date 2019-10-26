@@ -5,18 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/activity_bg"
+    android:id="@+id/parentScroll"
+    android:layout_weight="1"
     android:fillViewport="true">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@drawable/bg_signup"
 
+        <ImageView
+        android:layout_width="match_parent"
+            android:layout_height="250dp"
+        android:background="@drawable/bg_signup"
         />
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
 
@@ -27,23 +30,14 @@
         tools:context=".SignUpActivity">
 
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addProfilePhoto"
-            android:backgroundTint="@color/blue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="120dp"
-            android:layout_marginTop="100dp"
-            android:src="@drawable/ic_plus"
-            app:layout_constraintStart_toStartOf="@+id/profile_image"
-            app:layout_constraintTop_toTopOf="@+id/profile_image" />
+
 
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
             android:layout_width="200dp"
             android:layout_height="141dp"
-            android:layout_marginTop="148dp"
+            android:layout_marginTop="108dp"
             android:src="@drawable/anonymous_profile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -55,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginHorizontal="4dp"
-            android:layout_marginTop="350dp"
+                android:layout_marginTop="250dp"
             android:background="@drawable/empty_selector"
             android:theme="@style/TextLabel"
             app:errorEnabled="true"
@@ -180,6 +174,7 @@
                 app:layout_constraintStart_toEndOf="@+id/textView7"
                 app:layout_constraintTop_toTopOf="@+id/textView7" />
 
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -197,5 +192,9 @@
         android:layout_height="60dp"
         android:layout_gravity="center"
         android:visibility="gone" />
+
+
     </FrameLayout>
+
+
 </ScrollView>

@@ -27,6 +27,7 @@ public class WelcomeActivity extends AppCompatActivity {
     ViewPager viewPager;
     Button signUp;
     TextView login;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +64,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     }
 
+
     private void showSignUpButton() {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -72,6 +74,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int i) {
+
                 //show sign up button on third fragment only + show simple animation
                 switch (i)
                 {
@@ -87,7 +90,8 @@ public class WelcomeActivity extends AppCompatActivity {
                         break;
                     case 2:
                         signUp.setVisibility(View.VISIBLE);
-                        final Animation animTranslate = AnimationUtils.loadAnimation(WelcomeActivity.this,                          R.anim.anim_translate);
+                        final Animation animTranslate = AnimationUtils.loadAnimation(WelcomeActivity.this,
+                                R.anim.anim_translate);
                         signUp.startAnimation(animTranslate);
 
                         break;

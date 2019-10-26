@@ -1,23 +1,28 @@
 package com.example.myapplication.ui;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import com.example.myapplication.R;
 import com.example.myapplication.model.User;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -28,7 +33,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,8 +44,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
@@ -48,26 +56,34 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private static final int PICK_IMAGE = 101;
     private static final int RC_SIGN_IN = 102;
     CircleImageView profileImage;
+    @BindView(R.id.parentScroll)
+    ScrollView parentScroll;
     private TextInputEditText userNameEditText, emailEditText, passwordEditText;
     private Uri imageUri;
     Button signUp;
     ProgressBar progressBar;
-    FloatingActionButton addProfilePhoto;
     private FirebaseAuth mAuth;
     private String userName, email;
     private GoogleSignInClient mGoogleSignInClient;
+    private User newUser;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        ButterKnife.bind(this);
         profileImage = findViewById(R.id.profile_image);
-        addProfilePhoto = findViewById(R.id.addProfilePhoto);
         signUp = findViewById(R.id.signupButton);
         progressBar = findViewById(R.id.progressBar);
 
         selectPhoto();
+
+
+        askUserToAddPhoto();
+
+
+        showMoveToLoginSnackbar();
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +108,46 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         SignInButton signInButton = findViewById(R.id.sign_in_button);
         signInButton.setOnClickListener(this);
         signInButton.setSize(SignInButton.SIZE_ICON_ONLY);
+    }
+
+    private void showMoveToLoginSnackbar() {
+        Snackbar snackbar = Snackbar
+                .make(parentScroll, "Already have an account?", Snackbar.LENGTH_INDEFINITE)
+                .setAction("Sign in", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                    }
+                });
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        snackbar.show();
+    }
+
+
+    private void askUserToAddPhoto() {
+        TapTargetView.showFor(this,                 // `this` is an Activity
+                TapTarget.forView(findViewById(R.id.profile_image), "Click to add profile picture", "It's optional but will help your followers to get to know you better")
+                        // All options below are optional
+                        .outerCircleColor(R.color.blue)      // Specify a color for the outer circle
+                        .titleTextSize(25)                  // Specify the size (in sp) of the title text
+                        .descriptionTextSize(18)            // Specify the size (in sp) of the description text
+                        .textColor(R.color.grey)            // Specify a color for both the title and description text
+                        .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
+                        .dimColor(R.color.black)            // If set, will dim behind the view with 30% opacity of the given color
+                        .drawShadow(true)                   // Whether to draw a drop shadow or not
+                        .cancelable(true)                  // Whether tapping outside the outer circle dismisses the view
+                        .transparentTarget(true)           // Specify whether the target is transparent (displays the content underneath)
+                        .targetRadius(60),                  // Specify the target radius (in dp)
+                new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
+                    @Override
+                    public void onTargetClick(TapTargetView view) {
+                        super.onTargetClick(view);
+                        Intent intent = new Intent();
+                        intent.setType("image/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+                    }
+                });
     }
 
     private void checkUserNameAndEmailAndPassword() {
@@ -124,68 +180,96 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            constraintLayout.setVisibility(View.GONE);
-                            progressBar.setVisibility(View.GONE);
-
-                            FancyToast.makeText(SignUpActivity.this, "Registration successful.", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
-                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                            if (imageUri != null)
-                                intent.putExtra("imageUri", imageUri.toString());
-                            startActivity(intent);
+                            // createUser success, save user data in db and update ui
                             String uid = mAuth.getCurrentUser().getUid();
-                            saveUserInfoInRealtimeDb(uid);
-                            //save user data related to sending device to device notification later
+                            saveUserInfoInRealtimeDb(uid).observe(SignUpActivity.this, new Observer<Boolean>() {
+                                @Override
+                                public void onChanged(Boolean isDataUploadedSuccessfully) {
+                                    if (isDataUploadedSuccessfully) {
+                                        FancyToast.makeText(SignUpActivity.this, "Registration successful.", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
+                                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                                    } else {
+                                        constraintLayout.setVisibility(View.GONE);
+                                        progressBar.setVisibility(View.GONE);
+                                        FancyToast.makeText(SignUpActivity.this, "Error happened while signing up , Check connection and retry.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+
+                                    }
+                                }
+                            });
+
 
                         } else {
 
                             // If sign in fails, display a message to the user.
                             constraintLayout.setVisibility(View.GONE);
                             progressBar.setVisibility(View.GONE);
-                            FancyToast.makeText(SignUpActivity.this, task.getException() + "", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                            FancyToast.makeText(SignUpActivity.this, "Sign up failed with this email and password.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
 
                         }
 
-                        // ...
+
                     }
                 });
     }
 
 
-    private void saveUserInfoInRealtimeDb(String uid) {
+    private LiveData<Boolean> saveUserInfoInRealtimeDb(final String uid) {
+        final MutableLiveData<Boolean> load = new MutableLiveData();
 
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("users");
-        User newUser;
-        if (imageUri != null) {
-            //uploadImage to firebase storage
-            uploadProfilePic(imageUri);
+        final DatabaseReference myRef = database.getReference("users");
+
+        if (imageUri != null) {            //uploadImage to firebase storage then upload data to realtime db
             newUser = new User(uid, userName, email, imageUri.getLastPathSegment());
-        } else {
-            newUser = new User(uid, userName, email, "-1");
+
+            final StorageReference imagesRef = FirebaseStorage.getInstance().getReference().child("images/" + imageUri.getLastPathSegment());
+            imagesRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    myRef.child(uid).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.i(TAG, "onSuccess: ");
+                            load.setValue(true);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.i(TAG, "onFailure: " + e.getMessage());
+                            load.setValue(false);
+                        }
+                    });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    load.setValue(false);
+                }
+            });
+
+
+        } else {//user didnt select image only upload data to realtime db
+            newUser = new User(uid, userName, email, null);
+            myRef.child(uid).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.i(TAG, "onSuccess: ");
+                    load.setValue(true);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.i(TAG, "onFailure: " + e.getMessage());
+                    load.setValue(false);
+                }
+            });
         }
 
-        myRef.child(uid).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.i(TAG, "onSuccess: ");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "onFailure: " + e.getMessage());
-            }
-        });
 
+        return load;
     }
 
-    private void uploadProfilePic(Uri imageUri) {
-        // Create a storage reference from our app
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference imagesRef = storageRef.child("images/" + imageUri.getLastPathSegment());
-        imagesRef.putFile(imageUri);
-    }
 
     private void selectPhoto() {
         profileImage.setOnClickListener(new View.OnClickListener() {
@@ -198,15 +282,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        addProfilePhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-            }
-        });
 
     }
 
@@ -322,4 +397,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         }
     }
+
+
 }

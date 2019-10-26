@@ -10,4 +10,19 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/bg_login_3" />
+
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/text_shadow"
+        android:fontFamily="@font/proximanovaregular"
+        android:gravity="center"
+        android:text="Find gyms near your location and a lot more..."
+        android:textColor="#eee"
+        android:textSize="32sp" />
+
+
 </FrameLayout>

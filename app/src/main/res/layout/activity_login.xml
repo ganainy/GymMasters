@@ -3,18 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/parentScroll"
     android:layout_height="match_parent"
     android:background="@color/activity_bg"
     android:fillViewport="true"
+    android:layout_weight="1"
     >
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             tools:context=".LoginActivity">
 
@@ -45,9 +47,11 @@
                 android:layout_marginTop="16dp"
                 android:fontFamily="@font/night_machine"
                 android:gravity="center"
+                android:ellipsize="none"
+                android:singleLine="true"
                 android:text="@string/app_name"
                 android:textColor="@color/textblack"
-                android:textSize="52sp" />
+                android:textSize="42sp" />
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -145,33 +149,7 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_gravity="bottom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/don_t_have_an_account"
-                    android:fontFamily="@font/proximanovaregular"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/signupTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="signup"
-                    android:paddingLeft="5dp"
-                    android:layout_gravity="bottom"
-                    android:text="@string/sign_up"
-                    android:fontFamily="@font/proximanovaregular"
-                    android:textColor="@color/blue"
-                    android:textSize="20sp" />
-            </LinearLayout>
 
 
         </LinearLayout>
@@ -201,5 +179,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+
     </FrameLayout>
+
 </ScrollView>

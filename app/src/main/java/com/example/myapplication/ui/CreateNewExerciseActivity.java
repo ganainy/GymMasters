@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -218,6 +219,7 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
 
 
         Snackbar snackbar = Snackbar.make(parentScroll, "Fields with orange dots are mandatory", Snackbar.LENGTH_LONG);
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
         snackbar.show();
 
         muscleSpinnerCode();
