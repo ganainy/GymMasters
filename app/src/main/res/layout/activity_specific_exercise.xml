@@ -7,12 +7,13 @@
     android:layout_height="match_parent"
     android:id="@+id/parent"
     android:background="@color/activity_bg"
+    android:fillViewport="true"
     tools:context=".ui.SpecificExerciseActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,6 +53,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -223,6 +225,24 @@
 
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/deleteExerciseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/circularbordersolid"
+            android:drawableLeft="@drawable/ic_delete_red_24dp"
+            android:fontFamily="@font/proximanovaregular"
+            android:padding="8dp"
+            android:text="Delete exercise"
+            android:textAllCaps="false"
+            android:textColor="#B11111"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/linearLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

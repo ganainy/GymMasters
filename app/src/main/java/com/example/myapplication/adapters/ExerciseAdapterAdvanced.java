@@ -266,4 +266,10 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
         super.onDetachedFromRecyclerView(recyclerView);
         isParentDead = true;
     }
+
+    @Override
+    public void onViewAttachedToWindow(@NonNull ExerciseViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        isParentDead = false;
+    }
 }

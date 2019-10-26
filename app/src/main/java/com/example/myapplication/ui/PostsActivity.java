@@ -282,6 +282,7 @@ public class PostsActivity extends AppCompatActivity {
 
         }
 
+        Log.i(TAG, "onPause: ");
         recyclerView.setAdapter(null);
     }
 

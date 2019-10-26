@@ -216,10 +216,12 @@ public class MainFragmentHome extends Fragment {
     }
 
 
-    private void setupExercisesRecycler(List<Exercise> exercises) {
+    private void setupExercisesRecycler(final List<Exercise> exercises) {
         if (exercises.size() == 0) {
             FancyToast.makeText(getActivity(), "You didn't create any custom exercises yet.", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
         } else {
+
+
             exerciseFlag = 1;
             recyclerViewExercise.setVisibility(View.VISIBLE);
             exerciseAdapter = new ExerciseAdapter(getActivity(), exercises, "home");
@@ -234,6 +236,7 @@ public class MainFragmentHome extends Fragment {
         }
 
     }
+
 
 
     private void setupWorkoutRecycler(List<Workout> workouts) {

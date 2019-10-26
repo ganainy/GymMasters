@@ -377,4 +377,11 @@ public class CreateWorkoutFragment extends Fragment {
         Log.i(TAG, "onStop: ");
         exercisesRecycler.setAdapter(null);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: ");
+        exercisesRecycler.setAdapter(exerciseAdapter);
+    }
 }

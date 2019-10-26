@@ -7,10 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -77,6 +79,8 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
     TextView mechanicTextView;
     @BindView(R.id.targetedMuscleTextView)
     TextView targetedMuscleTextView;
+    @BindView(R.id.deleteExerciseButton)
+    Button deleteExerciseButton;
 
     private boolean b;
     private Timer timer;
@@ -121,6 +125,17 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
             // exercise=new Exercise();
             exercise = i.getParcelableExtra("exercise");
             showInViews();
+        }
+
+
+        /**only show delete button if it's exercise of logged in user(user coming from main fragment home adapter)*/
+        if (getIntent().hasExtra("ownExercise")) {
+            boolean ownExercise = getIntent().getBooleanExtra("ownExercise", false);
+            if (ownExercise) {
+                deleteExerciseButton.setVisibility(View.VISIBLE);
+            }
+        } else {
+            deleteExerciseButton.setVisibility(View.GONE);
         }
 
 
@@ -191,6 +206,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
                         exercise.setMechanism(ds.child("mechanism").getValue().toString());
                         exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
                         exercise.setPreviewPhoto2(ds.child("previewPhoto2").getValue().toString());
+                        exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
 
 
                     }
@@ -407,6 +423,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
         }
     }
 
+
     private interface CallbackInterface {
         void callbackMethod(Exercise exercise);
     }
@@ -448,6 +465,55 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
             @Override
             public void onFailure(Call<Example> call, Throwable t) {
                 Log.i(TAG, "onFailure: " + t.getMessage());
+            }
+        });
+    }
+
+
+    @OnClick(R.id.deleteExerciseButton)
+    public void onViewClicked() {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete exercise ?")
+                .setMessage("Are you sure you want to delete this exercise permanently from app?")
+                .setIcon(R.drawable.ic_delete_black_24dp)
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteExercise();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+
+    private void deleteExercise() {
+        //remove exercise data from db
+        final String name = exercise.getName();
+        String bodyPart = exercise.getBodyPart().toLowerCase();
+        final String previewPhoto1 = exercise.getPreviewPhoto1();
+        final String previewPhoto2 = exercise.getPreviewPhoto2();
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("excercises").child(bodyPart);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    if (ds.child("name").getValue().toString().equals(name)) {
+                        String nodeKey = ds.getKey();
+                        Log.i(TAG, "onDataChange: " + nodeKey);
+                        databaseReference.child(nodeKey).setValue(null);
+
+                        FirebaseStorage.getInstance().getReference("exerciseImages").child(previewPhoto1).delete();//delete exercise photos
+                        FirebaseStorage.getInstance().getReference("exerciseImages").child(previewPhoto2).delete();
+                        Toast.makeText(SpecificExerciseActivity.this, "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                        finish();
+                        return;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.i(TAG, "onCancelled: " + databaseError.getMessage());
             }
         });
     }

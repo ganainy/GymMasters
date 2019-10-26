@@ -156,11 +156,12 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
                         public void onClick(View v) {
                             //Different intents depending on the fragment/activity which called this adapter
                             if (parentName.equals("home")) {
-                                //adapter called by main fragment
+                                //adapter called by main fragment home
                                 Intent intent = new Intent(context, SpecificExerciseActivity.class);
                                 //parcelable have size limit so i wont pass image bitmap with the exercise
                                 Exercise exercise = exercisesList.get(getAdapterPosition());
                                 intent.putExtra("exercise", exercise);
+                                intent.putExtra("ownExercise", true);
                                 context.startActivity(intent);
                             } else if (parentName.equals("userInfo")) {
                                 UserInfoActivity userInfoActivity = (UserInfoActivity) context;

@@ -117,10 +117,16 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
                         intent.putExtra("workout", workoutList.get(getAdapterPosition()));
                         userInfoActivity.startActivity(intent);
 
-                    } else if (parent.equals("fragmentWorkouts") | parent.equals("fragmentHome")) {
+                    } else if (parent.equals("fragmentWorkouts")) {
                         MainActivity mainActivity = (MainActivity) context;
                         Intent intent = new Intent(WorkoutAdapter.this.context, SpecificWorkoutActivity.class);
                         intent.putExtra("workout", workoutList.get(getAdapterPosition()));
+                        mainActivity.startActivity(intent);
+                    } else if (parent.equals("fragmentHome")) {
+                        MainActivity mainActivity = (MainActivity) context;
+                        Intent intent = new Intent(WorkoutAdapter.this.context, SpecificWorkoutActivity.class);
+                        intent.putExtra("workout", workoutList.get(getAdapterPosition()));
+                        intent.putExtra("ownWorkout", true);
                         mainActivity.startActivity(intent);
                     }
 
