@@ -2,6 +2,7 @@ package com.example.myapplication.fragments;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class MainFragmentWorkouts extends Fragment {
     private WorkoutAdapter workoutAdapter;
     ConstraintLayout loading_workouts;
     private MainFragmentWorkoutsViewModel mainFragmentWorkoutsViewModel;
+    private RecyclerView recyclerView;
 
     public MainFragmentWorkouts() {
         // Required empty public constructor
@@ -42,6 +44,8 @@ public class MainFragmentWorkouts extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main_fragment_workouts, container, false);
         this.view = view;
+        recyclerView = view.findViewById(R.id.workoutRecyclerView);
+
 
         /**loading layout to show while workouts are loading*/
         loading_workouts = view.findViewById(R.id.loading_workouts);
@@ -61,12 +65,26 @@ public class MainFragmentWorkouts extends Fragment {
 
     private void setupRecycler(List<Workout> workouts) {
         loading_workouts.setVisibility(View.GONE);
-        RecyclerView recyclerView = view.findViewById(R.id.workoutRecyclerView);
         workoutAdapter = new WorkoutAdapter(getActivity(), "fragmentWorkouts");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         workoutAdapter.setDataSource(workouts);
         recyclerView.setAdapter(workoutAdapter);
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        recyclerView.setAdapter(null);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: ");
+        if (workoutAdapter != null) recyclerView.setAdapter(workoutAdapter);
     }
 
 

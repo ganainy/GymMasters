@@ -29,7 +29,7 @@ import com.example.myapplication.model.Exercise;
 import com.example.myapplication.model.Workout;
 import com.example.myapplication.ui.MainActivity;
 import com.example.myapplication.utils.MyConstant;
-import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
+import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -73,8 +73,8 @@ public class CreateWorkoutFragment extends Fragment {
     RecyclerView exercisesRecycler;
     @BindView(R.id.searchView)
     EditText searchView;
-    @BindView(R.id.circle_loading_view)
-    AnimatedCircleLoadingView circleLoadingView;
+    @BindView(R.id.circle_progress)
+    CircleProgress circleProgress;
 
 
     private String newWorkoutLevel;
@@ -84,6 +84,7 @@ public class CreateWorkoutFragment extends Fragment {
     private List<Exercise> exercisesOfWorkoutList;
 
     private ConstraintLayout loadingLayout;
+    private int fakeProgress;
 
 
     public CreateWorkoutFragment() {
@@ -107,7 +108,7 @@ public class CreateWorkoutFragment extends Fragment {
 
         /**show loading layout*/
         loadingLayout.setVisibility(View.VISIBLE);
-        circleLoadingView.startDeterminate();
+
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         final StorageReference imagesRef = storageRef.child("workoutImages/" + imageUri.getLastPathSegment() + timeMilli);
@@ -135,9 +136,32 @@ public class CreateWorkoutFragment extends Fragment {
             @Override
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                 //calculating progress percentage
-                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                final double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
                 //displaying percentage in circleLoadingView
-                circleLoadingView.setPercent((int) progress);
+
+
+                //add little delay when updating progress to look smoother
+                new Thread() {
+                    public void run() {
+                        while (fakeProgress < (int) progress) {
+                            try {
+                                getActivity().runOnUiThread(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        fakeProgress++;
+                                        circleProgress.setProgress(fakeProgress);
+                                    }
+                                });
+                                Thread.sleep(15);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }.start();
+
+                /* circleProgress.setProgress((int) progress);*/
             }
         });
     }
@@ -347,4 +371,10 @@ public class CreateWorkoutFragment extends Fragment {
     }
 
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop: ");
+        exercisesRecycler.setAdapter(null);
+    }
 }

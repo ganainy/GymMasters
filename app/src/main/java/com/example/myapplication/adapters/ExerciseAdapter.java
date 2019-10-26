@@ -37,6 +37,7 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
     List<Exercise> originalExerciseList;
     Context context;
     private static final String TAG = "ExerciseAdapter";
+    private boolean isParentDead;
 
     public ExerciseAdapter(Context context,List<Exercise>exercisesList) {
         this.context = context;
@@ -79,9 +80,10 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
         pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                //download image with glide then show it in the navigation menu
-                if (context != null)
+                if (!isParentDead) {
+                    Log.i(TAG, "shouldnt call after detatch");
                     Glide.with(context).load(uri.toString()).into(exerciseViewHolder.exerciseImage);
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -181,6 +183,17 @@ public  class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerc
             }
 
 
+    @Override
+    public void onViewDetachedFromWindow(@NonNull ExerciseViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        Log.i(TAG, "onViewDetachedFromWindow: ");
+        isParentDead = true;
 
+    }
 
+    @Override
+    public void onViewAttachedToWindow(@NonNull ExerciseViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        isParentDead = false;
+    }
 }

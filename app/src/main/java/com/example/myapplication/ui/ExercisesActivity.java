@@ -41,6 +41,7 @@ public class ExercisesActivity extends AppCompatActivity {
     @BindView(R.id.search_view)
     SearchView searchView;
     private ExerciseAdapter exerciseAdapter;
+    private RecyclerView recyclerView;
 
 
     @Override
@@ -48,6 +49,10 @@ public class ExercisesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercises);
         ButterKnife.bind(this);
+
+
+        recyclerView = findViewById(R.id.exerciseRecyclerView);
+
 
         /**set header image based on selected muscle from previous fragment*/
         setTabHeaderIamge();
@@ -77,6 +82,7 @@ public class ExercisesActivity extends AppCompatActivity {
         if (getIntent().hasExtra("triceps")) {
             htab_header.setImageResource(R.drawable.triceps);
             this.muscle = "triceps";
+            s
         } else if (getIntent().hasExtra("chest")) {
             htab_header.setImageResource(R.drawable.chest);
             this.muscle = "chest";
@@ -128,7 +134,6 @@ public class ExercisesActivity extends AppCompatActivity {
         if (exerciseList.size() == 0) {
             FancyToast.makeText(getApplicationContext(), "No exercises yet in this category", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
         } else {
-            RecyclerView recyclerView = findViewById(R.id.exerciseRecyclerView);
             exerciseAdapter = new ExerciseAdapter(this, exerciseList);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             recyclerView.setLayoutManager(linearLayoutManager);
@@ -159,5 +164,16 @@ public class ExercisesActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        recyclerView.setAdapter(null);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: ");
+        if (exerciseAdapter != null) recyclerView.setAdapter(exerciseAdapter);
+    }
 }

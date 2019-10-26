@@ -41,6 +41,7 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int TYPE_EXERCISE = 1;
     private final Context context;
     List<SharedExerciseWorkout> sharedExerciseWorkoutList;
+    private boolean isParentDead;
 
     public SharedAdapter(Context context, List<SharedExerciseWorkout> sharedExerciseWorkoutList) {
         this.context = context;
@@ -116,6 +117,18 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         void callbackMethod(String name);
     }
 
+    @Override
+    public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        isParentDead = false;
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        isParentDead = true;
+    }
+
     class PostExerciseViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.textView)
@@ -159,7 +172,9 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             FirebaseStorage.getInstance().getReference("exerciseImages/").child(exercise.getPreviewPhoto1()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    if (context != null) Glide.with(itemView).load(uri).into(exerciseImageView);
+                    if (!isParentDead) {
+                        Glide.with(itemView).load(uri).into(exerciseImageView);
+                    }
                 }
             });
 
@@ -212,7 +227,7 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 textViewDifficulty.setBackgroundResource(R.drawable.difficult_bg);
             }
 
-//todo if user leaves activity image keeps downloading and glide crashes
+
             textViewWorkoutName.setText(workout.getName());
             textViewNumberOfExercises.setText(workout.getExercisesNumber());
             textViewReps.setText(workout.getDuration());
@@ -226,7 +241,9 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             FirebaseStorage.getInstance().getReference().child(workout.getPhotoLink()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    if (context != null) Glide.with(itemView).load(uri).into(workoutImageView);
+                    if (!isParentDead) {
+                        Glide.with(itemView).load(uri).into(workoutImageView);
+                    }
                 }
             });
 

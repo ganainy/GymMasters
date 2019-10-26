@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/tools"
     android:background="#73B1ABAB">
 
 
@@ -12,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@drawable/circular_grey_green_bordersolid"
+        android:background="@drawable/circular_grey_bordersolid"
         android:orientation="vertical"
 
         android:padding="8dp"
@@ -21,11 +22,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView
-            android:id="@+id/circle_loading_view"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:layout_gravity="center" />
+        <com.github.lzyzsd.circleprogress.CircleProgress
+            android:id="@+id/circle_progress"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            custom:circle_progress="20" />
 
 
         <TextView
@@ -35,7 +37,7 @@
             android:fontFamily="@font/proximanovaregular"
             android:gravity="center"
             android:text="Note: Leaving while uploading will cause it to fail"
-            android:textColor="#eee"
+            android:textColor="@color/lightBlack"
             android:textSize="22sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

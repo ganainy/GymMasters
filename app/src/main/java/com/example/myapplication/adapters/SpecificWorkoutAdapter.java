@@ -157,4 +157,6 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             textViewTargetMuscle.setText(workoutExercise.getBodyPart());
         }
     }
+
+
 }

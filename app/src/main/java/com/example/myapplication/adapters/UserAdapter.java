@@ -44,6 +44,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     private final Context context;
     private long sumRatings;
     private int sumRaters;
+    private boolean isParentDead;
 
     public UserAdapter(Context context, List<User> userList) {
         this.context = context;
@@ -137,7 +138,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                if (context != null) {
+                if (!isParentDead) {
                     Glide.with(context).load(uri).into(userViewHolder.userImageView);
                 }
             }
@@ -221,5 +222,18 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             });
 
         }
+    }
+
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull UserViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        isParentDead = true;
+    }
+
+    @Override
+    public void onViewAttachedToWindow(@NonNull UserViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        isParentDead = false;
     }
 }

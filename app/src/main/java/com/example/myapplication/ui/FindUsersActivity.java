@@ -60,6 +60,7 @@ public class FindUsersActivity extends AppCompatActivity {
 
     @BindView(R.id.bgImageView)
     ImageView bgImageView;
+    private RecyclerView recyclerView;
 
     @OnClick(R.id.button)
     void loadAllUsersList() {
@@ -71,6 +72,10 @@ public class FindUsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_users);
         ButterKnife.bind(this);
+
+        recyclerView = findViewById(R.id.usersRecycler);
+
+
 
         /**setting up custom toolbar*/
         setSupportActionBar(toolbar);
@@ -284,7 +289,6 @@ public class FindUsersActivity extends AppCompatActivity {
         notFoundTextView.setVisibility(View.GONE);
         bgImageView.setVisibility(View.GONE);
 
-        RecyclerView recyclerView = findViewById(R.id.usersRecycler);
         if (source.equals("getFollowersData")) {
             userAdapter = new UserAdapter(FindUsersActivity.this, followersList);
         } else if (source.equals("loadAllUsers")) {
@@ -350,8 +354,15 @@ public class FindUsersActivity extends AppCompatActivity {
         } catch (Exception e) {
 
         }
+        recyclerView.setAdapter(null);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: ");
+        if (userAdapter != null) recyclerView.setAdapter(userAdapter);
+    }
 
     /** handle back press from toolbar
      */

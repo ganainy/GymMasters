@@ -59,6 +59,7 @@ public class PostsActivity extends AppCompatActivity {
     private List<String> followingIdList = new ArrayList<>();
     private List<SharedExerciseWorkout> sharedExerciseWorkoutList = new ArrayList<>();
     private SharedAdapter sharedAdapter;
+    private RecyclerView recyclerView;
 
     @OnClick(R.id.button)
     void openFindUsers() {
@@ -72,6 +73,8 @@ public class PostsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posts);
         ButterKnife.bind(this);
+
+        recyclerView = findViewById(R.id.sharedRv);
 
 
         /**setting up custom toolbar*/
@@ -253,7 +256,6 @@ public class PostsActivity extends AppCompatActivity {
         }*/
 
 
-        RecyclerView recyclerView = findViewById(R.id.sharedRv);
         sharedAdapter = new SharedAdapter(PostsActivity.this, sharedExerciseWorkoutList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(PostsActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -279,8 +281,17 @@ public class PostsActivity extends AppCompatActivity {
         } catch (Exception e) {
 
         }
+
+        recyclerView.setAdapter(null);
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: ");
+        if (sharedAdapter != null) recyclerView.setAdapter(sharedAdapter);
+    }
 
     /**
      * handle back press from toolbar

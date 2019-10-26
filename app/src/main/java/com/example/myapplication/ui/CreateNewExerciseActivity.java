@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.myapplication.R;
 import com.example.myapplication.model.Exercise;
 import com.example.myapplication.utils.MyConstant;
-import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
+import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.google.android.material.snackbar.Snackbar;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
@@ -66,13 +66,14 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
 
     @BindView(R.id.loadingLayout)
     ConstraintLayout loadingLayout;
-    @BindView(R.id.circle_loading_view)
-    AnimatedCircleLoadingView circleLoadingView;
+    @BindView(R.id.circle_progress)
+    CircleProgress circleProgress;
 
 
     private Uri imageUri, image2Uri;
     private CreateNewExerciseViewModel createNewExerciseViewModel;
     private Observer<Boolean> mObserver;
+    private int fakeProgress;
 
     @OnClick(R.id.saveButton)
     void saveExercise() {
@@ -91,7 +92,6 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
 
             //show loading layout
             loadingLayout.setVisibility(View.VISIBLE);
-            circleLoadingView.startDeterminate();
 
             /**add time in millis with image name to make it unique*/
             Date date = new Date();
@@ -124,9 +124,32 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
                         createNewExerciseViewModel.uploadExercisePhotos(imageUri, image2Uri, timeMilli).observe
                                 (CreateNewExerciseActivity.this, new Observer<Integer>() {
                                     @Override
-                                    public void onChanged(Integer progress) {
+                                    public void onChanged(final Integer progress) {
 
-                                        circleLoadingView.setPercent(progress);
+
+                                        //add little delay when updating progress to look smoother
+                                        new Thread() {
+                                            public void run() {
+                                                while (fakeProgress < progress) {
+                                                    try {
+                                                        runOnUiThread(new Runnable() {
+
+                                                            @Override
+                                                            public void run() {
+                                                                fakeProgress++;
+                                                                circleProgress.setProgress(fakeProgress);
+                                                            }
+                                                        });
+                                                        Thread.sleep(15);
+                                                    } catch (InterruptedException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                }
+                                            }
+                                        }.start();
+
+
+
 
                                         if (progress == 100) { //means both images uploaded successfully
                                             createNewExerciseViewModel.uploadExercise(exercise).

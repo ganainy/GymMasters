@@ -43,6 +43,7 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
     private String sets, reps;
     private List<Exercise> filteredNameList = new ArrayList<>();
     private List<Exercise> exerciseList, finalExerciseList;
+    private boolean isParentDead;
 
     public ExerciseAdapterAdvanced(Context context) {
         this.context = context;
@@ -60,7 +61,7 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ExerciseViewHolder exerciseViewHolder, int i) {
-
+        Log.i(TAG, "onBindViewHolder: ");
 
         if (finalExerciseList.get(i).getIsAddedToWorkout() != null && finalExerciseList.get(i).getIsAddedToWorkout()) {
             exerciseViewHolder.parentConstraint.setBackgroundResource(R.drawable.circular_green_bordersolid);
@@ -86,8 +87,10 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
             @Override
             public void onSuccess(Uri uri) {
                 //download image with glide then show it in the navigation menu
-                if (context != null)
+                if (!isParentDead) {
                     Glide.with(context).load(uri.toString()).into(exerciseViewHolder.exerciseImage);
+                }
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -258,4 +261,9 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
     //
 
 
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        isParentDead = true;
+    }
 }

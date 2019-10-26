@@ -78,4 +78,6 @@ public class SpecificWorkoutActivity extends AppCompatActivity {
         specificWorkoutAdapter.setDataSource(workoutExerciseList);
         specificWorkoutRecycler.setAdapter(specificWorkoutAdapter);
     }
+
+
 }

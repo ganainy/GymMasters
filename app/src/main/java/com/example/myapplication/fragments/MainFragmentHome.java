@@ -3,6 +3,7 @@ package com.example.myapplication.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,6 +153,8 @@ public class MainFragmentHome extends Fragment {
         ButterKnife.bind(this, view);
 
         recyclerViewWorkout = view.findViewById(R.id.customWorkoutRecycler);
+        recyclerViewExercise = view.findViewById(R.id.customExerciseRecycler);
+
         scrollView = view.findViewById(R.id.scrollView);
 
         mainFragmentHomeViewModel = ViewModelProviders.of(this).get(MainFragmentHomeViewModel.class);
@@ -218,7 +221,6 @@ public class MainFragmentHome extends Fragment {
             FancyToast.makeText(getActivity(), "You didn't create any custom exercises yet.", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
         } else {
             exerciseFlag = 1;
-            recyclerViewExercise = view.findViewById(R.id.customExerciseRecycler);
             recyclerViewExercise.setVisibility(View.VISIBLE);
             exerciseAdapter = new ExerciseAdapter(getActivity(), exercises, "home");
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -309,4 +311,19 @@ public class MainFragmentHome extends Fragment {
     }
 
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        recyclerViewWorkout.setAdapter(null);
+        recyclerViewExercise.setAdapter(null);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: ");
+        if (workoutAdapter != null) recyclerViewWorkout.setAdapter(workoutAdapter);
+        if (exerciseAdapter != null) recyclerViewExercise.setAdapter(exerciseAdapter);
+    }
 }

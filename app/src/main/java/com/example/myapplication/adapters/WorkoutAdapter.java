@@ -31,6 +31,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
     final Context context;
     private final String parent;
     private List<Workout> workoutList;
+    private boolean isParentDead;
 
 
     public WorkoutAdapter(Context context, String parent) {
@@ -71,7 +72,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
         storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                if (context != null)
+                if (!isParentDead)
                     Glide.with(context).load(uri).into(workoutViewHolder.workoutImageView);
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -127,6 +128,21 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
             });
         }
 
+    }
+
+
+    /*to prevent glide from loading images if the parent layout already destroyed*/
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull WorkoutViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        isParentDead = true;
+    }
+
+    @Override
+    public void onViewAttachedToWindow(@NonNull WorkoutViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        isParentDead = false;
     }
 
 

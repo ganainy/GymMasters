@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -53,7 +54,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SpecificExerciseActivity extends YouTubeBaseActivity {
-    private static final String TAG = "hehe";
+    private static final String TAG = "SpecificActivityh";
 
 
     @BindView(R.id.exerciseImageView)
@@ -111,6 +112,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
                 @Override
                 public void callbackMethod(Exercise exercisee) {
                     exercisee.setBodyPart(targetMuscle);
+                    exercisee.setName(exerciseName);
                     exercise = exercisee;
                     showInViews();
                 }
@@ -130,9 +132,11 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
     }
 
     private void showFirstSnackbar() {
+
+
         Snackbar snackbar = Snackbar
                 .make(parent, "Show video instead?", Snackbar.LENGTH_INDEFINITE)
-                .setAction("OK", new View.OnClickListener() {
+                .setAction("Show video", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -143,19 +147,21 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
                         showSecondSnackbar();
                     }
                 });
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
         snackbar.show();
     }
 
     private void showSecondSnackbar() {
         /**snack bar to ask user if he wants photos instead of video again*/
         Snackbar snackbar = Snackbar.make(parent, "Return to showing images?", Snackbar.LENGTH_INDEFINITE)
-                .setAction("OK", new View.OnClickListener() {
+                .setAction("Show images", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         showFirstSnackbar();
                         showSwitchingPhotosAgain();
                     }
                 });
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
         snackbar.show();
     }
 
@@ -210,7 +216,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
         storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-
+                Log.i(TAG, "shouldnt after stop");
                 load = Glide.with(getApplicationContext()).load(uri);
                 downloadPreviewImage2(load);
             }
@@ -232,6 +238,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
             @Override
             public void onSuccess(Uri uri) {
                 load2 = Glide.with(getApplicationContext()).load(uri);
+                Log.i(TAG, "shouldnt after stop");
                 switchExercisePhotos();
             }
 
@@ -350,7 +357,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
 
             @Override
             public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-                Log.i(TAG, "onInitializationFailure: ");
+                Log.i(TAG, "onInitializationFailure: " + youTubeInitializationResult);
                 openInYoutubeAlertDialog();
             }
         };
@@ -361,7 +368,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
     private void openInYoutubeAlertDialog() {
         AlertDialog.Builder builder;
         builder = new AlertDialog.Builder(this);
-        builder.setMessage("In app play failed ,Show video inside youtube app instead?").setTitle("Error playing video :/");
+        builder.setMessage("In app play failed ,Show video inside youtube app instead?").setTitle("Error playing video");
 
 
         builder.setCancelable(false)
@@ -446,6 +453,11 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
     }
 
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop: ");
+    }
 }
 
 

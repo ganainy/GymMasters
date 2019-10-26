@@ -103,6 +103,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private WorkoutAdapter workoutAdapter;
     private int rating;
     private boolean loadedExercisesBefore, loadedWorkoutsBefore;
+    private RecyclerView recyclerViewWorkout, recyclerViewExercise;
 
 
     @OnClick(R.id.cardView)
@@ -127,6 +128,10 @@ public class UserInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
         ButterKnife.bind(this);
+        recyclerViewWorkout = findViewById(R.id.workoutRecycler);
+        recyclerViewExercise = findViewById(R.id.exerciseRecycler);
+
+
 
         //note: user refers to the view profile user and not logged in user
         if (getIntent().hasExtra("user")) {
@@ -222,13 +227,12 @@ public class UserInfoActivity extends AppCompatActivity {
         if (exerciseListt.size() == 0) {
             FancyToast.makeText(this, "This user didn't create any custom exercises yet.", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
         } else {
-            RecyclerView recyclerView = findViewById(R.id.exerciseRecycler);
             exerciseAdapter = new ExerciseAdapter(this, exerciseListt, "userInfo");
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.setAdapter(exerciseAdapter);
+            recyclerViewExercise.setLayoutManager(linearLayoutManager);
+            recyclerViewExercise.setAdapter(exerciseAdapter);
 
-            recyclerView.requestFocus();
+            recyclerViewExercise.requestFocus();
         }
     }
 
@@ -237,14 +241,13 @@ public class UserInfoActivity extends AppCompatActivity {
         if (workoutListt.size() == 0) {
             FancyToast.makeText(this, "This user didn't create any custom workouts yet.", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
         } else {
-            RecyclerView recyclerView = findViewById(R.id.workoutRecycler);
             workoutAdapter = new WorkoutAdapter(this, "userInfo");
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerViewWorkout.setLayoutManager(linearLayoutManager);
             workoutAdapter.setDataSource(workoutListt);
-            recyclerView.setAdapter(workoutAdapter);
+            recyclerViewWorkout.setAdapter(workoutAdapter);
 
-            recyclerView.requestFocus();
+            recyclerViewWorkout.requestFocus();
         }
 
     }
@@ -344,7 +347,7 @@ public class UserInfoActivity extends AppCompatActivity {
                 FirebaseDatabase.getInstance().getReference("users").child(MyConstant.loggedInUserId).child("followingUID")
                         .push().setValue(user.getId());
                 //show toast
-                FancyToast.makeText(UserInfoActivity.this, "Subscribed successfully", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+                FancyToast.makeText(UserInfoActivity.this, "Follow successful", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
                 isSubscribed = true;
                 ChangeFollowButtonColors(isSubscribed);
             } else {
@@ -388,7 +391,7 @@ public class UserInfoActivity extends AppCompatActivity {
                 });
                 //
                 //show toast
-                FancyToast.makeText(UserInfoActivity.this, "Unsubscribed successfully.", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show();
+                FancyToast.makeText(UserInfoActivity.this, "Unfollow successful.", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show();
 
                 isSubscribed = false;
                 ChangeFollowButtonColors(isSubscribed);
@@ -414,4 +417,23 @@ public class UserInfoActivity extends AppCompatActivity {
     public void onViewClicked() {
         super.onBackPressed();
     }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop: ");
+        recyclerViewWorkout.setAdapter(null);
+        recyclerViewExercise.setAdapter(null);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: ");
+        if (workoutAdapter != null) recyclerViewWorkout.setAdapter(workoutAdapter);
+        if (exerciseAdapter != null) recyclerViewExercise.setAdapter(exerciseAdapter);
+    }
+
 }
