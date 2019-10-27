@@ -29,7 +29,7 @@
     <string name="about_me">About me</string>
     <string name="title_activity_maps">Map</string>
     <!--todo add your key that supports youtube data api , places api , maps api-->
-    <string name="google_maps_key">AIzaSyAAAlwebLExK498rkiT7VKBNGZkC9Rs90k</string>
+    <string name="google_maps_key">your key here</string>
 
 
 </resources>
