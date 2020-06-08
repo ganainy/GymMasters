@@ -8,7 +8,7 @@
     android:id="@+id/parent"
     android:background="@color/activity_bg"
     android:fillViewport="true"
-    tools:context=".ui.SpecificExerciseActivity">
+    tools:context="ganainy.dev.gymmasters.ui.SpecificExerciseActivity">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.TimerActivity"
+    tools:context="ganainy.dev.gymmasters.ui.TimerActivity"
     android:background="@drawable/circular_grey_bordersolid"
     tools:showIn="@layout/activity_timer">
 

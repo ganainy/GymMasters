@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.myapplication">
+    package="ganainy.dev.gymmasters">
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MapsActivity"
+            android:name="ganainy.dev.gymmasters.MapsActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -30,62 +30,62 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="@string/google_map_key" />
 
         <activity
-            android:name=".ui.TimerActivity"
+            android:name="ganainy.dev.gymmasters.ui.TimerActivity"
             android:label="@string/title_activity_timer"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.PostsActivity"
+            android:name="ganainy.dev.gymmasters.ui.PostsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.UserInfoActivity"
+            android:name="ganainy.dev.gymmasters.ui.UserInfoActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.FindUsersActivity"
+            android:name="ganainy.dev.gymmasters.ui.FindUsersActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.SpecificWorkoutActivity"
+            android:name="ganainy.dev.gymmasters.ui.SpecificWorkoutActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.CreateNewExerciseActivity"
+            android:name="ganainy.dev.gymmasters.ui.CreateNewExerciseActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.SpecificExerciseActivity"
+            android:name="ganainy.dev.gymmasters.ui.SpecificExerciseActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.ExercisesActivity"
+            android:name="ganainy.dev.gymmasters.ui.ExercisesActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_exercises"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name="ganainy.dev.gymmasters.ui.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.LoginActivity"
+            android:name="ganainy.dev.gymmasters.ui.LoginActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar"
             android:windowSoftInputMode="adjustNothing" />
         <activity
-            android:name=".ui.SignUpActivity"
+            android:name="ganainy.dev.gymmasters.ui.SignUpActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".ui.WelcomeActivity"
+            android:name="ganainy.dev.gymmasters.ui.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar">

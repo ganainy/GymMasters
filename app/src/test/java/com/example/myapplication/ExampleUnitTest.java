@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package ganainy.dev.gymmasters;
 
 import org.junit.Test;
 
