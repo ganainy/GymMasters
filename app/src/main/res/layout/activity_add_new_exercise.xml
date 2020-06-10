@@ -6,7 +6,7 @@
     android:id="@+id/parentScroll"
     android:layout_height="match_parent"
     android:background="@color/activity_bg"
-    tools:context="ganainy.dev.gymmasters.ui.CreateNewExerciseActivity">
+    tools:context="ganainy.dev.gymmasters.ui.createExercise.CreateNewExerciseActivity">
 
     <FrameLayout
         android:layout_width="match_parent"

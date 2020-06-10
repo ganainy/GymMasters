@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ganainy.dev.gymmasters.fragments.MainFragmentWorkouts">
+    tools:context="ganainy.dev.gymmasters.ui.main.workouts.MainFragmentWorkouts">
 
 
     <androidx.recyclerview.widget.RecyclerView

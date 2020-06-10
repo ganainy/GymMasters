@@ -6,7 +6,7 @@
     android:background="@color/activity_bg"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="ganainy.dev.gymmasters.ui.UserInfoActivity">
+    tools:context="ganainy.dev.gymmasters.ui.userInfo.UserInfoActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

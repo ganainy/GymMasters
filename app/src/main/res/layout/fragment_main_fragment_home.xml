@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/activity_bg"
-    tools:context="ganainy.dev.gymmasters.fragments.MainFragmentHome">
+    tools:context="ganainy.dev.gymmasters.ui.main.home.MainFragmentHome">
 
     <ScrollView
         android:id="@+id/scrollView"
