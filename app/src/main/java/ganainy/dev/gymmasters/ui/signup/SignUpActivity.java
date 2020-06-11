@@ -4,127 +4,176 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
-import ganainy.dev.gymmasters.R;
-import ganainy.dev.gymmasters.models.app_models.User;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.shashank.sony.fancytoastlib.FancyToast;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.ui.login.LoginActivity;
 import ganainy.dev.gymmasters.ui.main.MainActivity;
+import ganainy.dev.gymmasters.utils.ApplicationViewModelFactory;
 
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = "SignUpActivity";
+public class SignUpActivity extends AppCompatActivity {
     private static final int PICK_IMAGE = 101;
     private static final int RC_SIGN_IN = 102;
     CircleImageView profileImage;
-    @BindView(R.id.parentScroll)
-    ScrollView parentScroll;
     private TextInputEditText userNameEditText, emailEditText, passwordEditText;
     private Uri imageUri;
     Button signUp;
     ProgressBar progressBar;
-    private FirebaseAuth mAuth;
-    private String userName, email;
+    private String userName, email, password;
     private GoogleSignInClient mGoogleSignInClient;
-    private User newUser;
+    private SignUpViewModel signUpViewModel;
+    private ImageView semiTransparentBackgroundImage;
+    private TextView signInTextView;
+    private SignInButton googleSignInButton;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        ButterKnife.bind(this);
-        profileImage = findViewById(R.id.profile_image);
-        signUp = findViewById(R.id.signupButton);
-        progressBar = findViewById(R.id.progressBar);
 
-        selectPhoto();
+        initViews();
+
+        initViewModel();
+
+        signUpViewModel.isFirstSignUpShowing().observe(this, isFirstSignUpShowing -> {
+            if (isFirstSignUpShowing) askUserToAddPhoto();
+        });
+
+        signUpViewModel.getUsernameError().observe(this, errorHint -> userNameEditText.setError(errorHint));
 
 
-        askUserToAddPhoto();
+        signUpViewModel.getEmailError().observe(this, errorHint -> emailEditText.setError(errorHint));
 
 
-        showMoveToLoginSnackbar();
+        signUpViewModel.getPasswordError().observe(this, errorHint -> passwordEditText.setError(errorHint));
 
-        signUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkUserNameAndEmailAndPassword();
+        signUpViewModel.getIsLoadingLiveData().observe(this, isLoading -> {
+            if (isLoading) {
+                semiTransparentBackgroundImage.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+            } else {
+                semiTransparentBackgroundImage.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
             }
         });
 
 
+        signUpViewModel.isUserDataUploadedMediatorLiveData.observe(this, aBoolean -> {
+            //need to observe mediator live data to be able to trigger callback in viewModel
+            // constructor
+        });
+
+
+        signUpViewModel.getToastLiveData().observe(this, pairEvent -> {
+            if (!pairEvent.getHasBeenHandled()) {
+                Pair<Integer, Integer> toastPair = pairEvent.getContentIfNotHandled();
+                Toast.makeText(
+                        SignUpActivity.this,
+                        getApplication().getString(toastPair.first),
+                        toastPair.second)
+                        .show();
+            }
+        });
+
+        signUpViewModel.getNavigateToMainLiveData().observe(this, shouldNavigateToMainActivity -> {
+            if (!shouldNavigateToMainActivity.getHasBeenHandled()) {
+                startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+            }
+        });
+
+
+        signUpViewModel.getIsGoogleUserDataUploadedLiveData().observe(this, isGoogleUserDataUploaded -> {
+            if (isGoogleUserDataUploaded) {
+                //executes if account was added to db or not added if already existed
+                Toast.makeText(SignUpActivity.this, R.string.login_successful, Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+            } else {
+                //onCancelled called when adding or checking if google account is in db*/
+                Toast.makeText(SignUpActivity.this, R.string.use_gym_master_account, Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    private void initViews() {
+        profileImage = findViewById(R.id.profile_image);
+        signUp = findViewById(R.id.signupButton);
+        progressBar = findViewById(R.id.progressBar);
+        emailEditText = findViewById(R.id.emailEditText);
+        passwordEditText = findViewById(R.id.passwordEditText);
+        userNameEditText = findViewById(R.id.userNameEditText);
+        semiTransparentBackgroundImage = findViewById(R.id.semiTransparentBackgroundImage);
+        signInTextView = findViewById(R.id.signInTextView);
+        googleSignInButton = findViewById(R.id.sign_in_button);
+
+        googleSignInButton.setOnClickListener(v -> {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+        });
+
+        signInTextView.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class)));
+
+        profileImage.setOnClickListener(v -> openImageChooser());
+
+        signUp.setOnClickListener(v -> {
+            userName = userNameEditText.getText().toString().trim();
+            email = emailEditText.getText().toString().trim();
+            password = passwordEditText.getText().toString().trim();
+            signUpViewModel.validateUserData(userName, email, password, imageUri);
+        });
+
+        setupGoogleSignIn();
+
+    }
+
+    private void openImageChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+    }
+
+    private void setupGoogleSignIn() {
         // Configure sign-in to request the user's ID, email address, and basic
 // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
 
-
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-
         // Set the dimensions of the sign-in button.
         SignInButton signInButton = findViewById(R.id.sign_in_button);
-        signInButton.setOnClickListener(this);
         signInButton.setSize(SignInButton.SIZE_ICON_ONLY);
     }
 
-    private void showMoveToLoginSnackbar() {
-        Snackbar snackbar = Snackbar
-                .make(parentScroll, "Already have an account?", Snackbar.LENGTH_INDEFINITE)
-                .setAction("Sign in", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                    }
-                });
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        snackbar.show();
+    private void initViewModel() {
+        ApplicationViewModelFactory applicationViewModelFactory = new ApplicationViewModelFactory(getApplication());
+        signUpViewModel = new ViewModelProvider(this, applicationViewModelFactory).get(SignUpViewModel.class);
     }
-
 
     private void askUserToAddPhoto() {
         TapTargetView.showFor(this,                 // `this` is an Activity
@@ -144,147 +193,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void onTargetClick(TapTargetView view) {
                         super.onTargetClick(view);
-                        Intent intent = new Intent();
-                        intent.setType("image/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+                        openImageChooser();
                     }
                 });
-    }
-
-    private void checkUserNameAndEmailAndPassword() {
-
-        emailEditText = findViewById(R.id.emailEditText);
-        passwordEditText = findViewById(R.id.passwordEditText);
-        userNameEditText = findViewById(R.id.userNameEditText);
-        userName = userNameEditText.getText().toString().trim();
-        email = emailEditText.getText().toString().trim();
-        final String password = passwordEditText.getText().toString().trim();
-
-        String fillhere = getResources().getString((R.string.fillhere_signuplogin_error));
-        if (userName.isEmpty() || userName.equals(" "))
-            userNameEditText.setError(fillhere);
-        else if (email.isEmpty() || email.equals(" "))
-            emailEditText.setError(fillhere);
-        else if (password.isEmpty() || password.equals(" "))
-            passwordEditText.setError(fillhere);
-        else
-            auth(email, password);
-    }
-
-    private void auth(String email, String password) {
-        final ConstraintLayout constraintLayout = findViewById(R.id.constraint);
-        constraintLayout.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-        mAuth = FirebaseAuth.getInstance();
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // createUser success, save user data in db and update ui
-                            String uid = mAuth.getCurrentUser().getUid();
-                            saveUserInfoInRealtimeDb(uid).observe(SignUpActivity.this, new Observer<Boolean>() {
-                                @Override
-                                public void onChanged(Boolean isDataUploadedSuccessfully) {
-                                    if (isDataUploadedSuccessfully) {
-                                        FancyToast.makeText(SignUpActivity.this, "Registration successful.", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
-                                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-                                    } else {
-                                        constraintLayout.setVisibility(View.GONE);
-                                        progressBar.setVisibility(View.GONE);
-                                        FancyToast.makeText(SignUpActivity.this, "Error happened while signing up , Check connection and retry.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-
-                                    }
-                                }
-                            });
-
-
-                        } else {
-
-                            // If sign in fails, display a message to the user.
-                            constraintLayout.setVisibility(View.GONE);
-                            progressBar.setVisibility(View.GONE);
-                            FancyToast.makeText(SignUpActivity.this, "Sign up failed with this email and password.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-
-                        }
-
-
-                    }
-                });
-    }
-
-
-    private LiveData<Boolean> saveUserInfoInRealtimeDb(final String uid) {
-        final MutableLiveData<Boolean> load = new MutableLiveData();
-
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference("users");
-
-        if (imageUri != null) {            //uploadImage to firebase storage then upload data to realtime db
-            newUser = new User(uid, userName, email, imageUri.getLastPathSegment());
-
-            final StorageReference imagesRef = FirebaseStorage.getInstance().getReference().child("images/" + imageUri.getLastPathSegment());
-            imagesRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    myRef.child(uid).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.i(TAG, "onSuccess: ");
-                            load.setValue(true);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.i(TAG, "onFailure: " + e.getMessage());
-                            load.setValue(false);
-                        }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    load.setValue(false);
-                }
-            });
-
-
-        } else {//user didnt select image only upload data to realtime db
-            newUser = new User(uid, userName, email, null);
-            myRef.child(uid).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Log.i(TAG, "onSuccess: ");
-                    load.setValue(true);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.i(TAG, "onFailure: " + e.getMessage());
-                    load.setValue(false);
-                }
-            });
-        }
-
-
-        return load;
-    }
-
-
-    private void selectPhoto() {
-        profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-            }
-        });
-
-
+        //update shared pref value
+        signUpViewModel.updateIsFirstSignUpShowing();
     }
 
     @Override
@@ -298,106 +211,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         if (requestCode == RC_SIGN_IN) {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            signUpViewModel.handleGoogleSignIn(data);
         }
 
-    }
-
-    public void onStart() {
-        super.onStart();
-
-    }
-
-
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            // Signed in successfully, show authenticated UI.
-            updateUI(account);
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
-        }
-    }
-
-
-    private void updateUI(GoogleSignInAccount account) {
-        if (account == null) {
-            //ask user to login
-            Log.i(TAG, "updateUI: account is null");
-            FancyToast.makeText(SignUpActivity.this, "Error signing in with google account ,\n please sign up with Gym master account instead.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-        } else {
-
-            //user already added his google account
-            /**live data to observe and return when user data is saved */
-            addGoogleUserToDB(account).observe(this, new Observer<Boolean>() {
-                @Override
-                public void onChanged(Boolean aBoolean) {
-                    if (aBoolean) {
-                        /**executes if account was added to db or not added if already existed*/
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        FancyToast.makeText(SignUpActivity.this, "Login Successful.", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
-
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        /**onCancelled called when adding or checking if google account is in db*/
-                        FancyToast.makeText(SignUpActivity.this, "Error signing in with google account ,\n please login with Gym master account instead.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-                    }
-                }
-            });
-
-        }
-    }
-
-    private LiveData<Boolean> addGoogleUserToDB(final GoogleSignInAccount account) {
-        final MutableLiveData<Boolean> load = new MutableLiveData<>();
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference("users");
-        final User newUser;
-
-        newUser = new User(account.getId(), account.getDisplayName(), account.getEmail(),
-                account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
-
-        Log.i(TAG, "addGoogleUserToDB: " + account.getEmail());
-
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChild(account.getId())) {
-                    myRef.child(account.getId()).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            load.setValue(true);
-                        }
-                    });
-                } else {
-                    load.setValue(true);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                load.setValue(false);
-            }
-        });
-
-        return load;
-    }
-
-    @Override
-    public void onClick(View view) {
-        /**google sign in clicked*/
-        if (view.getId() == R.id.sign_in_button) {
-            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent, RC_SIGN_IN);
-
-        }
     }
 
 

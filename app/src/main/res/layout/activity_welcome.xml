@@ -7,7 +7,7 @@
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraint"
+        android:id="@+id/semiTransparentBackgroundImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

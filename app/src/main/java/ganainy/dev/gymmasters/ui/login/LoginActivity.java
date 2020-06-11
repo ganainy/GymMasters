@@ -143,7 +143,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void checkEmailAndPassword() {
 
         emailEditText = findViewById(R.id.emailEditText);
-        String fillhere = getResources().getString((R.string.fillhere_signuplogin_error));
+        String fillhere = getResources().getString((R.string.username_hint_error));
         if (emailEditText.getText().toString().trim().isEmpty() || emailEditText.getText().toString().trim().equals(" "))
             emailEditText.setError(fillhere);
         else if (passwordEditText.getText().toString().trim().isEmpty() || passwordEditText.getText().toString().trim().equals(" "))
@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void loginToFirebase() {
         //show fake progressbar to simulate loading
-        final ConstraintLayout constraintLayout = findViewById(R.id.constraint);
+        final ConstraintLayout constraintLayout = findViewById(R.id.semiTransparentBackgroundImage);
         constraintLayout.setVisibility(View.VISIBLE);
 
         mAuth = FirebaseAuth.getInstance();

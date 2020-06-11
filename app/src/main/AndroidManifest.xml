@@ -81,7 +81,6 @@
         <activity
             android:name="ganainy.dev.gymmasters.ui.signup.SignUpActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
             android:theme="@style/NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
@@ -96,9 +95,7 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="b75725b971627a73cfd1e4836764a2839975690d" />
+
     </application>
 
 </manifest>
