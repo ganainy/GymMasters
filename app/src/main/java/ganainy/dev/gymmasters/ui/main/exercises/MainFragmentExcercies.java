@@ -21,6 +21,17 @@ import butterknife.OnClick;
 public class MainFragmentExcercies extends Fragment {
 
 
+    public static final String SELECTED_MUSCLE = "selectedMuscle";
+    public static final String TRICEPS = "triceps";
+    public static final String CHEST = "chest";
+    public static final String SHOULDER = "shoulder";
+    public static final String BICEPS = "biceps";
+    public static final String ABS = "abs";
+    public static final String BACK = "back";
+    public static final String CARDIO = "cardio";
+    public static final String LOWERLEG = "lowerleg";
+    public static final String SHOWALL = "showall";
+
     public MainFragmentExcercies() {
         // Required empty public constructorp
     }
@@ -39,42 +50,42 @@ public class MainFragmentExcercies extends Fragment {
     @OnClick(R.id.triceps)
     void q() {
         Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra("triceps", "triceps");
+        intent.putExtra(SELECTED_MUSCLE, TRICEPS);
         startActivity(intent);
     }
 
     @OnClick(R.id.chest)
     void qq() {
         Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra("chest", "chest");
+        intent.putExtra(SELECTED_MUSCLE, CHEST);
         startActivity(intent);
     }
 
     @OnClick(R.id.shoulders)
     void qqq() {
         Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra("shoulders", "shoulders");
+        intent.putExtra(SELECTED_MUSCLE, SHOULDER);
         startActivity(intent);
     }
 
     @OnClick(R.id.biceps)
     void qqqq() {
         Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra("biceps", "biceps");
+        intent.putExtra(SELECTED_MUSCLE, BICEPS);
         startActivity(intent);
     }
 
     @OnClick(R.id.abs)
     void qqqqq() {
         Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra("abs", "abs");
+        intent.putExtra(SELECTED_MUSCLE, ABS);
         startActivity(intent);
     }
 
     @OnClick(R.id.back)
     void qqqqqq() {
         Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra("back", "back");
+        intent.putExtra(SELECTED_MUSCLE, BACK);
         startActivity(intent);
     }
 
@@ -83,21 +94,21 @@ public class MainFragmentExcercies extends Fragment {
     @OnClick(R.id.cardio)
     void qqqqqqqqqq() {
         Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra("cardio", "cardio");
+        intent.putExtra(SELECTED_MUSCLE, CARDIO);
         startActivity(intent);
     }
 
     @OnClick(R.id.leg)
     void qqqqqqqqqqq() {
         Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra("leg", "leg");
+        intent.putExtra(SELECTED_MUSCLE, LOWERLEG);
         startActivity(intent);
     }
 
     @OnClick(R.id.showall)
     void qqqqqqqqqqqq() {
         Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra("showall", "showall");
+        intent.putExtra(SELECTED_MUSCLE, SHOWALL);
         startActivity(intent);
     }
 

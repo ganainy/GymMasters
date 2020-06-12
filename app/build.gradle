@@ -96,5 +96,6 @@ dependencies {
     implementation "androidx.core:core-ktx:+"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
+    //shimmer for loading ui
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
 }

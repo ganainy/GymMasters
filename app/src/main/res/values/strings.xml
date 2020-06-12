@@ -43,6 +43,7 @@
     <string name="connection_lost">Internet connection lost</string>
     <string name="app_need_network">App needs internet connection to fully utilize its features</string>
     <string name="ok">OK</string>
+    <string name="no_exercises_found">No exercises found</string>
 
 
 </resources>

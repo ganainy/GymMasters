@@ -1,8 +1,6 @@
 package ganainy.dev.gymmasters.ui.posts;
 
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,7 +20,7 @@ import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.SharedExerciseWorkout;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.ui.findUser.FindUsersActivity;
-import ganainy.dev.gymmasters.utils.MyConstant;
+import ganainy.dev.gymmasters.utils.MyConstants;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,6 +37,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ganainy.dev.gymmasters.utils.NetworkUtil;
+
+import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
 
 public class PostsActivity extends AppCompatActivity {
     private static final String TAG = "PostsActivity";
@@ -86,7 +86,7 @@ public class PostsActivity extends AppCompatActivity {
     }
 
     private void getFollowingUid() {
-        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(MyConstant.loggedInUserId);
+        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(MyConstants.loggedInUserId);
         users.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -131,7 +131,7 @@ public class PostsActivity extends AppCompatActivity {
 
 
 
-        DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference("excercises");
+        DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference(EXERCISES);
         exerciseNode.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

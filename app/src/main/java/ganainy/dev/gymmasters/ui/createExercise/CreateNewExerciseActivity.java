@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
-import ganainy.dev.gymmasters.utils.MyConstant;
+import ganainy.dev.gymmasters.utils.MyConstants;
 import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.google.android.material.snackbar.Snackbar;
 import com.shashank.sony.fancytoastlib.FancyToast;
@@ -30,6 +30,16 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.ABS;
+import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.BACK;
+import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.BICEPS;
+import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.CARDIO;
+import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.CHEST;
+import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.LOWERLEG;
+import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.SHOULDER;
+import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.SHOWALL;
+import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.TRICEPS;
 
 public class CreateNewExerciseActivity extends AppCompatActivity {
     private static final String TAG = "CreateNewExerciseActivi";
@@ -64,7 +74,6 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
     ImageView addExercisePhoto2;
     @BindView(R.id.parentScroll)
     ScrollView parentScroll;
-
     @BindView(R.id.loadingLayout)
     ConstraintLayout loadingLayout;
     @BindView(R.id.circle_progress)
@@ -102,7 +111,7 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
             final Exercise exercise = new Exercise(nameEditText.getText().toString(), newExerciseSelectedMuscle, executionEditText.getText().toString()
                     , newExerciseMechanic, imageUri.getLastPathSegment() + timeMilli, image2Uri.getLastPathSegment() + timeMilli);
 
-            exercise.setCreatorId(MyConstant.loggedInUserId);
+            exercise.setCreatorId(MyConstants.loggedInUserId);
 
             if (!additionalNotesEditText.getText().equals(""))
                 exercise.setAdditional_notes(additionalNotesEditText.getText().toString());
@@ -255,8 +264,36 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
         bodyPartSpinner.setAdapter(arrayAdapter);
         bodyPartSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                newExerciseSelectedMuscle = muscles[i];
+            public void onItemSelected(AdapterView<?> adapterView, View view, int selectedIndex, long l) {
+                switch (selectedIndex){
+                    case 1:
+                    newExerciseSelectedMuscle = CHEST;
+                    break;
+                    case 2:
+                        newExerciseSelectedMuscle = TRICEPS;
+                        break;
+                    case 3:
+                        newExerciseSelectedMuscle = SHOULDER;
+                        break;
+                    case 4:
+                        newExerciseSelectedMuscle = BICEPS;
+                        break;
+                    case 5:
+                        newExerciseSelectedMuscle = ABS;
+                        break;
+                    case 6:
+                        newExerciseSelectedMuscle = BACK;
+                        break;
+                    case 7:
+                        newExerciseSelectedMuscle = LOWERLEG;
+                        break;
+                    case 8:
+                        newExerciseSelectedMuscle = CARDIO;
+                        break;
+                    case 9:
+                        newExerciseSelectedMuscle = SHOWALL;
+                        break;
+                }
             }
 
             @Override

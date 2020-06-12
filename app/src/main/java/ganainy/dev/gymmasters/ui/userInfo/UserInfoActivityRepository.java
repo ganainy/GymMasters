@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Workout;
-import ganainy.dev.gymmasters.utils.MyConstant;
+import ganainy.dev.gymmasters.utils.MyConstants;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +20,8 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
 
 public class UserInfoActivityRepository {
     private static final String TAG = "UserInfoActivityReposit";
@@ -42,7 +44,7 @@ public class UserInfoActivityRepository {
         final MutableLiveData<List<Exercise>> load = new MutableLiveData<>();
         exerciseList.clear();
 
-        DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference("excercises");
+        DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference(EXERCISES);
         exerciseNode.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -155,7 +157,7 @@ public class UserInfoActivityRepository {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                if (dataSnapshot1.getValue().equals(MyConstant.loggedInUserId)) {
+                                if (dataSnapshot1.getValue().equals(MyConstants.loggedInUserId)) {
                                     //this means logged in user already subscribed
                                     isSubscribed = true;
                                     break;
@@ -225,8 +227,8 @@ public class UserInfoActivityRepository {
         ratings.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(MyConstant.loggedInUserId)) {
-                    load.setValue((long) dataSnapshot.child(MyConstant.loggedInUserId).getValue());
+                if (dataSnapshot.hasChild(MyConstants.loggedInUserId)) {
+                    load.setValue((long) dataSnapshot.child(MyConstants.loggedInUserId).getValue());
                 }
             }
 
@@ -283,7 +285,7 @@ public class UserInfoActivityRepository {
 
     public MutableLiveData<Boolean> setRate(Integer rating, String profileId) {
         final MutableLiveData<Boolean> load = new MutableLiveData<>();
-        FirebaseDatabase.getInstance().getReference("users").child(profileId).child("Ratings").child(MyConstant.loggedInUserId)
+        FirebaseDatabase.getInstance().getReference("users").child(profileId).child("Ratings").child(MyConstants.loggedInUserId)
                 .setValue(rating).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

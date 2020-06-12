@@ -21,6 +21,8 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
+
 public class CreateNewExerciseViewModel extends ViewModel {
     private static final String TAG = "CreateNewExerciseViewMo";
 
@@ -28,7 +30,7 @@ public class CreateNewExerciseViewModel extends ViewModel {
         final MutableLiveData<Boolean> load = new MutableLiveData<>();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        reference.child("excercises").addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.child(EXERCISES).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot dsBig : dataSnapshot.getChildren()) {
@@ -59,7 +61,7 @@ public class CreateNewExerciseViewModel extends ViewModel {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
 
-        Task<Void> excercises = reference.child("excercises").child(exercise.getBodyPart().toLowerCase()).push().setValue(exercise);
+        Task<Void> excercises = reference.child(EXERCISES).child(exercise.getBodyPart().toLowerCase()).push().setValue(exercise);
         excercises.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

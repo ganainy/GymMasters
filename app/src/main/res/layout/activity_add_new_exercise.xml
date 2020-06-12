@@ -325,7 +325,7 @@
         <!--loading layout-->
         <include
             android:id="@+id/loadingLayout"
-            layout="@layout/loading_layout"
+            layout="@layout/loading_layout_shimmer"
             android:visibility="gone" />
 
     </FrameLayout>

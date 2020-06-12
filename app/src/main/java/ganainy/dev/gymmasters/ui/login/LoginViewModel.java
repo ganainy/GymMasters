@@ -2,8 +2,6 @@ package ganainy.dev.gymmasters.ui.login;
 
 import android.app.Application;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
@@ -29,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.utils.Event;
-import ganainy.dev.gymmasters.utils.MyConstant;
+import ganainy.dev.gymmasters.utils.MyConstants;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 
 public class LoginViewModel extends ViewModel {
@@ -86,7 +84,7 @@ public class LoginViewModel extends ViewModel {
                     isLoadingLiveData.setValue(false);
                     //todo fix this singleton with shared pref and clear shared pref on logout -
                     // set loggedInUserId value which will be used later
-                    MyConstant.loggedInUserId = mAuth.getUid();
+                    MyConstants.loggedInUserId = mAuth.getUid();
                     navigateToMainLiveData.setValue(new Event<>(true));
                 })
                 .addOnFailureListener(e -> {

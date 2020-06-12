@@ -55,9 +55,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
+
 public class SpecificExerciseActivity extends YouTubeBaseActivity {
     private static final String TAG = "SpecificActivityh";
-
 
     @BindView(R.id.exerciseImageView)
     ImageView exerciseImageView;
@@ -67,7 +68,6 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
 
     @BindView(R.id.loadingImageProgressBar)
     ProgressBar loadingImageProgressBar;
-
 
     @BindView(R.id.nameTextView)
     TextView nameTextView;
@@ -129,7 +129,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
 
 
         /**only show delete button if it's exercise of logged in user(user coming from main fragment home adapter)*/
-        if (getIntent().hasExtra("ownExercise")) {
+        if (getIntent().hasExtra("ownExercise")) {//todo replace this with method to get logged user id and compare with exercise creator id
             boolean ownExercise = getIntent().getBooleanExtra("ownExercise", false);
             if (ownExercise) {
                 deleteExerciseButton.setVisibility(View.VISIBLE);
@@ -194,7 +194,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
 
     private void downloadExercise(final CallbackInterface callbackInterface) {
         exercise = new Exercise();
-        DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference("excercises").child(targetMuscle);
+        DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference(EXERCISES).child(targetMuscle);
         exerciseNode.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -494,7 +494,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
         String bodyPart = exercise.getBodyPart().toLowerCase();
         final String previewPhoto1 = exercise.getPreviewPhoto1();
         final String previewPhoto2 = exercise.getPreviewPhoto2();
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("excercises").child(bodyPart);
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(EXERCISES).child(bodyPart);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

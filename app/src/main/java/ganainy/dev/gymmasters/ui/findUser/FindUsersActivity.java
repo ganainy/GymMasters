@@ -1,7 +1,5 @@
 package ganainy.dev.gymmasters.ui.findUser;
 
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.User;
-import ganainy.dev.gymmasters.utils.MyConstant;
+import ganainy.dev.gymmasters.utils.MyConstants;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -93,7 +91,7 @@ public class FindUsersActivity extends AppCompatActivity {
 
 
     private void loadFollowing() {
-        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(MyConstant.loggedInUserId);
+        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(MyConstants.loggedInUserId);
         users.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -171,7 +169,7 @@ public class FindUsersActivity extends AppCompatActivity {
 
     private void loadFollowers() {
 
-        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(MyConstant.loggedInUserId);
+        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(MyConstants.loggedInUserId);
         users.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -252,7 +250,7 @@ public class FindUsersActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds.child("id").getValue().equals(MyConstant.loggedInUserId)) {
+                    if (ds.child("id").getValue().equals(MyConstants.loggedInUserId)) {
                         //don't show this user in list since it's the logged in user
                     } else {
                         User user = new User();

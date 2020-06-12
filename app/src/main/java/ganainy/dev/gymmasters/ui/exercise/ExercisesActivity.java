@@ -2,47 +2,49 @@ package ganainy.dev.gymmasters.ui.exercise;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import ganainy.dev.gymmasters.R;
-import ganainy.dev.gymmasters.shared_adapters.ExerciseAdapter;
-import ganainy.dev.gymmasters.models.app_models.Exercise;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.shashank.sony.fancytoastlib.FancyToast;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ganainy.dev.gymmasters.R;
+import ganainy.dev.gymmasters.shared_adapters.ExercisesAdapter;
 import ganainy.dev.gymmasters.ui.specificExercise.SpecificExerciseActivity;
+import ganainy.dev.gymmasters.utils.MiscellaneousUtils;
+
+import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.SELECTED_MUSCLE;
+import static ganainy.dev.gymmasters.ui.main.home.MainFragmentHome.LOGGED_USER_ID;
 
 public class ExercisesActivity extends AppCompatActivity {
     private static final String TAG = "ExercisesActivity";
-    ExerciseActivityViewModel exerciseActivityViewModel;
-    String muscle;
+    public static final String EXERCISE = "exercise";
+    ExercisesViewModel exercisesViewModel;
 
     @BindView(R.id.collapse_toolbar)
     CollapsingToolbarLayout htab_collapse_toolbar;
-
     @BindView(R.id.htab_header)
-    ImageView htab_header;
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
+    ImageView collapsingToolbarImage;
     @BindView(R.id.search_view)
     SearchView searchView;
-    private ExerciseAdapter exerciseAdapter;
-    private RecyclerView recyclerView;
+    @BindView(R.id.loading_layout_shimmer)
+    ShimmerFrameLayout shimmerLoadingLayout;
+    @BindView(R.id.empty_layout)
+    ConstraintLayout emptyLayout;
+    @BindView(R.id.exercisesRecyclerView)
+    RecyclerView exercisesRecyclerView;
+
+
+    private ExercisesAdapter exercisesAdapter;
 
 
     @Override
@@ -50,98 +52,65 @@ public class ExercisesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercises);
         ButterKnife.bind(this);
+        setupRecycler();
+        setupSearchView();
 
+        exercisesViewModel = new ViewModelProvider(this).get(ExercisesViewModel.class);
 
-        recyclerView = findViewById(R.id.exerciseRecyclerView);
+        if (getIntent().hasExtra(LOGGED_USER_ID)) {
+            /*show exercises created by logged in user*/
+            collapsingToolbarImage.setImageResource(R.drawable.runblue);
+            exercisesViewModel.downloadLoggedUserExercises(getIntent().getStringExtra(LOGGED_USER_ID));
+        } else if (getIntent().hasExtra(SELECTED_MUSCLE)) {
+            String selectedMuscle = getIntent().getStringExtra(SELECTED_MUSCLE);
+            setTabHeaderImage(selectedMuscle);
+            exercisesViewModel.getSelectedMuscleExercises(selectedMuscle);
+        }
 
-
-        /**set header image based on selected muscle from previous fragment*/
-        setTabHeaderIamge();
-
-
-        exerciseActivityViewModel = ViewModelProviders.of(this).get(ExerciseActivityViewModel.class);
-
-        exerciseActivityViewModel.getExercises(muscle).observe(this, new Observer<List<Exercise>>() {
-            @Override
-            public void onChanged(@Nullable List<Exercise> exercises) {
-                /**setting up recycler here without images since image loading might take a while*/
-                setupRecycler(exercises);
-                exerciseActivityViewModel.downloadExercisesImages(exercises).observe(ExercisesActivity.this, new Observer<List<Exercise>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Exercise> exercises) {
-                        /** setting up recycler again with image*/
-                        setupRecycler(exercises);
-                    }
-                });
-            }
+        exercisesViewModel.getExerciseListLiveData().observe(this, exercises -> {
+            exercisesAdapter.setData(exercises);
+            exercisesAdapter.notifyDataSetChanged();
         });
 
-    }
+        exercisesViewModel.getLoadingStateLiveData().observe(this, this::handleLoadingUi);
 
-    private void setTabHeaderIamge() {
-
-        if (getIntent().hasExtra("triceps")) {
-            htab_header.setImageResource(R.drawable.triceps);
-            this.muscle = "triceps";
-
-        } else if (getIntent().hasExtra("chest")) {
-            htab_header.setImageResource(R.drawable.chest);
-            this.muscle = "chest";
-            Log.i(TAG, "setTabHeaderIamge: chest");
-        } else if (getIntent().hasExtra("shoulders")) {
-            htab_header.setImageResource(R.drawable.shoulder);
-            this.muscle = "shoulders";
-            Log.i(TAG, "setTabHeaderIamge: shoulders");
-        } else if (getIntent().hasExtra("biceps")) {
-            htab_header.setImageResource(R.drawable.biceps);
-            this.muscle = "biceps";
-            Log.i(TAG, "setTabHeaderIamge: biceps");
-        } else if (getIntent().hasExtra("abs")) {
-            htab_header.setImageResource(R.drawable.abs);
-            this.muscle = "abs";
-        } else if (getIntent().hasExtra("back")) {
-            htab_header.setImageResource(R.drawable.back);
-            this.muscle = "back";
-        } else if (getIntent().hasExtra("cardio")) {
-            htab_header.setImageResource(R.drawable.cardio);
-            this.muscle = "cardio";
-        } else if (getIntent().hasExtra("leg")) {
-            htab_header.setImageResource(R.drawable.lowerleg);
-            this.muscle = "leg";
-        } else if (getIntent().hasExtra("showall")) {
-            htab_header.setImageResource(R.drawable.showall);
-            this.muscle = "showall";
-        }
+        exercisesViewModel.getEmptyStateLiveData().observe(this, this::handleEmptyUi);
 
     }
 
-
-    public void handleClick(Exercise exercise) {
-
-        Intent intent = new Intent(ExercisesActivity.this, SpecificExerciseActivity.class);
-        /**parcelable have size limit so i won't pass image bitmap with the exercise*/
-        exercise.setPreviewBitmap(null);
-        intent.putExtra("exercise", exercise);
-        startActivity(intent);
-
+    private void handleEmptyUi(Boolean isEmpty) {
+        if (isEmpty) emptyLayout.setVisibility(View.VISIBLE);
+        else emptyLayout.setVisibility(View.GONE);
     }
 
-
-
-    private void setupRecycler(List<Exercise> exerciseList) {
-
-        progressBar.setVisibility(View.GONE);
-
-        if (exerciseList.size() == 0) {
-            FancyToast.makeText(getApplicationContext(), "No exercises yet in this category", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+    private void handleLoadingUi(Boolean isLoading) {
+        if (isLoading) {
+            exercisesRecyclerView.setVisibility(View.GONE);
+            shimmerLoadingLayout.setVisibility(View.VISIBLE);
         } else {
-            exerciseAdapter = new ExerciseAdapter(this, exerciseList);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.setAdapter(exerciseAdapter);
-            setupSearchView();
+            exercisesRecyclerView.setVisibility(View.VISIBLE);
+            shimmerLoadingLayout.setVisibility(View.GONE);
         }
+    }
 
+
+    /**
+     * set header image based on selected muscle from previous fragment
+     */
+    private void setTabHeaderImage(String selectedMuscle) {
+        collapsingToolbarImage.setImageResource(MiscellaneousUtils.getImageId(this, selectedMuscle));
+    }
+
+
+    private void setupRecycler() {
+
+        exercisesAdapter = new ExercisesAdapter(this, exercise -> {
+            //handle click of certain exercise
+            Intent intent = new Intent(ExercisesActivity.this, SpecificExerciseActivity.class);
+            intent.putExtra(EXERCISE, exercise);
+            startActivity(intent);
+        });
+        exercisesRecyclerView.setAdapter(exercisesAdapter);
     }
 
     private void setupSearchView() {
@@ -149,32 +118,16 @@ public class ExercisesActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String queryString) {
-
-                exerciseAdapter.getFilter().filter(queryString);
+                exercisesAdapter.getFilter().filter(queryString);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String queryString) {
-
-                exerciseAdapter.getFilter().filter(queryString);
-
+                exercisesAdapter.getFilter().filter(queryString);
                 return false;
             }
         });
     }
 
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        recyclerView.setAdapter(null);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i(TAG, "onResume: ");
-        if (exerciseAdapter != null) recyclerView.setAdapter(exerciseAdapter);
-    }
 }

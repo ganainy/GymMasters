@@ -21,12 +21,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import ganainy.dev.gymmasters.R;
-import ganainy.dev.gymmasters.shared_adapters.ExerciseAdapter;
+import ganainy.dev.gymmasters.shared_adapters.ExercisesAdapter;
 import ganainy.dev.gymmasters.shared_adapters.WorkoutAdapter;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
-import ganainy.dev.gymmasters.utils.MyConstant;
+import ganainy.dev.gymmasters.utils.MyConstants;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -98,7 +98,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private User user;
     private Boolean isSubscribed;
     private Observer<Boolean> observer;
-    private ExerciseAdapter exerciseAdapter;
+    private ExercisesAdapter exercisesAdapter;
     private List<Workout> workoutListt = new ArrayList<>();
     private WorkoutAdapter workoutAdapter;
     private int rating;
@@ -224,16 +224,17 @@ public class UserInfoActivity extends AppCompatActivity {
 
 
     private void setupExerciseRecycler() {
-        if (exerciseListt.size() == 0) {
+        //todo add callback
+       /* if (exerciseListt.size() == 0) {
             FancyToast.makeText(this, "This user didn't create any custom exercises yet.", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
         } else {
-            exerciseAdapter = new ExerciseAdapter(this, exerciseListt, "userInfo");
+            exercisesAdapter = new ExercisesAdapter(this, exerciseListt);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             recyclerViewExercise.setLayoutManager(linearLayoutManager);
-            recyclerViewExercise.setAdapter(exerciseAdapter);
+            recyclerViewExercise.setAdapter(exercisesAdapter);
 
             recyclerViewExercise.requestFocus();
-        }
+        }*/
     }
 
     private void setupWorkoutRecycler() {
@@ -342,9 +343,9 @@ public class UserInfoActivity extends AppCompatActivity {
                 //add id of logged in user in followersUID in profile account
                 final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
                         .child(user.getId()).child("followersUID");
-                profile.push().setValue(MyConstant.loggedInUserId);
+                profile.push().setValue(MyConstants.loggedInUserId);
                 //add id of profile account in followingUID of logged in account
-                FirebaseDatabase.getInstance().getReference("users").child(MyConstant.loggedInUserId).child("followingUID")
+                FirebaseDatabase.getInstance().getReference("users").child(MyConstants.loggedInUserId).child("followingUID")
                         .push().setValue(user.getId());
                 //show toast
                 FancyToast.makeText(UserInfoActivity.this, "Follow successful", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
@@ -357,7 +358,7 @@ public class UserInfoActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot ds : dataSnapshot.getChildren())
-                            if (ds.getValue().equals(MyConstant.loggedInUserId)) {
+                            if (ds.getValue().equals(MyConstants.loggedInUserId)) {
 
                                 String key = ds.getKey();
                                 profile.child(key).removeValue();
@@ -372,7 +373,7 @@ public class UserInfoActivity extends AppCompatActivity {
                 });
                 //
                 final DatabaseReference followingUID = FirebaseDatabase.getInstance().
-                        getReference("users").child(MyConstant.loggedInUserId).child("followingUID");
+                        getReference("users").child(MyConstants.loggedInUserId).child("followingUID");
                 followingUID.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -433,7 +434,7 @@ public class UserInfoActivity extends AppCompatActivity {
         super.onResume();
         Log.i(TAG, "onResume: ");
         if (workoutAdapter != null) recyclerViewWorkout.setAdapter(workoutAdapter);
-        if (exerciseAdapter != null) recyclerViewExercise.setAdapter(exerciseAdapter);
+        if (exercisesAdapter != null) recyclerViewExercise.setAdapter(exercisesAdapter);
     }
 
 }

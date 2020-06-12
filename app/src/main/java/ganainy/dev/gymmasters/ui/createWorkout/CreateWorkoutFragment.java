@@ -27,7 +27,7 @@ import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.ui.main.MainActivity;
-import ganainy.dev.gymmasters.utils.MyConstant;
+import ganainy.dev.gymmasters.utils.MyConstants;
 import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -49,6 +49,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -266,7 +268,7 @@ public class CreateWorkoutFragment extends Fragment {
         };
 
 
-        FirebaseDatabase.getInstance().getReference("excercises").addChildEventListener(childEventListener);
+        FirebaseDatabase.getInstance().getReference(EXERCISES).addChildEventListener(childEventListener);
 
     }
 
@@ -314,7 +316,7 @@ public class CreateWorkoutFragment extends Fragment {
         workout.setDuration(durationEditText.getText().toString());
         workout.setLevel(newWorkoutLevel);
         workout.setPhotoLink("workoutImages/" + imageUri.getLastPathSegment() + timeMilli);
-        workout.setCreatorId(MyConstant.loggedInUserId);
+        workout.setCreatorId(MyConstants.loggedInUserId);
         /**save user id and date with workout*/
         String id = workoutRef.push().getKey();
         workout.setId(id);
