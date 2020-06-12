@@ -53,7 +53,7 @@ public class MainFragmentHome extends Fragment {
     Button viewMyWorkoutsButton;
     @BindView(R.id.name)
     TextView name;
-    @BindView(R.id.email)
+    @BindView(R.id.emailTextInputLayout)
     TextView email;
     @BindView(R.id.about_me_text)
     TextView aboutMeText;

@@ -16,7 +16,7 @@
     </style>
     <!--button style-->
     <style name="MyButtonStyle" parent="TextAppearance.AppCompat.Widget.Button">
-        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:background">@drawable/button_selector_green_rect</item>
         <item name="android:textColor">@color/textwhite</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">16sp</item>
@@ -48,4 +48,14 @@
         <item name="android:textColor">@color/textblack</item>
         <item name="android:textSize">28sp</item>
     </style>
+
+
+<!--text appearance of textinput layout error-->
+    <style name="ErrorText" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/red</item>
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/proximanovaregular</item>
+    </style>
+
+
 </resources>

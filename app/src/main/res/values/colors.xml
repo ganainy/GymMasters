@@ -8,8 +8,6 @@
     <color name="blue">#293859</color>
     <color name="beige">#cccccc</color>
     <color name="activity_bg">#EBEBEB</color>
-    <color name="dark_blue">#293859</color>
-    <color name="cardview_light">#E6E7E7</color>
     <color name="grey">#E9EAEE</color>
     <!--shadow of text-->
     <color name="light_font">#FBFBFB</color>

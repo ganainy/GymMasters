@@ -12,31 +12,24 @@
     <string name="sign_up_password_edit_text_hint">Password</string>
     <string name="sign_up_sign_up_button">Sign up</string>
     <string name="username_hint_error">Username can\'t be empty</string>
-    <string name="password_hint_error">Password can\'t be empty</string>
-    <string name="email_hint_error">Email can\'t be empty</string>
-    <string name="don_t_have_an_account">Don\'t have an account?</string>
-    <string name="sign_up">Sign up</string>
+    <string name="password_hint_error">Password should be six or more characters</string>
+    <string name="email_hint_error">Invalid email</string>
 
 
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
 
-    <string name="sign_out">Sign out</string>
     <string name="title_activity_exercises">ExercisesActivity</string>
     <string name="title_activity_timer">TimerActivity</string>
     <string name="about_me">About me</string>
-    <string name="title_activity_maps">Map</string>
     <string name="signup_failed">Sign up failed with this email and password.</string>
-    <string name="registeration_successful">Registration successful.</string>
     <string name="error_signing_up">Error happened while signing up, Check connection and retry.</string>
-    <string name="already_have_an_account">Already have an account?</string>
     <string name="sign_in">Sign in</string>
     <string name="login_successful">Login Successful.</string>
     <string name="use_gym_master_account">Error signing in with google account ,\n please login with Gym master account instead.</string>
+    <string name="or">-OR-</string>
+    <string name="credentials_error">Error signing in, check your credentials</string>
 
 
 </resources>

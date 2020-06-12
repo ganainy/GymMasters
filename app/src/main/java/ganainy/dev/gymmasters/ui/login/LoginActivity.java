@@ -4,40 +4,42 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.util.Pair;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.ui.main.MainActivity;
 import ganainy.dev.gymmasters.ui.signup.SignUpActivity;
-import ganainy.dev.gymmasters.utils.MyConstant;
+import ganainy.dev.gymmasters.utils.ApplicationViewModelFactory;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,52 +48,134 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 101;
-    public NetworkChangeReceiver receiver;
-    Boolean bl = true;
-    @BindView(R.id.parentScroll)
     ScrollView parentScroll;
-    private FirebaseAuth mAuth;
     private TextInputEditText emailEditText, passwordEditText;
-    private Button login;
+    private TextInputLayout emailTextInputLayout,passwordTextInputLayout;
+    private Button signIn, signUp;
     private GoogleSignInClient mGoogleSignInClient;
+    private ImageView semiTransparentBackgroundImage;
+    private ProgressBar progressBar;
+
+    private LoginViewModel loginViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
-        login = findViewById(R.id.loginButton);
-        passwordEditText = findViewById(R.id.passwordEditText);
-        findViewById(R.id.sign_in_button).setOnClickListener(this);
-        checkInternet();
 
+        initViewModel();
 
-        showMoveToSignUpSnackbar();
+        initViews();
 
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkEmailAndPassword();
+        loginViewModel.getEmailError().observe(this, errorHint ->
+                {
+                    String errorHintContentIfNotHandled = errorHint.getContentIfNotHandled();
+                    if(errorHintContentIfNotHandled!=null&&errorHintContentIfNotHandled.isEmpty()){
+                        emailTextInputLayout.setError("");
+                    }else if(errorHintContentIfNotHandled != null){
+                        emailTextInputLayout.setError(errorHintContentIfNotHandled);
+                    }
+                }
+        );
+
+        loginViewModel.getPasswordError().observe(this, errorHint ->
+                {
+                    String errorHintContentIfNotHandled = errorHint.getContentIfNotHandled();
+                    if(errorHintContentIfNotHandled!=null&&errorHintContentIfNotHandled.isEmpty()){
+                        passwordTextInputLayout.setError("");
+                    }else if(errorHintContentIfNotHandled != null){
+                        passwordTextInputLayout.setError(errorHintContentIfNotHandled);
+                    }
+                }
+        );
+
+        loginViewModel.getIsLoadingLiveData().observe(this, isLoading -> {
+            if (isLoading) {
+                semiTransparentBackgroundImage.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
+            } else {
+                semiTransparentBackgroundImage.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+
+        loginViewModel.getToastLiveData().observe(this, pairEvent -> {
+            if (!pairEvent.getHasBeenHandled()) {
+                Pair<Integer, Integer> toastPair = pairEvent.getContentIfNotHandled();
+                Toast.makeText(
+                        LoginActivity.this,
+                        getApplication().getString(toastPair.first),
+                        toastPair.second)
+                        .show();
+            }
+        });
+
+        loginViewModel.getNavigateToMainLiveData().observe(this, shouldNavigateToMainActivity -> {
+            if (!shouldNavigateToMainActivity.getHasBeenHandled()) {
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
             }
         });
 
 
-        /**after pressing done on keyboard after writing password it will login*/
-        loginWithDone();
+        loginViewModel.getIsGoogleUserDataUploadedLiveData().observe(this, isGoogleUserDataUploaded -> {
+            if (isGoogleUserDataUploaded) {
+                //executes if account was added to db or not added if already existed
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                finish();
+            } else {
+                //onCancelled called when adding or checking if google account is in db*/
+                Toast.makeText(LoginActivity.this, R.string.use_gym_master_account, Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+    }
+
+    private void initViewModel() {
+        ApplicationViewModelFactory applicationViewModelFactory = new ApplicationViewModelFactory(getApplication());
+        loginViewModel = new ViewModelProvider(this, applicationViewModelFactory).get(LoginViewModel.class);
+    }
+
+    private void initViews() {
+        parentScroll = findViewById(R.id.parentScroll);
+        signIn = findViewById(R.id.loginButton);
+        signUp = findViewById(R.id.signUpButton);
+        passwordEditText = findViewById(R.id.passwordEditText);
+        emailEditText=findViewById(R.id.emailEditText);
+        emailTextInputLayout=findViewById(R.id.emailTextInputLayout);
+        passwordTextInputLayout=findViewById(R.id.passwordTextInputLayout);
+        semiTransparentBackgroundImage=findViewById(R.id.semiTransparentBackgroundImage);
+        progressBar=findViewById(R.id.progressBar);
+
+
+        SignInButton googleSignInButton = findViewById(R.id.sign_in_button);
+        googleSignInButton.setOnClickListener(v -> {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+        });
+
+
+        signUp.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), SignUpActivity.class)));
+
+        signIn.setOnClickListener(v ->loginViewModel.authenticateUser());
+
+
+        //softkeyboard done action on password initiates login
+        passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        loginViewModel.authenticateUser();
+                    }
+                    return false;
+                }
+        );
 
 
         // Configure sign-in to request the user's ID, email address, and basic
-// profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
-                //.requestIdToken("224559312783-78jrnd8t87e8vovvmveshiaad9p4bb54.apps.googleusercontent.com")
                 .build();
 
 
@@ -100,190 +184,57 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
         // Set the dimensions of the sign-in button.
-        SignInButton signInButton = findViewById(R.id.sign_in_button);
-        signInButton.setSize(SignInButton.SIZE_ICON_ONLY);
-    }
+        SignInButton signInButton = (SignInButton) googleSignInButton;
+        signInButton.setSize(SignInButton.SIZE_WIDE);
 
-    private void showMoveToSignUpSnackbar() {
-        Snackbar snackbar = Snackbar
-                .make(parentScroll, "Don't have an account?", Snackbar.LENGTH_INDEFINITE)
-                .setAction("Sign up", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
-                    }
-                });
-        snackbar.getView().setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        snackbar.show();
-
-    }
-
-
-
-
-
-    private void loginWithDone() {
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    /* Write your logic here that will be executed when user taps next button */
-                    checkEmailAndPassword();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                    handled = true;
-                }
-                return handled;
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                loginViewModel.validatePassword(s.toString());
             }
         });
 
-    }
+        emailEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
 
-    private void checkEmailAndPassword() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-        emailEditText = findViewById(R.id.emailEditText);
-        String fillhere = getResources().getString((R.string.username_hint_error));
-        if (emailEditText.getText().toString().trim().isEmpty() || emailEditText.getText().toString().trim().equals(" "))
-            emailEditText.setError(fillhere);
-        else if (passwordEditText.getText().toString().trim().isEmpty() || passwordEditText.getText().toString().trim().equals(" "))
-            passwordEditText.setError(fillhere);
-        else
-            loginToFirebase();
-    }
+            }
 
-    private void loginToFirebase() {
-        //show fake progressbar to simulate loading
-        final ConstraintLayout constraintLayout = findViewById(R.id.semiTransparentBackgroundImage);
-        constraintLayout.setVisibility(View.VISIBLE);
-
-        mAuth = FirebaseAuth.getInstance();
-        mAuth.signInWithEmailAndPassword(emailEditText.getText().toString().trim(), passwordEditText.getText().toString().trim())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-
-                            // Sign in success, update UI with the signed-in user's information
-                            constraintLayout.setVisibility(View.GONE);
-                            //set loggedInUserId value which will be used later
-                            MyConstant.loggedInUserId = mAuth.getUid();
-                            FancyToast.makeText(LoginActivity.this, "Login successful.", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            constraintLayout.setVisibility(View.GONE);
-                            FancyToast.makeText(LoginActivity.this, task.getException() + "", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-
-                        }
-
-                    }
-                });
+            @Override
+            public void afterTextChanged(Editable s) {
+                loginViewModel.validateEmail(s.toString());
+            }
+        });
 
 
     }
 
 
-    public void checkInternet() {
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        receiver = new NetworkChangeReceiver(this);
-        registerReceiver(receiver, filter);
-        bl = receiver.is_connected();
-        Log.d("Boolean ", bl.toString());
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loginViewModel.observeNetworkChanges();
     }
 
     @Override
     protected void onPause() {
+       loginViewModel.unregisterNetworkReceiver();
         super.onPause();
-        try {
-            unregisterReceiver(receiver);
-        } catch (Exception e) {
-
-        }
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
-
-    private void updateUI(GoogleSignInAccount account) {
-        if (account == null) {
-            //ask user to login
-            Log.i(TAG, "updateUI: account is null");
-            FancyToast.makeText(LoginActivity.this, "Error signing in with google account ,\n please login with Gym master account instead.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-        } else {
-            //user already added his google account
-            /**live data to observe and return when user data is saved */
-            addGoogleUserToDB(account).observe(this, new Observer<Boolean>() {
-                @Override
-                public void onChanged(Boolean aBoolean) {
-                    if (aBoolean) {
-                        /**executes if account was added to db or not added if already existed*/
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        FancyToast.makeText(LoginActivity.this, "Login Successful.", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
-
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        /**onCancelled called when adding or checking if google account is in db*/
-                        FancyToast.makeText(LoginActivity.this, "Error signing in with google account ,\n please login with Gym master account instead.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-                    }
-                }
-            });
-
-
-        }
-    }
-
-
-    private LiveData<Boolean> addGoogleUserToDB(final GoogleSignInAccount account) {
-        final MutableLiveData<Boolean> load = new MutableLiveData<>();
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference("users");
-        final User newUser;
-
-        newUser = new User(account.getId(), account.getDisplayName(), account.getEmail(),
-                account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : null);
-
-        Log.i(TAG, "addGoogleUserToDB: " + account.getEmail());
-
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (!dataSnapshot.hasChild(account.getId())) {
-                    myRef.child(account.getId()).setValue(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            load.setValue(true);
-                        }
-                    });
-                } else {
-                    load.setValue(true);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                load.setValue(false);
-            }
-        });
-
-        return load;
-    }
-
-
-    @Override
-    public void onClick(View view) {
-        /**google sign in clicked*/
-        if (view.getId() == R.id.sign_in_button) {
-            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent, RC_SIGN_IN);
-
-        }
     }
 
 
@@ -291,26 +242,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+            loginViewModel.handleGoogleSignIn(data);
         }
     }
 
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            // Signed in successfully, show authenticated UI.
-            updateUI(account);
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
-        }
-    }
 }

@@ -79,7 +79,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
     @BindView(R.id.rateButton)
     Button rateButton;
-    @BindView(R.id.email)
+    @BindView(R.id.emailTextInputLayout)
     TextView email;
     @BindView(R.id.about_me_text)
     TextView aboutMeText;

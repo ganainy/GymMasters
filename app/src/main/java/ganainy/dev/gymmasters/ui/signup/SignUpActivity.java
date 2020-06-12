@@ -2,10 +2,12 @@ package ganainy.dev.gymmasters.ui.signup;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -23,6 +25,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ganainy.dev.gymmasters.R;
@@ -33,18 +36,17 @@ import ganainy.dev.gymmasters.utils.ApplicationViewModelFactory;
 public class SignUpActivity extends AppCompatActivity {
     private static final int PICK_IMAGE = 101;
     private static final int RC_SIGN_IN = 102;
+    public static final String IMAGE_URI = "imageUri";
+
     CircleImageView profileImage;
     private TextInputEditText userNameEditText, emailEditText, passwordEditText;
-    private Uri imageUri;
+    private TextInputLayout passwordTextInputLayout,usernameTextInputLayout,emailTextInputLayout;
     Button signUp;
     ProgressBar progressBar;
-    private String userName, email, password;
     private GoogleSignInClient mGoogleSignInClient;
-    private SignUpViewModel signUpViewModel;
     private ImageView semiTransparentBackgroundImage;
-    private TextView signInTextView;
-    private SignInButton googleSignInButton;
 
+    private SignUpViewModel signUpViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +61,39 @@ public class SignUpActivity extends AppCompatActivity {
             if (isFirstSignUpShowing) askUserToAddPhoto();
         });
 
-        signUpViewModel.getUsernameError().observe(this, errorHint -> userNameEditText.setError(errorHint));
+        signUpViewModel.getUsernameError().observe(this, errorHint ->
+                {
+                    String errorHintContentIfNotHandled = errorHint.getContentIfNotHandled();
+                    if(errorHintContentIfNotHandled!=null&&errorHintContentIfNotHandled.isEmpty()){
+                        usernameTextInputLayout.setError("");
+                    }else if(errorHintContentIfNotHandled != null){
+                        usernameTextInputLayout.setError(errorHintContentIfNotHandled);
+                    }
+                }
+        );
 
 
-        signUpViewModel.getEmailError().observe(this, errorHint -> emailEditText.setError(errorHint));
+        signUpViewModel.getEmailError().observe(this, errorHint ->
+                {
+                    String errorHintContentIfNotHandled = errorHint.getContentIfNotHandled();
+                    if(errorHintContentIfNotHandled!=null&&errorHintContentIfNotHandled.isEmpty()){
+                        emailTextInputLayout.setError("");
+                    }else if(errorHintContentIfNotHandled != null){
+                        emailTextInputLayout.setError(errorHintContentIfNotHandled);
+                    }
+                }
+        );
 
-
-        signUpViewModel.getPasswordError().observe(this, errorHint -> passwordEditText.setError(errorHint));
+        signUpViewModel.getPasswordError().observe(this, errorHint ->
+                {
+                    String errorHintContentIfNotHandled = errorHint.getContentIfNotHandled();
+                    if(errorHintContentIfNotHandled!=null&&errorHintContentIfNotHandled.isEmpty()){
+                        passwordTextInputLayout.setError("");
+                    }else if(errorHintContentIfNotHandled != null){
+                        passwordTextInputLayout.setError(errorHintContentIfNotHandled);
+                    }
+                }
+               );
 
         signUpViewModel.getIsLoadingLiveData().observe(this, isLoading -> {
             if (isLoading) {
@@ -105,7 +133,6 @@ public class SignUpActivity extends AppCompatActivity {
         signUpViewModel.getIsGoogleUserDataUploadedLiveData().observe(this, isGoogleUserDataUploaded -> {
             if (isGoogleUserDataUploaded) {
                 //executes if account was added to db or not added if already existed
-                Toast.makeText(SignUpActivity.this, R.string.login_successful, Toast.LENGTH_LONG).show();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 finish();
             } else {
@@ -114,18 +141,27 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+
+        signUpViewModel.getImageUriLiveData().observe(this, profileImageUri -> {
+            profileImage.setImageURI(profileImageUri);
+        });
+
     }
 
     private void initViews() {
         profileImage = findViewById(R.id.profile_image);
-        signUp = findViewById(R.id.signupButton);
+        signUp = findViewById(R.id.loginButton);
         progressBar = findViewById(R.id.progressBar);
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         userNameEditText = findViewById(R.id.userNameEditText);
         semiTransparentBackgroundImage = findViewById(R.id.semiTransparentBackgroundImage);
-        signInTextView = findViewById(R.id.signInTextView);
-        googleSignInButton = findViewById(R.id.sign_in_button);
+        TextView signInTextView = findViewById(R.id.signUpButton);
+        SignInButton googleSignInButton = findViewById(R.id.sign_in_button);
+        passwordTextInputLayout=findViewById(R.id.passwordTextInputLayout);
+        usernameTextInputLayout=findViewById(R.id.userNameTextInputLayout);
+        emailTextInputLayout=findViewById(R.id.emailTextInputLayout);
+
 
         googleSignInButton.setOnClickListener(v -> {
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -137,16 +173,77 @@ public class SignUpActivity extends AppCompatActivity {
 
         profileImage.setOnClickListener(v -> openImageChooser());
 
-        signUp.setOnClickListener(v -> {
-            userName = userNameEditText.getText().toString().trim();
-            email = emailEditText.getText().toString().trim();
-            password = passwordEditText.getText().toString().trim();
-            signUpViewModel.validateUserData(userName, email, password, imageUri);
+        signUp.setOnClickListener(v -> signUpViewModel.authenticateUser());
+
+
+
+        userNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                signUpViewModel.validateUsername(s.toString());
+            }
         });
+
+
+        passwordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                signUpViewModel.validatePassword(s.toString());
+            }
+        });
+
+        emailEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                signUpViewModel.validateEmail(s.toString());
+            }
+        });
+
+
+
+        //on softkeyboard action done sign up user
+        passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if(actionId== EditorInfo.IME_ACTION_GO){
+                signUpViewModel.authenticateUser();
+            }
+            return false;
+        });
+
 
         setupGoogleSignIn();
 
     }
+
 
     private void openImageChooser() {
         Intent intent = new Intent();
@@ -167,7 +264,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         // Set the dimensions of the sign-in button.
         SignInButton signInButton = findViewById(R.id.sign_in_button);
-        signInButton.setSize(SignInButton.SIZE_ICON_ONLY);
+        signInButton.setSize(SignInButton.SIZE_WIDE);
     }
 
     private void initViewModel() {
@@ -205,16 +302,13 @@ public class SignUpActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (data != null && requestCode == PICK_IMAGE) {
-            imageUri = data.getData();
-            profileImage.setImageURI(imageUri);
+            signUpViewModel.setImageUri(data.getData());
         }
         if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
+            // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
             signUpViewModel.handleGoogleSignIn(data);
         }
 
     }
-
 
 }

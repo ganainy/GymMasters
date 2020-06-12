@@ -21,9 +21,7 @@
 
 
         <!--place_info_card-->
-        <include
-            android:id="@+id/place_info_card"
-            layout="@layout/place_info_card" />
+        <include layout="@layout/place_info_card" />
 
 
     </androidx.core.widget.NestedScrollView>
