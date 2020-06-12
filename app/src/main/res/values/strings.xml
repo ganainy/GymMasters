@@ -30,6 +30,19 @@
     <string name="use_gym_master_account">Error signing in with google account ,\n please login with Gym master account instead.</string>
     <string name="or">-OR-</string>
     <string name="credentials_error">Error signing in, check your credentials</string>
+    <string name="workout">Workout</string>
+    <string name="exercises">Exercises</string>
+    <string name="home">Home</string>
+    <string name="permission_required">Permission required</string>
+    <string name="permanently_denied_permission">You permanently denied permission ,but it can be changed from settings</string>
+    <string name="change">Change</string>
+    <string name="mcancel">Cancel</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="error_logging_out">\"Error logging out: \"</string>
+    <string name="are_you_sure_exit">Are you sure you want to exit?</string>
+    <string name="connection_lost">Internet connection lost</string>
+    <string name="app_need_network">App needs internet connection to fully utilize its features</string>
+    <string name="ok">OK</string>
 
 
 </resources>

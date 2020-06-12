@@ -38,11 +38,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import ganainy.dev.gymmasters.utils.NetworkUtil;
 
 public class PostsActivity extends AppCompatActivity {
     private static final String TAG = "PostsActivity";
-    public NetworkChangeReceiver receiver;
-    Boolean bl = true;
+    private NetworkChangeReceiver networkChangeReceiver;
+
     @BindView(R.id.notFoundTextView)
     TextView notFoundTextView;
     @BindView(R.id.button)
@@ -80,9 +81,7 @@ public class PostsActivity extends AppCompatActivity {
         /**setting up custom toolbar*/
         setSupportActionBar(toolbar);
 
-
         getFollowingUid();
-        checkInternet();
 
     }
 
@@ -265,24 +264,23 @@ public class PostsActivity extends AppCompatActivity {
     }
 
 
-    public void checkInternet() {
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        receiver = new NetworkChangeReceiver(this);
-        registerReceiver(receiver, filter);
-        bl = receiver.is_connected();
-        Log.d("Boolean ", bl.toString());
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        NetworkUtil.unregisterNetworkReceiver(this,networkChangeReceiver);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        networkChangeReceiver = NetworkUtil.registerNetworkReceiver(this);
+    }
+
 
     @Override
     protected void onPause() {
         super.onPause();
-        try {
-            unregisterReceiver(receiver);
-        } catch (Exception e) {
-
-        }
-
-        Log.i(TAG, "onPause: ");
         recyclerView.setAdapter(null);
     }
 
@@ -290,7 +288,6 @@ public class PostsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume: ");
         if (sharedAdapter != null) recyclerView.setAdapter(sharedAdapter);
     }
 

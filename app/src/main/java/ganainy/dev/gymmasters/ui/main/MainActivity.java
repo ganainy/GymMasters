@@ -1,20 +1,13 @@
 package ganainy.dev.gymmasters.ui.main;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
-import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,11 +24,10 @@ import ganainy.dev.gymmasters.ui.timer.TimerActivity;
 import ganainy.dev.gymmasters.ui.findUser.FindUsersActivity;
 import ganainy.dev.gymmasters.ui.login.LoginActivity;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,84 +41,78 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ganainy.dev.gymmasters.utils.NetworkUtil;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-    public NetworkChangeReceiver receiver;
-    Boolean bl = true;
-    SelectedBundle selectedBundle;
+public class MainActivity extends AppCompatActivity {
+    public static final String SOURCE = "source";
+    public NetworkChangeReceiver networkChangeReceiver;
     private static final String TAG = "MainActivity";
-
 
     @BindView(R.id.view_pager_main)
     ViewPager view_pager_main;
 
-
     @BindView(R.id.tabLayout)
     TabLayout tabLayout;
-    private GoogleSignInClient mGoogleSignInClient;
+
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        // setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        initViews();
+    }
+
+    private void initViews() {
+        setupViewPager();
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
-
-
-        setupMainViewPager();
 
         //handle click on navigation view items
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.nav_find:
-                        handleFindClick();
-                        break;
-                    case R.id.nav_posts:
-                        handlePostsClick();
-                        break;
-                    case R.id.nav_followers:
-                        handleFollowersClick();
-                        break;
-                    case R.id.nav_following:
-                        handleFollowedClick();
-                        break;
-                    case R.id.nav_timer:
-                        handleTimerClick();
-                        break;
-                    case R.id.nav_map:
-                        handleMapClick();
-                        break;
-                    case R.id.nav_sign_out:
-                        handleSignoutClick();
-                        break;
-
-
-                }
-                return false;
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.nav_find:
+                    handleFindClick();
+                    break;
+                case R.id.nav_posts:
+                    handlePostsClick();
+                    break;
+                case R.id.nav_followers:
+                    handleFollowersClick();
+                    break;
+                case R.id.nav_following:
+                    handleFollowedClick();
+                    break;
+                case R.id.nav_timer:
+                    handleTimerClick();
+                    break;
+                case R.id.nav_map:
+                    handleMapClick();
+                    break;
+                case R.id.nav_sign_out:
+                    handleSignOutClick();
+                    break;
             }
+            return false;
         });
-        {
-
-        }
-
-
-        checkInternet();
     }
 
     private void handleMapClick() {
         //check permissions before opening map activity
+        //todo move permission check to map activity
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             startActivity(new Intent(getApplicationContext(), MapsActivity.class));
         } else {
@@ -142,20 +128,18 @@ public class MainActivity extends AppCompatActivity
                             if (response.isPermanentlyDenied()) {
                                 //show alert dialog with custom view
                                 new AlertDialog.Builder(MainActivity.this)
-                                        .setTitle("Permission required")
-                                        .setMessage("You permanently denied permission ,but it can be changed from settings")
+                                        .setTitle(R.string.permission_required)
+                                        .setMessage(R.string.permanently_denied_permission)
                                         .setIcon(R.drawable.ic_location_on_black_24dp)
-                                        .setPositiveButton("Change", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                Intent i = new Intent();
-                                                i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                                i.setData(Uri.fromParts("package", getPackageName(), null));
-                                            }
+                                        .setPositiveButton(R.string.change, (dialog, which) -> {
+                                            Intent i = new Intent();
+                                            i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                            i.setData(Uri.fromParts("package", getPackageName(), null));
                                         })
-                                        .setNegativeButton("Cancel", null)
+                                        .setNegativeButton(R.string.mcancel, null)
                                         .show();
                             } else {
-                                Toast.makeText(MainActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -164,29 +148,31 @@ public class MainActivity extends AppCompatActivity
                             token.continuePermissionRequest();
                         }
                     }).check();
-            /*  //*/
-
         }
     }
 
-    private void handleSignoutClick() {
+    private void handleSignOutClick() {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
+            //user logged in with email/password
             mAuth.signOut();
-            openLoginActivity();
+            openLoginActivityAndClearTask();
         } else {
+            //user logged in with google account
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .build();
-            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-            mGoogleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) openLoginActivity();
-                    else
-                        Toast.makeText(MainActivity.this, "Error logging out: " + task.getException(), Toast.LENGTH_SHORT).show();
+            mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) openLoginActivityAndClearTask();
+                else {
+                    Toast.makeText(
+                            MainActivity.this,
+                            getString(R.string.error_logging_out) + task.getException(),
+                            Toast.LENGTH_SHORT)
+                            .show();
                 }
             });
         }
@@ -199,13 +185,13 @@ public class MainActivity extends AppCompatActivity
 
     private void handleFollowersClick() {
         Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
-        i.putExtra("source", "followers");
+        i.putExtra(SOURCE, "followers");
         startActivity(i);
     }
 
     private void handleFindClick() {
         Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
-        i.putExtra("source", "find");
+        i.putExtra(SOURCE, "find");
         startActivity(i);
     }
 
@@ -216,139 +202,116 @@ public class MainActivity extends AppCompatActivity
 
     private void handleFollowedClick() {
         Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
-        i.putExtra("source", "following");
+        i.putExtra(SOURCE, "following");
         startActivity(i);
     }
 
-    private void setupMainViewPager() {
-        //view pager and tab layout for swiping fragments
+    private void setupViewPager() {
+        //setup viewPager and connect it with tablayout
         view_pager_main.setAdapter(new ViewPagerAdapterMainActivity(getSupportFragmentManager()));
 
         tabLayout.setupWithViewPager(view_pager_main, true);
 
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_dumbbell_variant_outline);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_crisscross_position);
 
-        tabLayout.getTabAt(0).setText(("Home"));
-        tabLayout.getTabAt(1).setText(("Exercises"));
-        tabLayout.getTabAt(2).setText(("Workout"));
-
+        setupTabLayoutIconsAndLabels();
 
     }
 
+    private void setupTabLayoutIconsAndLabels() {
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_blue);
+        tabLayout.getTabAt(0).setText(getString(R.string.home));
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_dumbell_black);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_workout_black);
 
-    private void openLoginActivity() {
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        tab.setText(getString(R.string.home));
+                        tab.setIcon(R.drawable.ic_home_blue);
+                        break;
+                    case 1:
+                        tab.setText(getString(R.string.exercises));
+                        tab.setIcon(R.drawable.ic_dumbell_blue);
+                        break;
+                    case 2:
+                        tab.setText(getString(R.string.workout));
+                        tab.setIcon(R.drawable.ic_workout_blue);
+                        break;
+                }
+                tab.setTabLabelVisibility(TabLayout.TAB_LABEL_VISIBILITY_LABELED);
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                tab.setTabLabelVisibility(TabLayout.TAB_LABEL_VISIBILITY_UNLABELED);
+                switch (tab.getPosition()) {
+                    case 0:
+                        tab.setIcon(R.drawable.ic_home_black);
+                        break;
+                    case 1:
+                        tab.setIcon(R.drawable.ic_dumbell_black);
+                        break;
+                    case 2:
+                        tab.setIcon(R.drawable.ic_workout_black);
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+
+    private void openLoginActivityAndClearTask() {
         //finish this activity on log out so users won't be able to log in on back press in login
-        Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(i);
+        Intent openLoginInNewTaskIntent = new Intent(getApplicationContext(), LoginActivity.class);
+        openLoginInNewTaskIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(openLoginInNewTaskIntent);
         finish();
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_find) {
-        } else if (id == R.id.nav_followers) {
-
-        } else if (id == R.id.nav_following) {
-
-        } else if (id == R.id.nav_posts) {
-
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-
-    //result coming from gallery requested by createWorkoutFragment
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data == null)
-            return;
-        if (requestCode == 103) {
-            Log.i(TAG, "requestCode: ok");
-            //pass image uri to the createworkoutfragment
-            Bundle bundle = new Bundle();
-            bundle.putString("imageString", String.valueOf(data.getData()));
-            selectedBundle.onBundleSelect(bundle);
-
-        }
-
-    }
-
-
-    public void setOnBundleSelected(SelectedBundle selectedBundle) {
-        this.selectedBundle = selectedBundle;
-    }
-
-
-    public void getPhotoFromGallery() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 103);
     }
 
     @Override
     public void onBackPressed() {
-
-
+        /*when back pressed on main activity close drawer if open else show dialog to confirm
+        closing app*/
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
-            /**if there is fragment in back stack close it only*/
+            /*if there is fragment in back stack close it only*/
             super.onBackPressed();
         } else {
             new AlertDialog.Builder(this)
-                    .setMessage("Are you sure you want to exit?")
+                    .setMessage(R.string.are_you_sure_exit)
                     .setNegativeButton(android.R.string.no, null)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            // Finish this activity as well as all activities immediately below it
-                            finishAffinity();
-                        }
-                    }).create().show();
+                    .setPositiveButton(android.R.string.yes, (arg0, arg1) -> {
+                        // Finish this activity as well as all activities immediately below it
+                        finishAffinity();
+                    })
+                    .create().show();
         }
 
 
     }
-
-
-    public interface SelectedBundle {
-        void onBundleSelect(Bundle bundle);
-    }
-
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-        super.onPause();
-        try {
-            unregisterReceiver(receiver);
-        } catch (Exception e) {
-
-        }
-
+    protected void onStop() {
+        super.onStop();
+     NetworkUtil.unregisterNetworkReceiver(this,networkChangeReceiver);
     }
 
-    public void checkInternet() {
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        receiver = new NetworkChangeReceiver(this);
-        registerReceiver(receiver, filter);
-        bl = receiver.is_connected();
-        Log.d("Boolean ", bl.toString());
+    @Override
+    protected void onStart() {
+        super.onStart();
+         networkChangeReceiver = NetworkUtil.registerNetworkReceiver(this);
     }
 
 }

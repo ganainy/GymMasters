@@ -1,6 +1,7 @@
 package ganainy.dev.gymmasters.utils;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -36,6 +37,23 @@ public class NetworkUtil {
             status = "Not connected to Internet";
         }
         return status;
+    }
+
+    /**called by fragment/activity to listen to network changes
+     * @return*/
+    public static NetworkChangeReceiver registerNetworkReceiver(Context context) {
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        NetworkChangeReceiver networkChangeReceiver = new NetworkChangeReceiver();
+        context.registerReceiver(networkChangeReceiver, filter);
+        return networkChangeReceiver;
+    }
+
+    public static void unregisterNetworkReceiver(Context context,NetworkChangeReceiver networkChangeReceiver){
+        try {
+            context.unregisterReceiver(networkChangeReceiver);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

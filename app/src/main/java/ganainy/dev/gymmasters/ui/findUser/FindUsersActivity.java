@@ -37,6 +37,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import ganainy.dev.gymmasters.utils.NetworkUtil;
 
 public class FindUsersActivity extends AppCompatActivity {
     private static final String TAG = "FindUsersActivity";
@@ -50,6 +51,7 @@ public class FindUsersActivity extends AppCompatActivity {
     private List<User> followersList = new ArrayList<>();
     private ArrayList<String> followingIdList = new ArrayList<>();
     private List<User> followingList = new ArrayList<>();
+    private NetworkChangeReceiver networkChangeReceiver;
 
     @BindView(R.id.notFoundTextView)
     TextView notFoundTextView;
@@ -74,14 +76,9 @@ public class FindUsersActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.usersRecycler);
 
-
-
         /**setting up custom toolbar*/
         setSupportActionBar(toolbar);
 
-
-
-        checkInternet();
         //this activity called from more than one source so we differ with intent
         if (getIntent().getStringExtra("source").equals("find"))
             loadAllUsers();
@@ -337,24 +334,19 @@ public class FindUsersActivity extends AppCompatActivity {
     }
 
 
-    public void checkInternet() {
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        receiver = new NetworkChangeReceiver(this);
-        registerReceiver(receiver, filter);
-        bl = receiver.is_connected();
-        Log.d("Boolean ", bl.toString());
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        NetworkUtil.unregisterNetworkReceiver(this,networkChangeReceiver);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        try {
-            unregisterReceiver(receiver);
-        } catch (Exception e) {
-
-        }
-        recyclerView.setAdapter(null);
+    protected void onStart() {
+        super.onStart();
+        networkChangeReceiver = NetworkUtil.registerNetworkReceiver(this);
     }
+
 
     @Override
     protected void onResume() {

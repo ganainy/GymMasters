@@ -341,25 +341,26 @@ public class CreateWorkoutFragment extends Fragment {
 
 
     @OnClick(R.id.workoutImageView)
-    void getPhotoAndShow() {
-
-        MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.getPhotoFromGallery();
-
-        mainActivity.setOnBundleSelected(new MainActivity.SelectedBundle() {
-            @Override
-            public void onBundleSelect(Bundle bundle) {
-                Log.i(TAG, "onBundleSelect1: ");
-                String imageString = (String) bundle.get("imageString");
-                imageUri = Uri.parse(imageString);
-
-                workoutImage.setPadding(0, 0, 0, 0);
-                workoutImage.setImageURI(imageUri);
-            }
-        });
-
+    void openGalleryImageChooser() {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 103);
     }
 
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null)
+            return;
+        if (requestCode == 103) {
+            Log.i(TAG, "requestCode: ok");
+            imageUri =data.getData();
+            workoutImage.setPadding(0, 0, 0, 0);
+            workoutImage.setImageURI(imageUri);
+        }
+    }
 
     @OnClick(R.id.uploadButton)
     public void onuploadClicked() {

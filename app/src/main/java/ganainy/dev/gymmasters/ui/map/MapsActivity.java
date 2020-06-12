@@ -106,6 +106,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Todo handleMapClick check permission in main activity should be moved here
 
         //hide status bar sdk<16
         if (Build.VERSION.SDK_INT < 16) {
