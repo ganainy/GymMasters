@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
-import ganainy.dev.gymmasters.utils.MyConstants;
+import ganainy.dev.gymmasters.utils.AuthUtils;
 import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.google.android.material.snackbar.Snackbar;
 import com.shashank.sony.fancytoastlib.FancyToast;
@@ -31,15 +31,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.ABS;
-import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.BACK;
-import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.BICEPS;
-import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.CARDIO;
-import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.CHEST;
-import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.LOWERLEG;
-import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.SHOULDER;
-import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.SHOWALL;
-import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.TRICEPS;
+import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.ABS;
+import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.BACK;
+import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.BICEPS;
+import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.CARDIO;
+import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.CHEST;
+import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.LOWERLEG;
+import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.SHOULDER;
+import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.SHOWALL;
+import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.TRICEPS;
 
 public class CreateNewExerciseActivity extends AppCompatActivity {
     private static final String TAG = "CreateNewExerciseActivi";
@@ -111,7 +111,7 @@ public class CreateNewExerciseActivity extends AppCompatActivity {
             final Exercise exercise = new Exercise(nameEditText.getText().toString(), newExerciseSelectedMuscle, executionEditText.getText().toString()
                     , newExerciseMechanic, imageUri.getLastPathSegment() + timeMilli, image2Uri.getLastPathSegment() + timeMilli);
 
-            exercise.setCreatorId(MyConstants.loggedInUserId);
+            exercise.setCreatorId(AuthUtils.getLoggedUserId(this));
 
             if (!additionalNotesEditText.getText().equals(""))
                 exercise.setAdditional_notes(additionalNotesEditText.getText().toString());

@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Workout;
-import ganainy.dev.gymmasters.utils.MyConstants;
+import ganainy.dev.gymmasters.utils.AuthUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -157,7 +157,8 @@ public class UserInfoActivityRepository {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                                if (dataSnapshot1.getValue().equals(MyConstants.loggedInUserId)) {
+                                //todo
+                                if (dataSnapshot1.getValue().equals("AuthUtils.loggedInUserId")) {
                                     //this means logged in user already subscribed
                                     isSubscribed = true;
                                     break;
@@ -227,8 +228,9 @@ public class UserInfoActivityRepository {
         ratings.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(MyConstants.loggedInUserId)) {
-                    load.setValue((long) dataSnapshot.child(MyConstants.loggedInUserId).getValue());
+                //todo
+                if (dataSnapshot.hasChild("AuthUtils.loggedInUserId")) {
+                    load.setValue((long) dataSnapshot.child("AuthUtils.loggedInUserId").getValue());
                 }
             }
 
@@ -285,7 +287,8 @@ public class UserInfoActivityRepository {
 
     public MutableLiveData<Boolean> setRate(Integer rating, String profileId) {
         final MutableLiveData<Boolean> load = new MutableLiveData<>();
-        FirebaseDatabase.getInstance().getReference("users").child(profileId).child("Ratings").child(MyConstants.loggedInUserId)
+        //todo
+        FirebaseDatabase.getInstance().getReference("users").child(profileId).child("Ratings").child("AuthUtils.loggedInUserId")
                 .setValue(rating).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

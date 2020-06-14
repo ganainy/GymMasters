@@ -4,9 +4,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies;
-import ganainy.dev.gymmasters.ui.main.home.MainFragmentHome;
-import ganainy.dev.gymmasters.ui.main.workouts.MainFragmentWorkouts;
+import ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment;
+import ganainy.dev.gymmasters.ui.main.home.HomeFragment;
+import ganainy.dev.gymmasters.ui.main.workouts.WorkoutsFragment;
+
+import static ganainy.dev.gymmasters.ui.main.home.HomeFragment.LOGGED_USER_ID;
 
 public class ViewPagerAdapterMainActivity extends FragmentPagerAdapter {
     private static final String TAG = "ViewPagerAdapterMainAct";
@@ -18,11 +20,11 @@ public class ViewPagerAdapterMainActivity extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new MainFragmentHome();
+                return new HomeFragment();
             case 1:
-                return new MainFragmentExcercies();
+                return new ExercisesCategoriesFragment();
             case 2:
-                return new MainFragmentWorkouts();
+                return  new WorkoutsFragment();
         }
         return null; //does not happen
     }

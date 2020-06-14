@@ -20,7 +20,7 @@ import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.SharedExerciseWorkout;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.ui.findUser.FindUsersActivity;
-import ganainy.dev.gymmasters.utils.MyConstants;
+import ganainy.dev.gymmasters.utils.AuthUtils;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -86,7 +86,7 @@ public class PostsActivity extends AppCompatActivity {
     }
 
     private void getFollowingUid() {
-        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(MyConstants.loggedInUserId);
+        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(AuthUtils.getLoggedUserId(this));
         users.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

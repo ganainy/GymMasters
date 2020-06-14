@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -15,8 +16,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import ganainy.dev.gymmasters.ui.createWorkout.CreateWorkoutFragment;
+import ganainy.dev.gymmasters.ui.loggedUserExercises.LoggedUserExercisesFragment;
+import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.LoggedUserWorkoutsFragment;
 import ganainy.dev.gymmasters.ui.map.MapsActivity;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.ui.posts.PostsActivity;
@@ -43,7 +48,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ganainy.dev.gymmasters.utils.NetworkUtil;
 
-public class MainActivity extends AppCompatActivity {
+import static ganainy.dev.gymmasters.ui.main.home.HomeFragment.LOGGED_USER_ID;
+
+public class MainActivity extends AppCompatActivity implements ActivityCallback{
     public static final String SOURCE = "source";
     public NetworkChangeReceiver networkChangeReceiver;
     private static final String TAG = "MainActivity";
@@ -63,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @BindView(R.id.container)
+    FrameLayout container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +85,7 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
         setupViewPager();
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        setupDrawerLayout();
 
         //handle click on navigation view items
         navigationView.setNavigationItemSelectedListener(menuItem -> {
@@ -108,6 +114,14 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    private void setupDrawerLayout() {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.white));
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
     }
 
     private void handleMapClick() {
@@ -152,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleSignOutClick() {
+        //todo move to viewmodel
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
@@ -196,7 +211,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handlePostsClick() {
-
         startActivity(new Intent(MainActivity.this, PostsActivity.class));
     }
 
@@ -237,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                         tab.setIcon(R.drawable.ic_dumbell_blue);
                         break;
                     case 2:
-                        tab.setText(getString(R.string.workout));
+                        tab.setText(getString(R.string.workouts));
                         tab.setIcon(R.drawable.ic_workout_blue);
                         break;
                 }
@@ -298,8 +312,6 @@ public class MainActivity extends AppCompatActivity {
                     })
                     .create().show();
         }
-
-
     }
 
     @Override
@@ -314,4 +326,25 @@ public class MainActivity extends AppCompatActivity {
          networkChangeReceiver = NetworkUtil.registerNetworkReceiver(this);
     }
 
+    /**methods called by child fragments to talk to parent activity*/
+    @Override
+    public void openLoggedUserWorkoutsFragment(String loggedUserId) {
+        LoggedUserWorkoutsFragment loggedUserWorkoutsFragment = LoggedUserWorkoutsFragment.newInstance(loggedUserId);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, loggedUserWorkoutsFragment).addToBackStack("loggedUserWorkoutsFragment").commit();
+    }
+
+    @Override
+    public void openLoggedUserExercisesFragment(String loggedUserId) {
+        LoggedUserExercisesFragment loggedUserExercisesFragment = LoggedUserExercisesFragment.newInstance(loggedUserId);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, loggedUserExercisesFragment).addToBackStack("loggedUserExercisesFragment").commit();
+    }
+
+    @Override
+    public void openCreateWorkoutFragment() {
+        CreateWorkoutFragment createWorkoutFragment = new CreateWorkoutFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, createWorkoutFragment).addToBackStack("createWorkoutFragment").commit();
+    }
 }

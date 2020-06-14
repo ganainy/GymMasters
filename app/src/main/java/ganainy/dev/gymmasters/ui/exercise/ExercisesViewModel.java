@@ -17,37 +17,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ganainy.dev.gymmasters.models.app_models.Exercise;
+import ganainy.dev.gymmasters.utils.FirebaseUtils;
+import ganainy.dev.gymmasters.utils.NetworkState;
 
-import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.SHOWALL;
+import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.SHOWALL;
 
 public class ExercisesViewModel extends ViewModel {
     private static final String TAG = "ExerciseActivityViewMod";
     public static final String EXERCISES = "exercises";
-    public static final String CREATOR_ID = "creatorId";
 
-    private ArrayList<Exercise> loggedUserExercisesArrayList= new ArrayList<>();
     private List<Exercise> selectedMuscleExerciseArrayList = new ArrayList<>();
-
     private MutableLiveData<List<Exercise>> exerciseListLiveData =new MutableLiveData<>();
-    private MutableLiveData<Boolean> loadingStateLiveData =new MutableLiveData<>();
-    private MutableLiveData<Boolean> emptyStateLiveData =new MutableLiveData<>();
+    private MutableLiveData<NetworkState> networkStateLiveData =new MutableLiveData<>();
 
-
-    public LiveData<Boolean> getEmptyStateLiveData() {
-        return emptyStateLiveData;
+    public LiveData<NetworkState> getNetworkStateLiveData() {
+        return networkStateLiveData;
     }
-
-    public LiveData<Boolean> getLoadingStateLiveData() {
-        return loadingStateLiveData;
-    }
-
     public LiveData<List<Exercise>> getExerciseListLiveData() {
         return exerciseListLiveData;
     }
 
     /**load all/certain muscle exercises from firebase database*/
     public void getSelectedMuscleExercises(String muscle) {
-        loadingStateLiveData.setValue(true);
+        networkStateLiveData.setValue(NetworkState.LOADING);
 
         final DatabaseReference exercisesRef = FirebaseDatabase.getInstance().getReference(EXERCISES);
 
@@ -58,20 +50,20 @@ public class ExercisesViewModel extends ViewModel {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot ds:dataSnapshot.getChildren()) {
-                        Exercise exerciseFromSnapshot = getExerciseFromSnapshot(ds);
+                        Exercise exerciseFromSnapshot = FirebaseUtils.getExerciseFromSnapshot(ds);
                         selectedMuscleExerciseArrayList.add(exerciseFromSnapshot);
                     }
-                    loadingStateLiveData.setValue(false);
                     if (selectedMuscleExerciseArrayList.size()==0)
-                        emptyStateLiveData.setValue(true);
+                        networkStateLiveData.setValue(NetworkState.EMPTY);
                     else {
                         exerciseListLiveData.setValue(selectedMuscleExerciseArrayList);
-                        emptyStateLiveData.setValue(false);
+                        networkStateLiveData.setValue(NetworkState.SUCCESS);
                     }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
+                    networkStateLiveData.setValue(NetworkState.ERROR);
                 }
             });
         }else {
@@ -80,27 +72,10 @@ public class ExercisesViewModel extends ViewModel {
     }
 
     /**extract exercise model from snapshot*/
-    private Exercise getExerciseFromSnapshot(DataSnapshot snapshot) {
-            Exercise exercise = new Exercise();
-            if (snapshot.hasChild("name"))
-            exercise.setName(snapshot.child("name").getValue().toString());
-            if (snapshot.hasChild("execution"))
-            exercise.setExecution(snapshot.child("execution").getValue().toString());
-            if (snapshot.hasChild("additional_notes"))
-                exercise.setAdditional_notes(snapshot.child("additional_notes").getValue().toString());
-            if (snapshot.hasChild("bodyPart"))
-            exercise.setBodyPart(snapshot.child("bodyPart").getValue().toString());
-            if (snapshot.hasChild("mechanism"))
-            exercise.setMechanism(snapshot.child("mechanism").getValue().toString());
-            if (snapshot.hasChild("previewPhoto1"))
-            exercise.setPreviewPhoto1(snapshot.child("previewPhoto1").getValue().toString());
-            if (snapshot.hasChild("previewPhoto2"))
-            exercise.setPreviewPhoto2(snapshot.child("previewPhoto2").getValue().toString());
-           return exercise;
-    }
+
 
     private void loadAllExercises() {
-        loadingStateLiveData.setValue(true);
+        networkStateLiveData.setValue(NetworkState.LOADING);
         final DatabaseReference exercisesNode = FirebaseDatabase.getInstance().getReference(EXERCISES);
 
         exercisesNode.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -109,22 +84,21 @@ public class ExercisesViewModel extends ViewModel {
                 selectedMuscleExerciseArrayList.clear();
                 for (DataSnapshot dsBig : dataSnapshot.getChildren()) {
                     for (DataSnapshot ds : dsBig.getChildren()) {
-                        Exercise exerciseFromSnapshot = getExerciseFromSnapshot(ds);
+                        Exercise exerciseFromSnapshot = FirebaseUtils.getExerciseFromSnapshot(ds);
                         selectedMuscleExerciseArrayList.add(exerciseFromSnapshot);
                         }
                 }
-                loadingStateLiveData.setValue(false);
                 if (selectedMuscleExerciseArrayList.size()==0)
-                    emptyStateLiveData.setValue(true);
+                    networkStateLiveData.setValue(NetworkState.EMPTY);
                 else {
                     exerciseListLiveData.setValue(selectedMuscleExerciseArrayList);
-                    emptyStateLiveData.setValue(false);
+                    networkStateLiveData.setValue(NetworkState.SUCCESS);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                networkStateLiveData.setValue(NetworkState.ERROR);
             }
         });
 
@@ -132,36 +106,7 @@ public class ExercisesViewModel extends ViewModel {
 
 
 
-    public void downloadLoggedUserExercises(String loggedInUserId) {
-        loadingStateLiveData.setValue(true);
-        final DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference(EXERCISES);
-        exerciseNode.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                loggedUserExercisesArrayList.clear();
-                for (DataSnapshot dsBig : dataSnapshot.getChildren()) {
-                    for (DataSnapshot ds : dsBig.getChildren()) {
-                        if (ds.hasChild(CREATOR_ID) && ds.child(CREATOR_ID).getValue().equals(loggedInUserId)) {
-                            Exercise exerciseFromSnapshot = getExerciseFromSnapshot(ds);
-                            loggedUserExercisesArrayList.add(exerciseFromSnapshot);
-                        }
-                    }
-                }
-                loadingStateLiveData.setValue(false);
-                if (loggedUserExercisesArrayList.size()==0)
-                    emptyStateLiveData.setValue(true);
-                else {
-                    exerciseListLiveData.setValue(loggedUserExercisesArrayList);
-                    emptyStateLiveData.setValue(false);
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG, "onCancelled: "+databaseError);
-            }
-        });
-    }
 
 
 }

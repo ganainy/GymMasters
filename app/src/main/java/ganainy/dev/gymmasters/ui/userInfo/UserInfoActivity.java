@@ -26,7 +26,7 @@ import ganainy.dev.gymmasters.shared_adapters.WorkoutAdapter;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
-import ganainy.dev.gymmasters.utils.MyConstants;
+import ganainy.dev.gymmasters.utils.AuthUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -242,7 +242,9 @@ public class UserInfoActivity extends AppCompatActivity {
         if (workoutListt.size() == 0) {
             FancyToast.makeText(this, "This user didn't create any custom workouts yet.", FancyToast.LENGTH_LONG, FancyToast.INFO, false).show();
         } else {
-            workoutAdapter = new WorkoutAdapter(this, "userInfo");
+            workoutAdapter = new WorkoutAdapter(this, workout -> {
+                    /*todo*/}
+            );
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             recyclerViewWorkout.setLayoutManager(linearLayoutManager);
             workoutAdapter.setDataSource(workoutListt);
@@ -343,9 +345,9 @@ public class UserInfoActivity extends AppCompatActivity {
                 //add id of logged in user in followersUID in profile account
                 final DatabaseReference profile = FirebaseDatabase.getInstance().getReference("users")
                         .child(user.getId()).child("followersUID");
-                profile.push().setValue(MyConstants.loggedInUserId);
+                profile.push().setValue(AuthUtils.getLoggedUserId(this));
                 //add id of profile account in followingUID of logged in account
-                FirebaseDatabase.getInstance().getReference("users").child(MyConstants.loggedInUserId).child("followingUID")
+                FirebaseDatabase.getInstance().getReference("users").child(AuthUtils.getLoggedUserId(this)).child("followingUID")
                         .push().setValue(user.getId());
                 //show toast
                 FancyToast.makeText(UserInfoActivity.this, "Follow successful", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
@@ -358,7 +360,7 @@ public class UserInfoActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot ds : dataSnapshot.getChildren())
-                            if (ds.getValue().equals(MyConstants.loggedInUserId)) {
+                            if (ds.getValue().equals(AuthUtils.getLoggedUserId(UserInfoActivity.this))) {
 
                                 String key = ds.getKey();
                                 profile.child(key).removeValue();
@@ -373,7 +375,7 @@ public class UserInfoActivity extends AppCompatActivity {
                 });
                 //
                 final DatabaseReference followingUID = FirebaseDatabase.getInstance().
-                        getReference("users").child(MyConstants.loggedInUserId).child("followingUID");
+                        getReference("users").child(AuthUtils.getLoggedUserId(this)).child("followingUID");
                 followingUID.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

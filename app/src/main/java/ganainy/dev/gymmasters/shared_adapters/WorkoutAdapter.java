@@ -1,8 +1,6 @@
 package ganainy.dev.gymmasters.shared_adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,29 +12,29 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import ganainy.dev.gymmasters.R;
-import ganainy.dev.gymmasters.models.app_models.Workout;
-import ganainy.dev.gymmasters.ui.main.MainActivity;
-import ganainy.dev.gymmasters.ui.specificWorkout.SpecificWorkoutActivity;
-import ganainy.dev.gymmasters.ui.userInfo.UserInfoActivity;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
+import ganainy.dev.gymmasters.R;
+import ganainy.dev.gymmasters.models.app_models.Workout;
+import ganainy.dev.gymmasters.ui.exercise.WorkoutCallback;
+
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder> {
     private static final String TAG = "WorkoutAdapter";
-    final Context context;
-    private final String parent;
+    public static final String BEGINNER = "beginner";
+    public static final String INTERMEDIATE = "intermediate";
+    public static final String PROFESSIONAL = "professional";
+    final Context app;
     private List<Workout> workoutList;
-    private boolean isParentDead;
+    private WorkoutCallback workoutCallback;
 
 
-    public WorkoutAdapter(Context context, String parent) {
-        this.context = context;
-        this.parent = parent;
+    public WorkoutAdapter(Context app, WorkoutCallback workoutCallback) {
+        this.app = app;
+        this.workoutCallback = workoutCallback;
+
     }
 
     @NonNull
@@ -54,40 +52,28 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
         workoutViewHolder.textViewTime.setText(workoutList.get(i).getDuration());
         workoutViewHolder.difficultyTextView.setText(workoutList.get(i).getLevel());
         //change bg color of difficultyTextView
-        if (workoutList.get(i).getLevel().toLowerCase().equals("beginner")) {
+        if (workoutList.get(i).getLevel().toLowerCase().equals(BEGINNER)) {
             workoutViewHolder.difficultyTextView.setBackgroundResource(R.drawable.easy_bg);
-        } else if (workoutList.get(i).getLevel().toLowerCase().equals("intermediate")) {
+        } else if (workoutList.get(i).getLevel().toLowerCase().equals(INTERMEDIATE)) {
             workoutViewHolder.difficultyTextView.setBackgroundResource(R.drawable.intermediate_bg);
-        } else if (workoutList.get(i).getLevel().toLowerCase().equals("professional")) {
+        } else if (workoutList.get(i).getLevel().toLowerCase().equals(PROFESSIONAL)) {
             workoutViewHolder.difficultyTextView.setBackgroundResource(R.drawable.difficult_bg);
         }
         //download photo with glide then show it
         downloadWorkoutImage(workoutList.get(i).getPhotoLink(), workoutViewHolder);
-
     }
 
     private void downloadWorkoutImage(String photoLink, final WorkoutViewHolder workoutViewHolder) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(photoLink);
 
-        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                if (!isParentDead)
-                    Glide.with(context).load(uri).into(workoutViewHolder.workoutImageView);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "workout photo download failed " + e.getMessage());
-            }
-        });
-
+        storageRef.getDownloadUrl().addOnSuccessListener(uri ->
+                Glide.with(app).load(uri).into(workoutViewHolder.workoutImageView))
+                .addOnFailureListener(e -> Log.i(TAG, "workout photo download failed " + e.getMessage()));
     }
-
 
     @Override
     public int getItemCount() {
-        return workoutList.size();
+        return workoutList==null?0:workoutList.size();
     }
 
     public void setDataSource(List<Workout> workoutList) {
@@ -108,48 +94,9 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
             workoutImageView = itemView.findViewById(R.id.workoutImageView);
             difficultyTextView = itemView.findViewById(R.id.textViewDifficulty);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (parent.equals("userInfo")) {
-                        UserInfoActivity userInfoActivity = (UserInfoActivity) context;
-                        Intent intent = new Intent(WorkoutAdapter.this.context, SpecificWorkoutActivity.class);
-                        intent.putExtra("workout", workoutList.get(getAdapterPosition()));
-                        userInfoActivity.startActivity(intent);
-
-                    } else if (parent.equals("fragmentWorkouts")) {
-                        MainActivity mainActivity = (MainActivity) context;
-                        Intent intent = new Intent(WorkoutAdapter.this.context, SpecificWorkoutActivity.class);
-                        intent.putExtra("workout", workoutList.get(getAdapterPosition()));
-                        mainActivity.startActivity(intent);
-                    } else if (parent.equals("fragmentHome")) {
-                        MainActivity mainActivity = (MainActivity) context;
-                        Intent intent = new Intent(WorkoutAdapter.this.context, SpecificWorkoutActivity.class);
-                        intent.putExtra("workout", workoutList.get(getAdapterPosition()));
-                        intent.putExtra("ownWorkout", true);
-                        mainActivity.startActivity(intent);
-                    }
-
-                }
-            });
+            itemView.setOnClickListener(view -> workoutCallback.onWorkoutClicked(workoutList.get(getAdapterPosition())));
         }
 
     }
-
-
-    /*to prevent glide from loading images if the parent layout already destroyed*/
-
-    @Override
-    public void onViewDetachedFromWindow(@NonNull WorkoutViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        isParentDead = true;
-    }
-
-    @Override
-    public void onViewAttachedToWindow(@NonNull WorkoutViewHolder holder) {
-        super.onViewAttachedToWindow(holder);
-        isParentDead = false;
-    }
-
 
 }

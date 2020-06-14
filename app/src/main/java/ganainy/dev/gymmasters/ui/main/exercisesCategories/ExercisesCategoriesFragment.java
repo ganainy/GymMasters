@@ -1,4 +1,4 @@
-package ganainy.dev.gymmasters.ui.main.exercises;
+package ganainy.dev.gymmasters.ui.main.exercisesCategories;
 
 
 import android.content.Intent;
@@ -18,7 +18,7 @@ import butterknife.OnClick;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MainFragmentExcercies extends Fragment {
+public class ExercisesCategoriesFragment extends Fragment {
 
 
     public static final String SELECTED_MUSCLE = "selectedMuscle";
@@ -32,7 +32,7 @@ public class MainFragmentExcercies extends Fragment {
     public static final String LOWERLEG = "lowerleg";
     public static final String SHOWALL = "showall";
 
-    public MainFragmentExcercies() {
+    public ExercisesCategoriesFragment() {
         // Required empty public constructorp
     }
 
@@ -41,7 +41,7 @@ public class MainFragmentExcercies extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_main_fragment_excercies, container, false);
+        View view= inflater.inflate(R.layout.fragment_excercies, container, false);
         ButterKnife.bind(this, view);
         return view;
     }

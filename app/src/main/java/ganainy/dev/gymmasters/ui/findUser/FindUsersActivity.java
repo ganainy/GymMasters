@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.User;
-import ganainy.dev.gymmasters.utils.MyConstants;
+import ganainy.dev.gymmasters.utils.AuthUtils;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,8 +39,6 @@ import ganainy.dev.gymmasters.utils.NetworkUtil;
 
 public class FindUsersActivity extends AppCompatActivity {
     private static final String TAG = "FindUsersActivity";
-    public NetworkChangeReceiver receiver;
-    Boolean bl = true;
     List<User> userList = new ArrayList<>();
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -66,6 +64,11 @@ public class FindUsersActivity extends AppCompatActivity {
         loadAllUsers();
     }
 
+    @OnClick(R.id.backArrowImageView)
+    void onBackArrowClick(){
+        onBackPressed();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,8 +77,6 @@ public class FindUsersActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.usersRecycler);
 
-        /**setting up custom toolbar*/
-        setSupportActionBar(toolbar);
 
         //this activity called from more than one source so we differ with intent
         if (getIntent().getStringExtra("source").equals("find"))
@@ -91,7 +92,7 @@ public class FindUsersActivity extends AppCompatActivity {
 
 
     private void loadFollowing() {
-        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(MyConstants.loggedInUserId);
+        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(AuthUtils.getLoggedUserId(this));
         users.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -169,7 +170,7 @@ public class FindUsersActivity extends AppCompatActivity {
 
     private void loadFollowers() {
 
-        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(MyConstants.loggedInUserId);
+        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(AuthUtils.getLoggedUserId(this));
         users.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -250,7 +251,7 @@ public class FindUsersActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds.child("id").getValue().equals(MyConstants.loggedInUserId)) {
+                    if (ds.child("id").getValue().equals(AuthUtils.getLoggedUserId(FindUsersActivity.this))) {
                         //don't show this user in list since it's the logged in user
                     } else {
                         User user = new User();

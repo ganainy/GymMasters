@@ -291,7 +291,7 @@
 
     <include
         android:id="@+id/loading_layout"
-        layout="@layout/loading_layout_shimmer"
+        layout="@layout/loading_layout"
         android:visibility="gone" />
 
 </FrameLayout>

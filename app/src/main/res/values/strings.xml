@@ -31,6 +31,7 @@
     <string name="or">-OR-</string>
     <string name="credentials_error">Error signing in, check your credentials</string>
     <string name="workout">Workout</string>
+    <string name="workouts">Workouts</string>
     <string name="exercises">Exercises</string>
     <string name="home">Home</string>
     <string name="permission_required">Permission required</string>
@@ -44,6 +45,20 @@
     <string name="app_need_network">App needs internet connection to fully utilize its features</string>
     <string name="ok">OK</string>
     <string name="no_exercises_found">No exercises found</string>
+    <string name="error_while_loading_data">Something went wrong while downloading your data</string>
+    <string name="you_didnt_create_custom_workouts">You didn\'t create any custom workouts yet.</string>
+    <string name="my_workouts">My workouts</string>
+    <string name="users_list">Users list</string>
+    <string name="my_exercises">My exercises</string>
+    <string name="you_didnt_create_custom_exercises">You didn\'t create any custom exercises yet.</string>
+    <string name="rating_formula">%1$d/5</string>
+    <string name="edit">Edit</string>
+    <string name="following">following</string>
+    <string name="follower_s">follower(s)</string>
+    <string name="create_exercise">Create exercise</string>
+    <string name="create_workout">Create workout</string>
+    <string name="view_my_exercises">View my exercises</string>
+    <string name="view_my_workouts">View my workouts</string>
 
 
 </resources>

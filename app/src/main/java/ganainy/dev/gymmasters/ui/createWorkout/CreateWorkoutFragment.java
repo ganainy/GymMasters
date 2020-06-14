@@ -27,7 +27,7 @@ import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.ui.main.MainActivity;
-import ganainy.dev.gymmasters.utils.MyConstants;
+import ganainy.dev.gymmasters.utils.AuthUtils;
 import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -216,7 +216,7 @@ public class CreateWorkoutFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_create_workout_fragment1, container, false);
+        View view = inflater.inflate(R.layout.create_workout_fragment, container, false);
         loadingLayout = view.findViewById(R.id.loading_layout);
         // setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
@@ -316,7 +316,7 @@ public class CreateWorkoutFragment extends Fragment {
         workout.setDuration(durationEditText.getText().toString());
         workout.setLevel(newWorkoutLevel);
         workout.setPhotoLink("workoutImages/" + imageUri.getLastPathSegment() + timeMilli);
-        workout.setCreatorId(MyConstants.loggedInUserId);
+        workout.setCreatorId(AuthUtils.getLoggedUserId(requireContext()));
         /**save user id and date with workout*/
         String id = workoutRef.push().getKey();
         workout.setId(id);

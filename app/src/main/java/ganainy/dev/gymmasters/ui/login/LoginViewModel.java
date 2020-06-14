@@ -27,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.utils.Event;
-import ganainy.dev.gymmasters.utils.MyConstants;
+import ganainy.dev.gymmasters.utils.AuthUtils;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 
 public class LoginViewModel extends ViewModel {
@@ -82,9 +82,6 @@ public class LoginViewModel extends ViewModel {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
                     isLoadingLiveData.setValue(false);
-                    //todo fix this singleton with shared pref and clear shared pref on logout -
-                    // set loggedInUserId value which will be used later
-                    MyConstants.loggedInUserId = mAuth.getUid();
                     navigateToMainLiveData.setValue(new Event<>(true));
                 })
                 .addOnFailureListener(e -> {

@@ -47,6 +47,7 @@ public class SpecificWorkoutActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //todo check if opened workout is created by logged in user
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_specific_workout);
         ButterKnife.bind(this);

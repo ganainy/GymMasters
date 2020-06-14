@@ -69,10 +69,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="ganainy.dev.gymmasters.ui.main.MainActivity"
-            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_main"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            />
         <activity
             android:name="ganainy.dev.gymmasters.ui.login.LoginActivity"
             android:configChanges="keyboardHidden"

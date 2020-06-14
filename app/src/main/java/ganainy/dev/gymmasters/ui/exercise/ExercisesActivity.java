@@ -7,7 +7,6 @@ import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,9 +20,10 @@ import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.shared_adapters.ExercisesAdapter;
 import ganainy.dev.gymmasters.ui.specificExercise.SpecificExerciseActivity;
 import ganainy.dev.gymmasters.utils.MiscellaneousUtils;
+import ganainy.dev.gymmasters.utils.NetworkState;
 
-import static ganainy.dev.gymmasters.ui.main.exercises.MainFragmentExcercies.SELECTED_MUSCLE;
-import static ganainy.dev.gymmasters.ui.main.home.MainFragmentHome.LOGGED_USER_ID;
+import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.SELECTED_MUSCLE;
+import static ganainy.dev.gymmasters.ui.main.home.HomeFragment.LOGGED_USER_ID;
 
 public class ExercisesActivity extends AppCompatActivity {
     private static final String TAG = "ExercisesActivity";
@@ -40,6 +40,8 @@ public class ExercisesActivity extends AppCompatActivity {
     ShimmerFrameLayout shimmerLoadingLayout;
     @BindView(R.id.empty_layout)
     ConstraintLayout emptyLayout;
+    @BindView(R.id.error_layout)
+    ConstraintLayout errorLayout;
     @BindView(R.id.exercisesRecyclerView)
     RecyclerView exercisesRecyclerView;
 
@@ -57,11 +59,7 @@ public class ExercisesActivity extends AppCompatActivity {
 
         exercisesViewModel = new ViewModelProvider(this).get(ExercisesViewModel.class);
 
-        if (getIntent().hasExtra(LOGGED_USER_ID)) {
-            /*show exercises created by logged in user*/
-            collapsingToolbarImage.setImageResource(R.drawable.runblue);
-            exercisesViewModel.downloadLoggedUserExercises(getIntent().getStringExtra(LOGGED_USER_ID));
-        } else if (getIntent().hasExtra(SELECTED_MUSCLE)) {
+       if (getIntent().hasExtra(SELECTED_MUSCLE)) {
             String selectedMuscle = getIntent().getStringExtra(SELECTED_MUSCLE);
             setTabHeaderImage(selectedMuscle);
             exercisesViewModel.getSelectedMuscleExercises(selectedMuscle);
@@ -72,26 +70,40 @@ public class ExercisesActivity extends AppCompatActivity {
             exercisesAdapter.notifyDataSetChanged();
         });
 
-        exercisesViewModel.getLoadingStateLiveData().observe(this, this::handleLoadingUi);
-
-        exercisesViewModel.getEmptyStateLiveData().observe(this, this::handleEmptyUi);
-
+        exercisesViewModel.getNetworkStateLiveData().observe(this, this::handleNetworkStateUi);
     }
 
-    private void handleEmptyUi(Boolean isEmpty) {
-        if (isEmpty) emptyLayout.setVisibility(View.VISIBLE);
-        else emptyLayout.setVisibility(View.GONE);
-    }
-
-    private void handleLoadingUi(Boolean isLoading) {
-        if (isLoading) {
-            exercisesRecyclerView.setVisibility(View.GONE);
-            shimmerLoadingLayout.setVisibility(View.VISIBLE);
-        } else {
-            exercisesRecyclerView.setVisibility(View.VISIBLE);
-            shimmerLoadingLayout.setVisibility(View.GONE);
+    private void handleNetworkStateUi(NetworkState networkState) {
+        switch (networkState){
+            case SUCCESS:
+                errorLayout.setVisibility(View.GONE);
+                emptyLayout.setVisibility(View.GONE);
+                exercisesRecyclerView.setVisibility(View.VISIBLE);
+                shimmerLoadingLayout.setVisibility(View.GONE);
+                break;
+            case ERROR:
+                errorLayout.setVisibility(View.VISIBLE);
+                emptyLayout.setVisibility(View.GONE);
+                exercisesRecyclerView.setVisibility(View.GONE);
+                shimmerLoadingLayout.setVisibility(View.GONE);
+                break;
+            case LOADING:
+                errorLayout.setVisibility(View.GONE);
+                emptyLayout.setVisibility(View.GONE);
+                exercisesRecyclerView.setVisibility(View.GONE);
+                shimmerLoadingLayout.setVisibility(View.VISIBLE);
+                break;
+            case EMPTY:
+                errorLayout.setVisibility(View.GONE);
+                 emptyLayout.setVisibility(View.VISIBLE);
+                exercisesRecyclerView.setVisibility(View.GONE);
+                shimmerLoadingLayout.setVisibility(View.GONE);
+                break;
         }
     }
+
+
+
 
 
     /**
