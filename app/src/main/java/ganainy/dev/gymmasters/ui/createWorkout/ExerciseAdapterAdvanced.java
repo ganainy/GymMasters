@@ -2,7 +2,6 @@ package ganainy.dev.gymmasters.ui.createWorkout;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,11 +19,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.ui.main.MainActivity;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.shashank.sony.fancytoastlib.FancyToast;
@@ -34,21 +33,17 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapterAdvanced.ExerciseViewHolder> implements Filterable {
+public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapterAdvanced.ExerciseViewHolder>  {
     private static final String TAG = "ExerciseAdapterAdvanced";
+    public static final String EXERCISE_IMAGES = "exerciseImages/";
+
     private final Context context;
+    private List<Exercise> exerciseList;
+    private AddExerciseCallback addExerciseCallback;
 
-    private List<Exercise> ExercisesOfWorkoutList = new ArrayList<>();
-    private StorageReference storageRef;
-    private String sets, reps;
-    private List<Exercise> filteredNameList = new ArrayList<>();
-    private List<Exercise> exerciseList, finalExerciseList;
-    private boolean isParentDead;
-
-    public ExerciseAdapterAdvanced(Context context) {
+    public ExerciseAdapterAdvanced(Context context, AddExerciseCallback addExerciseCallback) {
         this.context = context;
-        sets = "1";
-        reps = "1";
+        this.addExerciseCallback = addExerciseCallback;
     }
 
     @NonNull
@@ -61,171 +56,60 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ExerciseViewHolder exerciseViewHolder, int i) {
-        Log.i(TAG, "onBindViewHolder: ");
 
-        if (finalExerciseList.get(i).getIsAddedToWorkout() != null && finalExerciseList.get(i).getIsAddedToWorkout()) {
+        if (exerciseList.get(i).getIsAddedToWorkout() != null && exerciseList.get(i).getIsAddedToWorkout()) {
+            //exercise is added to workout
             exerciseViewHolder.parentConstraint.setBackgroundResource(R.drawable.circular_green_bordersolid);
-            exerciseViewHolder.AlreadyaddedLayout.setVisibility(View.VISIBLE);
+            exerciseViewHolder.AlreadyAddedLayout.setVisibility(View.VISIBLE);
             exerciseViewHolder.imageViewPlus.setVisibility(View.GONE);
+            if (exerciseList.get(i).getReps()!=null) {
+                exerciseViewHolder.repsCountTextView.setVisibility(View.VISIBLE);
+                exerciseViewHolder.repsCountTextView.setText(context.getString(R.string.reps,exerciseList.get(i).getReps()));
+            }
+            if (exerciseList.get(i).getSets()!=null) {
+                exerciseViewHolder.setsCountTextView.setVisibility(View.VISIBLE);
+                exerciseViewHolder.setsCountTextView.setText(context.getString(R.string.sets,exerciseList.get(i).getSets()));
+            }
         } else {
             exerciseViewHolder.parentConstraint.setBackgroundResource(R.drawable.circular_grey_bordersolid);
-            exerciseViewHolder.AlreadyaddedLayout.setVisibility(View.GONE);
+            exerciseViewHolder.AlreadyAddedLayout.setVisibility(View.GONE);
             exerciseViewHolder.imageViewPlus.setVisibility(View.VISIBLE);
+            exerciseViewHolder.setsCountTextView.setVisibility(View.GONE);
+            exerciseViewHolder.repsCountTextView.setVisibility(View.GONE);
         }
 
         exerciseViewHolder.exerciseName.setText(exerciseList.get(i).getName());
-        storageRef = FirebaseStorage.getInstance().getReference();
         //reference to exercise image
         downloadAndShowExerciseImage(exerciseViewHolder, i);
-
-
     }
 
     private void downloadAndShowExerciseImage(final ExerciseViewHolder exerciseViewHolder, int i) {
-        StorageReference pathReference = storageRef.child("exerciseImages/" + exerciseList.get(i).getPreviewPhoto1());
-        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                //download image with glide then show it in the navigation menu
-                if (!isParentDead) {
-                    Glide.with(context).load(uri.toString()).into(exerciseViewHolder.exerciseImage);
-                }
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-                Log.i(TAG, "onFailure: " + exception.getMessage());
-            }
-        });
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference pathReference = storageRef.child(EXERCISE_IMAGES + exerciseList.get(i).getPreviewPhoto1());
+        pathReference.getDownloadUrl().addOnSuccessListener(uri ->
+                Glide.with(context).load(uri.toString()).into(exerciseViewHolder.exerciseImage))
+                .addOnFailureListener(exception
+                        -> {
+                    Log.i(TAG, "onFailure: " + exception.getMessage());
+                });
     }
 
     @Override
     public int getItemCount() {
-        return exerciseList.size();
+        return exerciseList == null ? 0 : exerciseList.size();
     }
 
     public void setDataSource(List<Exercise> exerciseList) {
         this.exerciseList = exerciseList;
-        if (finalExerciseList == null) this.finalExerciseList = exerciseList;
-    }
-
-
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-
-                String charSequenceString = constraint.toString();
-                if (charSequenceString.isEmpty()) {
-                    filteredNameList = finalExerciseList;
-                } else {
-                    List<Exercise> filteredList = new ArrayList<>();
-                    for (Exercise exercise : finalExerciseList) {
-                        if (exercise.getName().toLowerCase().contains(charSequenceString.toLowerCase())) {
-                            filteredList.add(exercise);
-                        }
-                        filteredNameList = filteredList;
-                    }
-                }
-                FilterResults results = new FilterResults();
-                Log.i(TAG, "performFiltering: filteredNameList" + filteredNameList.size());
-                results.values = filteredNameList;
-                return results;
-            }
-
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                setDataSource((List<Exercise>) results.values);
-                notifyDataSetChanged();
-
-            }
-        };
-    }
-
-    private void openSetsAndRepsAlertDialog(final int adapterPosition) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        // Get the layout inflater
-        MainActivity mainActivity = (MainActivity) context;
-        LayoutInflater inflater = mainActivity.getLayoutInflater();
-        View view = inflater.inflate(R.layout.sets_reps_layout, null);
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the
-        // dialog layout
-        builder.setTitle("Choose sets and repetitions");
-        builder.setCancelable(false);
-        builder.setIcon(R.drawable.ic_muscle);
-
-        builder.setView(view)
-                // Add action buttons
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        addToExercisesOfWorkoutList(adapterPosition);
-                        FancyToast.makeText(context, "Added exercise", FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
-
-                        finalExerciseList.get(adapterPosition).setIsAddedToWorkout(true);
-                        notifyItemChanged(adapterPosition);
-
-
-                    }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                //do nothing
-            }
-        });
-        builder.create();
-        builder.show();
-
-
-        //two number pickers in alert dialog to choose sets and reps for clicked exercise
-        NumberPicker setsPicker = view.findViewById(R.id.setsPicker);
-        NumberPicker repsPicker = view.findViewById(R.id.repsPicker);
-
-        setsPicker.setMinValue(4);
-        setsPicker.setMaxValue(12);
-
-        repsPicker.setMinValue(10);
-        repsPicker.setMaxValue(100);
-
-
-        setsPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                sets = String.valueOf(numberPicker.getValue());
-            }
-        });
-
-        repsPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                reps = String.valueOf(numberPicker.getValue());
-            }
-        });
-    }
-
-    private void addToExercisesOfWorkoutList(int adapterPosition) {
-        exerciseList.get(adapterPosition).setSets(sets);
-        exerciseList.get(adapterPosition).setReps(reps);
-        ExercisesOfWorkoutList.add(finalExerciseList.get(adapterPosition));
-    }
-
-
-    public List<Exercise> getExercisesOfWorkoutList() {
-        return ExercisesOfWorkoutList;
     }
 
     //viewHolder
     class ExerciseViewHolder extends RecyclerView.ViewHolder {
         CircleImageView exerciseImage;
-        TextView exerciseName;
+        TextView exerciseName,repsCountTextView,setsCountTextView;
         ImageView imageViewPlus, deleteImageView;
         ConstraintLayout parentConstraint;
-        LinearLayout AlreadyaddedLayout;
-
+        LinearLayout AlreadyAddedLayout;
 
 
         ExerciseViewHolder(@NonNull View itemView) {
@@ -235,41 +119,19 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
             exerciseName = itemView.findViewById(R.id.exerciseNameEdittext);
             imageViewPlus = itemView.findViewById(R.id.imageViewDelete);
             parentConstraint = itemView.findViewById(R.id.parentConstraint);
-            AlreadyaddedLayout = itemView.findViewById(R.id.AlreadyaddedLayout);
+            AlreadyAddedLayout = itemView.findViewById(R.id.AlreadyaddedLayout);
+            repsCountTextView = itemView.findViewById(R.id.repsCountTextView);
+            setsCountTextView = itemView.findViewById(R.id.setsCountTextView);
 
-            //open full exercise info when exercise from recycler is clicked
-            imageViewPlus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    openSetsAndRepsAlertDialog(getAdapterPosition());
-                }
-            });
+            /*delegate interactions to parent*/
+            imageViewPlus.setOnClickListener(v -> {
+                        addExerciseCallback.onExercisesAdded(exerciseList.get(getAdapterPosition()),getAdapterPosition());
+                    }
+            );
 
-            deleteImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finalExerciseList.get(getAdapterPosition()).setIsAddedToWorkout(false);
-                    notifyItemChanged(getAdapterPosition());
-                    ExercisesOfWorkoutList.remove(finalExerciseList.get(getAdapterPosition()));
-                }
-            });
+            deleteImageView.setOnClickListener(view -> addExerciseCallback.onExercisesDeleted(exerciseList.get(getAdapterPosition()),getAdapterPosition()));
         }
 
     }
 
-
-    //
-
-
-    @Override
-    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        isParentDead = true;
-    }
-
-    @Override
-    public void onViewAttachedToWindow(@NonNull ExerciseViewHolder holder) {
-        super.onViewAttachedToWindow(holder);
-        isParentDead = false;
-    }
 }

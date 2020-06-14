@@ -1,7 +1,6 @@
 package ganainy.dev.gymmasters.ui.createExercise;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -127,7 +126,7 @@ public class CreateExerciseFragment extends Fragment {
         initViewModel();
 
         mViewModel.getMissingFieldLiveData().observe(getViewLifecycleOwner(), missingField -> {
-            MissingField contentIfNotHandled = missingField.getContentIfNotHandled();
+            ExerciseFieldIssue contentIfNotHandled = missingField.getContentIfNotHandled();
             if (contentIfNotHandled==null)return;
             switch (contentIfNotHandled) {
                 case NAME:

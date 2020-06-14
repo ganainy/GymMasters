@@ -1,26 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context="ganainy.dev.gymmasters.ui.createExercise.CreateNewExerciseActivity">
+
+        <!--toolbar-->
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary">
+
+            <ImageView
+                android:id="@+id/backArrowImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_arrow_back_white"
+                android:adjustViewBounds="true"
+                style="?android:borderlessButtonStyle"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/create_workout"
+                android:textColor="#eee"
+                android:textSize="18sp"
+                />
+
+        </androidx.appcompat.widget.Toolbar>
 
 
         <ScrollView
+
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/activity_bg"
             android:orientation="vertical">
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,14 +78,14 @@
                                 android:layout_width="9dp"
                                 android:layout_height="9dp"
                                 android:layout_marginTop="8dp"
-                                android:layout_marginRight="4dp"
+                                android:layout_marginEnd="4dp"
                                 android:src="@drawable/orange_circle" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/proximanovaregular"
-                                android:text="Workout name : "
+                                android:text="@string/workout_name"
                                 android:textSize="17sp"
                                 android:textStyle="bold" />
 
@@ -68,7 +96,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
-                            android:hint="What do you wanna call it"
+                            android:hint="@string/what_do_you_wanna_call_it"
                             app:layout_constraintEnd_toEndOf="parent" />
 
                     </LinearLayout>
@@ -86,14 +114,14 @@
                                 android:layout_width="9dp"
                                 android:layout_height="9dp"
                                 android:layout_marginTop="8dp"
-                                android:layout_marginRight="4dp"
+                                android:layout_marginEnd="4dp"
                                 android:src="@drawable/orange_circle" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/proximanovaregular"
-                                android:text="Duration : "
+                                android:text="@string/duration"
                                 android:textSize="17sp"
                                 android:textStyle="bold" />
 
@@ -105,7 +133,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
-                            android:hint="Estimated time of workout"
+                            android:hint="@string/estimated_time_of_workout"
                             app:layout_constraintEnd_toEndOf="parent" />
 
                     </LinearLayout>
@@ -139,7 +167,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/proximanovaregular"
-                            android:text="Level :"
+                            android:text="@string/level"
                             android:textSize="17sp"
                             android:textStyle="bold"
 
@@ -185,7 +213,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:fontFamily="@font/proximanovaregular"
-                        android:text="Add cover photo for your workout : "
+                        android:text="@string/add_cover_photo_for_your_workout"
                         android:textSize="17sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@+id/exerciseImagesDot"
@@ -236,7 +264,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/proximanovaregular"
-                            android:text="Press + to add exercises to your workout "
+                            android:text="@string/press_to_add_exercises_to_your_workout"
                             android:textSize="17sp"
                             android:textStyle="bold" />
 
@@ -264,11 +292,11 @@
                     </LinearLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
-
                         android:id="@+id/exercisesRecycler"
                         android:layout_width="match_parent"
                         android:layout_height="400dp"
-                        android:padding="8dp"></androidx.recyclerview.widget.RecyclerView>
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:padding="8dp"/>
 
                 </LinearLayout>
 
@@ -279,12 +307,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_margin="8dp"
-                    android:text="Upload" />
+                    android:text="@string/upload" />
 
 
             </LinearLayout>
-
         </ScrollView>
+
 
     </LinearLayout>
 
@@ -295,3 +323,4 @@
         android:visibility="gone" />
 
 </FrameLayout>
+

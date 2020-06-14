@@ -1,5 +1,5 @@
 package ganainy.dev.gymmasters.ui.createExercise;
 
-public enum MissingField {
+public enum ExerciseFieldIssue {
     NAME,EXECUTION,MECHANIC,TARGET_MUSCLE,PHOTO
 }

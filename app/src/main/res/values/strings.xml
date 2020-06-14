@@ -62,7 +62,6 @@
     <string name="add_two_photos_describing_the_exercise">Add two photos describing the exercise :</string>
     <string name="upload">Upload</string>
     <string name="exercise_name">Exercise name :</string>
-    <string name="what_do_you_wanna_call_it">What do you wanna call it</string>
     <string name="enter_execution_steps">Enter execution steps..</string>
     <string name="targeted_muscle">Targeted Muscle :</string>
     <string name="mechanic">Mechanic :</string>
@@ -79,6 +78,25 @@
     <string name="select_target_muscle">Press arrow to select targeted muscle</string>
     <string name="select_photos">Select two photos describing exercise movement.</string>
     <string name="uploading">Uploading...</string>
+    <string name="workout_name">Workout name :</string>
+    <string name="what_do_you_wanna_call_it">What do you wanna call it</string>
+    <string name="duration">Duration :</string>
+    <string name="estimated_time_of_workout">Estimated time of workout</string>
+    <string name="level">Level :</string>
+    <string name="add_cover_photo_for_your_workout">Add cover photo for your workout :</string>
+    <string name="press_to_add_exercises_to_your_workout">Press + to add exercises to your workout</string>
+    <string name="workout_uploaded">Workout uploaded</string>
+    <string name="workout_upload_failed">Uploading failed, check connection and try again</string>
+    <string name="duration_0_to_120">Duration must be from 0 to 120 minutes</string>
+    <string name="select_workout_image">Select image to represent workout</string>
+    <string name="select_workout_level">Select workout level</string>
+    <string name="workout_doesnt_have_any_exercise">Workout must have at lease 1 exercise</string>
+    <string name="chose_sets_reps_count">Choose sets and repetitions</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="added_exercise_to_workout">Added exercise to workout</string>
+    <string name="sets">%1$s Sets</string>
+    <string name="reps">%1$s Reps</string>
 
 
 </resources>

@@ -19,8 +19,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.nio.file.ClosedDirectoryStreamException;
-
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.utils.AuthUtils;
 import ganainy.dev.gymmasters.utils.Event;
@@ -70,8 +68,8 @@ public class CreateExerciseViewModel extends ViewModel {
     private LiveData<Boolean> uploadExerciseTransformation;
     private MutableLiveData<Boolean> repeatedNameLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> isExerciseUploadSuccessfulLiveData = new MutableLiveData<>();
+    private MutableLiveData<Event<ExerciseFieldIssue>> missingFieldLiveData = new MutableLiveData<>();
     private MutableLiveData<Integer> uploadProgressLiveData = new MutableLiveData<>();
-    private MutableLiveData<Event<MissingField>> missingFieldLiveData = new MutableLiveData<>();
     private MutableLiveData<NetworkState> networkStateLiveData = new MutableLiveData<>();
     private MutableLiveData<Uri> firstImageUriLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> firstImageUploadedLiveData = new MutableLiveData<>();
@@ -121,7 +119,7 @@ public class CreateExerciseViewModel extends ViewModel {
         return networkStateLiveData;
     }
 
-    public LiveData<Event<MissingField>> getMissingFieldLiveData() {
+    public LiveData<Event<ExerciseFieldIssue>> getMissingFieldLiveData() {
         return missingFieldLiveData;
     }
 
@@ -220,15 +218,15 @@ public class CreateExerciseViewModel extends ViewModel {
 
     public void saveExercise(String exerciseName, String exerciseExecution, String additionalNotes) {
         if (exerciseName.trim().length() < 6) {
-            missingFieldLiveData.setValue(new Event<>(MissingField.NAME));
+            missingFieldLiveData.setValue(new Event<>(ExerciseFieldIssue.NAME));
         } else if (exerciseExecution.trim().length() < 30) {
-            missingFieldLiveData.setValue(new Event<>(MissingField.EXECUTION));
+            missingFieldLiveData.setValue(new Event<>(ExerciseFieldIssue.EXECUTION));
         } else if (exerciseMechanic==null || exerciseMechanic.trim().isEmpty()) {
-            missingFieldLiveData.setValue(new Event<>(MissingField.MECHANIC));
+            missingFieldLiveData.setValue(new Event<>(ExerciseFieldIssue.MECHANIC));
         } else if (exerciseSelectedMuscle==null ||exerciseSelectedMuscle.trim().isEmpty()) {
-            missingFieldLiveData.setValue(new Event<>(MissingField.TARGET_MUSCLE));
+            missingFieldLiveData.setValue(new Event<>(ExerciseFieldIssue.TARGET_MUSCLE));
         } else if (firstImageUri == null || secondImageUri == null) {
-            missingFieldLiveData.setValue(new Event<>(MissingField.PHOTO));
+            missingFieldLiveData.setValue(new Event<>(ExerciseFieldIssue.PHOTO));
         } else {
             networkStateLiveData.setValue(NetworkState.LOADING);
 

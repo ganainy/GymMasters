@@ -1,6 +1,7 @@
 package ganainy.dev.gymmasters.ui.createWorkout;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,36 +15,31 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
-import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.ui.main.MainActivity;
-import ganainy.dev.gymmasters.utils.AuthUtils;
+import ganainy.dev.gymmasters.utils.ApplicationViewModelFactory;
+
 import com.github.lzyzsd.circleprogress.CircleProgress;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -57,6 +53,11 @@ import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
  */
 public class CreateWorkoutFragment extends Fragment {
     private static final String TAG = "CreateWorkoutFragment";
+    public static final String SELECT_PICTURE = "Select Picture";
+
+    private String sets = "4";
+    private String reps = "10";
+
     @BindView(R.id.nameEditText)
     EditText nameEditText;
 
@@ -69,7 +70,6 @@ public class CreateWorkoutFragment extends Fragment {
     @BindView(R.id.workoutImageView)
     ImageView workoutImage;
 
-
     @BindView(R.id.exercisesRecycler)
     RecyclerView exercisesRecycler;
     @BindView(R.id.searchView)
@@ -77,132 +77,113 @@ public class CreateWorkoutFragment extends Fragment {
     @BindView(R.id.circle_progress)
     CircleProgress circleProgress;
 
+    @OnClick(R.id.backArrowImageView)
+    void onBackArrowClick(){
+        requireActivity().onBackPressed();
+    }
 
-    private String newWorkoutLevel;
+    CreateWorkoutViewModel mViewModel;
+
     private Uri imageUri;
-    private List<Exercise> exerciseList;
     private ExerciseAdapterAdvanced exerciseAdapter;
-    private List<Exercise> exercisesOfWorkoutList;
 
-    private ConstraintLayout loadingLayout;
-    private int fakeProgress;
+    @BindView(R.id.loading_layout)
+     ConstraintLayout loadingLayout;
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        initViewModel();
+
+        mViewModel.getNetworkStateLiveData().observe(getViewLifecycleOwner(),networkState -> {
+            switch (networkState){
+
+                case SUCCESS:
+                    loadingLayout.setVisibility(View.GONE);
+                    FancyToast.makeText(getActivity(), getString(R.string.workout_uploaded), FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
+                    requireActivity().onBackPressed();
+                    break;
+                case ERROR:
+                    loadingLayout.setVisibility(View.GONE);
+                    FancyToast.makeText(getActivity(), getString(R.string.workout_upload_failed), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                    break;
+                case LOADING:
+                    loadingLayout.setVisibility(View.VISIBLE);
+                    break;
+                case EMPTY:
+                    break;
+            }
+
+        });
+
+        mViewModel.getImageUriLiveData().observe(getViewLifecycleOwner(),imageUri->{
+            workoutImage.setPadding(0, 0, 0, 0);
+            workoutImage.setImageURI(imageUri);
+        });
+
+        mViewModel.getUploadProgressLiveData().observe(getViewLifecycleOwner(),progress->{
+             circleProgress.setProgress(progress);
+        });
+
+        mViewModel.getExerciseListLiveData().observe(getViewLifecycleOwner(),exerciseList->{
+            exerciseAdapter.setDataSource(exerciseList);
+            exerciseAdapter.notifyDataSetChanged();
+        });
+
+        mViewModel.getFieldIssueLiveData().observe(getViewLifecycleOwner(),fieldIssue->{
+            WorkoutFieldIssue contentIfNotHandled = fieldIssue.getContentIfNotHandled();
+            if (contentIfNotHandled!=null){
+                switch (contentIfNotHandled){
+                    case NAME:
+                        FancyToast.makeText(getActivity(), getString(R.string.name_atleast_6), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                        break;
+                    case DURATION:
+                        FancyToast.makeText(getActivity(), getString(R.string.duration_0_to_120), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                        break;
+                    case IMAGE:
+                        FancyToast.makeText(getActivity(), getString(R.string.select_workout_image), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                        break;
+                    case LEVEL:
+                        FancyToast.makeText(getActivity(), getString(R.string.select_workout_level), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                        break;
+                    case EMPTY_EXERCISES:
+                        FancyToast.makeText(getActivity(), getString(R.string.workout_doesnt_have_any_exercise), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                        break;
+                }
+            }
+        });
+
+        mViewModel.getDownloadedExerciseListLiveData().observe(getViewLifecycleOwner(),updatedExerciseList->{
+            exerciseAdapter.setDataSource(updatedExerciseList);
+            exerciseAdapter.notifyDataSetChanged();
+        });
+
+    }
+
+
+
+
+
+
+    private void initViewModel() {
+        ApplicationViewModelFactory applicationViewModelFactory=new ApplicationViewModelFactory(requireActivity().getApplication());
+        mViewModel = new ViewModelProvider(this,applicationViewModelFactory).get(CreateWorkoutViewModel.class);
+    }
 
     public CreateWorkoutFragment() {
         // Required empty public constructor
     }
 
-
-    private void uploadWorkoutImage() {
-
-        /**this list contains exercises i added to the work out and each one has sets and reps*/
-        exercisesOfWorkoutList = exerciseAdapter.getExercisesOfWorkoutList();
-
-        if (!validateInputs()) {
-            return;
-        }
-
-
-        /**unique number to attach to image path */
-        Date date = new Date();
-        final long timeMilli = date.getTime();
-
-        /**show loading layout*/
-        loadingLayout.setVisibility(View.VISIBLE);
-
-
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference imagesRef = storageRef.child("workoutImages/" + imageUri.getLastPathSegment() + timeMilli);
-        imagesRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.i(TAG, "isAdded: " + isAdded() + isVisible() + getUserVisibleHint());
-                if (isAdded() && isVisible() && getUserVisibleHint()) {
-                    //check if fragment is visible
-                    uploadWorkout(timeMilli);
-                } else {
-                    //delete uploaded photo since workout wont be uploaded
-                    imagesRef.delete();
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                loadingLayout.setVisibility(View.GONE);
-                Log.i(TAG, "onFailure: " + e.getMessage());
-                FancyToast.makeText(getActivity(), "Uploading failed , check connection and try again", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                //calculating progress percentage
-                final double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                //displaying percentage in circleLoadingView
-
-
-                //add little delay when updating progress to look smoother
-                new Thread() {
-                    public void run() {
-                        while (fakeProgress < (int) progress) {
-                            try {
-                                getActivity().runOnUiThread(new Runnable() {
-
-                                    @Override
-                                    public void run() {
-                                        fakeProgress++;
-                                        circleProgress.setProgress(fakeProgress);
-                                    }
-                                });
-                                Thread.sleep(15);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }.start();
-
-                /* circleProgress.setProgress((int) progress);*/
-            }
-        });
-    }
-
-    private boolean validateInputs() {
-        if (nameEditText.getText().length() < 6) {
-            FancyToast.makeText(getActivity(), "Name must be at least 6 chars", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-            return false;
-        } else if (!checkInRange(durationEditText.getText().toString())) {
-            FancyToast.makeText(getActivity(), "Duration must be from 0 to 120 minutes", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-            return false;
-        } else if (imageUri == null) {
-            FancyToast.makeText(getActivity(), "Select image to represent workout", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-            return false;
-        } else if (newWorkoutLevel.equals("")) {
-            FancyToast.makeText(getActivity(), "Select workout level", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-            return false;
-        } else if (exercisesOfWorkoutList == null || exercisesOfWorkoutList.size() == 0) {
-            FancyToast.makeText(getActivity(), "Workout must have at lease 1 exercise", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-            return false;
-        } else {
-
-            return true;
-        }
-    }
-
-    private boolean checkInRange(String text) {
-        return Integer.valueOf(text) > 0 && Integer.valueOf(text) <= 120;
-    }
-
     private void levelSpinnerCode() {
         final String[] level = {"", "Beginner", "Intermediate", "Professional"};
-        ArrayAdapter arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_item, level);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(requireActivity(), android.R.layout.simple_spinner_item, level);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         levelSpinner.setAdapter(arrayAdapter);
         levelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                newWorkoutLevel = level[i];
+                mViewModel.setWorkoutLevel(level[i]);
             }
 
             @Override
@@ -217,69 +198,28 @@ public class CreateWorkoutFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.create_workout_fragment, container, false);
-        loadingLayout = view.findViewById(R.id.loading_layout);
         // setHasOptionsMenu(true);
         ButterKnife.bind(this, view);
-
         levelSpinnerCode();
-        downloadAllExercises();
+        setupRecycler();
         return view;
     }
 
 
-    private void downloadAllExercises() {
-        exerciseList = new ArrayList<>();
-        ChildEventListener childEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Exercise exercise = new Exercise();
-                    exercise.setName(ds.child("name").getValue().toString());
-                    exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
-                    exercise.setPreviewPhoto1(ds.child("previewPhoto1").getValue().toString());
-                    exerciseList.add(exercise);
-
-                }
-
-                //downloadExercisesImages();
-                setupRecycler();
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-
-
-        FirebaseDatabase.getInstance().getReference(EXERCISES).addChildEventListener(childEventListener);
-
-    }
-
     private void setupRecycler() {
+        //addExerciseToWorkout
+        exerciseAdapter = new ExerciseAdapterAdvanced(getActivity(),new AddExerciseCallback(){
+            @Override
+            public void onExercisesAdded(Exercise exercise,Integer adapterPosition) {
+                openSetsAndRepsAlertDialog(exercise);
+            }
 
-        exerciseAdapter = new ExerciseAdapterAdvanced(getActivity());
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        exerciseAdapter.setDataSource(exerciseList);
-        exercisesRecycler.setLayoutManager(linearLayoutManager);
+            @Override
+            public void onExercisesDeleted(Exercise exercise,Integer adapterPosition) {
+                mViewModel.removeExerciseFromWorkout(exercise);
+            }
+        });
         exercisesRecycler.setAdapter(exerciseAdapter);
-
         addSearchFunctionality();
     }
 
@@ -297,46 +237,7 @@ public class CreateWorkoutFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                Log.i(TAG, "onQueryTextChange: " + editable);
-                //so app won't crash if no data in recycler
-                if (exerciseAdapter != null)
-                    exerciseAdapter.getFilter().filter(editable);
-            }
-        });
-    }
-
-    private void uploadWorkout(long timeMilli) {
-
-
-        DatabaseReference workoutRef = FirebaseDatabase.getInstance().getReference("workout");
-
-
-        Workout workout = new Workout();
-        workout.setName(nameEditText.getText().toString());
-        workout.setDuration(durationEditText.getText().toString());
-        workout.setLevel(newWorkoutLevel);
-        workout.setPhotoLink("workoutImages/" + imageUri.getLastPathSegment() + timeMilli);
-        workout.setCreatorId(AuthUtils.getLoggedUserId(requireContext()));
-        /**save user id and date with workout*/
-        String id = workoutRef.push().getKey();
-        workout.setId(id);
-        workout.setDate(String.valueOf(System.currentTimeMillis()));
-
-        workout.setExercisesNumber(String.valueOf(exercisesOfWorkoutList.size()));
-        workout.setWorkoutExerciseList(exercisesOfWorkoutList);
-
-        workoutRef.child(id).setValue(workout).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                loadingLayout.setVisibility(View.GONE);
-                startActivity(new Intent(getActivity(), MainActivity.class));
-                FancyToast.makeText(getActivity(), "Workout uploaded", FancyToast.LENGTH_LONG, FancyToast.SUCCESS, false).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                FancyToast.makeText(getActivity(), "Uploading failed , check connection and retry", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-                loadingLayout.setVisibility(View.GONE);
+                mViewModel.filterExercises(editable);
             }
         });
     }
@@ -347,7 +248,7 @@ public class CreateWorkoutFragment extends Fragment {
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 103);
+            startActivityForResult(Intent.createChooser(intent, SELECT_PICTURE), 103);
     }
 
 
@@ -357,33 +258,66 @@ public class CreateWorkoutFragment extends Fragment {
         if (data == null)
             return;
         if (requestCode == 103) {
-            Log.i(TAG, "requestCode: ok");
-            imageUri =data.getData();
-            workoutImage.setPadding(0, 0, 0, 0);
-            workoutImage.setImageURI(imageUri);
+            mViewModel.setImageUri(data.getData());
         }
     }
 
     @OnClick(R.id.uploadButton)
-    public void onuploadClicked() {
-        /**upload workout image to storge*/
-        uploadWorkoutImage();
-
-
+    public void onUploadClicked() {
+        /*this list contains exercises i added to the work out and each one has sets and reps*/
+        if (mViewModel.validateInputs(nameEditText.getText().toString().trim(),
+                durationEditText.getText().toString().trim()))
+        {
+            mViewModel.uploadWorkoutImage();
+            mViewModel.setWorkoutName(nameEditText.getText().toString());
+            mViewModel.setWorkoutDuration(durationEditText.getText().toString());
+        }
     }
 
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.i(TAG, "onStop: ");
-        exercisesRecycler.setAdapter(null);
+    private void openSetsAndRepsAlertDialog(final Exercise selectedExercise) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        LayoutInflater inflater = requireActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.sets_reps_layout, null);
+        // Inflate and set the layout for the dialog
+        builder.setTitle(R.string.chose_sets_reps_count);
+        builder.setCancelable(false);
+        builder.setIcon(R.drawable.ic_muscle);
+
+        builder.setView(view)
+                // Add action buttons
+                .setPositiveButton(R.string.save, (dialog, id) -> {
+
+                    selectedExercise.setSets(sets);
+                    selectedExercise.setReps(reps);
+                    mViewModel.addExerciseToWorkout(selectedExercise);
+
+                    FancyToast.makeText(requireContext(), getString(R.string.added_exercise_to_workout), FancyToast.LENGTH_SHORT, FancyToast.SUCCESS, false).show();
+
+                }).setNegativeButton(R.string.cancel, (dialogInterface, i) -> {
+                    //do nothing
+                });
+        builder.create();
+        builder.show();
+
+
+        //two number pickers in alert dialog to choose sets and reps for clicked exercise
+        NumberPicker setsPicker = view.findViewById(R.id.setsPicker);
+        NumberPicker repsPicker = view.findViewById(R.id.repsPicker);
+
+        setsPicker.setMinValue(4);
+        setsPicker.setMaxValue(12);
+
+        repsPicker.setMinValue(10);
+        repsPicker.setMaxValue(100);
+
+
+        setsPicker.setOnValueChangedListener((numberPicker, i, i1) ->
+                sets = String.valueOf(numberPicker.getValue()));
+
+        repsPicker.setOnValueChangedListener((numberPicker, i, i1) ->
+                reps = String.valueOf(numberPicker.getValue()));
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i(TAG, "onResume: ");
-        exercisesRecycler.setAdapter(exerciseAdapter);
-    }
+
 }
