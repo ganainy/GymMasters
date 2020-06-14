@@ -54,10 +54,6 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity
-            android:name="ganainy.dev.gymmasters.ui.createExercise.CreateNewExerciseActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait" />
-        <activity
             android:name="ganainy.dev.gymmasters.ui.specificExercise.SpecificExerciseActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />

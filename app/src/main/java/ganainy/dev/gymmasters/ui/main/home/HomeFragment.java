@@ -16,9 +16,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.facebook.shimmer.ShimmerFrameLayout;
+
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.User;
-import ganainy.dev.gymmasters.ui.createExercise.CreateNewExerciseActivity;
 import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 import ganainy.dev.gymmasters.utils.AuthUtils;
 
@@ -49,6 +50,8 @@ public class HomeFragment extends Fragment {
     TextView followingTextView;
     @BindView(R.id.ratingTextView)
     TextView ratingTextView;
+    @BindView(R.id.shimmer_layout)
+    ShimmerFrameLayout shimmerFrameLayout;
 
     private HomeViewModel mViewModel;
 
@@ -61,7 +64,8 @@ public class HomeFragment extends Fragment {
 
     @OnClick(R.id.createExercise)
     void createExercise() {
-        startActivity(new Intent(getActivity(), CreateNewExerciseActivity.class));
+        ActivityCallback activityCallback = (ActivityCallback) requireActivity();
+        activityCallback.openCreateExerciseFragment();
     }
 
     @OnClick(R.id.viewLoggedUserExercises)
@@ -135,6 +139,7 @@ public class HomeFragment extends Fragment {
         name.setText(user.getName());
         email.setText(user.getEmail());
         aboutMeText.setText(user.getAbout_me());
+        shimmerFrameLayout.hideShimmer();
     }
 
 

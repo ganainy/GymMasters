@@ -170,7 +170,7 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:id="@+id/imageView8"
+                        android:id="@+id/exerciseImagesDot"
                         android:layout_width="9dp"
                         android:layout_height="9dp"
                         android:layout_marginStart="8dp"
@@ -188,7 +188,7 @@
                         android:text="Add cover photo for your workout : "
                         android:textSize="17sp"
                         android:textStyle="bold"
-                        app:layout_constraintStart_toEndOf="@+id/imageView8"
+                        app:layout_constraintStart_toEndOf="@+id/exerciseImagesDot"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <LinearLayout

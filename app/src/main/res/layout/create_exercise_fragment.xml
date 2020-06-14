@@ -10,7 +10,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,34 +19,29 @@
 
 
             <!--toolbar-->
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorPrimary">
 
                 <ImageView
                     android:id="@+id/backArrowImageView"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/ic_arrow_back_white"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"></ImageView>
+                    android:adjustViewBounds="true"
+                    style="?android:borderlessButtonStyle"
+                   />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Create exercise"
+                    android:text="@string/create_exercise"
                     android:textColor="#eee"
-                    android:textSize="24sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textSize="18sp"
+                   />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.Toolbar>
 
             <!--name ,execution , additinal note-->
             <LinearLayout
@@ -72,14 +67,16 @@
                             android:layout_width="9dp"
                             android:layout_height="9dp"
                             android:layout_marginTop="8dp"
-                            android:layout_marginRight="4dp"
+                            android:id="@+id/exerciseNameDot"
+                            android:visibility="gone"
+                            android:layout_marginEnd="4dp"
                             android:src="@drawable/orange_circle" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/proximanovaregular"
-                            android:text="Exercise name : "
+                            android:text="@string/exercise_name"
                             android:textSize="17sp"
                             android:textStyle="bold" />
 
@@ -90,7 +87,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:hint="What do you wanna call it"
+                        android:hint="@string/what_do_you_wanna_call_it"
                         app:layout_constraintEnd_toEndOf="parent" />
 
                 </LinearLayout>
@@ -108,14 +105,16 @@
                             android:layout_width="9dp"
                             android:layout_height="9dp"
                             android:layout_marginTop="8dp"
-                            android:layout_marginRight="4dp"
+                            android:id="@+id/executionDot"
+                            android:visibility="gone"
+                            android:layout_marginEnd="4dp"
                             android:src="@drawable/orange_circle" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/proximanovaregular"
-                            android:text="Execution : "
+                            android:text="@string/execution"
                             android:textSize="17sp"
                             android:textStyle="bold" />
 
@@ -126,7 +125,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:hint="Executions steps"
+                        android:hint="@string/executions_steps"
                         app:layout_constraintEnd_toEndOf="parent" />
 
                 </LinearLayout>
@@ -145,7 +144,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/proximanovaregular"
-                            android:text="Additional notes : "
+                            android:text="@string/additional_notes"
                             android:textSize="17sp"
                             android:textStyle="bold" />
 
@@ -156,7 +155,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:hint="Any addiditonal thoughs?"
+                        android:hint="@string/any_addiditonal_thoughs"
                         app:layout_constraintEnd_toEndOf="parent" />
 
                 </LinearLayout>
@@ -183,14 +182,16 @@
                         android:layout_width="9dp"
                         android:layout_height="9dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginRight="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:id="@+id/mechanicDot"
+                        android:visibility="gone"
                         android:src="@drawable/orange_circle" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/proximanovaregular"
-                        android:text="Mechanic              :"
+                        android:text="@string/mechanic"
                         android:textSize="17sp"
                         android:textStyle="bold"
 
@@ -218,14 +219,16 @@
                         android:layout_width="9dp"
                         android:layout_height="9dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginRight="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:id="@+id/targetedMuscleDot"
+                        android:visibility="gone"
                         android:src="@drawable/orange_circle" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/proximanovaregular"
-                        android:text="Targeted Muscle   :"
+                        android:text="@string/targeted_muscle"
                         android:textSize="17sp"
                         android:textStyle="bold"
 
@@ -236,7 +239,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:hint="Enter execution steps.."
+                        android:hint="@string/enter_execution_steps"
                         android:textSize="20sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         tools:text=" dd" />
@@ -258,6 +261,7 @@
                     android:layout_height="9dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
+                    android:visibility="gone"
                     android:src="@drawable/orange_circle"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -268,7 +272,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:fontFamily="@font/proximanovaregular"
-                    android:text="Add two photos describing the exercise : "
+                    android:text="@string/add_two_photos_describing_the_exercise"
                     android:textSize="17sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/exerciseImagesDot"
@@ -286,7 +290,7 @@
                         android:layout_height="200dp"
                         android:layout_margin="8dp"
                         android:layout_weight="1"
-                        android:background="@drawable/startexercise"
+                        android:src="@drawable/startexercise"
                         android:scaleType="centerCrop" />
 
                     <ImageView
@@ -302,7 +306,7 @@
                         android:layout_margin="8dp"
                         android:layout_weight="1"
                         android:scaleType="centerCrop"
-                        android:background="@drawable/endexercise" />
+                        android:src="@drawable/endexercise" />
 
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -313,10 +317,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+                android:layout_margin="8dp"
                 android:fontFamily="@font/proximanovaregular"
-                android:text="Upload"
+                android:text="@string/upload"
                 android:textSize="24sp" />
 
         </LinearLayout>

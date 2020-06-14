@@ -186,7 +186,7 @@ public class SpecificExerciseActivity extends YouTubeBaseActivity {
         mechanicTextView.setText(exercise.getMechanism());
         targetedMuscleTextView.setText(exercise.getBodyPart());
 
-        if (exercise.getAdditional_notes().equals("")) additionalNotesTextView.setText("None");
+        if (exercise.getAdditional_notes()==null) additionalNotesTextView.setText("None");
         else additionalNotesTextView.setText(exercise.getAdditional_notes());
 
         downloadPreviewImage();

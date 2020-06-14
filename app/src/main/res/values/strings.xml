@@ -55,10 +55,30 @@
     <string name="edit">Edit</string>
     <string name="following">following</string>
     <string name="follower_s">follower(s)</string>
-    <string name="create_exercise">Create exercise</string>
     <string name="create_workout">Create workout</string>
     <string name="view_my_exercises">View my exercises</string>
     <string name="view_my_workouts">View my workouts</string>
+    <string name="create_exercise">Create exercise</string>
+    <string name="add_two_photos_describing_the_exercise">Add two photos describing the exercise :</string>
+    <string name="upload">Upload</string>
+    <string name="exercise_name">Exercise name :</string>
+    <string name="what_do_you_wanna_call_it">What do you wanna call it</string>
+    <string name="enter_execution_steps">Enter execution steps..</string>
+    <string name="targeted_muscle">Targeted Muscle :</string>
+    <string name="mechanic">Mechanic :</string>
+    <string name="any_addiditonal_thoughs">Any addiditonal thoughs?</string>
+    <string name="additional_notes">Additional notes :</string>
+    <string name="executions_steps">Executions steps</string>
+    <string name="execution">Execution :</string>
+    <string name="exercises_added_successfully">Added Exercise successfully.</string>
+    <string name="something_went_wrong">Something went wrong, check connection and try again.</string>
+    <string name="exercise_was_same_name_exist">Exercise with same name already exists \n your exercise was not added</string>
+    <string name="name_atleast_6">Exercise name must be at least 6 letters</string>
+    <string name="execution_atleast_30">Please provide more execution steps to help other users do exercise correctly</string>
+    <string name="select_mechanic">Press arrow to select mechanic</string>
+    <string name="select_target_muscle">Press arrow to select targeted muscle</string>
+    <string name="select_photos">Select two photos describing exercise movement.</string>
+    <string name="uploading">Uploading...</string>
 
 
 </resources>

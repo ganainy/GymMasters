@@ -9,6 +9,7 @@ import android.provider.Settings;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,9 +17,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import ganainy.dev.gymmasters.ui.createExercise.CreateExerciseFragment;
 import ganainy.dev.gymmasters.ui.createWorkout.CreateWorkoutFragment;
 import ganainy.dev.gymmasters.ui.loggedUserExercises.LoggedUserExercisesFragment;
 import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.LoggedUserWorkoutsFragment;
@@ -347,4 +350,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback{
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.container, createWorkoutFragment).addToBackStack("createWorkoutFragment").commit();
     }
+
+    @Override
+    public void openCreateExerciseFragment() {
+        CreateExerciseFragment createExerciseFragment = new CreateExerciseFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, createExerciseFragment).addToBackStack("createExerciseFragment").commit();
+    }
+
 }

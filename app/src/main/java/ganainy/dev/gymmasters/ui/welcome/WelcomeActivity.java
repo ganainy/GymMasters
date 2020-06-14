@@ -31,7 +31,9 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkIfUserAlreadySignedIn();
         setContentView(R.layout.activity_welcome);
+
         viewPager = findViewById(R.id.view_pager);
         signUp = findViewById(R.id.sign_up);
         login = findViewById(R.id.logInTextView);
@@ -59,6 +61,18 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void checkIfUserAlreadySignedIn() {
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        // Check if user is signed in and open app without asking to login again
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() != null || account != null) {
+            // User is signed in
+            startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
+        }
     }
 
 
@@ -94,21 +108,6 @@ public class WelcomeActivity extends AppCompatActivity {
         });
     }
 
-
-    public void onStart() {
-        super.onStart();
-
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        // Check if user is signed in and open app without asking to login again
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() != null || account != null) {
-            // User is signed in (getCurrentUser() will be null if not signed in)
-            startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
-        }
-
-    }
 
 }
 
