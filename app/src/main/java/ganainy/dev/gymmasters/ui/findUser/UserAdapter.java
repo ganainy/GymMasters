@@ -36,20 +36,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> implements Filterable {
+public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     private static final String TAG = "UserAdapter";
-    private final List<User> userList;
-    private List<User> userListFull;
+    private  List<User> userList;
     private final Context context;
-    private long sumRatings;
-    private int sumRaters;
-    private boolean isParentDead;
+    private UserCallback userCallback;
 
-    public UserAdapter(Context context, List<User> userList) {
+
+    public UserAdapter(Context context, UserCallback userCallback) {
         this.context = context;
-        this.userList = userList;
-        userListFull = new ArrayList<>(userList);
+        this.userCallback = userCallback;
     }
+
+    public void setData(List<User> userList){
+        this.userList=userList;
+    }
+
 
     @NonNull
     @Override
@@ -63,132 +65,26 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public void onBindViewHolder(@NonNull UserViewHolder userViewHolder, int i) {
         User currentUser = userList.get(i);
         userViewHolder.nameTextView.setText(currentUser.getName());
-        downloadAndShowUserImage(userViewHolder, currentUser.getPhoto());
 
-        getRatingAndFollowers(userViewHolder, i);
-
-
-    }
-
-
-    private void getRatingAndFollowers(final UserViewHolder userViewHolder, int i) {
-
-        //show followers count
-        FirebaseDatabase.getInstance().getReference("users").child(userList.get(i).getId()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                if (dataSnapshot.hasChild("followersUID")) {
-                    userViewHolder.followersTextView.setText(dataSnapshot.child("followersUID").getChildrenCount() + " Followers");
-                } else {
-                    userViewHolder.followersTextView.setText("0 Followers");
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        //show avg rating on rating bar
-        final DatabaseReference users = FirebaseDatabase.getInstance().getReference("users").child(userList.get(i).getId());
-        users.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild("Ratings")) {
-                    users.child("Ratings").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            sumRatings = 0;
-                            sumRaters = 0;
-                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                sumRatings += (long) ds.getValue();
-                                sumRaters++;
-                            }
-                            userViewHolder.ratingBar.setRating(sumRatings / sumRaters);
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-                } else {
-                    userViewHolder.ratingBar.setRating(0);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        //
-
-
-    }
-
-    private void downloadAndShowUserImage(final UserViewHolder userViewHolder, final String photo) {
-        if (photo == null) {
-            return;
+        if (userList.get(i).getPhoto()!=null) {
+            Glide.with(context).load(userList.get(i).getPhoto()).into(userViewHolder.userImageView);
         }
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child("images/").child(photo);
 
-        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                if (!isParentDead) {
-                    Glide.with(context).load(uri).into(userViewHolder.userImageView);
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "user photo download failed " + e.getMessage());
-                try {
-                    if (context != null)
-                        Glide.with(context).load(Uri.parse(photo)).into(userViewHolder.userImageView);
-                } catch (Exception ex) {
-                    Log.i(TAG, "Exception: " + ex.getMessage());
-                }
-            }
-        });
+        if (userList.get(i).getFollowers()!=null) {
+            userViewHolder.followersTextView.setText(context.getString(R.string.followers_count,userList.get(i).getFollowers()));
+        }
+
+        if (userList.get(i).getRating() != null) {
+            userViewHolder.ratingBar.setRating(userList.get(i).getRating());
+        }
 
     }
+
+
 
     @Override
     public int getItemCount() {
-        return userList.size();
-    }
-
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                List<User> filteredList = new ArrayList<>();
-                if (charSequence == null || charSequence.length() == 0) {
-                    filteredList.addAll(userListFull);
-                } else {
-                    String filterPattern = charSequence.toString().toLowerCase().trim();
-                    for (User user : userListFull) {
-                        if (user.getName().toLowerCase().contains(filterPattern)) {
-                            filteredList.add(user);
-                        }
-                    }
-                }
-                FilterResults results = new FilterResults();
-                results.values = filteredList;
-                return results;
-            }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                userList.clear();
-                userList.addAll((List<User>) filterResults.values);
-                notifyDataSetChanged();
-            }
-        };
+        return userList==null?0:userList.size();
     }
 
 
@@ -210,29 +106,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             ButterKnife.bind(this, itemView);
 
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(context, UserInfoActivity.class);
-                    intent.putExtra("user", userList.get(getAdapterPosition()));
-                    FindUsersActivity findUsersActivity = (FindUsersActivity) context;
-                    findUsersActivity.startActivity(intent);
-                }
+            itemView.setOnClickListener(view -> {
+              userCallback.onUserClicked(userList.get(getAdapterPosition()),getAdapterPosition());
             });
 
         }
     }
 
 
-    @Override
-    public void onViewDetachedFromWindow(@NonNull UserViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        isParentDead = true;
-    }
-
-    @Override
-    public void onViewAttachedToWindow(@NonNull UserViewHolder holder) {
-        super.onViewAttachedToWindow(holder);
-        isParentDead = false;
-    }
 }

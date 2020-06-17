@@ -5,4 +5,11 @@
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
+    <style name="searchViewTheme" parent="@android:style/ThemeOverlay.Material.Light">
+        <item name="android:editTextColor">@color/white</item>
+        <item name="android:colorControlActivated">@color/white</item>
+    </style>
+
+
 </resources>

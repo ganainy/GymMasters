@@ -130,7 +130,7 @@ public class CreateExerciseFragment extends Fragment {
             if (contentIfNotHandled==null)return;
             switch (contentIfNotHandled) {
                 case NAME:
-                    FancyToast.makeText(requireActivity(), getString(R.string.name_atleast_6), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                    FancyToast.makeText(requireActivity(), getString(R.string.exercise_name_atleast_6), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
                     break;
                 case EXECUTION:
                     FancyToast.makeText(requireActivity(), getString(R.string.execution_atleast_30), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();

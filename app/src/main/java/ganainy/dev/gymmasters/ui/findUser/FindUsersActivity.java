@@ -1,5 +1,6 @@
 package ganainy.dev.gymmasters.ui.findUser;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,28 +10,24 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Space;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
-
-import ganainy.dev.gymmasters.R;
-import ganainy.dev.gymmasters.models.app_models.User;
-import ganainy.dev.gymmasters.utils.AuthUtils;
-import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.shashank.sony.fancytoastlib.FancyToast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ganainy.dev.gymmasters.R;
+import ganainy.dev.gymmasters.models.app_models.User;
+import ganainy.dev.gymmasters.ui.userInfo.UserInfoActivity;
+import ganainy.dev.gymmasters.utils.ApplicationViewModelFactory;
+import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,275 +36,76 @@ import ganainy.dev.gymmasters.utils.NetworkUtil;
 
 public class FindUsersActivity extends AppCompatActivity {
     private static final String TAG = "FindUsersActivity";
-    List<User> userList = new ArrayList<>();
+    public static final String SOURCE = "source";
+    public static final String FIND = "find";
+    public static final String FOLLOWERS = "followers";
+    public static final String FOLLOWING = "following";
+    public static final String USER = "user";
+
+    /*this can be used to show all users/ followers of logged user or people who logged user is
+     following*/
+    List<User> users=new ArrayList<>();
+    List<User> filteredUsers=new ArrayList<>();
+
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
     private UserAdapter userAdapter;
-    private ArrayList<String> followersIdList = new ArrayList<>();
-    private List<User> followersList = new ArrayList<>();
-    private ArrayList<String> followingIdList = new ArrayList<>();
-    private List<User> followingList = new ArrayList<>();
     private NetworkChangeReceiver networkChangeReceiver;
+    private FindUserViewModel mViewModel;
 
     @BindView(R.id.notFoundTextView)
     TextView notFoundTextView;
 
-    @BindView(R.id.button)
+    @BindView(R.id.findUsersButton)
     Button findButton;
 
     @BindView(R.id.bgImageView)
     ImageView bgImageView;
-    private RecyclerView recyclerView;
 
-    @OnClick(R.id.button)
-    void loadAllUsersList() {
-        loadAllUsers();
+    @BindView(R.id.usersRecycler)
+    RecyclerView recyclerView;
+
+    @BindView(R.id.no_users_layout)
+    ConstraintLayout noUsersLayout;
+
+    @BindView(R.id.no_followers_layout)
+    ConstraintLayout noFollowersLayout;
+
+    @BindView(R.id.no_following_layout)
+    ConstraintLayout noFollowingLayout;
+
+    @BindView(R.id.titleTextView)
+    TextView titleTextView;
+
+    @BindView(R.id.searchView)
+    SearchView searchView;
+
+    @BindView(R.id.spacer)
+    Space spacer;
+
+    @BindView(R.id.backArrowImageView)
+    ImageView backArrowImageView;
+
+    @BindView(R.id.filterImageView)
+    ImageView filterImageView;
+
+    @OnClick(R.id.filterImageView)
+    void showSearchView(){
+        showSearchViewLayout();
     }
 
-    @OnClick(R.id.backArrowImageView)
-    void onBackArrowClick(){
-        onBackPressed();
+    private void showSearchViewLayout() {
+        filterImageView.setVisibility(View.GONE);
+        backArrowImageView.setVisibility(View.GONE);
+        spacer.setVisibility(View.GONE);
+        titleTextView.setVisibility(View.GONE);
+        searchView.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_find_users);
-        ButterKnife.bind(this);
-
-        recyclerView = findViewById(R.id.usersRecycler);
-
-
-        //this activity called from more than one source so we differ with intent
-        if (getIntent().getStringExtra("source").equals("find"))
-            loadAllUsers();
-        else if (getIntent().getStringExtra("source").equals("followers")) {
-            loadFollowers();
-            notFoundTextView.setText("No followers yet");
-        } else if (getIntent().getStringExtra("source").equals("following")) {
-            loadFollowing();
-            notFoundTextView.setText("Not following anyone yet");
-        }
-    }
-
-
-    private void loadFollowing() {
-        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(AuthUtils.getLoggedUserId(this));
-        users.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                followingIdList.clear();
-                if (dataSnapshot.hasChild("followingUID")) {
-                    users.child("followingUID").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                followingIdList.add(ds.getValue().toString());
-
-                            }
-                            getFollowingData();
-                            Log.i(TAG, "onDataChange: followingIddddList " + followingIdList.size());
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                        }
-                    });
-                } else {
-                    //loged in user has no ONE FOLLOWING HIM
-                    Log.i(TAG, "onDataChange: no following");
-                    notFoundTextView.setVisibility(View.VISIBLE);
-                    findButton.setVisibility(View.VISIBLE);
-                    bgImageView.setVisibility(View.VISIBLE);
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                FancyToast.makeText(FindUsersActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-
-            }
-        });
-    }
-
-    private void getFollowingData() {
-        DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users");
-        users.addValueEventListener(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                followingList.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    for (int i = 0; i < followingIdList.size(); i++) {
-                        if (followingIdList.get(i).equals(ds.getKey())) {
-                            User user = new User();
-                            user.setName(ds.child("name").getValue().toString());
-                            if (ds.hasChild("photo"))
-                                user.setPhoto(ds.child("photo").getValue().toString());
-                            user.setId(ds.child("id").getValue().toString());
-                            if (ds.hasChild("about_me"))
-                                user.setAbout_me(ds.child("about_me").getValue().toString());
-                            if (ds.hasChild("email"))
-                                user.setEmail(ds.child("email").getValue().toString());
-                            followingList.add(user);
-                        }
-                    }
-                }
-
-                Log.i(TAG, "onDataChange: followingList" + followingList.size());
-                setupRecycler("getFollowingData");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                FancyToast.makeText(FindUsersActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-
-            }
-        });
-    }
-
-    private void loadFollowers() {
-
-        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users").child(AuthUtils.getLoggedUserId(this));
-        users.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                followersIdList.clear();
-                if (dataSnapshot.hasChild("followersUID")) {
-                    users.child("followersUID").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                followersIdList.add(ds.getValue().toString());
-
-                            }
-                            getFollowersData();
-                            Log.i(TAG, "onDataChange: followersIddddList " + followersIdList.size());
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                        }
-                    });
-                } else {
-                    //loged in user has no followers
-                    Log.i(TAG, "onDataChange: no followers");
-                    notFoundTextView.setVisibility(View.VISIBLE);
-                    bgImageView.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                FancyToast.makeText(FindUsersActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-            }
-        });
-    }
-
-    private void getFollowersData() {
-
-        DatabaseReference users = FirebaseDatabase.getInstance().getReference().child("users");
-        users.addValueEventListener(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                followersList.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    for (int i = 0; i < followersIdList.size(); i++) {
-                        if (followersIdList.get(i).equals(ds.getKey())) {
-
-                            User user = new User();
-                            user.setName(ds.child("name").getValue().toString());
-                            if (ds.hasChild("photo"))
-                                user.setPhoto(ds.child("photo").getValue().toString());
-                            user.setId(ds.child("id").getValue().toString());
-                            if (ds.hasChild("about_me"))
-                                user.setAbout_me(ds.child("about_me").getValue().toString());
-                            if (ds.hasChild("email"))
-                                user.setEmail(ds.child("email").getValue().toString());
-                            followersList.add(user);
-                        }
-                    }
-                }
-
-                Log.i(TAG, "onDataChange: followersList" + followersList.size());
-                setupRecycler("getFollowersData");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                FancyToast.makeText(FindUsersActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-
-            }
-        });
-    }
-
-    private void loadAllUsers() {
-        FirebaseDatabase.getInstance().getReference().child("users").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userList.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds.child("id").getValue().equals(AuthUtils.getLoggedUserId(FindUsersActivity.this))) {
-                        //don't show this user in list since it's the logged in user
-                    } else {
-                        User user = new User();
-                        user.setName(ds.child("name").getValue().toString());
-                        if (ds.hasChild("photo"))
-                            user.setPhoto(ds.child("photo").getValue().toString());
-                        user.setId(ds.child("id").getValue().toString());
-                        if (ds.hasChild("about_me"))
-                            user.setAbout_me(ds.child("about_me").getValue().toString());
-                        if (ds.hasChild("email"))
-                            user.setEmail(ds.child("email").getValue().toString());
-                        userList.add(user);
-                    }
-
-                }
-                setupRecycler("loadAllUsers");
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                FancyToast.makeText(FindUsersActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-
-            }
-        });
-    }
-
-    private void setupRecycler(String source) {
-
-        findButton.setVisibility(View.GONE);
-        notFoundTextView.setVisibility(View.GONE);
-        bgImageView.setVisibility(View.GONE);
-
-        if (source.equals("getFollowersData")) {
-            userAdapter = new UserAdapter(FindUsersActivity.this, followersList);
-        } else if (source.equals("loadAllUsers")) {
-            userAdapter = new UserAdapter(FindUsersActivity.this, userList);
-        } else if (source.equals("getFollowingData")) {
-            userAdapter = new UserAdapter(FindUsersActivity.this, followingList);
-        }
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(FindUsersActivity.this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(userAdapter);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //for filtering
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_users_menu, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-
-        //hide search button from keyboard since it does nothing and we filter on text change
-        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-
+    @OnClick(R.id.searchView)
+    void filterUsers(){
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -316,15 +114,119 @@ public class FindUsersActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                //so app won't crash if no data in recycler
-                if (userAdapter != null)
-                    userAdapter.getFilter().filter(s);
+                filteredUsers.clear();
+                for (User user:users){
+                    if (user.getName().contains(s)){
+                        filteredUsers.add(user);
+                    }
+                }
+                userAdapter.setData(filteredUsers);
+                userAdapter.notifyDataSetChanged();
                 return true;
             }
         });
 
-        return true;
+        searchView.setOnCloseListener(() -> {
+            hideSearchViewLayout();
+            return false;
+        });
     }
+
+    private void hideSearchViewLayout() {
+        filterImageView.setVisibility(View.VISIBLE);
+        backArrowImageView.setVisibility(View.VISIBLE);
+        spacer.setVisibility(View.VISIBLE);
+        titleTextView.setVisibility(View.VISIBLE);
+        searchView.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.backArrowImageView)
+    void onBackArrowClick() {
+        onBackPressed();
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_find_users);
+        ButterKnife.bind(this);
+
+        //todo handle loading layout and pagination
+        setupRecycler();
+        initViewModel();
+
+        //this activity called from more than one source so we differ with intent param
+        if (getIntent().getStringExtra(SOURCE).equals(FIND)) {
+            titleTextView.setText(R.string.users_list);
+            mViewModel.loadAllUsers();
+        }
+        else if (getIntent().getStringExtra(SOURCE).equals(FOLLOWERS)) {
+            titleTextView.setText(R.string.my_followers);
+            mViewModel.loadFollowersIds();
+        } else if (getIntent().getStringExtra(SOURCE).equals(FOLLOWING)) {
+            titleTextView.setText(R.string.users_iam_following);
+          mViewModel.loadFollowingId();
+        }
+
+        mViewModel.getNoUsersLiveData().observe(this,noUserType->{
+            switch (noUserType){
+
+                case NO_FOLLOWERS:
+                    noUsersLayout.setVisibility(View.GONE);
+                    noFollowersLayout.setVisibility(View.VISIBLE);
+                    noFollowingLayout.setVisibility(View.GONE);
+                    break;
+                case NO_FOLLOWING:
+                    noUsersLayout.setVisibility(View.GONE);
+                    noFollowersLayout.setVisibility(View.GONE);
+                    noFollowingLayout.setVisibility(View.VISIBLE);
+                    break;
+                case NO_USERS:
+                    noUsersLayout.setVisibility(View.VISIBLE);
+                    noFollowersLayout.setVisibility(View.GONE);
+                    noFollowingLayout.setVisibility(View.GONE);
+                    break;
+            }
+        });
+
+
+        mViewModel.userTransformation.observe(this,followingUser->{
+            //must subscribe to trigger transformation
+        });
+
+        mViewModel.userWithRatingTransformation.observe(this, userWithRating->{
+            //must subscribe to trigger transformation
+        });
+
+        mViewModel.userWithRatingAndFollowerCountTransformation.observe(this, userWithRatingAndFollowerCount->{
+            Log.d(TAG, "userWithRatingAndFollowerCountTransformation: "+userWithRatingAndFollowerCount);
+            users.add(userWithRatingAndFollowerCount);
+            userAdapter.setData(users);
+            userAdapter.notifyItemInserted(users.size()-1);
+        });
+
+
+    }
+
+    private void initViewModel() {
+        ApplicationViewModelFactory applicationViewModelFactory = new ApplicationViewModelFactory(getApplication());
+        mViewModel = new ViewModelProvider(this, applicationViewModelFactory).get(FindUserViewModel.class);
+    }
+
+
+    private void setupRecycler() {
+        userAdapter = new UserAdapter(FindUsersActivity.this, new UserCallback() {
+            @Override
+            public void onUserClicked(User user, Integer adapterPosition) {
+                Intent intent = new Intent(FindUsersActivity.this, UserInfoActivity.class);
+                intent.putExtra(USER, user);
+                startActivity(intent);
+            }
+        });
+        recyclerView.setAdapter(userAdapter);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -333,11 +235,10 @@ public class FindUsersActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onStop() {
         super.onStop();
-        NetworkUtil.unregisterNetworkReceiver(this,networkChangeReceiver);
+        NetworkUtil.unregisterNetworkReceiver(this, networkChangeReceiver);
     }
 
     @Override
@@ -347,18 +248,5 @@ public class FindUsersActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i(TAG, "onResume: ");
-        if (userAdapter != null) recyclerView.setAdapter(userAdapter);
-    }
-
-    /** handle back press from toolbar
-     */
-    @OnClick(R.id.backArrowImageView)
-    public void onViewClicked() {
-        onBackPressed();
-    }
 }
 

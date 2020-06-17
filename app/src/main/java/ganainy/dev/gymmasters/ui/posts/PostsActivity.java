@@ -46,7 +46,7 @@ public class PostsActivity extends AppCompatActivity {
 
     @BindView(R.id.notFoundTextView)
     TextView notFoundTextView;
-    @BindView(R.id.button)
+    @BindView(R.id.findUsersButton)
     Button button;
     @BindView(R.id.bgImageView)
     ImageView bgImageView;
@@ -62,7 +62,7 @@ public class PostsActivity extends AppCompatActivity {
     private SharedAdapter sharedAdapter;
     private RecyclerView recyclerView;
 
-    @OnClick(R.id.button)
+    @OnClick(R.id.findUsersButton)
     void openFindUsers() {
         Intent i = new Intent(PostsActivity.this, FindUsersActivity.class);
         i.putExtra("source", "find");

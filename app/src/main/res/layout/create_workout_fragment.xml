@@ -8,6 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/activity_bg"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -47,7 +48,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/activity_bg"
             android:orientation="vertical">
 
             <LinearLayout
@@ -294,25 +294,26 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/exercisesRecycler"
                         android:layout_width="match_parent"
-                        android:layout_height="400dp"
+                        android:layout_height="wrap_content"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         android:padding="8dp"/>
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/uploadButton"
-                    style="@style/MyButtonStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_margin="8dp"
-                    android:text="@string/upload" />
+
 
 
             </LinearLayout>
         </ScrollView>
 
+        <Button
+            android:id="@+id/uploadButton"
+            style="@style/MyButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="8dp"
+            android:text="@string/upload" />
 
     </LinearLayout>
 

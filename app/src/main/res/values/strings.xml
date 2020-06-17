@@ -72,14 +72,15 @@
     <string name="exercises_added_successfully">Added Exercise successfully.</string>
     <string name="something_went_wrong">Something went wrong, check connection and try again.</string>
     <string name="exercise_was_same_name_exist">Exercise with same name already exists \n your exercise was not added</string>
-    <string name="name_atleast_6">Exercise name must be at least 6 letters</string>
+    <string name="exercise_name_atleast_6">Exercise name must be at least 6 letters</string>
+    <string name="workout_name_atleast_6">Workout name must be at least 6 letters</string>
     <string name="execution_atleast_30">Please provide more execution steps to help other users do exercise correctly</string>
     <string name="select_mechanic">Press arrow to select mechanic</string>
     <string name="select_target_muscle">Press arrow to select targeted muscle</string>
     <string name="select_photos">Select two photos describing exercise movement.</string>
-    <string name="uploading">Uploading...</string>
+    <string name="uploading">Uploading…</string>
     <string name="workout_name">Workout name :</string>
-    <string name="what_do_you_wanna_call_it">What do you wanna call it</string>
+    <string name="what_do_you_wanna_call_it">What do you want to call it</string>
     <string name="duration">Duration :</string>
     <string name="estimated_time_of_workout">Estimated time of workout</string>
     <string name="level">Level :</string>
@@ -97,6 +98,13 @@
     <string name="added_exercise_to_workout">Added exercise to workout</string>
     <string name="sets">%1$s Sets</string>
     <string name="reps">%1$s Reps</string>
+    <string name="no_followers_yet">No followers yet</string>
+    <string name="you_didn_t_follow_any_users_yet">You didn\'t follow any users yet</string>
+    <string name="find_users_to_follow">Find users to follow</string>
+    <string name="no_users_found">No users found</string>
+    <string name="followers_count">%1$d Followers</string>
+    <string name="my_followers">My followers</string>
+    <string name="users_iam_following">Users I am following</string>
 
 
 </resources>

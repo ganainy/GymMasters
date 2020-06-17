@@ -3,21 +3,35 @@ package ganainy.dev.gymmasters.models.app_models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import retrofit2.http.Url;
+
+
 public class User implements Parcelable {
-    private String name, email, followers, following, about_me;
-    String id;
-    private String photo;
+    private String id, name, email, about_me, photo;
+    private Long followers,following,rating;
 
-    public User() {
+    protected User(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        email = in.readString();
+        about_me = in.readString();
+        photo = in.readString();
+        if (in.readByte() == 0) {
+            followers = null;
+        } else {
+            followers = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            following = null;
+        } else {
+            following = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            rating = null;
+        } else {
+            rating = in.readLong();
+        }
     }
-
-    public User(String id, String name, String email, String photo) {
-        this.name = name;
-        this.email = email;
-        this.photo = photo;
-        this.id = id;
-    }
-
 
     public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
@@ -31,29 +45,45 @@ public class User implements Parcelable {
         }
     };
 
-    protected User(Parcel in) {
-        name = in.readString();
-        email = in.readString();
-        followers = in.readString();
-        following = in.readString();
-        about_me = in.readString();
-        id = in.readString();
-        photo = in.readString();
+    public Long getRating() {
+        return rating;
     }
 
-    public String getFollowers() {
+    public void setRating(Long rating) {
+        this.rating = rating;
+    }
+
+
+    public User() {
+    }
+
+    public User(String id, String name, String email, String photo) {
+        this.name = name;
+        this.email = email;
+        this.photo = photo;
+        this.id = id;
+    }
+
+    public User(String id, String name, String email) {
+        this.name = name;
+        this.email = email;
+        this.id = id;
+    }
+
+
+    public Long getFollowers() {
         return followers;
     }
 
-    public void setFollowers(String followers) {
+    public void setFollowers(Long followers) {
         this.followers = followers;
     }
 
-    public String getFollowing() {
+    public Long getFollowing() {
         return following;
     }
 
-    public void setFollowing(String following) {
+    public void setFollowing(Long following) {
         this.following = following;
     }
 
@@ -105,13 +135,29 @@ public class User implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(name);
-        parcel.writeString(email);
-        parcel.writeString(followers);
-        parcel.writeString(following);
-        parcel.writeString(about_me);
-        parcel.writeString(id);
-        parcel.writeString(photo);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(email);
+        dest.writeString(about_me);
+        dest.writeString(photo);
+        if (followers == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(followers);
+        }
+        if (following == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(following);
+        }
+        if (rating == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(rating);
+        }
     }
 }

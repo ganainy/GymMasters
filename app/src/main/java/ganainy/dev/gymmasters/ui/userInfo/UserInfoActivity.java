@@ -301,7 +301,7 @@ public class UserInfoActivity extends AppCompatActivity {
         } else {
             aboutMeText.setText(user.getName() + " didn't add this information yet");
         }
-        followingTextView.setText(user.getFollowing());
+//todo        followingTextView.setText(user.getFollowing().toString());
 
     }
 

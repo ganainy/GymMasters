@@ -28,11 +28,9 @@ public class HomeViewModel extends ViewModel {
     public static final String RATINGS = "Ratings";
     public static final String FOLLOWING_UID = "followingUID";
     public static final String ABOUT_ME = "about_me";
-    public static final String IMAGES = "images/";
     private long sumRatings, sumRaters;
 
     private MutableLiveData<User> userLiveData = new MutableLiveData<>();
-    private MutableLiveData<Uri> imageUriLiveData = new MutableLiveData<>();
     private MutableLiveData<String> followersCountLiveData = new MutableLiveData<>();
     private MutableLiveData<Pair<Boolean,String>> updateAboutMe = new MutableLiveData<>();
     private MutableLiveData<String> followingCountLiveData = new MutableLiveData<>();
@@ -65,10 +63,6 @@ public class HomeViewModel extends ViewModel {
         return userLiveData;
     }
 
-    public LiveData<Uri> getImageUriLiveData() {
-        return imageUriLiveData;
-    }
-
 
     public void getUserData(final String loggedUserId) {
 
@@ -77,7 +71,6 @@ public class HomeViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = getUserFromSnapshot(dataSnapshot);
                 userLiveData.setValue(user);
-                downloadUserPhoto(user.getPhoto());
             }
 
             @Override
@@ -98,16 +91,6 @@ public class HomeViewModel extends ViewModel {
     }
 
 
-    public void downloadUserPhoto(final String photo) {
-        if (photo==null)return;
-
-        FirebaseStorage.getInstance().getReference().child(IMAGES).child(photo).getDownloadUrl()
-                .addOnSuccessListener(uri ->
-                imageUriLiveData.setValue(uri)).addOnFailureListener(e -> {
-            /*if the photo is from google account it will be cause method to fail since it's not in storage*/
-            imageUriLiveData.setValue(Uri.parse(photo));
-        });
-    }
 
 
     public void getFollowersCount(String loggedUserId) {

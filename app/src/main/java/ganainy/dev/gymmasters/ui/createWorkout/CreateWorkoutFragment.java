@@ -1,13 +1,10 @@
 package ganainy.dev.gymmasters.ui.createWorkout;
 
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,36 +15,23 @@ import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
-import ganainy.dev.gymmasters.ui.main.MainActivity;
 import ganainy.dev.gymmasters.utils.ApplicationViewModelFactory;
 
 import com.github.lzyzsd.circleprogress.CircleProgress;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
 import com.shashank.sony.fancytoastlib.FancyToast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -84,7 +68,6 @@ public class CreateWorkoutFragment extends Fragment {
 
     CreateWorkoutViewModel mViewModel;
 
-    private Uri imageUri;
     private ExerciseAdapterAdvanced exerciseAdapter;
 
     @BindView(R.id.loading_layout)
@@ -135,7 +118,7 @@ public class CreateWorkoutFragment extends Fragment {
             if (contentIfNotHandled!=null){
                 switch (contentIfNotHandled){
                     case NAME:
-                        FancyToast.makeText(getActivity(), getString(R.string.name_atleast_6), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                        FancyToast.makeText(getActivity(), getString(R.string.workout_name_atleast_6), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
                         break;
                     case DURATION:
                         FancyToast.makeText(getActivity(), getString(R.string.duration_0_to_120), FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();

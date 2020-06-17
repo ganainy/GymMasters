@@ -50,10 +50,14 @@ public class FirebaseUtils {
 
     public static User getUserFromSnapshot(@NonNull DataSnapshot dataSnapshot) {
         User user = new User();
-        String name = dataSnapshot.child("name").getValue().toString();
-        user.setName(name);
-        String email = dataSnapshot.child("email").getValue().toString();
-        user.setEmail(email);
+        if (dataSnapshot.hasChild("name")) {
+            String name = dataSnapshot.child("name").getValue().toString();
+            user.setName(name);
+        }
+        if (dataSnapshot.hasChild("email")) {
+            String email = dataSnapshot.child("email").getValue().toString();
+            user.setEmail(email);
+        }
         if (dataSnapshot.hasChild("photo")) {
             String photo = dataSnapshot.child("photo").getValue().toString();
             user.setPhoto(photo);
@@ -61,6 +65,10 @@ public class FirebaseUtils {
         if (dataSnapshot.hasChild("about_me")) {
             String about_me = dataSnapshot.child("about_me").getValue().toString();
             user.setAbout_me(about_me);
+        }
+        if (dataSnapshot.hasChild("id")) {
+            String id = dataSnapshot.child("id").getValue().toString();
+            user.setId(id);
         }
         return user;
     }

@@ -160,14 +160,25 @@ public class CreateWorkoutViewModel extends ViewModel {
         workout.setId(id);
         workout.setDate(String.valueOf(System.currentTimeMillis()));
 
-        workout.setExercisesNumber(String.valueOf(downloadedExerciseList.size()));
-        workout.setWorkoutExerciseList(downloadedExerciseList);
+        List<Exercise> workoutExercisesList = getWorkoutExercisesList();
+        workout.setExercisesNumber(String.valueOf(workoutExercisesList.size()));
+        workout.setWorkoutExerciseList(workoutExercisesList);
 
         workoutRef.child(id).setValue(workout).addOnSuccessListener(aVoid -> {
             networkStateLiveData.setValue(NetworkState.SUCCESS);
         }).addOnFailureListener(e -> {
             networkStateLiveData.setValue(NetworkState.ERROR);
         });
+    }
+
+    private List<Exercise> getWorkoutExercisesList() {
+        List<Exercise> workoutExercisesList=new ArrayList<>();
+        for (Exercise exercise:downloadedExerciseList){
+            if (exercise.getIsAddedToWorkout()!=null && exercise.getIsAddedToWorkout()){
+                workoutExercisesList.add(exercise);
+            }
+        }
+        return workoutExercisesList;
     }
 
 

@@ -84,19 +84,7 @@ public class UserInfoActivityRepository {
         if (photo == null) {
             return load;
         }
-        FirebaseStorage.getInstance().getReference().child("images/").child(photo).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                load.setValue(uri);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i(TAG, "onFailure: " + e.getMessage());
                 load.setValue(Uri.parse(photo));//photo itself is url(google image)
-            }
-        });
-
         return load;
     }
 

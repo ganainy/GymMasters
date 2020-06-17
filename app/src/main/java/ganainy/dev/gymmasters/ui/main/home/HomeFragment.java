@@ -109,9 +109,6 @@ public class HomeFragment extends Fragment {
 
         mViewModel.getUserLiveData().observe(getViewLifecycleOwner(), this::setupUi);
 
-        mViewModel.getImageUriLiveData().observe(getViewLifecycleOwner(), uri ->
-                Glide.with(HomeFragment.this).load(uri).into(profileImage));
-
         mViewModel.getFollowersCountLiveData().observe(getViewLifecycleOwner(),followerCount->{
             followersTextView.setText(followerCount);
         });
@@ -139,6 +136,7 @@ public class HomeFragment extends Fragment {
         name.setText(user.getName());
         email.setText(user.getEmail());
         aboutMeText.setText(user.getAbout_me());
+        Glide.with(HomeFragment.this).load(user.getPhoto()).into(profileImage);
         shimmerFrameLayout.hideShimmer();
     }
 

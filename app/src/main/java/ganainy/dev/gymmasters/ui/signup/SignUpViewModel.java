@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -82,32 +83,31 @@ public class SignUpViewModel extends ViewModel {
     }
 
     public void authenticateUser() {
-        if (username.trim().isEmpty() || email.trim().isEmpty() || password.trim().isEmpty())
-         {
-             validateUsername(username);
-             validateEmail(email);
-             validatePassword(password);
-             return;
-         }
-             isLoadingLiveData.setValue(true);
-             final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-             mAuth.createUserWithEmailAndPassword(email, password)
-                     .addOnSuccessListener(authResult -> {
-                         if (mAuth.getCurrentUser() != null) {
-                             // createUser success, save user data in db and update ui
-                             String userId = mAuth.getCurrentUser().getUid();
-                             saveUserInfoInRealtimeDb(userId);
-                         } else {
-                             //  sign in fails, display a message to the user.
-                             isLoadingLiveData.setValue(false);
-                             toastLiveData.setValue(new Event<>(new Pair<>(R.string.signup_failed, 0)));
-                         }
-                     })
-                     .addOnFailureListener(e -> {
-                         //  sign in fails, display a message to the user.
-                         isLoadingLiveData.setValue(false);
-                         toastLiveData.setValue(new Event<>(new Pair<>(R.string.signup_failed, 0)));
-                     });
+        if (username.trim().isEmpty() || email.trim().isEmpty() || password.trim().isEmpty()) {
+            validateUsername(username);
+            validateEmail(email);
+            validatePassword(password);
+            return;
+        }
+        isLoadingLiveData.setValue(true);
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnSuccessListener(authResult -> {
+                    if (mAuth.getCurrentUser() != null) {
+                        // createUser success, save user data in db and update ui
+                        String userId = mAuth.getCurrentUser().getUid();
+                        saveUserInfoInRealtimeDb(userId);
+                    } else {
+                        //  sign in fails, display a message to the user.
+                        isLoadingLiveData.setValue(false);
+                        toastLiveData.setValue(new Event<>(new Pair<>(R.string.signup_failed, 0)));
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    //  sign in fails, display a message to the user.
+                    isLoadingLiveData.setValue(false);
+                    toastLiveData.setValue(new Event<>(new Pair<>(R.string.signup_failed, 0)));
+                });
 
     }
 
@@ -120,16 +120,27 @@ public class SignUpViewModel extends ViewModel {
 
         if (imageUri != null) {
             //uploadImage to firebase storage then upload data to realtime db
-            final User newUser = new User(uid, username, email, imageUri.getLastPathSegment());
+            final User newUser = new User(uid, username, email);
 
             final StorageReference imagesRef = FirebaseStorage.getInstance().getReference().child("images/" + imageUri.getLastPathSegment());
-            imagesRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> myRef.child(uid).setValue(newUser).addOnSuccessListener(aVoid -> {
-                Log.i(TAG, "onSuccess: ");
-                isUserDataUploadedLiveData.setValue(true);
-            }).addOnFailureListener(e -> {
-                Log.i(TAG, "onFailure: " + e.getMessage());
-                isUserDataUploadedLiveData.setValue(false);
-            })).addOnFailureListener(e -> isUserDataUploadedLiveData.setValue(false));
+            imagesRef.putFile(imageUri).addOnSuccessListener(taskSnapshot ->
+                    {
+
+                    imagesRef.getDownloadUrl().addOnSuccessListener(url->{
+                        Log.d(TAG, "getDownloadUrl: "+url);
+                        newUser.setPhoto(url.toString());
+                        myRef.child(uid).setValue(newUser).addOnSuccessListener(aVoid -> {
+                            isUserDataUploadedLiveData.setValue(true);
+                        }).addOnFailureListener(e -> {
+                            isUserDataUploadedLiveData.setValue(false);
+                        });
+                    });
+                    //todo we are only saving user if we can upload image and get its download url,
+                        //maybe should also add user if upload failed
+
+                    }
+
+           ).addOnFailureListener(e -> isUserDataUploadedLiveData.setValue(false));
 
 
         } else {
@@ -192,7 +203,7 @@ public class SignUpViewModel extends ViewModel {
 
 
     public void validateUsername(String username) {
-        this.username=username;
+        this.username = username;
         if (username.trim().isEmpty())
             userNameErrorLiveData.setValue(new Event<>(app.getString(R.string.username_hint_error)));
         else
@@ -200,21 +211,20 @@ public class SignUpViewModel extends ViewModel {
     }
 
     public void validatePassword(String password) {
-        this.password=password;
-        if (password.trim().length()<6)
+        this.password = password;
+        if (password.trim().length() < 6)
             passwordErrorLiveData.setValue(new Event<>(app.getString(R.string.password_hint_error)));
         else
             passwordErrorLiveData.setValue(new Event<>(""));
     }
 
     public void validateEmail(String email) {
-        this.email=email;
+        this.email = email;
         if (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches())
             emailErrorLiveData.setValue(new Event<>(""));
         else
             emailErrorLiveData.setValue(new Event<>(app.getString(R.string.email_hint_error)));
     }
-
 
 
     public void setImageUri(Uri imageUri) {
@@ -228,9 +238,13 @@ public class SignUpViewModel extends ViewModel {
     }
 
 
-     LiveData<Uri> getImageUriLiveData() { return imageUriLiveData; }
+    LiveData<Uri> getImageUriLiveData() {
+        return imageUriLiveData;
+    }
 
-    LiveData<Event<String>> getUsernameError() { return userNameErrorLiveData; }
+    LiveData<Event<String>> getUsernameError() {
+        return userNameErrorLiveData;
+    }
 
     LiveData<Event<String>> getPasswordError() {
         return passwordErrorLiveData;
