@@ -255,7 +255,16 @@ public class PostsActivity extends AppCompatActivity {
         }*/
 
 
-        sharedAdapter = new SharedAdapter(PostsActivity.this, sharedExerciseWorkoutList);
+        sharedAdapter = new SharedAdapter(getApplicationContext(), new PostCallback() {
+            @Override
+            public void onExerciseClicked(Exercise exercise, Integer adapterPosition) {
+                //todo open selected exercise
+               /* Intent i = new Intent(this,);
+                i.putExtra("exercise", currentExercise);
+                startActivity(i);*/
+            }
+        });
+        //sharedExerciseWorkoutList setdata
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(PostsActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(sharedAdapter);

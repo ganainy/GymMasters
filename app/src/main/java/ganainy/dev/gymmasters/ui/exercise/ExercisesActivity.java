@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,15 +18,17 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ganainy.dev.gymmasters.R;
+import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.shared_adapters.ExercisesAdapter;
-import ganainy.dev.gymmasters.ui.specificExercise.SpecificExerciseActivity;
+import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
+import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeCallback;
+import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeFragment;
 import ganainy.dev.gymmasters.utils.MiscellaneousUtils;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
 import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.SELECTED_MUSCLE;
-import static ganainy.dev.gymmasters.ui.main.home.HomeFragment.LOGGED_USER_ID;
 
-public class ExercisesActivity extends AppCompatActivity {
+public class ExercisesActivity extends AppCompatActivity implements YoutubeCallback {
     private static final String TAG = "ExercisesActivity";
     public static final String EXERCISE = "exercise";
     ExercisesViewModel exercisesViewModel;
@@ -116,13 +119,15 @@ public class ExercisesActivity extends AppCompatActivity {
 
     private void setupRecycler() {
 
-        exercisesAdapter = new ExercisesAdapter(this, exercise -> {
-            //handle click of certain exercise
-            Intent intent = new Intent(ExercisesActivity.this, SpecificExerciseActivity.class);
-            intent.putExtra(EXERCISE, exercise);
-            startActivity(intent);
-        });
+        //handle click of certain exercise
+        exercisesAdapter = new ExercisesAdapter(this, this::openSelectedExerciseFragment);
         exercisesRecyclerView.setAdapter(exercisesAdapter);
+    }
+
+    private void openSelectedExerciseFragment(Exercise exercise) {
+        ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exercise.getName(),exercise.getBodyPart());
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, exerciseFragment).addToBackStack("exerciseFragment").commit();
     }
 
     private void setupSearchView() {
@@ -142,4 +147,10 @@ public class ExercisesActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void openYoutubeFragment(String exerciseName) {
+        YoutubeFragment youtubeFragment = YoutubeFragment.newInstance(exerciseName);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, youtubeFragment).addToBackStack("youtubeFragment").commit();
+    }
 }

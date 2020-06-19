@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.Space;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -222,6 +223,17 @@ public class FindUsersActivity extends AppCompatActivity {
                 Intent intent = new Intent(FindUsersActivity.this, UserInfoActivity.class);
                 intent.putExtra(USER, user);
                 startActivity(intent);
+            }
+        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+               /* int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                if(lastVisibleItemPosition>=users.size()-1){
+                    Log.d(TAG, "onScrolled: "+lastVisibleItemPosition);
+                    mViewModel.getMoreUsers(users.get(users.size()-1).getId());
+                }*/
             }
         });
         recyclerView.setAdapter(userAdapter);

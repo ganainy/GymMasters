@@ -44,6 +44,8 @@ public class FirebaseUtils {
             exercise.setPreviewPhoto1(snapshot.child("previewPhoto1").getValue().toString());
         if (snapshot.hasChild("previewPhoto2"))
             exercise.setPreviewPhoto2(snapshot.child("previewPhoto2").getValue().toString());
+        if (snapshot.hasChild("creatorId"))
+            exercise.setCreatorId(snapshot.child("creatorId").getValue().toString());
         return exercise;
     }
 

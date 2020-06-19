@@ -6,6 +6,26 @@ import android.os.Parcelable;
 
 public class Exercise implements Parcelable {
 
+    @Override
+    public String toString() {
+        return "Exercise{" +
+                "name='" + name + '\'' +
+                ", bodyPart='" + bodyPart + '\'' +
+                ", execution='" + execution + '\'' +
+                ", mechanism='" + mechanism + '\'' +
+                ", previewPhoto1='" + previewPhoto1 + '\'' +
+                ", previewPhoto2='" + previewPhoto2 + '\'' +
+                ", sets='" + sets + '\'' +
+                ", reps='" + reps + '\'' +
+                ", duration='" + duration + '\'' +
+                ", creatorId='" + creatorId + '\'' +
+                ", date='" + date + '\'' +
+                ", creatorName='" + creatorName + '\'' +
+                ", additional_notes='" + additional_notes + '\'' +
+                ", isAddedToWorkout=" + isAddedToWorkout +
+                ", previewBitmap=" + previewBitmap +
+                '}';
+    }
 
     public Exercise() {
     }

@@ -12,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
-import ganainy.dev.gymmasters.ui.specificExercise.SpecificExerciseActivity;
-import ganainy.dev.gymmasters.ui.specificWorkout.SpecificWorkoutActivity;
 
 import java.util.List;
 
@@ -24,11 +22,13 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private static final String TAG = "SpecificWorkoutAdapter";
     private static final int TYPE_REPS = 1;
     private static final int TYPE_TIME = 2;
-    final Context context;
+    private final Context context;
     private List<Exercise> workoutExerciseList;
+    private ExerciseInsideWorkoutCallback exerciseInsideWorkoutCallback;
 
-    public SpecificWorkoutAdapter(Context context) {
+    public SpecificWorkoutAdapter(Context context, ExerciseInsideWorkoutCallback exerciseInsideWorkoutCallback) {
         this.context = context;
+        this.exerciseInsideWorkoutCallback=exerciseInsideWorkoutCallback;
     }
 
     @NonNull
@@ -75,13 +75,6 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     }
 
-    private void openSpecificExerciseActivity(int adapterPosition) {
-        SpecificWorkoutActivity specificWorkoutActivity = (SpecificWorkoutActivity) context;
-        Intent intent = new Intent(context, SpecificExerciseActivity.class);
-        intent.putExtra("name", workoutExerciseList.get(adapterPosition).getName());
-        intent.putExtra("targetMuscle", workoutExerciseList.get(adapterPosition).getBodyPart().toLowerCase());
-        specificWorkoutActivity.startActivity(intent);
-    }
 
     //
     class RepsExerciseViewHolder extends RecyclerView.ViewHolder {
@@ -103,14 +96,8 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    openSpecificExerciseActivity(getAdapterPosition());
-
-                }
-            });
-
+            itemView.setOnClickListener(view ->
+                    exerciseInsideWorkoutCallback.onRepsExerciseClicked(workoutExerciseList.get(getAdapterPosition()),getAdapterPosition()));
         }
 
         public void setDetails(Exercise workoutExercise) {
@@ -139,14 +126,8 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    openSpecificExerciseActivity(getAdapterPosition());
-
-                }
-            });
-
+            itemView.setOnClickListener(view ->
+                    exerciseInsideWorkoutCallback.onTimeExerciseClicked(workoutExerciseList.get(getAdapterPosition()),getAdapterPosition()));
         }
 
 

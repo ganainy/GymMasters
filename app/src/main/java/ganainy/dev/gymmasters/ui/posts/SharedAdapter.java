@@ -17,8 +17,6 @@ import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.SharedExerciseWorkout;
 import ganainy.dev.gymmasters.models.app_models.Workout;
-import ganainy.dev.gymmasters.ui.posts.PostsActivity;
-import ganainy.dev.gymmasters.ui.specificExercise.SpecificExerciseActivity;
 import ganainy.dev.gymmasters.ui.specificWorkout.SpecificWorkoutActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -40,12 +38,13 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int TYPE_WORKOUT = 0;
     private static final int TYPE_EXERCISE = 1;
     private final Context context;
-    List<SharedExerciseWorkout> sharedExerciseWorkoutList;
+    private List<SharedExerciseWorkout> sharedExerciseWorkoutList;
     private boolean isParentDead;
+    private PostCallback postCallback;
 
-    public SharedAdapter(Context context, List<SharedExerciseWorkout> sharedExerciseWorkoutList) {
+    public SharedAdapter(Context context, PostCallback postCallback) {
         this.context = context;
-        this.sharedExerciseWorkoutList = sharedExerciseWorkoutList;
+        this.postCallback = postCallback;
 
     }
 
@@ -147,17 +146,8 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             ButterKnife.bind(this, itemView);
 
             //open specific exercise activity
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent i = new Intent(context, SpecificExerciseActivity.class);
-                    i.putExtra("exercise", currentExercise);
-                    PostsActivity postsActivity = (PostsActivity) context;
-                    postsActivity.startActivity(i);
-                }
-            });
-
-
+            itemView.setOnClickListener(view ->
+                    postCallback.onExerciseClicked(currentExercise,getAdapterPosition()));
         }
 
         public void setDetails(final Exercise exercise) {

@@ -74,7 +74,8 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.1.0'
     //multidex
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation files('libs/YouTubeAndroidPlayerApi.jar')
+    //implementation files('libs/YouTubeAndroidPlayerApi.jar')
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
     //google sign in
     implementation 'com.google.android.gms:play-services-auth:18.0.0'
     //dexter for runtime permission

@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.ui.createExercise.CreateExerciseFragment;
 import ganainy.dev.gymmasters.ui.createWorkout.CreateWorkoutFragment;
 import ganainy.dev.gymmasters.ui.loggedUserExercises.LoggedUserExercisesFragment;
@@ -28,6 +29,9 @@ import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.LoggedUserWorkoutsFragm
 import ganainy.dev.gymmasters.ui.map.MapsActivity;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.ui.posts.PostsActivity;
+import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
+import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeCallback;
+import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeFragment;
 import ganainy.dev.gymmasters.ui.timer.TimerActivity;
 import ganainy.dev.gymmasters.ui.findUser.FindUsersActivity;
 import ganainy.dev.gymmasters.ui.login.LoginActivity;
@@ -51,9 +55,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ganainy.dev.gymmasters.utils.NetworkUtil;
 
+import static ganainy.dev.gymmasters.ui.exercise.ExercisesActivity.EXERCISE;
 import static ganainy.dev.gymmasters.ui.main.home.HomeFragment.LOGGED_USER_ID;
 
-public class MainActivity extends AppCompatActivity implements ActivityCallback{
+public class MainActivity extends AppCompatActivity implements ActivityCallback, YoutubeCallback {
     public static final String SOURCE = "source";
     public NetworkChangeReceiver networkChangeReceiver;
     private static final String TAG = "MainActivity";
@@ -358,4 +363,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback{
         fragmentTransaction.add(R.id.container, createExerciseFragment).addToBackStack("createExerciseFragment").commit();
     }
 
+    @Override
+    public void openExerciseFragment(Exercise exercise) {
+        ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exercise.getName(),exercise.getBodyPart());
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, exerciseFragment).addToBackStack("exerciseFragment").commit();
+    }
+
+    @Override
+    public void openYoutubeFragment(String exerciseName) {
+        YoutubeFragment youtubeFragment = YoutubeFragment.newInstance(exerciseName);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, youtubeFragment).addToBackStack("youtubeFragment").commit();
+    }
 }

@@ -3,9 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/container"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginHorizontal="4dp"
-    android:layout_marginVertical="8dp"
     tools:context="ganainy.dev.gymmasters.ui.specificWorkout.SpecificWorkoutActivity">
 
 
@@ -14,6 +13,7 @@
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_marginStart="27dp"
+        android:layout_marginTop="8dp"
         android:rotation="90"
         android:src="@drawable/ic_circle"
         app:layout_constraintStart_toStartOf="parent"

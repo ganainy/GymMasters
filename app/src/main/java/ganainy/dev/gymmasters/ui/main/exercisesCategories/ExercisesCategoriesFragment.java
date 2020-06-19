@@ -2,13 +2,22 @@ package ganainy.dev.gymmasters.ui.main.exercisesCategories;
 
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import butterknife.BindView;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.ui.exercise.ExercisesActivity;
 
@@ -32,6 +41,9 @@ public class ExercisesCategoriesFragment extends Fragment {
     public static final String LOWERLEG = "lowerleg";
     public static final String SHOWALL = "showall";
 
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+
     public ExercisesCategoriesFragment() {
         // Required empty public constructorp
     }
@@ -46,73 +58,34 @@ public class ExercisesCategoriesFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-    @OnClick(R.id.triceps)
-    void q() {
-        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra(SELECTED_MUSCLE, TRICEPS);
-        startActivity(intent);
-    }
+        CategoriesAdapter categoriesAdapter = new CategoriesAdapter(selectedCategory -> {
+            Intent intent = new Intent(getActivity(), ExercisesActivity.class);
+            intent.putExtra(SELECTED_MUSCLE, selectedCategory);
+            startActivity(intent);
+        });
+        categoriesAdapter.setData(getCategoriesList());
 
-    @OnClick(R.id.chest)
-    void qq() {
-        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra(SELECTED_MUSCLE, CHEST);
-        startActivity(intent);
-    }
+        recyclerView.setAdapter(categoriesAdapter);
 
-    @OnClick(R.id.shoulders)
-    void qqq() {
-        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra(SELECTED_MUSCLE, SHOULDER);
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.biceps)
-    void qqqq() {
-        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra(SELECTED_MUSCLE, BICEPS);
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.abs)
-    void qqqqq() {
-        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra(SELECTED_MUSCLE, ABS);
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.back)
-    void qqqqqq() {
-        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra(SELECTED_MUSCLE, BACK);
-        startActivity(intent);
     }
 
 
-
-    @OnClick(R.id.cardio)
-    void qqqqqqqqqq() {
-        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra(SELECTED_MUSCLE, CARDIO);
-        startActivity(intent);
+    List<Pair<String,Drawable>>getCategoriesList(){
+        List<Pair<String,Drawable>> categories = new ArrayList<>();
+        categories.add(new Pair<>(TRICEPS,getActivity().getResources().getDrawable(R.drawable.triceps)));
+        categories.add(new Pair<>(CHEST,getActivity().getResources().getDrawable(R.drawable.chest)));
+        categories.add(new Pair<>(SHOULDER,getActivity().getResources().getDrawable(R.drawable.shoulder)));
+        categories.add(new Pair<>(BICEPS,getActivity().getResources().getDrawable(R.drawable.biceps)));
+        categories.add(new Pair<>(ABS,getActivity().getResources().getDrawable(R.drawable.abs)));
+        categories.add(new Pair<>(BACK,getActivity().getResources().getDrawable(R.drawable.back)));
+        categories.add(new Pair<>(CARDIO,getActivity().getResources().getDrawable(R.drawable.cardio)));
+        categories.add(new Pair<>(LOWERLEG,getActivity().getResources().getDrawable(R.drawable.lowerleg)));
+        categories.add(new Pair<>(SHOWALL,getActivity().getResources().getDrawable(R.drawable.showall)));
+        return categories;
     }
-
-    @OnClick(R.id.leg)
-    void qqqqqqqqqqq() {
-        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra(SELECTED_MUSCLE, LOWERLEG);
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.showall)
-    void qqqqqqqqqqqq() {
-        Intent intent = new Intent(getActivity(), ExercisesActivity.class);
-        intent.putExtra(SELECTED_MUSCLE, SHOWALL);
-        startActivity(intent);
-    }
-
-
-
 
 }

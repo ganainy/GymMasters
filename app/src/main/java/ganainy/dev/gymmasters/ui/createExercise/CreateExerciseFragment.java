@@ -148,13 +148,6 @@ public class CreateExerciseFragment extends Fragment {
         });
 
 
-        mViewModel.getRepeatedNameTransformation().observe(getViewLifecycleOwner(), isRepeatedName -> {
-            if (isRepeatedName) {
-                FancyToast.makeText(requireContext(), getString(R.string.exercise_was_same_name_exist),
-                        FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
-            }
-        });
-
         mViewModel.getUploadProgressLiveData().observe(getViewLifecycleOwner(), progress -> {
             circleProgress.setProgress(progress);
         });
@@ -175,6 +168,9 @@ public class CreateExerciseFragment extends Fragment {
                     break;
                 case EMPTY:
                     break;
+                case STOP_LOADING:
+                    loadingLayout.setVisibility(View.GONE);
+                    break;
             }
         });
 
@@ -188,13 +184,21 @@ public class CreateExerciseFragment extends Fragment {
 
         });
 
-        mViewModel.getUploadExerciseTransformation().observe(getViewLifecycleOwner(),isExerciseUploaded->{
-            //Do nothing, observing to activate transformation
+        mViewModel.getRepeatedNameTransformation().observe(getViewLifecycleOwner(), isRepeatedName -> {
+            if (isRepeatedName) {
+                FancyToast.makeText(requireContext(), getString(R.string.exercise_was_same_name_exist),
+                        FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+            }
         });
 
         mViewModel.getFirstImageUploadedTransformation().observe(getViewLifecycleOwner(),isFirstImageUploaded->{
             //Do nothing, observing to activate transformation
         });
+
+        mViewModel.getSecondImageUploadedTransformation().observe(getViewLifecycleOwner(),isExerciseUploaded->{
+            //Do nothing, observing to activate transformation
+        });
+
 
     }
 

@@ -1,6 +1,7 @@
 package ganainy.dev.gymmasters.ui.loggedUserExercises;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -21,8 +22,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ganainy.dev.gymmasters.R;
+import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.shared_adapters.ExercisesAdapter;
-import ganainy.dev.gymmasters.ui.specificExercise.SpecificExerciseActivity;
+import ganainy.dev.gymmasters.ui.main.ActivityCallback;
+import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
 import static ganainy.dev.gymmasters.ui.exercise.ExercisesActivity.EXERCISE;
@@ -56,8 +59,6 @@ public class LoggedUserExercisesFragment extends Fragment {
         return loggedUserExercisesFragment;
     }
 
-    private LoggedUserExercisesFragment() {
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -88,12 +89,12 @@ public class LoggedUserExercisesFragment extends Fragment {
     private void setupRecycler() {
         exercisesAdapter = new ExercisesAdapter(requireActivity().getApplicationContext(), exercise -> {
             //handle click of certain exercise
-            Intent intent = new Intent(requireActivity(), SpecificExerciseActivity.class);
-            intent.putExtra(EXERCISE, exercise);
-            startActivity(intent);
+            ActivityCallback activityCallback = (ActivityCallback) requireActivity();
+            activityCallback.openExerciseFragment(exercise);
         });
         exercisesRecyclerView.setAdapter(exercisesAdapter);
     }
+
 
     private void handleNetworkStateUi(NetworkState networkState) {
         switch (networkState) {

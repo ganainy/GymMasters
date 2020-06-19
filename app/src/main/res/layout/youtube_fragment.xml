@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment">
+    tools:context=".ui.specificExercise.youtubeFragment.YoutubeFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+        android:id="@+id/youtube_player_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:listitem="@layout/category_item"
-        app:spanCount="2"/>
+        app:autoPlay="false"
+        app:handleNetworkEvents="true"
+        app:enableAutomaticInitialization="true"
+        app:showFullScreenButton="true" />
 
 </FrameLayout>

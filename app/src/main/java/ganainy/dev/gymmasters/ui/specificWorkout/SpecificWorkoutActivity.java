@@ -1,6 +1,7 @@
 package ganainy.dev.gymmasters.ui.specificWorkout;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,8 +34,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.LoggedUserWorkoutsFragment;
+import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
+import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeCallback;
+import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeFragment;
 
-public class SpecificWorkoutActivity extends AppCompatActivity {
+public class SpecificWorkoutActivity extends AppCompatActivity implements YoutubeCallback {
     private static final String TAG = "SpecificWorkoutActivity";
     private static final String MY_PREFS_NAME = "mSharedPref";
     @BindView(R.id.specificWorkoutRecycler)
@@ -101,12 +107,29 @@ public class SpecificWorkoutActivity extends AppCompatActivity {
 
 
     private void setupRecycler() {
-        SpecificWorkoutAdapter specificWorkoutAdapter = new SpecificWorkoutAdapter(this);
+        SpecificWorkoutAdapter specificWorkoutAdapter = new SpecificWorkoutAdapter(getApplicationContext(),
+                new ExerciseInsideWorkoutCallback() {
+                    @Override
+                    public void onTimeExerciseClicked(Exercise exercise, Integer adapterPosition) {
+                        openSelectedExerciseFragment(exercise);
+                    }
+
+                    @Override
+                    public void onRepsExerciseClicked(Exercise exercise, Integer adapterPosition) {
+                        openSelectedExerciseFragment(exercise);
+                    }
+                });
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         specificWorkoutRecycler.setLayoutManager(linearLayoutManager);
         specificWorkoutAdapter.setDataSource(workoutExerciseList);
         specificWorkoutRecycler.setAdapter(specificWorkoutAdapter);
         promptUserToClickExercise();
+    }
+
+    private void openSelectedExerciseFragment(Exercise exercise) {
+        ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exercise.getName(),exercise.getBodyPart().toLowerCase());
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, exerciseFragment).addToBackStack("exerciseFragment").commit();
     }
 
 
@@ -169,5 +192,12 @@ public class SpecificWorkoutActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public void openYoutubeFragment(String exerciseName) {
+        YoutubeFragment youtubeFragment = YoutubeFragment.newInstance(exerciseName);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, youtubeFragment).addToBackStack("youtubeFragment").commit();
+    }
 
 }

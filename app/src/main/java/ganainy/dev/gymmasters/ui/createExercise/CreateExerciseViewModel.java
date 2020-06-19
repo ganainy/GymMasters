@@ -41,40 +41,47 @@ public class CreateExerciseViewModel extends ViewModel {
     public CreateExerciseViewModel(Application app) {
         this.app = app;
 
-         repeatedNameTransformation = Transformations.map(repeatedNameLiveData, isRepeatedName -> {
-             Log.d(TAG, "CreateExerciseViewModel: repeatedNameTransformation");
+        repeatedNameTransformation = Transformations.map(repeatedNameLiveData, isRepeatedName -> {
+            Log.d(TAG, "CreateExerciseViewModel: repeatedNameTransformation");
             if (!isRepeatedName)
-                uploadExercise(exercise);
+                uploadFirstExercisePhoto();
             return isRepeatedName;
         });
 
-        uploadExerciseTransformation=Transformations.map(isExerciseUploadSuccessfulLiveData,isExerciseUploadSuccessfully->{
-            Log.d(TAG, "CreateExerciseViewModel: uploadExerciseTransformation");
-            if (isExerciseUploadSuccessfully)
-            uploadFirstExercisePhoto(firstImageUri);
-            return isExerciseUploadSuccessfully;
+
+        firstImageUploadedTransformation = Transformations.map(firstImageDownloadUrlLiveData, firstImageDownloadUrl -> {
+            Log.d(TAG, "CreateExerciseViewModel: firstImageUploadedTransformation");
+            exercise.setPreviewPhoto1(firstImageDownloadUrl.toString());
+            uploadSecondExercisePhoto();
+            return firstImageDownloadUrl;
         });
 
-        firstImageUploadedTransformation =Transformations.map(firstImageUploadedLiveData, firstImageUploaded->{
-            Log.d(TAG, "CreateExerciseViewModel: firstImageUploadedTransformation");
-           if (firstImageUploaded)
-               uploadSecondExercisePhoto(firstImageUri,secondImageUri);
-            return firstImageUri;
+
+        secondImageUploadedTransformation = Transformations.map(secondImageDownloadUriLiveData, secondImageDownloadUri -> {
+            Log.d(TAG, "CreateExerciseViewModel: secondImageUploadedTransformation");
+            exercise.setPreviewPhoto2(secondImageDownloadUri.toString());
+            uploadExercise(exercise);
+            return secondImageDownloadUri;
         });
     }
 
 
     private LiveData<Boolean> repeatedNameTransformation;
-    private LiveData<Boolean> uploadExerciseTransformation;
     private MutableLiveData<Boolean> repeatedNameLiveData = new MutableLiveData<>();
-    private MutableLiveData<Boolean> isExerciseUploadSuccessfulLiveData = new MutableLiveData<>();
     private MutableLiveData<Event<ExerciseFieldIssue>> missingFieldLiveData = new MutableLiveData<>();
     private MutableLiveData<Integer> uploadProgressLiveData = new MutableLiveData<>();
     private MutableLiveData<NetworkState> networkStateLiveData = new MutableLiveData<>();
     private MutableLiveData<Uri> firstImageUriLiveData = new MutableLiveData<>();
-    private MutableLiveData<Boolean> firstImageUploadedLiveData = new MutableLiveData<>();
+    private MutableLiveData<Uri> firstImageDownloadUrlLiveData = new MutableLiveData<>();
     private MutableLiveData<Uri> secondImageUriLiveData = new MutableLiveData<>();
+    private MutableLiveData<Uri> secondImageDownloadUriLiveData = new MutableLiveData<>();
     private LiveData<Uri> firstImageUploadedTransformation;
+
+    public LiveData<Uri> getSecondImageUploadedTransformation() {
+        return secondImageUploadedTransformation;
+    }
+
+    private LiveData<Uri> secondImageUploadedTransformation;
 
     public LiveData<Uri> getFirstImageUriLiveData() {
         return firstImageUriLiveData;
@@ -111,10 +118,6 @@ public class CreateExerciseViewModel extends ViewModel {
         return repeatedNameTransformation;
     }
 
-    public LiveData<Boolean> getUploadExerciseTransformation() {
-        return uploadExerciseTransformation;
-    }
-
     public LiveData<NetworkState> getNetworkStateLiveData() {
         return networkStateLiveData;
     }
@@ -129,8 +132,9 @@ public class CreateExerciseViewModel extends ViewModel {
     }
 
 
-
-    /**check if there is an exercise with same name in DB exists*/
+    /**
+     * check if there is an exercise with same name in DB exists
+     */
     public void checkRepeatedName(final String name) {
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
@@ -141,13 +145,12 @@ public class CreateExerciseViewModel extends ViewModel {
                     for (DataSnapshot ds : dsBig.getChildren()) {
                         if (ds.hasChild(NAME) && ds.child(NAME).getValue().toString().toLowerCase().trim().equals(name.toLowerCase().trim())) {
                             repeatedNameLiveData.setValue(true);
-                            networkStateLiveData.setValue(NetworkState.SUCCESS);
+                            networkStateLiveData.setValue(NetworkState.STOP_LOADING);
                             return;
                         }
                     }
                 }
                 repeatedNameLiveData.setValue(false);
-
             }
 
             @Override
@@ -160,35 +163,39 @@ public class CreateExerciseViewModel extends ViewModel {
 
 
     public void uploadExercise(final Exercise exercise) {
-
+        Log.d(TAG, "uploadExercise: "+exercise.toString());
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
         Task<Void> exercises = reference.child(EXERCISES).child(exercise.getBodyPart().toLowerCase()).push().setValue(exercise);
         exercises.addOnSuccessListener(aVoid ->
-                isExerciseUploadSuccessfulLiveData.setValue(true))
+                networkStateLiveData.setValue(NetworkState.SUCCESS))
                 .addOnFailureListener(e -> {
-                    isExerciseUploadSuccessfulLiveData.setValue(false);
+                    networkStateLiveData.setValue(NetworkState.ERROR);
                 });
     }
 
 
-    public void uploadFirstExercisePhoto(Uri firstPhotoUri) {
-        Log.d(TAG, "uploadFirstExercisePhoto: ");
+    public void uploadFirstExercisePhoto() {
         // Create a storage reference from our app
         final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference firstImageRef = storageRef.child(EXERCISE_IMAGES + formatUriAsTimeStampedString(firstPhotoUri));
+        final StorageReference firstImageRef = storageRef.child(EXERCISE_IMAGES).child(System.currentTimeMillis()+"");
 
-        firstImageRef.putFile(firstPhotoUri).addOnProgressListener(taskSnapshot -> {
+        firstImageRef.putFile(firstImageUri).addOnProgressListener(taskSnapshot -> {
                     //returns half of the real progress since this is only one image of two
                     double progress = (50.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
                     uploadProgressLiveData.setValue((int) progress);
                 }
         ).addOnSuccessListener(taskSnapshot -> {
             //first image uploaded successfully
-            firstImageUploadedLiveData.setValue(true);
+            firstImageRef.getDownloadUrl().addOnSuccessListener(url -> {
+                Log.d(TAG, "getDownloadUrl: " + url);
+                firstImageDownloadUrlLiveData.setValue(url);
+            }).addOnFailureListener(e -> {
+                Log.d(TAG, "getDownloadUrl: " + e.getMessage());
+            });
         }).addOnFailureListener(e -> {
             //upload first image failed
-            Log.d(TAG, "uploadFirstExercisePhoto: "+e.getMessage());
+            Log.d(TAG, "uploadFirstExercisePhoto: " + e.getMessage());
             deleteExerciseFromDb();
         });
     }
@@ -197,22 +204,26 @@ public class CreateExerciseViewModel extends ViewModel {
         //todo delete exercise
     }
 
-    private void uploadSecondExercisePhoto(Uri firstPhotoUri, Uri secondImageUri) {
+    private void uploadSecondExercisePhoto() {
 
         final StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        final StorageReference firstImageRef = storageRef.child(EXERCISE_IMAGES + formatUriAsTimeStampedString(firstPhotoUri));
+        final StorageReference imagesRef = storageRef.child(EXERCISE_IMAGES).child(System.currentTimeMillis()+"");
 
-        final StorageReference secondImageRef = storageRef.child(EXERCISE_IMAGES + formatUriAsTimeStampedString(secondImageUri));
-        secondImageRef.putFile(secondImageUri).addOnProgressListener(taskSnapshot1 -> {
+        imagesRef.putFile(secondImageUri).addOnProgressListener(taskSnapshot1 -> {
             double progress = (50.0 + (50.0 * taskSnapshot1.getBytesTransferred()) / taskSnapshot1.getTotalByteCount());
             uploadProgressLiveData.setValue((int) progress);
         }).addOnFailureListener(e -> {
             //uploading second image failed so no need to keep first uploaded image
             deleteExerciseFromDb();
-            firstImageRef.delete();
+            //todo delete first image
         }).addOnSuccessListener(aVoid -> {
-            //second image uploaded successfully
-            networkStateLiveData.setValue(NetworkState.SUCCESS);
+            imagesRef.getDownloadUrl().addOnSuccessListener(url -> {
+                //second image uploaded successfully
+                secondImageDownloadUriLiveData.setValue(url);
+                Log.d(TAG, "getDownloadUrl2: "+url);
+            }).addOnFailureListener(e -> {
+                Log.d(TAG, "uploadSecondExercisePhoto: " + e.getMessage());
+            });
         });
     }
 
@@ -221,16 +232,16 @@ public class CreateExerciseViewModel extends ViewModel {
             missingFieldLiveData.setValue(new Event<>(ExerciseFieldIssue.NAME));
         } else if (exerciseExecution.trim().length() < 30) {
             missingFieldLiveData.setValue(new Event<>(ExerciseFieldIssue.EXECUTION));
-        } else if (exerciseMechanic==null || exerciseMechanic.trim().isEmpty()) {
+        } else if (exerciseMechanic == null || exerciseMechanic.trim().isEmpty()) {
             missingFieldLiveData.setValue(new Event<>(ExerciseFieldIssue.MECHANIC));
-        } else if (exerciseSelectedMuscle==null ||exerciseSelectedMuscle.trim().isEmpty()) {
+        } else if (exerciseSelectedMuscle == null || exerciseSelectedMuscle.trim().isEmpty()) {
             missingFieldLiveData.setValue(new Event<>(ExerciseFieldIssue.TARGET_MUSCLE));
         } else if (firstImageUri == null || secondImageUri == null) {
             missingFieldLiveData.setValue(new Event<>(ExerciseFieldIssue.PHOTO));
         } else {
             networkStateLiveData.setValue(NetworkState.LOADING);
 
-             exercise = new Exercise(exerciseName, exerciseSelectedMuscle, exerciseExecution
+            exercise = new Exercise(exerciseName, exerciseSelectedMuscle, exerciseExecution
                     , exerciseMechanic, formatUriAsTimeStampedString(firstImageUri),
                     formatUriAsTimeStampedString(secondImageUri));
             exercise.setCreatorId(AuthUtils.getLoggedUserId(app));

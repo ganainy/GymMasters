@@ -105,6 +105,31 @@
     <string name="followers_count">%1$d Followers</string>
     <string name="my_followers">My followers</string>
     <string name="users_iam_following">Users I am following</string>
+    <string name="delete_exercise">Delete exercise</string>
+    <string name="play_video_instead">Show video instead of images</string>
+    <string name="none">None</string>
+    <string name="basic_definition">A principal exercise that can place greater absolute intensity
+        on muscles exercised relative to auxiliary exercises. Basic exercises tend to have more of
+        the following characteristics:gravity dependentinclusion or shift of resistance through
+        multiple muscle group throughout the range of motione.g. bench press: front deltoid to
+        pectoralis major to tricepsnatural transfer of torsion force to compression force (e.g.,
+        lockout on squat, bench press, etc.) or tension force (e.g. extension of arm curl) to the
+        bone(s) and joint(s) during full range of motionAlso see angle of pull</string>
+    <string name="compound_definition">\"An exercise that involves two or more joint movements. \"</string>
+    <string name="got_it">Got it!</string>
+    <string name="delete_exercise_q">Delete exercise ?</string>
+    <string name="confirm_delete">Are you sure you want to delete this exercise permanently from app?</string>
+    <string name="delete">Delete</string>
+    <string name="exercise_deleted_successfully">Exercise deleted Successfully</string>
+    <string name="error_deleting_exercise">Error while deleting exercise</string>
+    <string name="in_app_play_failed">In app play failed ,Show video inside youtube app instead?</string>
+    <string name="error_playing_video">Error playing video</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="selected_exercise_not_found_it_might_have_been_deleted">Selected exercise not found, it might have been deleted</string>
+    <string name="return_back_to_showing_images">Return back to showing images</string>
 
 
 </resources>
