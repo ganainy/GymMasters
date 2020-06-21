@@ -1,6 +1,5 @@
 package ganainy.dev.gymmasters.ui.main.home;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,19 +35,19 @@ public class HomeFragment extends Fragment {
     Button viewMyExercisesButton;
     @BindView(R.id.viewMyWorkoutsButton)
     Button viewMyWorkoutsButton;
-    @BindView(R.id.name)
+    @BindView(R.id.textViewName)
     TextView name;
     @BindView(R.id.emailTextInputLayout)
     TextView email;
-    @BindView(R.id.about_me_text)
+    @BindView(R.id.aboutUserContentTextView)
     TextView aboutMeText;
     @BindView(R.id.profile_image)
     ImageView profileImage;
-    @BindView(R.id.followersTextView)
+    @BindView(R.id.followersCountTextView)
     TextView followersTextView;
-    @BindView(R.id.followingTextView)
+    @BindView(R.id.followingCountTextView)
     TextView followingTextView;
-    @BindView(R.id.ratingTextView)
+    @BindView(R.id.ratingAverageTextView)
     TextView ratingTextView;
     @BindView(R.id.shimmer_layout)
     ShimmerFrameLayout shimmerFrameLayout;

@@ -41,9 +41,6 @@
             android:name="ganainy.dev.gymmasters.ui.posts.PostsActivity"
          />
         <activity
-            android:name="ganainy.dev.gymmasters.ui.userInfo.UserInfoActivity"
-            />
-        <activity
             android:name="ganainy.dev.gymmasters.ui.findUser.FindUsersActivity"
             />
         <activity

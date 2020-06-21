@@ -1,6 +1,6 @@
 package ganainy.dev.gymmasters.models.app_models;
 
-public class SharedExerciseWorkout {
+public class Post {
 
     Exercise exercise;
     Workout workout;
@@ -8,13 +8,13 @@ public class SharedExerciseWorkout {
     Long dateStamp;
 
 
-    public SharedExerciseWorkout(Exercise exercise, Integer entityType, Long dateStamp) {
+    public Post(Exercise exercise, Integer entityType, Long dateStamp) {
         this.exercise = exercise;
         EntityType = entityType;
         this.dateStamp = dateStamp;
     }
 
-    public SharedExerciseWorkout(Workout workout, Integer entityType, Long dateStamp) {
+    public Post(Workout workout, Integer entityType, Long dateStamp) {
         this.workout = workout;
         EntityType = entityType;
         this.dateStamp = dateStamp;

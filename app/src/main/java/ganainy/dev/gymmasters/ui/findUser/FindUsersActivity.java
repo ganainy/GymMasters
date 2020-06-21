@@ -3,11 +3,7 @@ package ganainy.dev.gymmasters.ui.findUser;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Space;
@@ -18,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,7 +23,8 @@ import java.util.List;
 
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.User;
-import ganainy.dev.gymmasters.ui.userInfo.UserInfoActivity;
+import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeFragment;
+import ganainy.dev.gymmasters.ui.userInfo.UserInfoFragment;
 import ganainy.dev.gymmasters.utils.ApplicationViewModelFactory;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 
@@ -217,14 +215,12 @@ public class FindUsersActivity extends AppCompatActivity {
 
 
     private void setupRecycler() {
-        userAdapter = new UserAdapter(FindUsersActivity.this, new UserCallback() {
-            @Override
-            public void onUserClicked(User user, Integer adapterPosition) {
-                Intent intent = new Intent(FindUsersActivity.this, UserInfoActivity.class);
-                intent.putExtra(USER, user);
-                startActivity(intent);
-            }
+        userAdapter = new UserAdapter(FindUsersActivity.this, (user, adapterPosition) -> {
+            UserInfoFragment userInfoFragment = UserInfoFragment.newInstance(user);
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.container, userInfoFragment).addToBackStack("userInfoFragment").commit();
         });
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

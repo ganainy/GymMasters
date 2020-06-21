@@ -36,7 +36,7 @@
             tools:text="Amr mohammed" />
 
         <TextView
-            android:id="@+id/followersTextView"
+            android:id="@+id/followersCountTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -53,7 +53,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="4dp"
             app:layout_constraintStart_toEndOf="@+id/userImageView"
-            app:layout_constraintTop_toBottomOf="@+id/followersTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/followersCountTextView" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

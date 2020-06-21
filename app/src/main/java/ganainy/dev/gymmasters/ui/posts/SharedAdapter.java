@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
-import ganainy.dev.gymmasters.models.app_models.SharedExerciseWorkout;
+import ganainy.dev.gymmasters.models.app_models.Post;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.ui.specificWorkout.SpecificWorkoutActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -38,8 +38,7 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int TYPE_WORKOUT = 0;
     private static final int TYPE_EXERCISE = 1;
     private final Context context;
-    private List<SharedExerciseWorkout> sharedExerciseWorkoutList;
-    private boolean isParentDead;
+    private List<Post> postList;
     private PostCallback postCallback;
 
     public SharedAdapter(Context context, PostCallback postCallback) {
@@ -67,20 +66,20 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         if (getItemViewType(position) == TYPE_EXERCISE) {
-            ((PostExerciseViewHolder) viewHolder).setDetails(sharedExerciseWorkoutList.get(position).getExercise());
+            ((PostExerciseViewHolder) viewHolder).setDetails(postList.get(position).getExercise());
         } else {
-            ((PostWorkoutViewHolder) viewHolder).setDetails(sharedExerciseWorkoutList.get(position).getWorkout());
+            ((PostWorkoutViewHolder) viewHolder).setDetails(postList.get(position).getWorkout());
         }
     }
 
     @Override
     public int getItemCount() {
-        return sharedExerciseWorkoutList.size();
+        return postList==null?0:postList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (sharedExerciseWorkoutList.get(position).getEntityType() == 0) {
+        if (postList.get(position).getEntityType() == 0) {
             return TYPE_EXERCISE;
         } else {
             return TYPE_WORKOUT;
@@ -112,20 +111,12 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return DateFormat.getDateInstance().format(date);
     }
 
+    public void setData(List<Post> postList) {
+        this.postList=postList;
+    }
+
     private interface CallbackInterface {
         void callbackMethod(String name);
-    }
-
-    @Override
-    public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
-        super.onViewAttachedToWindow(holder);
-        isParentDead = false;
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-        isParentDead = true;
     }
 
     class PostExerciseViewHolder extends RecyclerView.ViewHolder {
@@ -162,9 +153,7 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             FirebaseStorage.getInstance().getReference("exerciseImages/").child(exercise.getPreviewPhoto1()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    if (!isParentDead) {
                         Glide.with(itemView).load(uri).into(exerciseImageView);
-                    }
                 }
             });
 
@@ -231,9 +220,7 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             FirebaseStorage.getInstance().getReference().child(workout.getPhotoLink()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
-                    if (!isParentDead) {
                         Glide.with(itemView).load(uri).into(workoutImageView);
-                    }
                 }
             });
 

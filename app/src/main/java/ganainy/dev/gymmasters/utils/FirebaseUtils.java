@@ -25,6 +25,10 @@ public class FirebaseUtils {
             workout.setId(ds.child("id").getValue().toString());
         if (ds.hasChild("level"))
             workout.setLevel(ds.child("level").getValue().toString());
+        if (ds.hasChild("date"))
+            workout.setLevel(ds.child("date").getValue().toString());
+        if (ds.hasChild("creatorId"))
+            workout.setLevel(ds.child("creatorId").getValue().toString());
         return workout;
     }
 
@@ -46,6 +50,8 @@ public class FirebaseUtils {
             exercise.setPreviewPhoto2(snapshot.child("previewPhoto2").getValue().toString());
         if (snapshot.hasChild("creatorId"))
             exercise.setCreatorId(snapshot.child("creatorId").getValue().toString());
+        if (snapshot.hasChild("date"))
+            exercise.setDate(snapshot.child("date").getValue().toString());
         return exercise;
     }
 

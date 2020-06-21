@@ -2,9 +2,6 @@
     <string name="app_name">Gym Masters</string>
 
     <!-- Login Activity -->
-    <string name="login_email_edit_text_hint">E-mail</string>
-    <string name="login_password_edit_text_hint">Password</string>
-    <string name="login_login_button">Login</string>
 
     <!-- Sign Up Activity -->
     <string name="sign_up_user_name_edit_text_hint">Username</string>
@@ -26,11 +23,9 @@
     <string name="signup_failed">Sign up failed with this email and password.</string>
     <string name="error_signing_up">Error happened while signing up, Check connection and retry.</string>
     <string name="sign_in">Sign in</string>
-    <string name="login_successful">Login Successful.</string>
     <string name="use_gym_master_account">Error signing in with google account ,\n please login with Gym master account instead.</string>
     <string name="or">-OR-</string>
     <string name="credentials_error">Error signing in, check your credentials</string>
-    <string name="workout">Workout</string>
     <string name="workouts">Workouts</string>
     <string name="exercises">Exercises</string>
     <string name="home">Home</string>
@@ -105,7 +100,6 @@
     <string name="followers_count">%1$d Followers</string>
     <string name="my_followers">My followers</string>
     <string name="users_iam_following">Users I am following</string>
-    <string name="delete_exercise">Delete exercise</string>
     <string name="play_video_instead">Show video instead of images</string>
     <string name="none">None</string>
     <string name="basic_definition">A principal exercise that can place greater absolute intensity
@@ -129,7 +123,10 @@
     <string name="_1">1</string>
     <string name="_2">2</string>
     <string name="selected_exercise_not_found_it_might_have_been_deleted">Selected exercise not found, it might have been deleted</string>
-    <string name="return_back_to_showing_images">Return back to showing images</string>
+    <string name="follow">follow</string>
+    <string name="rate">rate</string>
+    <string name="about_user">About Mohammed</string>
+    <string name="click_to_view">Click to view</string>
 
 
 </resources>
