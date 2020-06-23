@@ -13,7 +13,7 @@
 
 
         <ImageView
-            android:id="@+id/exerciseImageView"
+            android:id="@+id/exerciseOneImageView"
             android:layout_width="75dp"
             android:layout_height="75dp"
             android:layout_marginStart="8dp"
@@ -31,7 +31,7 @@
             android:background="@color/grey"
             app:layout_constraintBottom_toBottomOf="@+id/exerciseImageView2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/exerciseImageView"
+            app:layout_constraintStart_toEndOf="@+id/exerciseOneImageView"
             app:layout_constraintTop_toTopOf="@+id/exerciseImageView2" />
 
 
@@ -43,7 +43,7 @@
             android:layout_marginTop="8dp"
             android:src="@drawable/oval_grey"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/exerciseImageView" />
+            app:layout_constraintTop_toBottomOf="@+id/exerciseOneImageView" />
 
         <ImageButton
             android:layout_width="0dp"
@@ -51,9 +51,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
             android:background="@color/grey"
-            app:layout_constraintBottom_toBottomOf="@+id/exerciseImageView"
+            app:layout_constraintBottom_toBottomOf="@+id/exerciseOneImageView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/exerciseImageView"
+            app:layout_constraintStart_toEndOf="@+id/exerciseOneImageView"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView

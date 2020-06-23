@@ -8,8 +8,6 @@ import ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFra
 import ganainy.dev.gymmasters.ui.main.home.HomeFragment;
 import ganainy.dev.gymmasters.ui.main.workouts.WorkoutsFragment;
 
-import static ganainy.dev.gymmasters.ui.main.home.HomeFragment.LOGGED_USER_ID;
-
 public class ViewPagerAdapterMainActivity extends FragmentPagerAdapter {
     private static final String TAG = "ViewPagerAdapterMainAct";
     public ViewPagerAdapterMainActivity(FragmentManager fm) {

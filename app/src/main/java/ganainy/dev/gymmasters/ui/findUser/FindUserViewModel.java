@@ -1,6 +1,7 @@
 package ganainy.dev.gymmasters.ui.findUser;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -34,7 +35,8 @@ public class FindUserViewModel extends ViewModel {
     private MutableLiveData<User> userWithRatingLiveData =new MutableLiveData<>();
     private MutableLiveData<User> userWithRatingAndFollowerCountLiveData =new MutableLiveData<>();
 
-    LiveData<User> userTransformation;
+    LiveData<User> followingUserTransformation;
+    LiveData<User> followerUserTransformation;
     LiveData<User> userWithRatingTransformation;
     LiveData<User> userWithRatingAndFollowerCountTransformation;
 
@@ -51,12 +53,12 @@ public class FindUserViewModel extends ViewModel {
             return userWithRatingAndFollowerCountLiveData;
         });
 
-        userTransformation=Transformations.switchMap(followingIdLiveData,followingId->{
+        followingUserTransformation =Transformations.switchMap(followingIdLiveData, followingId->{
             getFollowingUserById(followingId);
             return userLiveData;
         });
 
-        userTransformation=Transformations.switchMap(followerIdLiveData,followerId->{
+        followerUserTransformation =Transformations.switchMap(followerIdLiveData, followerId->{
             getFollowerDataById(followerId);
             return userLiveData;
         });
@@ -108,6 +110,7 @@ public class FindUserViewModel extends ViewModel {
     }
 
   private void getFollowingUserById(String followingId) {
+      Log.d("dfq", "getFollowingUserById: ");
         DatabaseReference users = FirebaseDatabase.getInstance().getReference().child(USERS);
         users.addListenerForSingleValueEvent(new ValueEventListener() {
 

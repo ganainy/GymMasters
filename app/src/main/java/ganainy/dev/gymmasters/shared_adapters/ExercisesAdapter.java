@@ -26,6 +26,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public  class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.ExerciseViewHolder>  implements Filterable {
+    //todo check this adapter
     private String parentName = "";
     List<Exercise> exercisesList;
     List<Exercise> filteredNameList;
@@ -57,18 +58,14 @@ public  class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.Exe
     public void onBindViewHolder(@NonNull ExerciseViewHolder exerciseViewHolder, int position) {
         exerciseViewHolder.exerciseName.setText(exercisesList.get(position).getName());
 
-        if (parentName == null) {
-            exerciseViewHolder.exerciseImage.setImageBitmap(exercisesList.get(position).getPreviewBitmap());
-        } else {
-
             downloadAndShowExerciseImage(exerciseViewHolder, position);
-        }
+
     }
 
 
     private void downloadAndShowExerciseImage(final ExerciseViewHolder exerciseViewHolder, int i) {
 
-        StorageReference pathReference = FirebaseStorage.getInstance().getReference().child("exerciseImages/" + exercisesList.get(i).getPreviewPhoto1());
+        StorageReference pathReference = FirebaseStorage.getInstance().getReference().child("exerciseImages/" + exercisesList.get(i).getPreviewPhotoOneUrl());
         pathReference.getDownloadUrl().addOnSuccessListener(uri ->
                 Glide.with(context).load(uri.toString()).into(exerciseViewHolder.exerciseImage))
                 .addOnFailureListener(exception -> {
@@ -130,7 +127,7 @@ public  class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.Exe
 
         ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
-            exerciseImage = itemView.findViewById(R.id.exerciseImageView);
+            exerciseImage = itemView.findViewById(R.id.exerciseOneImageView);
             exerciseName = itemView.findViewById(R.id.exerciseNameEdittext);
 
             itemView.setOnClickListener(v -> exerciseCallback.onExerciseClick(exercisesList.get(getAdapterPosition())));

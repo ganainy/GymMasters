@@ -87,7 +87,7 @@
 
 
             <ImageView
-                android:id="@+id/exerciseImageView"
+                android:id="@+id/exerciseOneImageView"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:fadingEdge="horizontal"

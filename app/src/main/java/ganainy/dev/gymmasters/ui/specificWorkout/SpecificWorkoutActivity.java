@@ -1,7 +1,6 @@
 package ganainy.dev.gymmasters.ui.specificWorkout;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -34,7 +33,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.LoggedUserWorkoutsFragment;
 import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
 import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeCallback;
 import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeFragment;

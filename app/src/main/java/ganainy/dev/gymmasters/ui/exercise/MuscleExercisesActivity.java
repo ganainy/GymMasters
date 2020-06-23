@@ -28,7 +28,7 @@ import ganainy.dev.gymmasters.utils.NetworkState;
 
 import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.SELECTED_MUSCLE;
 
-public class ExercisesActivity extends AppCompatActivity implements YoutubeCallback {
+public class MuscleExercisesActivity extends AppCompatActivity implements YoutubeCallback {
     private static final String TAG = "ExercisesActivity";
     public static final String EXERCISE = "exercise";
     ExercisesViewModel exercisesViewModel;

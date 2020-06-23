@@ -44,14 +44,16 @@ public class ExercisesViewModel extends ViewModel {
         final DatabaseReference exercisesRef = FirebaseDatabase.getInstance().getReference(EXERCISES);
 
         if (!muscle.equals(SHOWALL)) {
-            DatabaseReference selectedMuscleRef =  exercisesRef.child(muscle);
+
             selectedMuscleExerciseArrayList.clear();
-            selectedMuscleRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            exercisesRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot ds:dataSnapshot.getChildren()) {
-                        Exercise exerciseFromSnapshot = FirebaseUtils.getExerciseFromSnapshot(ds);
-                        selectedMuscleExerciseArrayList.add(exerciseFromSnapshot);
+                        Exercise exercise = ds.getValue(Exercise.class);
+                        if (exercise.getBodyPart().equals(muscle)){
+                            selectedMuscleExerciseArrayList.add(exercise);
+                        }
                     }
                     if (selectedMuscleExerciseArrayList.size()==0)
                         networkStateLiveData.setValue(NetworkState.EMPTY);
@@ -82,11 +84,10 @@ public class ExercisesViewModel extends ViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 selectedMuscleExerciseArrayList.clear();
-                for (DataSnapshot dsBig : dataSnapshot.getChildren()) {
-                    for (DataSnapshot ds : dsBig.getChildren()) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Exercise exerciseFromSnapshot = FirebaseUtils.getExerciseFromSnapshot(ds);
                         selectedMuscleExerciseArrayList.add(exerciseFromSnapshot);
-                        }
+
                 }
                 if (selectedMuscleExerciseArrayList.size()==0)
                     networkStateLiveData.setValue(NetworkState.EMPTY);

@@ -25,6 +25,7 @@
             style="?android:borderlessButtonStyle"
             />
         <TextView
+            android:id="@+id/toolbarTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/my_workouts"

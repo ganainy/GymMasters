@@ -40,12 +40,12 @@
     <string name="app_need_network">App needs internet connection to fully utilize its features</string>
     <string name="ok">OK</string>
     <string name="no_exercises_found">No exercises found</string>
-    <string name="error_while_loading_data">Something went wrong while downloading your data</string>
-    <string name="you_didnt_create_custom_workouts">You didn\'t create any custom workouts yet.</string>
+    <string name="error_while_loading_data">Something went wrong while downloading data</string>
+    <string name="you_didnt_create_custom_workouts">This account didn\'t create any custom workouts yet.</string>
     <string name="my_workouts">My workouts</string>
     <string name="users_list">Users list</string>
     <string name="my_exercises">My exercises</string>
-    <string name="you_didnt_create_custom_exercises">You didn\'t create any custom exercises yet.</string>
+    <string name="you_didnt_create_custom_exercises">This account didn\'t create any custom exercises yet.</string>
     <string name="rating_formula">%1$d/5</string>
     <string name="edit">Edit</string>
     <string name="following">following</string>
@@ -127,6 +127,9 @@
     <string name="rate">rate</string>
     <string name="about_user">About Mohammed</string>
     <string name="click_to_view">Click to view</string>
+    <string name="your_feed">Your feed</string>
+    <string name="write_a_comment">Write a comment...</string>
+    <string name="this_post_has_no_comments_yet">This post has no comments yet</string>
 
 
 </resources>

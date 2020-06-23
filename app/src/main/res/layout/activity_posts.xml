@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/container"
+    android:background="@color/grey"
     tools:context="ganainy.dev.gymmasters.ui.posts.PostsActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -15,36 +17,38 @@
 
         >
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
+            android:orientation="horizontal"
             android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/backArrowImageView"
-                android:layout_width="40dp"
-
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/ic_arrow_back_white"
                 app:layout_constraintBottom_toBottomOf="parent"
+                android:adjustViewBounds="true"
+                style="?android:borderlessButtonStyle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/logo"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
                 android:lines="1"
-                android:text="News Feed"
+                android:text="@string/your_feed"
                 android:textColor="@color/textwhite"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
     <androidx.recyclerview.widget.RecyclerView

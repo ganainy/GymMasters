@@ -1,5 +1,6 @@
 package ganainy.dev.gymmasters.ui.userInfo;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
+import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 
 public class UserInfoFragment extends Fragment {
 
@@ -110,12 +112,16 @@ public class UserInfoFragment extends Fragment {
 
     @OnClick(R.id.showExercisesLayout)
     void showExerciseList() {
-        //todo open exercises activity with this user id
+        ActivityCallback activityCallback = (ActivityCallback) requireActivity();
+        activityCallback.openUserExercisesFragment(mViewModel.getUserProfileModel().getProfileOwner().getId(),
+                mViewModel.getUserProfileModel().getProfileOwner().getName());
     }
 
     @OnClick(R.id.showWorkoutsLayout)
     void showWorkoutList() {
-        //todo open workout activity with this user id
+        ActivityCallback activityCallback = (ActivityCallback) requireActivity();
+        activityCallback.openUserWorkoutsFragment(mViewModel.getUserProfileModel().getProfileOwner().getId(),
+                mViewModel.getUserProfileModel().getProfileOwner().getName());
     }
 
 
@@ -220,7 +226,7 @@ public class UserInfoFragment extends Fragment {
         } else {
             clickToViewExercises.setVisibility(View.VISIBLE);
             exerciseCountFullTextView.setText(profileOwnerName + " created " + exerciseList.size() + " custom exercises");
-            exercisesCountTextView.setText(exerciseList.size());
+            exercisesCountTextView.setText(Integer.toString(exerciseList.size()));
         }
     }
 
@@ -232,7 +238,7 @@ public class UserInfoFragment extends Fragment {
         } else {
             clickToViewWorkouts.setVisibility(View.VISIBLE);
             workoutCountFullTextView.setText(profileOwnerName + " created " + workoutList.size() + " custom workouts");
-            workoutCountTextView.setText(workoutList.size());
+            workoutCountTextView.setText(Integer.toString(workoutList.size()));
         }
 
     }

@@ -118,8 +118,8 @@ public class ExerciseViewModel extends ViewModel {
 
         final String name = mExercise.getName();
         String bodyPart = mExercise.getBodyPart().toLowerCase();
-        final String previewPhoto1 = mExercise.getPreviewPhoto1();
-        final String previewPhoto2 = mExercise.getPreviewPhoto2();
+        final String previewPhoto1 = mExercise.getPreviewPhotoOneUrl();
+        final String previewPhoto2 = mExercise.getPreviewPhotoTwoUrl();
         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(EXERCISES).child(bodyPart);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -168,7 +168,7 @@ public class ExerciseViewModel extends ViewModel {
             return;
         }
 
-       Glide.with(app).load(mExercise.getPreviewPhoto1()).addListener(new RequestListener<Drawable>() {
+       Glide.with(app).load(mExercise.getPreviewPhotoOneUrl()).addListener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 return false;
@@ -177,7 +177,7 @@ public class ExerciseViewModel extends ViewModel {
             @Override
             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                 mFirstDrawable = resource;
-               Glide.with(app).load(mExercise.getPreviewPhoto2()).addListener(new RequestListener<Drawable>() {
+               Glide.with(app).load(mExercise.getPreviewPhotoTwoUrl()).addListener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;

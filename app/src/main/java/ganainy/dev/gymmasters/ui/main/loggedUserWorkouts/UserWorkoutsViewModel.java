@@ -18,7 +18,7 @@ import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.utils.FirebaseUtils;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
-public class LoggedUserWorkoutsViewModel extends ViewModel {
+public class UserWorkoutsViewModel extends ViewModel {
 
     private List<Workout> workoutList = new ArrayList<>();
     private MutableLiveData<List<Workout>> workoutListLiveData = new MutableLiveData<>();

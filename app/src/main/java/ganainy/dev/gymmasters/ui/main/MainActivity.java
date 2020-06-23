@@ -9,7 +9,6 @@ import android.provider.Settings;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,15 +16,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.ui.createExercise.CreateExerciseFragment;
 import ganainy.dev.gymmasters.ui.createWorkout.CreateWorkoutFragment;
-import ganainy.dev.gymmasters.ui.loggedUserExercises.LoggedUserExercisesFragment;
-import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.LoggedUserWorkoutsFragment;
+import ganainy.dev.gymmasters.ui.userExercises.UserExercisesFragment;
+import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.UserWorkoutsFragment;
 import ganainy.dev.gymmasters.ui.map.MapsActivity;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.ui.posts.PostsActivity;
@@ -55,11 +53,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ganainy.dev.gymmasters.utils.NetworkUtil;
 
-import static ganainy.dev.gymmasters.ui.exercise.ExercisesActivity.EXERCISE;
-import static ganainy.dev.gymmasters.ui.main.home.HomeFragment.LOGGED_USER_ID;
-
 public class MainActivity extends AppCompatActivity implements ActivityCallback, YoutubeCallback {
     public static final String SOURCE = "source";
+    public static final String FOLLOWERS = "followers";
+    public static final String FIND = "find";
+    public static final String FOLLOWING = "following";
     public NetworkChangeReceiver networkChangeReceiver;
     private static final String TAG = "MainActivity";
 
@@ -208,13 +206,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback,
 
     private void handleFollowersClick() {
         Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
-        i.putExtra(SOURCE, "followers");
+        i.putExtra(SOURCE, FOLLOWERS);
         startActivity(i);
     }
 
     private void handleFindClick() {
         Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
-        i.putExtra(SOURCE, "find");
+        i.putExtra(SOURCE, FIND);
         startActivity(i);
     }
 
@@ -224,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback,
 
     private void handleFollowedClick() {
         Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
-        i.putExtra(SOURCE, "following");
+        i.putExtra(SOURCE, FOLLOWING);
         startActivity(i);
     }
 
@@ -336,17 +334,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback,
 
     /**methods called by child fragments to talk to parent activity*/
     @Override
-    public void openLoggedUserWorkoutsFragment(String loggedUserId) {
-        LoggedUserWorkoutsFragment loggedUserWorkoutsFragment = LoggedUserWorkoutsFragment.newInstance(loggedUserId);
+    public void openUserWorkoutsFragment(String userId,String userName) {
+        UserWorkoutsFragment userWorkoutsFragment = UserWorkoutsFragment.newInstance(userId,null);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.container, loggedUserWorkoutsFragment).addToBackStack("loggedUserWorkoutsFragment").commit();
+        fragmentTransaction.add(R.id.container, userWorkoutsFragment).addToBackStack("userWorkoutsFragment").commit();
     }
 
     @Override
-    public void openLoggedUserExercisesFragment(String loggedUserId) {
-        LoggedUserExercisesFragment loggedUserExercisesFragment = LoggedUserExercisesFragment.newInstance(loggedUserId);
+    public void openUserExercisesFragment(String userId,String userName) {
+        UserExercisesFragment userExercisesFragment = UserExercisesFragment.newInstance(userId,null);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.container, loggedUserExercisesFragment).addToBackStack("loggedUserExercisesFragment").commit();
+        fragmentTransaction.add(R.id.container, userExercisesFragment).addToBackStack("userExercisesFragment").commit();
     }
 
     @Override

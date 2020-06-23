@@ -1,8 +1,6 @@
 package ganainy.dev.gymmasters.ui.posts;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.app.Application;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +15,10 @@ import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Post;
 import ganainy.dev.gymmasters.models.app_models.Workout;
-import ganainy.dev.gymmasters.ui.specificWorkout.SpecificWorkoutActivity;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
+
+import com.bumptech.glide.request.RequestOptions;
+
+import org.ocpsoft.prettytime.PrettyTime;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -31,18 +26,17 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "SharedAdapter";
     private static final int TYPE_WORKOUT = 0;
     private static final int TYPE_EXERCISE = 1;
-    private final Context context;
+    private final Application app;
     private List<Post> postList;
     private PostCallback postCallback;
 
-    public SharedAdapter(Context context, PostCallback postCallback) {
-        this.context = context;
+    public SharedAdapter(Application app, PostCallback postCallback) {
+        this.app = app;
         this.postCallback = postCallback;
 
     }
@@ -54,11 +48,11 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         View view;
         if (viewType == TYPE_EXERCISE) {
 
-            view = LayoutInflater.from(context).inflate(R.layout.post_exercise_item, viewGroup, false);
+            view = LayoutInflater.from(app).inflate(R.layout.post_exercise_item2, viewGroup, false);
             return new PostExerciseViewHolder(view);
 
         } else {
-            view = LayoutInflater.from(context).inflate(R.layout.post_workout_item, viewGroup, false);
+            view = LayoutInflater.from(app).inflate(R.layout.post_workout_item, viewGroup, false);
             return new PostWorkoutViewHolder(view);
         }
     }
@@ -66,7 +60,7 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         if (getItemViewType(position) == TYPE_EXERCISE) {
-            ((PostExerciseViewHolder) viewHolder).setDetails(postList.get(position).getExercise());
+            ((PostExerciseViewHolder) viewHolder).setDetails(postList.get(position));
         } else {
             ((PostWorkoutViewHolder) viewHolder).setDetails(postList.get(position).getWorkout());
         }
@@ -87,23 +81,9 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     }
 
-    private void getCreatorName(final String creatorId, final CallbackInterface callbackInterface) {
-        FirebaseDatabase.getInstance().getReference("users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds.getKey().equals(creatorId)) {
-                        callbackInterface.callbackMethod(ds.child("name").getValue().toString());
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
+    @Override
+    public long getItemId(int position) {
+        return postList.get(position).getId();
     }
 
     private String formatDate(String mDate) {
@@ -115,48 +95,95 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.postList=postList;
     }
 
-    private interface CallbackInterface {
-        void callbackMethod(String name);
-    }
+
 
     class PostExerciseViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.textView)
-        TextView textView;
-        @BindView(R.id.exerciseNameEdittext)
-        TextView exerciseNameEdittext;
-        @BindView(R.id.exerciseImageView)
-        CircleImageView exerciseImageView;
+      @BindView(R.id.profileImageView)
+        ImageView profileImageView;
 
+      @BindView(R.id.userNameTextView)
+        TextView userNameTextView;
 
-        Exercise currentExercise;
+      @BindView(R.id.dateTextView)
+      TextView dateTextView;
 
+      @BindView(R.id.exerciseOneImageView)
+        ImageView exerciseOneImageView;
+
+        @BindView(R.id.exerciseTwoImageView)
+        ImageView exerciseTwoImageView;
+
+      @BindView(R.id.exerciseNameTextView)
+        TextView exerciseNameTextView;
+
+      @BindView(R.id.likeButton)
+      ImageView likeButton;
+
+        @BindView(R.id.commentButton)
+        ImageView commentButton;
+
+        @BindView(R.id.commentCountTextView)
+        TextView commentCountTextView;
+
+        @BindView(R.id.likeCountTextView)
+        TextView likeCountTextView;
+
+        @BindView(R.id.likeImage)
+        ImageView likeImage;
+
+        @BindView(R.id.targetMuscleTextView)
+        TextView targetMuscleTextView;
 
         public PostExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            //open specific exercise activity
-            itemView.setOnClickListener(view ->
-                    postCallback.onExerciseClicked(currentExercise,getAdapterPosition()));
+            //todo open specific exercise activity
+           /* itemView.setOnClickListener(view ->
+                   postCallback.onExerciseClicked(currentExercise,getAdapterPosition()));*/
         }
 
-        public void setDetails(final Exercise exercise) {
-            currentExercise = exercise;
-            exerciseNameEdittext.setText(exercise.getName());
-            getCreatorName(exercise.getCreatorId(), new CallbackInterface() {
-                @Override
-                public void callbackMethod(String name) {
-                    textView.setText(name + " created new exercise on " + formatDate(exercise.getDate()));
-                }
-            });
-            FirebaseStorage.getInstance().getReference("exerciseImages/").child(exercise.getPreviewPhoto1()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                        Glide.with(itemView).load(uri).into(exerciseImageView);
-                }
-            });
+        public void setDetails(final Post post) {
+            Exercise exercise=post.getExercise();
 
+            Glide.with(app).load(exercise.getCreatorImageUrl())
+                    .apply(new RequestOptions().placeholder(R.drawable.loading_animation).error(R.drawable.anonymous_profile))
+                    .into(profileImageView);
+
+            userNameTextView.setText(exercise.getCreatorName());
+
+            dateTextView.setText(new PrettyTime().format(new Date((Long.parseLong(exercise.getDate())))));
+
+            Glide.with(app).load(exercise.getPreviewPhotoOneUrl())
+                    .apply(new RequestOptions().placeholder(R.drawable.loading_animation).error(R.drawable.ic_exercise_grey))
+                    .into(exerciseOneImageView);
+
+            Glide.with(app).load(exercise.getPreviewPhotoTwoUrl())
+                    .apply(new RequestOptions().placeholder(R.drawable.loading_animation).error(R.drawable.ic_exercise_2_grey))
+                    .into(exerciseTwoImageView);
+
+            exerciseNameTextView.setText(exercise.getName());
+
+            targetMuscleTextView.setText(exercise.getBodyPart());
+
+            if (exercise.getLikeCount()!=null)
+            likeCountTextView.setText(Long.toString(exercise.getLikeCount()));
+
+
+                if (post.getLiked())
+                    likeImage.setImageResource(R.drawable.ic_like_blue);
+                else
+                    likeImage.setImageResource(R.drawable.ic_like_grey);
+
+
+          likeButton.setOnClickListener(v->{
+              postCallback.onPostLike(exercise.getId(),getAdapterPosition());
+          });
+
+            commentButton.setOnClickListener(v->{
+                postCallback.onPostComment(post,getAdapterPosition());
+            });
 
         }
     }
@@ -172,7 +199,7 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         TextView textViewNumberOfExercises;
         @BindView(R.id.textViewReps)
         TextView textViewReps;
-        @BindView(R.id.textViewDifficulty)
+        @BindView(R.id.targetMuscleTextView)
         TextView textViewDifficulty;
 
         Workout currentWorkout;
@@ -185,10 +212,10 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(context, SpecificWorkoutActivity.class);
+                   /* Intent i = new Intent(app, SpecificWorkoutActivity.class);
                     i.putExtra("workout", currentWorkout);
-                    PostsActivity postsActivity = (PostsActivity) context;
-                    postsActivity.startActivity(i);
+                    PostsActivity postsActivity = (PostsActivity) app;
+                    postsActivity.startActivity(i);*/
                 }
             });
 
@@ -211,18 +238,7 @@ public class SharedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             textViewNumberOfExercises.setText(workout.getExercisesNumber());
             textViewReps.setText(workout.getDuration());
             //
-            getCreatorName(workout.getCreatorId(), new CallbackInterface() {
-                @Override
-                public void callbackMethod(String name) {
-                    textView.setText(name + " created new workout on " + formatDate(workout.getDate()));
-                }
-            });
-            FirebaseStorage.getInstance().getReference().child(workout.getPhotoLink()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                        Glide.with(itemView).load(uri).into(workoutImageView);
-                }
-            });
+
 
         }
     }

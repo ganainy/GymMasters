@@ -28,6 +28,16 @@ public class Workout implements Parcelable {
     private String creatorId;
     private String date;
     private String creatorName;
+    private String creatorImageUrl;
+
+
+    public String getCreatorImageUrl() {
+        return creatorImageUrl;
+    }
+
+    public void setCreatorImageUrl(String creatorImageUrl) {
+        this.creatorImageUrl = creatorImageUrl;
+    }
 
     public String getCreatorId() {
         return creatorId;
@@ -56,6 +66,7 @@ public class Workout implements Parcelable {
         exercisesNumber = in.readString();
         level = in.readString();
         photoLink = in.readString();
+        creatorImageUrl = in.readString();
         workoutExerciseList = in.createTypedArrayList(Exercise.CREATOR);
     }
 
@@ -145,6 +156,7 @@ public class Workout implements Parcelable {
         parcel.writeString(exercisesNumber);
         parcel.writeString(level);
         parcel.writeString(photoLink);
+        parcel.writeString(creatorImageUrl);
         parcel.writeTypedList(workoutExerciseList);
     }
 

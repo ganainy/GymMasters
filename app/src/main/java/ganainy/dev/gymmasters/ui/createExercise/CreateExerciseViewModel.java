@@ -25,6 +25,7 @@ import ganainy.dev.gymmasters.utils.Event;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
 import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
+import static ganainy.dev.gymmasters.utils.Constants.SOCIAL;
 import static ganainy.dev.gymmasters.utils.MiscellaneousUtils.formatUriAsTimeStampedString;
 
 public class CreateExerciseViewModel extends ViewModel {
@@ -51,7 +52,7 @@ public class CreateExerciseViewModel extends ViewModel {
 
         firstImageUploadedTransformation = Transformations.map(firstImageDownloadUrlLiveData, firstImageDownloadUrl -> {
             Log.d(TAG, "CreateExerciseViewModel: firstImageUploadedTransformation");
-            exercise.setPreviewPhoto1(firstImageDownloadUrl.toString());
+            exercise.setPreviewPhotoOneUrl(firstImageDownloadUrl.toString());
             uploadSecondExercisePhoto();
             return firstImageDownloadUrl;
         });
@@ -59,7 +60,7 @@ public class CreateExerciseViewModel extends ViewModel {
 
         secondImageUploadedTransformation = Transformations.map(secondImageDownloadUriLiveData, secondImageDownloadUri -> {
             Log.d(TAG, "CreateExerciseViewModel: secondImageUploadedTransformation");
-            exercise.setPreviewPhoto2(secondImageDownloadUri.toString());
+            exercise.setPreviewPhotoTwoUrl(secondImageDownloadUri.toString());
             uploadExercise(exercise);
             return secondImageDownloadUri;
         });
@@ -166,12 +167,14 @@ public class CreateExerciseViewModel extends ViewModel {
         Log.d(TAG, "uploadExercise: "+exercise.toString());
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
-        Task<Void> exercises = reference.child(EXERCISES).child(exercise.getBodyPart().toLowerCase()).push().setValue(exercise);
-        exercises.addOnSuccessListener(aVoid ->
+        String exerciseKey = reference.child(EXERCISES).push().getKey();
+        exercise.setId(exerciseKey);
+        reference.child(EXERCISES).child(exerciseKey).setValue(exercise).addOnSuccessListener(aVoid ->
                 networkStateLiveData.setValue(NetworkState.SUCCESS))
                 .addOnFailureListener(e -> {
                     networkStateLiveData.setValue(NetworkState.ERROR);
                 });
+
     }
 
 

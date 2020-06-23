@@ -12,7 +12,7 @@
 
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/exerciseImageView"
+        android:id="@+id/exerciseOneImageView"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginStart="8dp"
@@ -34,10 +34,10 @@
         android:maxLines="2"
         android:textColor="@color/textblack"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/exerciseImageView"
+        app:layout_constraintBottom_toBottomOf="@+id/exerciseOneImageView"
         app:layout_constraintEnd_toStartOf="@+id/imageViewDelete"
-        app:layout_constraintStart_toEndOf="@+id/exerciseImageView"
-        app:layout_constraintTop_toTopOf="@+id/exerciseImageView"
+        app:layout_constraintStart_toEndOf="@+id/exerciseOneImageView"
+        app:layout_constraintTop_toTopOf="@+id/exerciseOneImageView"
         app:layout_constraintVertical_bias="0.25"
         tools:text="Barbell bench press " />
 
@@ -66,7 +66,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exerciseImageView"
+        app:layout_constraintTop_toBottomOf="@+id/exerciseOneImageView"
         tools:visibility="visible">
 
         <TextView

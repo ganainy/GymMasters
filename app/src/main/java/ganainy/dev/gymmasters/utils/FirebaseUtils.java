@@ -9,7 +9,7 @@ import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 
 public class FirebaseUtils {
-
+//todo delete this and replace with getvalue(class type)
     @NonNull
     public static Workout getWorkoutFromSnapshot(DataSnapshot ds) {
         Workout workout = new Workout();
@@ -26,14 +26,16 @@ public class FirebaseUtils {
         if (ds.hasChild("level"))
             workout.setLevel(ds.child("level").getValue().toString());
         if (ds.hasChild("date"))
-            workout.setLevel(ds.child("date").getValue().toString());
+            workout.setDate(ds.child("date").getValue().toString());
         if (ds.hasChild("creatorId"))
-            workout.setLevel(ds.child("creatorId").getValue().toString());
+            workout.setCreatorId(ds.child("creatorId").getValue().toString());
         return workout;
     }
 
     public static Exercise getExerciseFromSnapshot(DataSnapshot snapshot) {
         Exercise exercise = new Exercise();
+        if (snapshot.hasChild("id"))
+            exercise.setId(snapshot.child("id").getValue().toString());
         if (snapshot.hasChild("name"))
             exercise.setName(snapshot.child("name").getValue().toString());
         if (snapshot.hasChild("execution"))
@@ -44,10 +46,10 @@ public class FirebaseUtils {
             exercise.setBodyPart(snapshot.child("bodyPart").getValue().toString());
         if (snapshot.hasChild("mechanism"))
             exercise.setMechanism(snapshot.child("mechanism").getValue().toString());
-        if (snapshot.hasChild("previewPhoto1"))
-            exercise.setPreviewPhoto1(snapshot.child("previewPhoto1").getValue().toString());
-        if (snapshot.hasChild("previewPhoto2"))
-            exercise.setPreviewPhoto2(snapshot.child("previewPhoto2").getValue().toString());
+        if (snapshot.hasChild("previewPhotoOneUrl"))
+            exercise.setPreviewPhotoOneUrl(snapshot.child("previewPhotoOneUrl").getValue().toString());
+        if (snapshot.hasChild("previewPhotoTwoUrl"))
+            exercise.setPreviewPhotoTwoUrl(snapshot.child("previewPhotoTwoUrl").getValue().toString());
         if (snapshot.hasChild("creatorId"))
             exercise.setCreatorId(snapshot.child("creatorId").getValue().toString());
         if (snapshot.hasChild("date"))

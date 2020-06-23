@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,8 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Post;
+import ganainy.dev.gymmasters.models.app_models.User;
+import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.ui.createExercise.CreateExerciseViewModel;
 import ganainy.dev.gymmasters.ui.findUser.FindUsersActivity;
+import ganainy.dev.gymmasters.ui.posts.postComments.PostCommentsFragment;
+import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
 import ganainy.dev.gymmasters.utils.ApplicationViewModelFactory;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 
@@ -47,7 +52,7 @@ public class PostsActivity extends AppCompatActivity {
     ProgressBar loadingProgressbar;
 
     @BindView(R.id.sharedRv)
-     RecyclerView recyclerView;
+    RecyclerView recyclerView;
 
     @OnClick(R.id.findUsersButton)
     void openFindUsers() {
@@ -67,8 +72,8 @@ public class PostsActivity extends AppCompatActivity {
 
         mViewModel.getFollowingUid();
 
-        mViewModel.getNetworkStateLiveData().observe(this,networkState->{
-            switch (networkState){
+        mViewModel.getNetworkStateLiveData().observe(this, networkState -> {
+            switch (networkState) {
 
                 case SUCCESS:
                     //hide loading
@@ -96,18 +101,17 @@ public class PostsActivity extends AppCompatActivity {
         });
 
 
-        mViewModel.getPostListLiveData().observe(this,posts -> {
+        mViewModel.getPostListLiveData().observe(this, posts -> {
 
-            Collections.sort(posts, (s1, s2) -> s2.getDateStamp().compareTo(s1.getDateStamp()));
+                        Collections.sort(posts, (s1, s2) -> s2.getDateStamp().compareTo(s1.getDateStamp()));
             sharedAdapter.setData(posts);
             sharedAdapter.notifyDataSetChanged();
-
         });
     }
 
     private void initViewModel() {
-        ApplicationViewModelFactory applicationViewModelFactory=new ApplicationViewModelFactory(getApplication());
-        mViewModel = new ViewModelProvider(this,applicationViewModelFactory).get(PostsViewModel.class);
+        ApplicationViewModelFactory applicationViewModelFactory = new ApplicationViewModelFactory(getApplication());
+        mViewModel = new ViewModelProvider(this, applicationViewModelFactory).get(PostsViewModel.class);
     }
 
 
@@ -117,7 +121,7 @@ public class PostsActivity extends AppCompatActivity {
         /* Intent i = new Intent(this,);
                 i.putExtra("exercise", currentExercise);
                 startActivity(i);*/
-         sharedAdapter = new SharedAdapter(getApplicationContext(), new PostCallback() {
+        sharedAdapter = new SharedAdapter(getApplication(), new PostCallback() {
             @Override
             public void onExerciseClicked(Exercise exercise, Integer adapterPosition) {
                 //todo open selected exercise
@@ -125,20 +129,55 @@ public class PostsActivity extends AppCompatActivity {
                 i.putExtra("exercise", currentExercise);
                 startActivity(i);*/
             }
+
+            @Override
+            public void onWorkoutClicked(Workout workout, Integer adapterPosition) {
+
+            }
+
+            @Override
+            public void onUserClicked(User user) {
+
+            }
+
+            @Override
+            public void onPostLike(String postId, Integer adapterPosition) {
+                mViewModel.likePost(postId, adapterPosition);
+                Post oldPost = mViewModel.getPostList().get(adapterPosition);
+                Post newPost=oldPost;
+
+                if (newPost.getLiked())
+                newPost.getExercise().setLikeCount(newPost.getExercise().getLikeCount()-1);
+                else
+                    newPost.getExercise().setLikeCount(newPost.getExercise().getLikeCount()+1);
+
+                newPost.setLiked(!newPost.getLiked());
+                mViewModel.getPostList().set(adapterPosition,newPost);
+                sharedAdapter.setData(mViewModel.getPostList());
+                sharedAdapter.notifyItemChanged(adapterPosition);
+            }
+
+            @Override
+            public void onPostComment(Post post, Integer adapterPosition) {
+                PostCommentsFragment postCommentsFragment = PostCommentsFragment.newInstance(post);
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.add(R.id.container, postCommentsFragment).addToBackStack("postCommentsFragment").commit();
+            }
         });
         //sharedExerciseWorkoutList setdata
 
+        sharedAdapter.setHasStableIds(true);
+        recyclerView.setItemAnimator(null);
         recyclerView.setAdapter(sharedAdapter);
 
 
     }
 
 
-
     @Override
     protected void onStop() {
         super.onStop();
-        NetworkUtil.unregisterNetworkReceiver(this,networkChangeReceiver);
+        NetworkUtil.unregisterNetworkReceiver(this, networkChangeReceiver);
     }
 
     @Override

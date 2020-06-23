@@ -4,33 +4,49 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Exercise implements Parcelable {
+import com.google.firebase.database.Exclude;
 
-    @Override
-    public String toString() {
-        return "Exercise{" +
-                "name='" + name + '\'' +
-                ", bodyPart='" + bodyPart + '\'' +
-                ", execution='" + execution + '\'' +
-                ", mechanism='" + mechanism + '\'' +
-                ", previewPhoto1='" + previewPhoto1 + '\'' +
-                ", previewPhoto2='" + previewPhoto2 + '\'' +
-                ", sets='" + sets + '\'' +
-                ", reps='" + reps + '\'' +
-                ", duration='" + duration + '\'' +
-                ", creatorId='" + creatorId + '\'' +
-                ", date='" + date + '\'' +
-                ", creatorName='" + creatorName + '\'' +
-                ", additional_notes='" + additional_notes + '\'' +
-                ", isAddedToWorkout=" + isAddedToWorkout +
-                ", previewBitmap=" + previewBitmap +
-                '}';
-    }
+import java.util.ArrayList;
+import java.util.List;
+
+public class Exercise implements Parcelable{
+
 
     public Exercise() {
     }
 
-    private String name, bodyPart, execution, mechanism, previewPhoto1, previewPhoto2, sets, reps, duration, creatorId, date, creatorName, additional_notes;
+    protected Exercise(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        bodyPart = in.readString();
+        execution = in.readString();
+        mechanism = in.readString();
+        previewPhotoOneUrl = in.readString();
+        previewPhotoTwoUrl = in.readString();
+        sets = in.readString();
+        reps = in.readString();
+        duration = in.readString();
+        creatorId = in.readString();
+        date = in.readString();
+        creatorName = in.readString();
+        additional_notes = in.readString();
+        if (in.readByte() == 0) {
+            likeCount = null;
+        } else {
+            likeCount = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            commentCount = null;
+        } else {
+            commentCount = in.readLong();
+        }
+        likerIdList = in.createStringArrayList();
+        commentList = in.createTypedArrayList(Comment.CREATOR);
+        creatorImageUrl = in.readString();
+        byte tmpIsAddedToWorkout = in.readByte();
+        isAddedToWorkout = tmpIsAddedToWorkout == 0 ? null : tmpIsAddedToWorkout == 1;
+    }
+
     public static final Creator<Exercise> CREATOR = new Creator<Exercise>() {
         @Override
         public Exercise createFromParcel(Parcel in) {
@@ -42,37 +58,74 @@ public class Exercise implements Parcelable {
             return new Exercise[size];
         }
     };
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    private String id;
+    private String name;
+    private String bodyPart;
+    private String execution;
+    private String mechanism;
+    private String previewPhotoOneUrl;
+    private String previewPhotoTwoUrl;
+    private String sets;
+    private String reps;
+    private String duration;
+    private String creatorId;
+    private String date;
+    private String creatorName;
+    private String additional_notes;
+    private Long likeCount=0L;
+    private Long commentCount=0L;
+    private List<String> likerIdList;
+    private List<Comment> commentList;
+    private String creatorImageUrl;
+
+    @Exclude()
     private Boolean isAddedToWorkout;
 
-    public Exercise(String name, String bodyPart, String execution, String mechanism, String previewPhoto1, String previewPhoto2) {
+
+    public List<String> getLikerIdList() {
+        return likerIdList;
+    }
+
+    public void setLikerIdList(List<String> likerIdList) {
+        this.likerIdList = likerIdList;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
+    }
+
+
+
+    public String getCreatorImageUrl() {
+        return creatorImageUrl;
+    }
+    public void setCreatorImageUrl(String creatorImageUrl) {
+        this.creatorImageUrl = creatorImageUrl;
+    }
+
+    public Exercise(String name, String bodyPart, String execution, String mechanism, String previewPhotoOneUrl, String previewPhotoTwoUrl) {
         this.name = name;
         this.execution = execution;
         this.mechanism = mechanism;
-        this.previewPhoto1 = previewPhoto1;
-        this.previewPhoto2 = previewPhoto2;
+        this.previewPhotoOneUrl = previewPhotoOneUrl;
+        this.previewPhotoTwoUrl = previewPhotoTwoUrl;
         this.bodyPart = bodyPart;
     }
 
-    private Bitmap previewBitmap;
 
-    protected Exercise(Parcel in) {
-        name = in.readString();
-        bodyPart = in.readString();
-        execution = in.readString();
-        mechanism = in.readString();
-        previewPhoto1 = in.readString();
-        previewPhoto2 = in.readString();
-        sets = in.readString();
-        reps = in.readString();
-        duration = in.readString();
-        creatorId = in.readString();
-        date = in.readString();
-        creatorName = in.readString();
-        additional_notes = in.readString();
-        byte tmpIsAddedToWorkout = in.readByte();
-        isAddedToWorkout = tmpIsAddedToWorkout == 0 ? null : tmpIsAddedToWorkout == 1;
-        previewBitmap = in.readParcelable(Bitmap.class.getClassLoader());
-    }
 
     public String getCreatorId() {
         return creatorId;
@@ -80,15 +133,6 @@ public class Exercise implements Parcelable {
 
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
-    }
-
-
-    public Bitmap getPreviewBitmap() {
-        return previewBitmap;
-    }
-
-    public void setPreviewBitmap(Bitmap previewBitmap) {
-        this.previewBitmap = previewBitmap;
     }
 
     public String getBodyPart() {
@@ -115,8 +159,6 @@ public class Exercise implements Parcelable {
         this.execution = execution;
     }
 
-
-
     public String getMechanism() {
         return mechanism;
     }
@@ -125,25 +167,21 @@ public class Exercise implements Parcelable {
         this.mechanism = mechanism;
     }
 
-
-
-    public String getPreviewPhoto1() {
-        return previewPhoto1;
+    public String getPreviewPhotoOneUrl() {
+        return previewPhotoOneUrl;
     }
 
-    public void setPreviewPhoto1(String previewPhoto1) {
-        this.previewPhoto1 = previewPhoto1;
+    public void setPreviewPhotoOneUrl(String previewPhotoOneUrl) {
+        this.previewPhotoOneUrl = previewPhotoOneUrl;
     }
 
-    public String getPreviewPhoto2() {
-        return previewPhoto2;
+    public String getPreviewPhotoTwoUrl() {
+        return previewPhotoTwoUrl;
     }
 
-    public void setPreviewPhoto2(String previewPhoto2) {
-        this.previewPhoto2 = previewPhoto2;
+    public void setPreviewPhotoTwoUrl(String previewPhotoTwoUrl) {
+        this.previewPhotoTwoUrl = previewPhotoTwoUrl;
     }
-
-
 
     public String getSets() {
         return sets;
@@ -201,27 +239,58 @@ public class Exercise implements Parcelable {
         this.isAddedToWorkout = isAddedToWorkout;
     }
 
+    public Long getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(Long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public Long getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Long commentCount) {
+        this.commentCount = commentCount;
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(name);
-        parcel.writeString(bodyPart);
-        parcel.writeString(execution);
-        parcel.writeString(mechanism);
-        parcel.writeString(previewPhoto1);
-        parcel.writeString(previewPhoto2);
-        parcel.writeString(sets);
-        parcel.writeString(reps);
-        parcel.writeString(duration);
-        parcel.writeString(creatorId);
-        parcel.writeString(date);
-        parcel.writeString(creatorName);
-        parcel.writeString(additional_notes);
-        parcel.writeByte((byte) (isAddedToWorkout == null ? 0 : isAddedToWorkout ? 1 : 2));
-        parcel.writeParcelable(previewBitmap, i);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(bodyPart);
+        dest.writeString(execution);
+        dest.writeString(mechanism);
+        dest.writeString(previewPhotoOneUrl);
+        dest.writeString(previewPhotoTwoUrl);
+        dest.writeString(sets);
+        dest.writeString(reps);
+        dest.writeString(duration);
+        dest.writeString(creatorId);
+        dest.writeString(date);
+        dest.writeString(creatorName);
+        dest.writeString(additional_notes);
+        if (likeCount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(likeCount);
+        }
+        if (commentCount == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(commentCount);
+        }
+        dest.writeStringList(likerIdList);
+        dest.writeTypedList(commentList);
+        dest.writeString(creatorImageUrl);
+        dest.writeByte((byte) (isAddedToWorkout == null ? 0 : isAddedToWorkout ? 1 : 2));
     }
 }

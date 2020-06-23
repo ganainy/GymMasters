@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -25,12 +26,13 @@ import ganainy.dev.gymmasters.shared_adapters.WorkoutAdapter;
 import ganainy.dev.gymmasters.ui.specificWorkout.SpecificWorkoutActivity;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
-import static ganainy.dev.gymmasters.ui.main.home.HomeFragment.LOGGED_USER_ID;
+import static ganainy.dev.gymmasters.ui.main.home.HomeFragment.USER_ID;
 import static ganainy.dev.gymmasters.ui.main.workouts.WorkoutsFragment.WORKOUT;
 
-public class LoggedUserWorkoutsFragment extends Fragment {
+public class UserWorkoutsFragment extends Fragment {
 
-    private LoggedUserWorkoutsViewModel mViewModel;
+    public static final String USER_NAME = "userName";
+    private UserWorkoutsViewModel mViewModel;
     private WorkoutAdapter workoutAdapter;
     @BindView(R.id.workoutRecyclerView)
      RecyclerView recyclerView;
@@ -40,6 +42,8 @@ public class LoggedUserWorkoutsFragment extends Fragment {
     ConstraintLayout emptyLayout;
     @BindView(R.id.error_layout)
     ConstraintLayout errorLayout;
+    @BindView(R.id.toolbarTitleTextView)
+    TextView toolbarTitleTextView;
 
 
     @OnClick(R.id.backArrowImageView)
@@ -47,15 +51,16 @@ public class LoggedUserWorkoutsFragment extends Fragment {
         requireActivity().onBackPressed();
     }
 
-    public static LoggedUserWorkoutsFragment newInstance(String loggedUserId) {
-        LoggedUserWorkoutsFragment loggedUserWorkoutsFragment= new LoggedUserWorkoutsFragment();
+    public static UserWorkoutsFragment newInstance(String userId,String userName) {
+        UserWorkoutsFragment userWorkoutsFragment = new UserWorkoutsFragment();
         Bundle bundle=new Bundle();
-        bundle.putString(LOGGED_USER_ID,loggedUserId);
-        loggedUserWorkoutsFragment.setArguments(bundle);
-        return loggedUserWorkoutsFragment;
+        bundle.putString(USER_ID,userId);
+        bundle.putString(USER_NAME,userName);
+        userWorkoutsFragment.setArguments(bundle);
+        return userWorkoutsFragment;
     }
 
-    private LoggedUserWorkoutsFragment() {
+    private UserWorkoutsFragment() {
 
     }
 
@@ -71,8 +76,10 @@ public class LoggedUserWorkoutsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(LoggedUserWorkoutsViewModel.class);
-        mViewModel.downloadLoggedUserWorkouts(getArguments().getString(LOGGED_USER_ID));
+        mViewModel = new ViewModelProvider(this).get(UserWorkoutsViewModel.class);
+        mViewModel.downloadLoggedUserWorkouts(getArguments().getString(USER_ID));
+
+        setupToolbarTitle(getArguments().getString(USER_NAME));
 
         mViewModel.getWorkoutListLiveData().observe(getViewLifecycleOwner(), workouts -> {
             workoutAdapter.setDataSource(workouts);
@@ -81,6 +88,11 @@ public class LoggedUserWorkoutsFragment extends Fragment {
 
         mViewModel.getNetworkStateLiveData().observe(getViewLifecycleOwner(), this::handleNetworkStateUi);
 
+    }
+
+    private void setupToolbarTitle(String username) {
+        if (username!=null)
+            toolbarTitleTextView.setText(username+"'s workouts");
     }
 
     private void handleNetworkStateUi(NetworkState networkState) {

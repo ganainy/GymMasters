@@ -91,7 +91,6 @@
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/btn_add_blue"
                     android:fontFamily="@font/proximanovaregular"
-                    android:padding="4dp"
                     android:text="@string/follow"
                     android:textAlignment="center"
                     android:textAllCaps="false"
@@ -461,12 +460,12 @@
                         android:paddingTop="8dp"
                         android:textColor="@color/textblack"
                         android:textSize="18sp"
-                        app:layout_constraintEnd_toStartOf="@+id/textView10"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/exercisesCountTextView"
+                        tools:ignore="MissingConstraints"
                         tools:layout_editor_absoluteY="0dp"
-                        tools:text="Amr created 3 custom exercises"
-                        tools:ignore="MissingConstraints" />
+                        tools:text="Amr created 3 custom exercises" />
 
                     <TextView
                         android:id="@+id/clickToViewExercises"
@@ -520,6 +519,7 @@
                         android:paddingTop="8dp"
                         android:textColor="@color/textblack"
                         android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/workoutCountTextView"
                         tools:layout_editor_absoluteY="0dp"
                         tools:text="Amr created 2 custom workouts" />

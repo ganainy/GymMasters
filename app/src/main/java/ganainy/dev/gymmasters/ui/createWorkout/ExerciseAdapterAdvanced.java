@@ -1,20 +1,15 @@
 package ganainy.dev.gymmasters.ui.createWorkout;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,13 +17,10 @@ import com.bumptech.glide.Glide;
 
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
-import ganainy.dev.gymmasters.ui.main.MainActivity;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.shashank.sony.fancytoastlib.FancyToast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -85,7 +77,7 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
 
     private void downloadAndShowExerciseImage(final ExerciseViewHolder exerciseViewHolder, int i) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-        StorageReference pathReference = storageRef.child(EXERCISE_IMAGES + exerciseList.get(i).getPreviewPhoto1());
+        StorageReference pathReference = storageRef.child(EXERCISE_IMAGES + exerciseList.get(i).getPreviewPhotoOneUrl());
         pathReference.getDownloadUrl().addOnSuccessListener(uri ->
                 Glide.with(context).load(uri.toString()).into(exerciseViewHolder.exerciseImage))
                 .addOnFailureListener(exception
@@ -114,7 +106,7 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
 
         ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
-            exerciseImage = itemView.findViewById(R.id.exerciseImageView);
+            exerciseImage = itemView.findViewById(R.id.exerciseOneImageView);
             deleteImageView = itemView.findViewById(R.id.deleteImageView);
             exerciseName = itemView.findViewById(R.id.exerciseNameEdittext);
             imageViewPlus = itemView.findViewById(R.id.imageViewDelete);

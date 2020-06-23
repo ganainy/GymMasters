@@ -1,4 +1,4 @@
-package ganainy.dev.gymmasters.ui.loggedUserExercises;
+package ganainy.dev.gymmasters.ui.userExercises;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -20,7 +20,7 @@ import ganainy.dev.gymmasters.utils.NetworkState;
 import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
 import static ganainy.dev.gymmasters.utils.FirebaseUtils.getExerciseFromSnapshot;
 
-public class LoggedUserExercisesViewModel extends ViewModel {
+public class UserExercisesViewModel extends ViewModel {
     public static final String CREATOR_ID = "creatorId";
 
     private MutableLiveData<NetworkState> networkStateLiveData =new MutableLiveData<>();
@@ -41,13 +41,11 @@ public class LoggedUserExercisesViewModel extends ViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 loggedUserExercisesArrayList.clear();
-                for (DataSnapshot dsBig : dataSnapshot.getChildren()) {
-                    for (DataSnapshot ds : dsBig.getChildren()) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         if (ds.hasChild(CREATOR_ID) && ds.child(CREATOR_ID).getValue().equals(loggedInUserId)) {
                             Exercise exerciseFromSnapshot = getExerciseFromSnapshot(ds);
                             loggedUserExercisesArrayList.add(exerciseFromSnapshot);
                         }
-                    }
                 }
 
                 if (loggedUserExercisesArrayList.size()==0)

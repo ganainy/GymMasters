@@ -5,12 +5,9 @@ import android.net.Uri;
 import android.text.Editable;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -147,6 +144,7 @@ public class CreateWorkoutViewModel extends ViewModel {
 
 
     private void uploadWorkout(String photoPath) {
+        //todo add workout id like we did with exercise
         DatabaseReference workoutRef = FirebaseDatabase.getInstance().getReference(WORKOUT);
 
         Workout workout = new Workout();
@@ -186,14 +184,12 @@ public class CreateWorkoutViewModel extends ViewModel {
         FirebaseDatabase.getInstance().getReference(EXERCISES).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot outerDataSnapshot : dataSnapshot.getChildren()) {
-                    for (DataSnapshot innerDataSnapshot : outerDataSnapshot.getChildren()) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Exercise exercise = new Exercise();
-                        exercise.setName(innerDataSnapshot.child("name").getValue().toString());
-                        exercise.setBodyPart(innerDataSnapshot.child("bodyPart").getValue().toString());
-                        exercise.setPreviewPhoto1(innerDataSnapshot.child("previewPhoto1").getValue().toString());
+                        exercise.setName(ds.child("name").getValue().toString());
+                        exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
+                        exercise.setPreviewPhotoOneUrl(ds.child("previewPhotoOneUrl").getValue().toString());
                         downloadedExerciseList.add(exercise);
-                    }
                 }
                 exerciseListLiveData.setValue(downloadedExerciseList);
             }

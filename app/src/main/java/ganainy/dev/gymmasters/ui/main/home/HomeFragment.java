@@ -29,7 +29,7 @@ import butterknife.OnClick;
 
 public class HomeFragment extends Fragment {
     private static final String TAG = "MainFragmentHome";
-    public static final String LOGGED_USER_ID = "loggedUserId";
+    public static final String USER_ID = "userId";
 
     @BindView(R.id.viewLoggedUserExercises)
     Button viewMyExercisesButton;
@@ -70,13 +70,13 @@ public class HomeFragment extends Fragment {
     @OnClick(R.id.viewLoggedUserExercises)
     void viewLoggedUserExercises() {
         ActivityCallback activityCallback = (ActivityCallback) requireActivity();
-        activityCallback.openLoggedUserExercisesFragment(AuthUtils.getLoggedUserId(requireContext()));
+        activityCallback.openUserExercisesFragment(AuthUtils.getLoggedUserId(requireContext()),null);
     }
 
     @OnClick(R.id.viewMyWorkoutsButton)
     void viewWorkouts() {
         ActivityCallback activityCallback = (ActivityCallback) requireActivity();
-        activityCallback.openLoggedUserWorkoutsFragment(AuthUtils.getLoggedUserId(requireContext()));
+        activityCallback.openUserWorkoutsFragment(AuthUtils.getLoggedUserId(requireContext()),null);
     }
 
 

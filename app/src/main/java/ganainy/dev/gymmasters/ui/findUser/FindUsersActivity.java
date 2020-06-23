@@ -1,6 +1,5 @@
 package ganainy.dev.gymmasters.ui.findUser;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,8 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ganainy.dev.gymmasters.R;
+import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.User;
-import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeFragment;
+import ganainy.dev.gymmasters.ui.userExercises.UserExercisesFragment;
+import ganainy.dev.gymmasters.ui.main.ActivityCallback;
+import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.UserWorkoutsFragment;
+import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
 import ganainy.dev.gymmasters.ui.userInfo.UserInfoFragment;
 import ganainy.dev.gymmasters.utils.ApplicationViewModelFactory;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
@@ -33,7 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ganainy.dev.gymmasters.utils.NetworkUtil;
 
-public class FindUsersActivity extends AppCompatActivity {
+public class FindUsersActivity extends AppCompatActivity implements ActivityCallback {
     private static final String TAG = "FindUsersActivity";
     public static final String SOURCE = "source";
     public static final String FIND = "find";
@@ -190,7 +193,11 @@ public class FindUsersActivity extends AppCompatActivity {
         });
 
 
-        mViewModel.userTransformation.observe(this,followingUser->{
+        mViewModel.followingUserTransformation.observe(this, followingUser->{
+            //must subscribe to trigger transformation
+        });
+
+        mViewModel.followerUserTransformation.observe(this, followingUser->{
             //must subscribe to trigger transformation
         });
 
@@ -256,5 +263,36 @@ public class FindUsersActivity extends AppCompatActivity {
     }
 
 
+    /*override methods called by userinfo fragment to show certain user exercises/workouts*/
+    @Override
+    public void openUserWorkoutsFragment(String userId, String userName) {
+        UserWorkoutsFragment userWorkoutsFragment = UserWorkoutsFragment.newInstance(userId,userName);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, userWorkoutsFragment).addToBackStack("userWorkoutsFragment").commit();
+    }
+
+    @Override
+    public void openUserExercisesFragment(String userId, String userName) {
+        UserExercisesFragment userExercisesFragment = UserExercisesFragment.newInstance(userId,userName);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, userExercisesFragment).addToBackStack("userExercisesFragment").commit();
+    }
+
+    @Override
+    public void openCreateWorkoutFragment() {
+
+    }
+
+    @Override
+    public void openCreateExerciseFragment() {
+
+    }
+
+    @Override
+    public void openExerciseFragment(Exercise exercise) {
+        ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exercise.getName(),exercise.getBodyPart());
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, exerciseFragment).addToBackStack("exerciseFragment").commit();
+    }
 }
 

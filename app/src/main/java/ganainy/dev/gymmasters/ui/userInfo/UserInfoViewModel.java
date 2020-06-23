@@ -35,8 +35,8 @@ public class UserInfoViewModel extends ViewModel {
     public static final String RATINGS = "Ratings";
     public static final String FOLLOWING_UID = "followingUID";
 
-    private List<Exercise> exercisesList = new ArrayList<>();
-    private List<Workout> workoutList = new ArrayList<>();
+    private List<Exercise> exercisesList ;
+    private List<Workout> workoutList ;
     private FollowState followState;
     private Long followersCount;
     private Long ratingAverage;
@@ -45,6 +45,10 @@ public class UserInfoViewModel extends ViewModel {
     private User profileOwner;
 
     private Application app;
+
+    public UserProfileModel getUserProfileModel() {
+        return userProfileModel;
+    }
 
     private UserProfileModel userProfileModel = new UserProfileModel();
 
@@ -84,18 +88,17 @@ public class UserInfoViewModel extends ViewModel {
         if (exercisesList != null) {
             return;
         }
+        exercisesList=new ArrayList<>();
 
         DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference(EXERCISES);
         exerciseNode.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot dsBig : dataSnapshot.getChildren()) {
-                    for (DataSnapshot ds : dsBig.getChildren()) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         if (ds.child(CREATOR_ID).getValue().equals(profileOwner.getId())) {
                             Exercise exercise = FirebaseUtils.getExerciseFromSnapshot(ds);
                             exercisesList.add(exercise);
                         }
-                    }
                 }
                 userProfileModel.setExercisesList(exercisesList);
                 userProfileModelLiveData.setValue(userProfileModel);
@@ -113,6 +116,7 @@ public class UserInfoViewModel extends ViewModel {
         if (workoutList != null) {
             return;
         }
+        workoutList=new ArrayList<>();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.child(WORKOUT).addListenerForSingleValueEvent(new ValueEventListener() {

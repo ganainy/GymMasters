@@ -15,14 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import ganainy.dev.gymmasters.R;
-import ganainy.dev.gymmasters.ui.exercise.ExercisesActivity;
+import ganainy.dev.gymmasters.ui.exercise.MuscleExercisesActivity;
 
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,7 +61,7 @@ public class ExercisesCategoriesFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         CategoriesAdapter categoriesAdapter = new CategoriesAdapter(selectedCategory -> {
-            Intent intent = new Intent(getActivity(), ExercisesActivity.class);
+            Intent intent = new Intent(getActivity(), MuscleExercisesActivity.class);
             intent.putExtra(SELECTED_MUSCLE, selectedCategory);
             startActivity(intent);
         });
