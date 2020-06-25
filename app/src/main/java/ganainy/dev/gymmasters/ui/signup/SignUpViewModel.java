@@ -34,8 +34,6 @@ import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.utils.Event;
 import ganainy.dev.gymmasters.utils.SharedPrefUtils;
 
-import static ganainy.dev.gymmasters.utils.SharedPrefUtils.isFirstShowingOfSignUp;
-
 public class SignUpViewModel extends ViewModel {
 
     private static final String TAG = "SignUpViewModel";
@@ -74,12 +72,12 @@ public class SignUpViewModel extends ViewModel {
     }
 
     LiveData<Boolean> isFirstSignUpShowing() {
-        isFirstShowingOfSignUpLiveData.setValue(SharedPrefUtils.getBoolean(app, isFirstShowingOfSignUp));
+        isFirstShowingOfSignUpLiveData.setValue(SharedPrefUtils.getBoolean(app, SharedPrefUtils.IS_FIRST_SHOWING_OF_SIGN_UP));
         return isFirstShowingOfSignUpLiveData;
     }
 
     public void updateIsFirstSignUpShowing() {
-        SharedPrefUtils.putBoolean(app, false, isFirstShowingOfSignUp);
+        SharedPrefUtils.putBoolean(app, false, SharedPrefUtils.IS_FIRST_SHOWING_OF_SIGN_UP);
     }
 
     public void authenticateUser() {

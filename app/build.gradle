@@ -100,4 +100,8 @@ dependencies {
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     //pretty time
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.4.Final'
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.6'
+    //lottie animation
+    implementation 'com.airbnb.android:lottie:3.4.1'
 }

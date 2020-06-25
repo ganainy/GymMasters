@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Space;
 import android.widget.TextView;
 
@@ -23,8 +24,8 @@ import java.util.List;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.User;
+import ganainy.dev.gymmasters.ui.main.ProfileCallback;
 import ganainy.dev.gymmasters.ui.userExercises.UserExercisesFragment;
-import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.UserWorkoutsFragment;
 import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
 import ganainy.dev.gymmasters.ui.userInfo.UserInfoFragment;
@@ -36,7 +37,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ganainy.dev.gymmasters.utils.NetworkUtil;
 
-public class FindUsersActivity extends AppCompatActivity implements ActivityCallback {
+public class FindUsersActivity extends AppCompatActivity implements ProfileCallback {
     private static final String TAG = "FindUsersActivity";
     public static final String SOURCE = "source";
     public static final String FIND = "find";
@@ -59,6 +60,9 @@ public class FindUsersActivity extends AppCompatActivity implements ActivityCall
 
     @BindView(R.id.noNewsFeedTextView)
     TextView notFoundTextView;
+
+    @BindView(R.id.loadingProgressbar)
+    ProgressBar loadingProgressbar;
 
     @BindView(R.id.findUsersButton)
     Button findButton;
@@ -154,7 +158,6 @@ public class FindUsersActivity extends AppCompatActivity implements ActivityCall
         setContentView(R.layout.activity_find_users);
         ButterKnife.bind(this);
 
-        //todo handle loading layout and pagination
         setupRecycler();
         initViewModel();
 
@@ -212,6 +215,12 @@ public class FindUsersActivity extends AppCompatActivity implements ActivityCall
             userAdapter.notifyItemInserted(users.size()-1);
         });
 
+        mViewModel.getLoadingLiveData().observe(this,isLoading->{
+            if (isLoading)
+                loadingProgressbar.setVisibility(View.VISIBLE);
+            else
+                loadingProgressbar.setVisibility(View.GONE);
+        });
 
     }
 
@@ -240,13 +249,6 @@ public class FindUsersActivity extends AppCompatActivity implements ActivityCall
             }
         });
         recyclerView.setAdapter(userAdapter);
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 
 
@@ -290,9 +292,19 @@ public class FindUsersActivity extends AppCompatActivity implements ActivityCall
 
     @Override
     public void openExerciseFragment(Exercise exercise) {
-        ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exercise.getName(),exercise.getBodyPart());
+        ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exercise);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.container, exerciseFragment).addToBackStack("exerciseFragment").commit();
+    }
+
+    @Override
+    public void showLoggedUserFollowers(String key, String value) {
+
+    }
+
+    @Override
+    public void showUsersFollowedByLoggedUser(String key, String value) {
+
     }
 }
 

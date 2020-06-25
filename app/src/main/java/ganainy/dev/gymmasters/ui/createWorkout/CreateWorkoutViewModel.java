@@ -184,11 +184,8 @@ public class CreateWorkoutViewModel extends ViewModel {
         FirebaseDatabase.getInstance().getReference(EXERCISES).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        Exercise exercise = new Exercise();
-                        exercise.setName(ds.child("name").getValue().toString());
-                        exercise.setBodyPart(ds.child("bodyPart").getValue().toString());
-                        exercise.setPreviewPhotoOneUrl(ds.child("previewPhotoOneUrl").getValue().toString());
+                for (DataSnapshot exerciseSnapshot : dataSnapshot.getChildren()) {
+                        Exercise exercise =exerciseSnapshot.getValue(Exercise.class);
                         downloadedExerciseList.add(exercise);
                 }
                 exerciseListLiveData.setValue(downloadedExerciseList);

@@ -20,18 +20,21 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import ganainy.dev.gymmasters.models.app_models.Exercise;
+import ganainy.dev.gymmasters.models.app_models.Post;
 import ganainy.dev.gymmasters.ui.createExercise.CreateExerciseFragment;
 import ganainy.dev.gymmasters.ui.createWorkout.CreateWorkoutFragment;
+import ganainy.dev.gymmasters.ui.findUser.FindUsersActivity;
+import ganainy.dev.gymmasters.ui.main.home.ProfileFragment;
+import ganainy.dev.gymmasters.ui.main.workouts.PostsCallback;
+import ganainy.dev.gymmasters.ui.posts.postComments.PostCommentsFragment;
 import ganainy.dev.gymmasters.ui.userExercises.UserExercisesFragment;
 import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.UserWorkoutsFragment;
 import ganainy.dev.gymmasters.ui.map.MapsActivity;
 import ganainy.dev.gymmasters.R;
-import ganainy.dev.gymmasters.ui.posts.PostsActivity;
 import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
 import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeCallback;
 import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeFragment;
 import ganainy.dev.gymmasters.ui.timer.TimerActivity;
-import ganainy.dev.gymmasters.ui.findUser.FindUsersActivity;
 import ganainy.dev.gymmasters.ui.login.LoginActivity;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 
@@ -53,7 +56,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ganainy.dev.gymmasters.utils.NetworkUtil;
 
-public class MainActivity extends AppCompatActivity implements ActivityCallback, YoutubeCallback {
+public class MainActivity extends AppCompatActivity implements ProfileCallback, YoutubeCallback, PostsCallback {
     public static final String SOURCE = "source";
     public static final String FOLLOWERS = "followers";
     public static final String FIND = "find";
@@ -96,17 +99,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback,
         //handle click on navigation view items
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             switch (menuItem.getItemId()) {
-                case R.id.nav_find:
-                    handleFindClick();
+                case R.id.nav_discover:
+                    handleDiscoverClick();
                     break;
-                case R.id.nav_posts:
-                    handlePostsClick();
-                    break;
-                case R.id.nav_followers:
-                    handleFollowersClick();
-                    break;
-                case R.id.nav_following:
-                    handleFollowedClick();
+                case R.id.nav_profile:
+                    handleProfileClick();
                     break;
                 case R.id.nav_timer:
                     handleTimerClick();
@@ -131,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback,
     }
 
     private void handleMapClick() {
+        drawerLayout.closeDrawers();
         //check permissions before opening map activity
         //todo move permission check to map activity
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -172,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback,
     }
 
     private void handleSignOutClick() {
+        drawerLayout.closeDrawers();
         //todo move to viewmodel
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -200,30 +199,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback,
     }
 
     private void handleTimerClick() {
+        drawerLayout.closeDrawers();
         Intent i = new Intent(MainActivity.this, TimerActivity.class);
         startActivity(i);
     }
 
-    private void handleFollowersClick() {
-        Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
-        i.putExtra(SOURCE, FOLLOWERS);
-        startActivity(i);
-    }
-
-    private void handleFindClick() {
+    private void handleDiscoverClick() {
+        drawerLayout.closeDrawers();
         Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
         i.putExtra(SOURCE, FIND);
         startActivity(i);
     }
 
-    private void handlePostsClick() {
-        startActivity(new Intent(MainActivity.this, PostsActivity.class));
-    }
-
-    private void handleFollowedClick() {
-        Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
-        i.putExtra(SOURCE, FOLLOWING);
-        startActivity(i);
+    private void handleProfileClick() {
+        drawerLayout.closeDrawers();
+        ProfileFragment profileFragment = ProfileFragment.newInstance();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, profileFragment).addToBackStack("profileFragment").commit();
     }
 
     private void setupViewPager() {
@@ -232,16 +224,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback,
 
         tabLayout.setupWithViewPager(view_pager_main, true);
 
-
         setupTabLayoutIconsAndLabels();
-
     }
 
     private void setupTabLayoutIconsAndLabels() {
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_home_blue);
-        tabLayout.getTabAt(0).setText(getString(R.string.home));
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_dumbell_black);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_workout_black);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_blog_black);
+        tabLayout.getTabAt(0).setText(getString(R.string.feed));
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_dumbell_grey);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_workout_grey);
 
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -249,16 +239,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback,
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0:
-                        tab.setText(getString(R.string.home));
-                        tab.setIcon(R.drawable.ic_home_blue);
+                        tab.setText(getString(R.string.feed));
+                        tab.setIcon(R.drawable.ic_blog_black);
                         break;
                     case 1:
                         tab.setText(getString(R.string.exercises));
-                        tab.setIcon(R.drawable.ic_dumbell_blue);
+                        tab.setIcon(R.drawable.ic_dumbell_black);
                         break;
                     case 2:
                         tab.setText(getString(R.string.workouts));
-                        tab.setIcon(R.drawable.ic_workout_blue);
+                        tab.setIcon(R.drawable.ic_workout_black);
                         break;
                 }
                 tab.setTabLabelVisibility(TabLayout.TAB_LABEL_VISIBILITY_LABELED);
@@ -270,13 +260,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback,
                 tab.setTabLabelVisibility(TabLayout.TAB_LABEL_VISIBILITY_UNLABELED);
                 switch (tab.getPosition()) {
                     case 0:
-                        tab.setIcon(R.drawable.ic_home_black);
+                        tab.setIcon(R.drawable.ic_blog_grey);
                         break;
                     case 1:
-                        tab.setIcon(R.drawable.ic_dumbell_black);
+                        tab.setIcon(R.drawable.ic_dumbell_grey);
                         break;
                     case 2:
-                        tab.setIcon(R.drawable.ic_workout_black);
+                        tab.setIcon(R.drawable.ic_workout_grey);
                         break;
                 }
 
@@ -363,9 +353,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback,
 
     @Override
     public void openExerciseFragment(Exercise exercise) {
-        ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exercise.getName(),exercise.getBodyPart());
+        ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exercise);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.container, exerciseFragment).addToBackStack("exerciseFragment").commit();
+    }
+
+    @Override
+    public void showLoggedUserFollowers(String key, String value) {
+        Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
+        i.putExtra(key, value);
+        startActivity(i);
+    }
+
+    @Override
+    public void showUsersFollowedByLoggedUser(String key, String value) {
+        Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
+        i.putExtra(key, value);
+        startActivity(i);
     }
 
     @Override
@@ -373,5 +377,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback,
         YoutubeFragment youtubeFragment = YoutubeFragment.newInstance(exerciseName);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.container, youtubeFragment).addToBackStack("youtubeFragment").commit();
+    }
+
+    @Override
+    public void onOpenFindUsersActivity(String key, String value) {
+        Intent i = new Intent(this, FindUsersActivity.class);
+        i.putExtra(key, value);
+        startActivity(i);
+    }
+
+    @Override
+    public void onOpenPostCommentFragment(Post post) {
+        PostCommentsFragment postCommentsFragment = PostCommentsFragment.newInstance(post);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, postCommentsFragment).addToBackStack("postCommentsFragment").commit();
     }
 }

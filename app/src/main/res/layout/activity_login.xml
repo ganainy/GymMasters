@@ -39,7 +39,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/emailTextInputLayout"
+                android:id="@+id/emailShimmer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="4dp"
@@ -71,7 +71,7 @@
                 android:theme="@style/TextLabel"
                 app:errorEnabled="true"
                 app:errorTextAppearance="@style/ErrorText"
-                app:layout_constraintTop_toBottomOf="@+id/emailTextInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/emailShimmer"
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText

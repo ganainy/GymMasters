@@ -79,7 +79,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         @BindView(R.id.nameEditText)
         TextView nameTextView;
 
-        @BindView(R.id.followersCountTextView)
+        @BindView(R.id.followerCountShimmer)
         TextView followersTextView;
 
         @BindView(R.id.ratingBar)

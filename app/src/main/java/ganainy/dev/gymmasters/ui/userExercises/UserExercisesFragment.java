@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -22,17 +23,17 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.shared_adapters.ExercisesAdapter;
-import ganainy.dev.gymmasters.ui.main.ActivityCallback;
+import ganainy.dev.gymmasters.ui.main.ProfileCallback;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
-import static ganainy.dev.gymmasters.ui.main.home.HomeFragment.USER_ID;
+import static ganainy.dev.gymmasters.ui.main.home.ProfileFragment.USER_ID;
 
 /**can be called to show logged user exercises or any user exercises*/
 public class UserExercisesFragment extends Fragment {
 
     public static final String USER_NAME = "userName";
     @BindView(R.id.loading_layout_shimmer)
-    ShimmerFrameLayout shimmerLoadingLayout;
+    LinearLayout shimmerLoadingLayout;
     @BindView(R.id.empty_layout)
     ConstraintLayout emptyLayout;
     @BindView(R.id.error_layout)
@@ -96,8 +97,8 @@ public class UserExercisesFragment extends Fragment {
     private void setupRecycler() {
         exercisesAdapter = new ExercisesAdapter(requireActivity().getApplicationContext(), exercise -> {
             //handle click of certain exercise
-            ActivityCallback activityCallback = (ActivityCallback) requireActivity();
-            activityCallback.openExerciseFragment(exercise);
+            ProfileCallback profileCallback = (ProfileCallback) requireActivity();
+            profileCallback.openExerciseFragment(exercise);
         });
         exercisesRecyclerView.setAdapter(exercisesAdapter);
     }

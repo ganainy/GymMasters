@@ -1,12 +1,9 @@
 package ganainy.dev.gymmasters.ui.login;
 
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -16,37 +13,20 @@ import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import ganainy.dev.gymmasters.R;
-import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.ui.main.MainActivity;
 import ganainy.dev.gymmasters.ui.signup.SignUpActivity;
 import ganainy.dev.gymmasters.utils.ApplicationViewModelFactory;
-import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.shashank.sony.fancytoastlib.FancyToast;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -145,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
         signUp = findViewById(R.id.signUpButton);
         passwordEditText = findViewById(R.id.passwordEditText);
         emailEditText=findViewById(R.id.emailEditText);
-        emailTextInputLayout=findViewById(R.id.emailTextInputLayout);
+        emailTextInputLayout=findViewById(R.id.emailShimmer);
         passwordTextInputLayout=findViewById(R.id.passwordTextInputLayout);
         semiTransparentBackgroundImage=findViewById(R.id.semiTransparentBackgroundImage);
         progressBar=findViewById(R.id.progressBar);

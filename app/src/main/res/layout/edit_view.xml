@@ -11,15 +11,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:fontFamily="@font/proximanovaregular"
-        android:text="Tell your followers something about yourself"
+        android:text="@string/tell_your_followers_something_about_yourself"
         android:textSize="17sp"
-        android:textStyle="bold"></TextView>
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"></EditText>
+        android:layout_margin="8dp"/>
 
 
     <LinearLayout
@@ -33,29 +33,28 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_weight="1"
-            android:background="@drawable/btn_add_blue"
+            android:background="@drawable/circular_grey_bordersolid_clicked"
             android:fontFamily="@font/proximanovaregular"
-            android:gravity="left|center"
-            android:text="Save"
+            android:gravity="start|center"
+            android:text="@string/save"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textColor="@color/blue"
+            android:textColor="@color/white"
             android:textSize="14sp" />
 
         <Button
-
             android:id="@+id/cancel_action"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_weight="1"
-            android:background="@drawable/btn_add_blue"
+            android:background="?android:attr/selectableItemBackground"
             android:fontFamily="@font/proximanovaregular"
-            android:gravity="left|center"
-            android:text="Cancel"
+            android:gravity="start|center"
+            android:text="@string/cancel"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textColor="@color/blue"
+            android:textColor="@color/dark_grey"
             android:textSize="14sp" />
 
 

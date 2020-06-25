@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -33,7 +34,7 @@ public class WorkoutsFragment extends Fragment {
     private WorkoutsViewModel workoutsViewModel;
     private RecyclerView recyclerView;
     @BindView(R.id.loading_layout_shimmer)
-    ShimmerFrameLayout shimmerLoadingLayout;
+    LinearLayout shimmerLoadingLayout;
     @BindView(R.id.empty_layout)
     ConstraintLayout emptyLayout;
     @BindView(R.id.error_layout)

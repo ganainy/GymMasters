@@ -26,11 +26,9 @@ import ganainy.dev.gymmasters.utils.ApplicationViewModelFactory;
 
 public class ExerciseFragment extends LogFragment  {
 
-    private static final String TAG = "ExerciseFragment";
-    public static final String NAME = "name";
-    public static final String TARGET_MUSCLE = "targetMuscle";
     public static final String BASIC = "basic";
     public static final String COMPOUND = "compound";
+    public static final String EXERCISE = "exercise";
 
     private ExerciseViewModel mViewModel;
 
@@ -110,11 +108,10 @@ public class ExerciseFragment extends LogFragment  {
 
 
 
-    public static ExerciseFragment newInstance(String exerciseName, String targetMuscle) {
+    public static ExerciseFragment newInstance(Exercise exercise) {
         ExerciseFragment exerciseFragment = new ExerciseFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(NAME, exerciseName);
-        bundle.putString(TARGET_MUSCLE, targetMuscle);
+        bundle.putParcelable(EXERCISE, exercise);
         exerciseFragment.setArguments(bundle);
         return exerciseFragment;
     }
@@ -134,23 +131,14 @@ public class ExerciseFragment extends LogFragment  {
 
         initViewModel();
 
-
-        if (getArguments().getString(NAME) != null) {
-            String exerciseName = getArguments().getString(NAME);
-            String targetMuscle = getArguments().getString(TARGET_MUSCLE);
-            mViewModel.downloadExercise(exerciseName, targetMuscle);
+        if (getArguments().getParcelable(EXERCISE) != null) {
+            Exercise exercise = getArguments().getParcelable(EXERCISE);
+            showExerciseInUi(exercise);
+            mViewModel.setExercise(exercise);
+            mViewModel.loadExercisePhotos();
+            mViewModel.isLoggedUserExercise();
         }
 
-        mViewModel.getExerciseLiveData().observe(getViewLifecycleOwner(), exercise -> {
-            if (exercise!=null){
-            mViewModel.isLoggedUserExercise();
-            mViewModel.loadExercisePhotos();
-            showExerciseInUi(exercise);
-            }else {
-                //exercise not found
-                exerciseDeletedLayout.setVisibility(View.VISIBLE);
-            }
-        });
 
         /*only show delete button if this exercise is owned by logged in user*/
         mViewModel.getIsLoggedUserExerciseLiveData().observe(getViewLifecycleOwner(), isLoggedUserExercise -> {
@@ -172,7 +160,7 @@ public class ExerciseFragment extends LogFragment  {
 
         mViewModel.getIsExerciseDeletedSuccessfullyLiveData().observe(getViewLifecycleOwner(), isExerciseDeletedSuccessfully -> {
             if (isExerciseDeletedSuccessfully) {
-                Toast.makeText(requireActivity(), R.string.exercise_deleted_successfully, Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), R.string.exercise_deleted_successfully, Toast.LENGTH_LONG).show();
                 requireActivity().onBackPressed();
             } else {
                 Toast.makeText(requireActivity(), R.string.error_deleting_exercise, Toast.LENGTH_SHORT).show();
@@ -188,8 +176,7 @@ public class ExerciseFragment extends LogFragment  {
     }
 
     private void initViewModel() {
-        ApplicationViewModelFactory applicationViewModelFactory = new ApplicationViewModelFactory(requireActivity().getApplication());
-        mViewModel = new ViewModelProvider(this, applicationViewModelFactory).get(ExerciseViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(ExerciseViewModel.class);
     }
 
     private void showExerciseInUi(Exercise exercise) {
@@ -231,17 +218,8 @@ public class ExerciseFragment extends LogFragment  {
                 builder.setMessage(R.string.compound_definition);
                 break;
             }
-
-
         }
-
-
-        //Creating dialog box
-        AlertDialog alert = builder.create();
-        //Setting the title manually
-        //alert.setTitle("Additional information");
-        alert.show();
-
+        builder.create().show();
     }
 
 

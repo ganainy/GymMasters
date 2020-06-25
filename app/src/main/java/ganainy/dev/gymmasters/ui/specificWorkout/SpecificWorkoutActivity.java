@@ -125,7 +125,7 @@ public class SpecificWorkoutActivity extends AppCompatActivity implements Youtub
     }
 
     private void openSelectedExerciseFragment(Exercise exercise) {
-        ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exercise.getName(),exercise.getBodyPart().toLowerCase());
+        ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exercise);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.container, exerciseFragment).addToBackStack("exerciseFragment").commit();
     }

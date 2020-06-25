@@ -38,7 +38,7 @@
             android:label="@string/title_activity_timer"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="ganainy.dev.gymmasters.ui.posts.PostsActivity"
+            android:name="ganainy.dev.gymmasters.ui.posts.PostsFragment"
          />
         <activity
             android:name="ganainy.dev.gymmasters.ui.findUser.FindUsersActivity"

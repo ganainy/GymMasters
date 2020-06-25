@@ -5,8 +5,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment;
-import ganainy.dev.gymmasters.ui.main.home.HomeFragment;
 import ganainy.dev.gymmasters.ui.main.workouts.WorkoutsFragment;
+import ganainy.dev.gymmasters.ui.posts.PostsFragment;
 
 public class ViewPagerAdapterMainActivity extends FragmentPagerAdapter {
     private static final String TAG = "ViewPagerAdapterMainAct";
@@ -18,7 +18,7 @@ public class ViewPagerAdapterMainActivity extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new HomeFragment();
+                return  PostsFragment.newInstance();
             case 1:
                 return new ExercisesCategoriesFragment();
             case 2:

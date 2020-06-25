@@ -17,7 +17,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.utils.AuthUtils;
-import ganainy.dev.gymmasters.utils.FirebaseUtils;
 
 public class FindUserViewModel extends ViewModel {
 
@@ -34,6 +33,7 @@ public class FindUserViewModel extends ViewModel {
     private MutableLiveData<User> userLiveData =new MutableLiveData<>();
     private MutableLiveData<User> userWithRatingLiveData =new MutableLiveData<>();
     private MutableLiveData<User> userWithRatingAndFollowerCountLiveData =new MutableLiveData<>();
+    private MutableLiveData<Boolean> loadingLiveData =new MutableLiveData<>();
 
     LiveData<User> followingUserTransformation;
     LiveData<User> followerUserTransformation;
@@ -68,16 +68,11 @@ public class FindUserViewModel extends ViewModel {
 
     private MutableLiveData<String> followingIdLiveData =new MutableLiveData<>();
     private MutableLiveData<String> followerIdLiveData =new MutableLiveData<>();
-
-
-    public LiveData<NoUsersType> getNoUsersLiveData() {
-        return noUsersLiveData;
-    }
-
     private MutableLiveData<NoUsersType> noUsersLiveData=new MutableLiveData<>();
 
 
    public void loadFollowingId() {
+       loadingLiveData.setValue(true);
         final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child(USERS).child(AuthUtils.getLoggedUserId(app));
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -93,11 +88,13 @@ public class FindUserViewModel extends ViewModel {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
+                            loadingLiveData.setValue(false);
                         }
                     });
                 } else {
                     //logged in user has no one following him
                     noUsersLiveData.setValue(NoUsersType.NO_FOLLOWING);
+                    loadingLiveData.setValue(false);
                 }
             }
 
@@ -119,9 +116,10 @@ public class FindUserViewModel extends ViewModel {
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         if (followingId.equals(ds.getKey())) {
-                            User user = FirebaseUtils.getUserFromSnapshot(ds);
+                            User user = ds.getValue(User.class);
                             userLiveData.setValue(user);
                         }
+                    loadingLiveData.setValue(false);
                 }
             }
 
@@ -135,6 +133,7 @@ public class FindUserViewModel extends ViewModel {
 
 
     public void loadAllUsers() {
+       loadingLiveData.setValue(true);
         FirebaseDatabase.getInstance().getReference().child(USERS).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -142,23 +141,23 @@ public class FindUserViewModel extends ViewModel {
                     if (ds.child(ID).getValue().equals(AuthUtils.getLoggedUserId(app))) {
                         //don't show this user in list since it's the logged in user
                     } else {
-                        User user = FirebaseUtils.getUserFromSnapshot(ds);
+                        User user = ds.getValue(User.class);
                         userLiveData.setValue(user);
                     }
 
                 }
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
              //   FancyToast.makeText(FindUsersActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                loadingLiveData.setValue(false);
             }
         });
     }
 
    public void loadFollowersIds() {
-
+       loadingLiveData.setValue(true);
         final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child(USERS).child(AuthUtils.getLoggedUserId(app));
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -180,12 +179,14 @@ public class FindUserViewModel extends ViewModel {
                 } else {
                     //logged in user has no followers
                     noUsersLiveData.setValue(NoUsersType.NO_FOLLOWERS);
+                    loadingLiveData.setValue(false);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                // FancyToast.makeText(FindUsersActivity.this, "Check network connection and try again.", FancyToast.LENGTH_LONG, FancyToast.ERROR, false).show();
+                loadingLiveData.setValue(false);
             }
         });
     }
@@ -200,9 +201,10 @@ public class FindUserViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         if (followerId.equals(ds.getKey())) {
-                            User user = FirebaseUtils.getUserFromSnapshot(ds);
+                            User user = ds.getValue(User.class);
                             userLiveData.setValue(user);
                         }
+                    loadingLiveData.setValue(false);
                 }
             }
 
@@ -227,6 +229,7 @@ public class FindUserViewModel extends ViewModel {
                     user.setFollowers(0L);
                 }
                 userWithRatingAndFollowerCountLiveData.setValue(user);
+                loadingLiveData.setValue(false);
             }
 
             @Override
@@ -274,5 +277,15 @@ public class FindUserViewModel extends ViewModel {
             }
         });
     }
+
+
+
+    public LiveData<NoUsersType> getNoUsersLiveData() {
+        return noUsersLiveData;
+    }
+    public LiveData<Boolean> getLoadingLiveData() {
+        return loadingLiveData;
+    }
+
 
 }

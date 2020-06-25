@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import ganainy.dev.gymmasters.models.app_models.Workout;
-import ganainy.dev.gymmasters.utils.FirebaseUtils;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
 import com.google.firebase.database.DataSnapshot;
@@ -44,9 +43,9 @@ public class WorkoutsViewModel extends ViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 workoutList.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                for (DataSnapshot workoutSnapshot : dataSnapshot.getChildren()) {
 
-                    Workout workout = FirebaseUtils.getWorkoutFromSnapshot(ds);
+                    Workout workout = workoutSnapshot.getValue(Workout.class);
                     workoutList.add(workout);
                 }
 

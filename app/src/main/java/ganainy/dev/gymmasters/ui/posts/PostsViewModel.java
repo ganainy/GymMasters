@@ -41,7 +41,6 @@ public class PostsViewModel extends AndroidViewModel {
     public static final String LIKER_ID_LIST="likerIdList";
     public static final String LIKE_COUNT="likeCount";
 
-    Application app;
     private List<String> mFollowingIdList = new ArrayList<>();
 
     public PostsViewModel(@NonNull Application application) {
@@ -82,7 +81,7 @@ public class PostsViewModel extends AndroidViewModel {
 
         networkStateLiveData.setValue(NetworkState.LOADING);
 
-        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child(USERS).child(AuthUtils.getLoggedUserId(app));
+        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child(USERS).child(AuthUtils.getLoggedUserId(getApplication()));
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -128,10 +127,10 @@ public class PostsViewModel extends AndroidViewModel {
                                 if (exercise.getLikerIdList()==null){
                                     //post has no likes
                                     postList.add(new Post(exercise, 0, Long.valueOf(exercise.getDate()), false));
-                                }else if (exercise.getLikerIdList().contains(AuthUtils.getLoggedUserId(app))){
+                                }else if (exercise.getLikerIdList().contains(AuthUtils.getLoggedUserId(getApplication()))){
                                     //logged user liked post
                                     postList.add(new Post(exercise, 0, Long.valueOf(exercise.getDate()), true));
-                                }else if (!exercise.getLikerIdList().contains(AuthUtils.getLoggedUserId(app))){
+                                }else if (!exercise.getLikerIdList().contains(AuthUtils.getLoggedUserId(getApplication()))){
                                     //logged user DIDN'T liked post
                                     postList.add(new Post(exercise, 0, Long.valueOf(exercise.getDate()), false));
                                 }

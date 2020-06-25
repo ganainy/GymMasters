@@ -1,6 +1,5 @@
 package ganainy.dev.gymmasters.ui.main.home;
 
-import android.net.Uri;
 import android.util.Pair;
 
 import androidx.annotation.NonNull;
@@ -8,19 +7,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import ganainy.dev.gymmasters.models.app_models.User;
-import ganainy.dev.gymmasters.utils.AuthUtils;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
+import ganainy.dev.gymmasters.models.app_models.User;
 
-import static ganainy.dev.gymmasters.utils.FirebaseUtils.getUserFromSnapshot;
 
-public class HomeViewModel extends ViewModel {
+public class ProfileViewModel extends ViewModel {
 
     private static final String TAG = "MainFragmentHomeViewMod";
     public static final String FOLLOWERS_UID = "followersUID";
@@ -69,7 +64,7 @@ public class HomeViewModel extends ViewModel {
         FirebaseDatabase.getInstance().getReference(USERS).child(loggedUserId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = getUserFromSnapshot(dataSnapshot);
+                User user = dataSnapshot.getValue(User.class);
                 userLiveData.setValue(user);
             }
 

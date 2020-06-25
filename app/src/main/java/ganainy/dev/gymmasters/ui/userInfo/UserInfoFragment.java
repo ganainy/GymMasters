@@ -1,6 +1,5 @@
 package ganainy.dev.gymmasters.ui.userInfo;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +29,7 @@ import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
-import ganainy.dev.gymmasters.ui.main.ActivityCallback;
+import ganainy.dev.gymmasters.ui.main.ProfileCallback;
 
 public class UserInfoFragment extends Fragment {
 
@@ -42,13 +41,13 @@ public class UserInfoFragment extends Fragment {
     @BindView(R.id.exerciseCountFullTextView)
     TextView exerciseCountFullTextView;
 
-    @BindView(R.id.followersCountTextView)
+    @BindView(R.id.followerCountShimmer)
     TextView followersTextView;
 
-    @BindView(R.id.profile_image)
+    @BindView(R.id.profile_image_shimmer)
     ImageView profile_image;
 
-    @BindView(R.id.textViewName)
+    @BindView(R.id.nameShimmer)
     TextView textViewName;
 
     @BindView(R.id.workoutCountFullTextView)
@@ -72,7 +71,7 @@ public class UserInfoFragment extends Fragment {
     @BindView(R.id.rateButton)
     ImageButton rateButton;
 
-    @BindView(R.id.emailTextInputLayout)
+    @BindView(R.id.emailShimmer)
     TextView email;
 
     @BindView(R.id.aboutUserContentTextView)
@@ -81,10 +80,10 @@ public class UserInfoFragment extends Fragment {
     @BindView(R.id.aboutUserTitleTextView)
     TextView aboutUserTitleTextView;
 
-    @BindView(R.id.followingCountTextView)
+    @BindView(R.id.followingCountShimmer)
     TextView followingTextView;
 
-    @BindView(R.id.ratingAverageTextView)
+    @BindView(R.id.ratingAverageShimmer)
     TextView ratingTextView;
 
     @BindView(R.id.showWorkoutsLayout)
@@ -112,15 +111,15 @@ public class UserInfoFragment extends Fragment {
 
     @OnClick(R.id.showExercisesLayout)
     void showExerciseList() {
-        ActivityCallback activityCallback = (ActivityCallback) requireActivity();
-        activityCallback.openUserExercisesFragment(mViewModel.getUserProfileModel().getProfileOwner().getId(),
+        ProfileCallback profileCallback = (ProfileCallback) requireActivity();
+        profileCallback.openUserExercisesFragment(mViewModel.getUserProfileModel().getProfileOwner().getId(),
                 mViewModel.getUserProfileModel().getProfileOwner().getName());
     }
 
     @OnClick(R.id.showWorkoutsLayout)
     void showWorkoutList() {
-        ActivityCallback activityCallback = (ActivityCallback) requireActivity();
-        activityCallback.openUserWorkoutsFragment(mViewModel.getUserProfileModel().getProfileOwner().getId(),
+        ProfileCallback profileCallback = (ProfileCallback) requireActivity();
+        profileCallback.openUserWorkoutsFragment(mViewModel.getUserProfileModel().getProfileOwner().getId(),
                 mViewModel.getUserProfileModel().getProfileOwner().getName());
     }
 

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ganainy.dev.gymmasters.models.app_models.Workout;
-import ganainy.dev.gymmasters.utils.FirebaseUtils;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
 public class UserWorkoutsViewModel extends ViewModel {
@@ -43,10 +42,10 @@ public class UserWorkoutsViewModel extends ViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 workoutList.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds.hasChild("creatorId") &&
-                            ds.child("creatorId").getValue().equals(loggedUserId)) {
-                        Workout workout = FirebaseUtils.getWorkoutFromSnapshot(ds);
+                for (DataSnapshot workoutSnapshot : dataSnapshot.getChildren()) {
+                    if (workoutSnapshot.hasChild("creatorId") &&
+                            workoutSnapshot.child("creatorId").getValue().equals(loggedUserId)) {
+                        Workout workout = workoutSnapshot.getValue(Workout.class);
                         workoutList.add(workout);
                     }
                 }

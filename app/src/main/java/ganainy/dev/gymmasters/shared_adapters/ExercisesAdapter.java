@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -56,23 +57,14 @@ public  class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.Exe
 
     @Override
     public void onBindViewHolder(@NonNull ExerciseViewHolder exerciseViewHolder, int position) {
-        exerciseViewHolder.exerciseName.setText(exercisesList.get(position).getName());
+        Exercise currentExercise = exercisesList.get(position);
+        exerciseViewHolder.exerciseName.setText(currentExercise.getName());
 
-            downloadAndShowExerciseImage(exerciseViewHolder, position);
-
+        Glide.with(context).load(currentExercise.getPreviewPhotoOneUrl())
+                .apply(new RequestOptions().placeholder(R.drawable.loading_animation).error(R.drawable.ic_dumbell_grey))
+                .into(exerciseViewHolder.exerciseImage);
     }
 
-
-    private void downloadAndShowExerciseImage(final ExerciseViewHolder exerciseViewHolder, int i) {
-
-        StorageReference pathReference = FirebaseStorage.getInstance().getReference().child("exerciseImages/" + exercisesList.get(i).getPreviewPhotoOneUrl());
-        pathReference.getDownloadUrl().addOnSuccessListener(uri ->
-                Glide.with(context).load(uri.toString()).into(exerciseViewHolder.exerciseImage))
-                .addOnFailureListener(exception -> {
-                    // Handle any errors
-                    Log.i(TAG, "onFailure: " + exception.getMessage());
-                });
-    }
 
 
     @Override
@@ -114,7 +106,6 @@ public  class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.Exe
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 setDataSource((List<Exercise>) results.values);
                 notifyDataSetChanged();
-
             }
         };
     }

@@ -4,41 +4,37 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item android:title="Social">
+        <item android:title="@string/social">
             <menu>
 
                 <item
-                    android:id="@+id/nav_find"
+                    android:id="@+id/nav_discover"
                     android:icon="@drawable/ic_search_white"
-                    android:title="Find" />
-                <item
-                    android:id="@+id/nav_posts"
-                    android:icon="@drawable/ic_post"
-                    android:title="Posts" />
-                <item
+                    android:title="@string/discover" />
+        <!--        <item
                     android:id="@+id/nav_followers"
                     android:icon="@drawable/ic_follow_black"
                     android:title="My Followers" />
                 <item
                     android:id="@+id/nav_following"
                     android:icon="@drawable/ic_following"
-                    android:title="Following" />
+                    android:title="Following" />-->
             </menu>
         </item>
     </group>
 
 
     <group android:checkableBehavior="single">
-        <item android:title="Utilities">
+        <item android:title="@string/utilities">
             <menu>
                 <item
                     android:id="@+id/nav_timer"
                     android:icon="@drawable/ic_reset_timer"
-                    android:title="Timer" />
+                    android:title="@string/timer" />
                 <item
                     android:id="@+id/nav_map"
                     android:icon="@drawable/ic_location_on_black_24dp"
-                    android:title="Find nearby gyms" />
+                    android:title="@string/nearby_gyms" />
             </menu>
 
 
@@ -47,12 +43,16 @@
 
 
     <group android:checkableBehavior="single">
-        <item android:title="Personal">
+        <item android:title="@string/personal">
             <menu>
+                <item
+                    android:id="@+id/nav_profile"
+                    android:icon="@drawable/ic_profile_black"
+                    android:title="@string/my_profile" />
                 <item
                     android:id="@+id/nav_sign_out"
                     android:icon="@drawable/ic_logout"
-                    android:title="Logout" />
+                    android:title="@string/logout" />
             </menu>
 
         </item>

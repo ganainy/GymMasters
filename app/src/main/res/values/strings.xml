@@ -137,6 +137,21 @@
     <string name="follow_more_users">Follow more users</string>
     <string name="no_news_feed_from_the_users_you_follow">No News feed from the users you follow</string>
     <string name="loading_comments">Loading comments...</string>
+    <string name="feed">Feed</string>
+    <string name="personal">Personal</string>
+    <string name="my_profile">My profile</string>
+    <string name="logout">Logout</string>
+    <string name="utilities">Utilities</string>
+    <string name="timer">Timer</string>
+    <string name="nearby_gyms">Nearby gyms</string>
+    <string name="find">Find</string>
+    <string name="discover">Discover</string>
+    <string name="social">Social</string>
+    <string name="view_my_followers">Show my followers</string>
+    <string name="view_users_iam_following">View users I am following</string>
+    <string name="rating">rating</string>
+    <string name="tell_your_followers_something_about_yourself">Tell your followers something about yourself</string>
+    <string name="no_workouts_found">No workouts found</string>
 
 
 </resources>

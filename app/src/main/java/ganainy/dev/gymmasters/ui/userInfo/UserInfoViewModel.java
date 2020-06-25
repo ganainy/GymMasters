@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,7 +21,6 @@ import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.utils.AuthUtils;
-import ganainy.dev.gymmasters.utils.FirebaseUtils;
 
 import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
 
@@ -94,9 +92,9 @@ public class UserInfoViewModel extends ViewModel {
         exerciseNode.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        if (ds.child(CREATOR_ID).getValue().equals(profileOwner.getId())) {
-                            Exercise exercise = FirebaseUtils.getExerciseFromSnapshot(ds);
+                for (DataSnapshot exerciseSnapShot : dataSnapshot.getChildren()) {
+                        if (exerciseSnapShot.child(CREATOR_ID).getValue().equals(profileOwner.getId())) {
+                            Exercise exercise = exerciseSnapShot.getValue(Exercise.class);
                             exercisesList.add(exercise);
                         }
                 }
@@ -123,10 +121,10 @@ public class UserInfoViewModel extends ViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    for (DataSnapshot workoutSnapshot : dataSnapshot.getChildren()) {
                         //only show in main list the workouts that admin added
-                        if (ds.child(CREATOR_ID).getValue().equals(profileOwner.getId())) {
-                            Workout workout = FirebaseUtils.getWorkoutFromSnapshot(ds);
+                        if (workoutSnapshot.child(CREATOR_ID).getValue().equals(profileOwner.getId())) {
+                            Workout workout = workoutSnapshot.getValue(Workout.class);
                             workoutList.add(workout);
                         }
                         userProfileModel.setWorkoutList(workoutList);

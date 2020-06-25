@@ -24,7 +24,7 @@
 
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
+                android:id="@+id/profile_image_shimmer"
                 android:layout_width="200dp"
                 android:layout_height="141dp"
                 android:layout_marginTop="32dp"
@@ -44,7 +44,7 @@
                 android:theme="@style/TextLabel"
                 app:errorEnabled="true"
                 app:errorTextAppearance="@style/ErrorText"
-                app:layout_constraintTop_toBottomOf="@+id/profile_image">
+                app:layout_constraintTop_toBottomOf="@+id/profile_image_shimmer">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/userNameEditText"
@@ -59,7 +59,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/emailTextInputLayout"
+                android:id="@+id/emailShimmer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="4dp"
@@ -90,7 +90,7 @@
                 android:theme="@style/TextLabel"
                 app:errorEnabled="true"
                 app:errorTextAppearance="@style/ErrorText"
-                app:layout_constraintTop_toBottomOf="@+id/emailTextInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/emailShimmer"
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText

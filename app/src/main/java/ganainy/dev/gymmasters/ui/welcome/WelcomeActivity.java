@@ -2,7 +2,6 @@ package ganainy.dev.gymmasters.ui.welcome;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -13,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import ganainy.dev.gymmasters.R;
+import ganainy.dev.gymmasters.ui.main.MainActivity;
 import ganainy.dev.gymmasters.ui.signup.SignUpActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -21,7 +21,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
 import ganainy.dev.gymmasters.ui.login.LoginActivity;
-import ganainy.dev.gymmasters.ui.main.MainActivity;
 
 public class WelcomeActivity extends AppCompatActivity {
     ViewPager viewPager;

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -26,7 +27,7 @@ import ganainy.dev.gymmasters.shared_adapters.WorkoutAdapter;
 import ganainy.dev.gymmasters.ui.specificWorkout.SpecificWorkoutActivity;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
-import static ganainy.dev.gymmasters.ui.main.home.HomeFragment.USER_ID;
+import static ganainy.dev.gymmasters.ui.main.home.ProfileFragment.USER_ID;
 import static ganainy.dev.gymmasters.ui.main.workouts.WorkoutsFragment.WORKOUT;
 
 public class UserWorkoutsFragment extends Fragment {
@@ -37,7 +38,7 @@ public class UserWorkoutsFragment extends Fragment {
     @BindView(R.id.workoutRecyclerView)
      RecyclerView recyclerView;
     @BindView(R.id.loading_layout_shimmer)
-    ShimmerFrameLayout shimmerLoadingLayout;
+    LinearLayout shimmerLoadingLayout;
     @BindView(R.id.empty_layout)
     ConstraintLayout emptyLayout;
     @BindView(R.id.error_layout)
@@ -60,7 +61,7 @@ public class UserWorkoutsFragment extends Fragment {
         return userWorkoutsFragment;
     }
 
-    private UserWorkoutsFragment() {
+    public UserWorkoutsFragment() {
 
     }
 

@@ -22,7 +22,7 @@
         android:visibility="gone"
         />
 
-    <include layout="@layout/no_exercises_layout"
+    <include layout="@layout/no_workouts_layout"
         android:id="@+id/empty_layout"
         android:visibility="gone"
         />

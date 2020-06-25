@@ -10,15 +10,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.utils.NetworkState;
-
 import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
-import static ganainy.dev.gymmasters.utils.FirebaseUtils.getExerciseFromSnapshot;
 
 public class UserExercisesViewModel extends ViewModel {
     public static final String CREATOR_ID = "creatorId";
@@ -43,7 +39,7 @@ public class UserExercisesViewModel extends ViewModel {
                 loggedUserExercisesArrayList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         if (ds.hasChild(CREATOR_ID) && ds.child(CREATOR_ID).getValue().equals(loggedInUserId)) {
-                            Exercise exerciseFromSnapshot = getExerciseFromSnapshot(ds);
+                            Exercise exerciseFromSnapshot = ds.getValue(Exercise.class);
                             loggedUserExercisesArrayList.add(exerciseFromSnapshot);
                         }
                 }

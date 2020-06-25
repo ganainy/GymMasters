@@ -1,7 +1,5 @@
 package ganainy.dev.gymmasters.ui.exercise;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -17,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ganainy.dev.gymmasters.models.app_models.Exercise;
-import ganainy.dev.gymmasters.utils.FirebaseUtils;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
 import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.SHOWALL;
@@ -73,8 +70,6 @@ public class ExercisesViewModel extends ViewModel {
         }
     }
 
-    /**extract exercise model from snapshot*/
-
 
     private void loadAllExercises() {
         networkStateLiveData.setValue(NetworkState.LOADING);
@@ -85,7 +80,7 @@ public class ExercisesViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 selectedMuscleExerciseArrayList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        Exercise exerciseFromSnapshot = FirebaseUtils.getExerciseFromSnapshot(ds);
+                        Exercise exerciseFromSnapshot = ds.getValue(Exercise.class);
                         selectedMuscleExerciseArrayList.add(exerciseFromSnapshot);
 
                 }

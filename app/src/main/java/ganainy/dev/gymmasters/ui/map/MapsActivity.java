@@ -83,7 +83,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     MaterialSearchBar materialSearchBar;
     @BindView(R.id.imageView9)
     ImageView markerImage;
-    @BindView(R.id.textViewName)
+    @BindView(R.id.nameShimmer)
     TextView textViewName;
     @BindView(R.id.textView8)
     TextView textViewAddress;

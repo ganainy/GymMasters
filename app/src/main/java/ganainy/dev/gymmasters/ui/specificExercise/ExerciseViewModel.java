@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -28,16 +29,15 @@ import java.util.TimerTask;
 
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.utils.AuthUtils;
-import ganainy.dev.gymmasters.utils.FirebaseUtils;
 
 import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
 
-public class ExerciseViewModel extends ViewModel {
+public class ExerciseViewModel extends AndroidViewModel {
 
     private static final String TAG = "ExerciseViewModel";
     public static final String NAME = "name";
+    public static final String ID = "id";
 
-    private Application app;
     private Timer timer;
 
     private Exercise mExercise;
@@ -47,14 +47,14 @@ public class ExerciseViewModel extends ViewModel {
     private Drawable mSecondDrawable;
     private Boolean mIsShowingFirstImage=false;
 
-    public ExerciseViewModel(Application app) {
-        this.app = app;
-    }
 
     private MutableLiveData<ExerciseSelectedImage> exerciseSelectedImageLiveData =new MutableLiveData<>();
     private MutableLiveData<Boolean> isLoggedUserExerciseLiveData = new MutableLiveData<>();
-    private MutableLiveData<Exercise> exerciseLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> isExerciseDeletedSuccessfullyLiveData = new MutableLiveData<>();
+
+    public ExerciseViewModel(@NonNull Application application) {
+        super(application);
+    }
 
 
     public void switchToExercisePhotos() {
@@ -75,57 +75,26 @@ public class ExerciseViewModel extends ViewModel {
         timer.scheduleAtFixedRate(timerTask, 0, 1500);
     }
 
-
-    public void downloadExercise(String exerciseName, String targetMuscle) {
-
-        if (mExercise!=null){
-            return;
-        }
-
-        DatabaseReference exerciseNode = FirebaseDatabase.getInstance().getReference(EXERCISES).child(targetMuscle);
-        exerciseNode.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds.child(NAME).getValue().equals(exerciseName)) {
-                        Exercise exercise = FirebaseUtils.getExerciseFromSnapshot(ds);
-                        mExercise=exercise;
-                        exerciseLiveData.setValue(exercise);
-                        return;
-                    }
-                }
-                exerciseLiveData.setValue(null);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.i(TAG, "onCancelled: " + databaseError.getMessage() + " %%% " + databaseError.getDetails());
-            }
-        });
-
-    }
-
     /**check if this exercise is created by logged in user to allow delete option*/
     public void isLoggedUserExercise(){
         if (mIsLoggedUserExercise!=null)return;
 
-        mIsLoggedUserExercise= mExercise.getCreatorId().equals(AuthUtils.getLoggedUserId(app));
+        mIsLoggedUserExercise= mExercise.getCreatorId().equals(AuthUtils.getLoggedUserId(getApplication()));
         isLoggedUserExerciseLiveData.setValue(mIsLoggedUserExercise);
     }
-
 
     /**delete exercise photos from storage then delete exercise from real time db*/
     void deleteExercise() {
 
-        final String name = mExercise.getName();
-        String bodyPart = mExercise.getBodyPart().toLowerCase();
+        final String exerciseId = mExercise.getId();
         final String previewPhoto1 = mExercise.getPreviewPhotoOneUrl();
         final String previewPhoto2 = mExercise.getPreviewPhotoTwoUrl();
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(EXERCISES).child(bodyPart);
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(EXERCISES);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds.hasChild(NAME) && ds.child(NAME).getValue().toString().equals(name)) {
+                    if (ds.hasChild(ID) && ds.child(ID).getValue().toString().equals(exerciseId)) {
                         String nodeKey = ds.getKey();
                         StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(previewPhoto1);
                         storageReference.delete().addOnSuccessListener(aVoid -> {
@@ -168,7 +137,7 @@ public class ExerciseViewModel extends ViewModel {
             return;
         }
 
-       Glide.with(app).load(mExercise.getPreviewPhotoOneUrl()).addListener(new RequestListener<Drawable>() {
+       Glide.with(getApplication()).load(mExercise.getPreviewPhotoOneUrl()).addListener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 return false;
@@ -177,7 +146,7 @@ public class ExerciseViewModel extends ViewModel {
             @Override
             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
                 mFirstDrawable = resource;
-               Glide.with(app).load(mExercise.getPreviewPhotoTwoUrl()).addListener(new RequestListener<Drawable>() {
+               Glide.with(getApplication()).load(mExercise.getPreviewPhotoTwoUrl()).addListener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                         return false;
@@ -209,11 +178,6 @@ public class ExerciseViewModel extends ViewModel {
     public LiveData<ExerciseSelectedImage> getExerciseSelectedImageLiveData() {
         return exerciseSelectedImageLiveData;
     }
-
-    public LiveData<Exercise> getExerciseLiveData() {
-        return exerciseLiveData;
-    }
-
 
     public LiveData<Boolean> getIsLoggedUserExerciseLiveData() {
         return isLoggedUserExerciseLiveData;

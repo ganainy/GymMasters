@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -40,7 +41,7 @@ public class MuscleExercisesActivity extends AppCompatActivity implements Youtub
     @BindView(R.id.search_view)
     SearchView searchView;
     @BindView(R.id.loading_layout_shimmer)
-    ShimmerFrameLayout shimmerLoadingLayout;
+    LinearLayout shimmerLoadingLayout;
     @BindView(R.id.empty_layout)
     ConstraintLayout emptyLayout;
     @BindView(R.id.error_layout)
@@ -125,7 +126,7 @@ public class MuscleExercisesActivity extends AppCompatActivity implements Youtub
     }
 
     private void openSelectedExerciseFragment(Exercise exercise) {
-        ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exercise.getName(),exercise.getBodyPart());
+        ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exercise);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.container, exerciseFragment).addToBackStack("exerciseFragment").commit();
     }

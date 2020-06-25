@@ -42,7 +42,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewName"
+        android:id="@+id/nameShimmer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
@@ -63,7 +63,7 @@
         android:layout_marginTop="8dp"
         android:src="@drawable/orange_circle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+        app:layout_constraintTop_toBottomOf="@+id/nameShimmer" />
 
     <TextView
         android:id="@+id/textViewAddress"
@@ -75,7 +75,7 @@
         android:textSize="17sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/imageView11"
-        app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+        app:layout_constraintTop_toBottomOf="@+id/nameShimmer" />
 
     <TextView
         android:id="@+id/textView8"
@@ -87,7 +87,7 @@
         android:textSize="17sp"
         app:layout_constraintLeft_toRightOf="@+id/textViewAddress"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+        app:layout_constraintTop_toBottomOf="@+id/nameShimmer" />
 
 
     <ImageView

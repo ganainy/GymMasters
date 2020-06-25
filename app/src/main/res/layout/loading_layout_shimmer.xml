@@ -1,150 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.facebook.shimmer.ShimmerFrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+<include layout="@layout/loading_layout_shimmer_item"/>
+<include layout="@layout/loading_layout_shimmer_item"/>
+<include layout="@layout/loading_layout_shimmer_item"/>
+<include layout="@layout/loading_layout_shimmer_item"/>
+<include layout="@layout/loading_layout_shimmer_item"/>
+<include layout="@layout/loading_layout_shimmer_item"/>
+<include layout="@layout/loading_layout_shimmer_item"/>
+<include layout="@layout/loading_layout_shimmer_item"/>
+<include layout="@layout/loading_layout_shimmer_item"/>
+<include layout="@layout/loading_layout_shimmer_item"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="8dp"
-        >
-
-
-        <ImageView
-            android:id="@+id/workoutImageView"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/oval_grey"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/exerciseNameEdittext"
-            android:layout_width="0dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
-            android:background="@color/grey"
-            app:layout_constraintBottom_toBottomOf="@+id/exerciseImageView2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/workoutImageView"
-            app:layout_constraintTop_toTopOf="@+id/exerciseImageView2" />
-
-
-        <ImageView
-            android:id="@+id/exerciseImageView2"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/oval_grey"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/workoutImageView" />
-
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
-            android:background="@color/grey"
-            app:layout_constraintBottom_toBottomOf="@+id/workoutImageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/workoutImageView"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/exerciseImageView3"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/oval_grey"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/exerciseImageView2" />
-
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
-            android:background="@color/grey"
-            app:layout_constraintBottom_toBottomOf="@+id/exerciseImageView3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/exerciseImageView3"
-            app:layout_constraintTop_toTopOf="@+id/exerciseImageView3" />
-
-        <ImageView
-            android:id="@+id/exerciseImageView4"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/oval_grey"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/exerciseImageView3" />
-
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
-            android:background="@color/grey"
-            app:layout_constraintBottom_toBottomOf="@+id/exerciseImageView4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/exerciseImageView4"
-            app:layout_constraintTop_toTopOf="@+id/exerciseImageView4" />
-
-        <ImageView
-            android:id="@+id/exerciseImageView5"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/oval_grey"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/exerciseImageView4" />
-
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
-            android:background="@color/grey"
-            app:layout_constraintBottom_toBottomOf="@+id/exerciseImageView5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/exerciseImageView5"
-            app:layout_constraintTop_toTopOf="@+id/exerciseImageView5" />
-
-        <ImageView
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/oval_grey"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/exerciseImageView4" />
-
-        <ImageButton
-            android:layout_width="0dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
-            android:background="@color/grey"
-            app:layout_constraintBottom_toBottomOf="@+id/exerciseImageView5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/exerciseImageView5"
-            app:layout_constraintTop_toTopOf="@+id/exerciseImageView5" />
-
-
-
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-</com.facebook.shimmer.ShimmerFrameLayout>
+</LinearLayout>

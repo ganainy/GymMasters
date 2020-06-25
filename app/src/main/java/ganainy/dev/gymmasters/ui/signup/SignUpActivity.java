@@ -149,7 +149,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        profileImage = findViewById(R.id.profile_image);
+        profileImage = findViewById(R.id.profile_image_shimmer);
         signUp = findViewById(R.id.loginButton);
         progressBar = findViewById(R.id.progressBar);
         emailEditText = findViewById(R.id.emailEditText);
@@ -160,7 +160,7 @@ public class SignUpActivity extends AppCompatActivity {
         SignInButton googleSignInButton = findViewById(R.id.sign_in_button);
         passwordTextInputLayout=findViewById(R.id.passwordTextInputLayout);
         usernameTextInputLayout=findViewById(R.id.userNameTextInputLayout);
-        emailTextInputLayout=findViewById(R.id.emailTextInputLayout);
+        emailTextInputLayout=findViewById(R.id.emailShimmer);
 
 
         googleSignInButton.setOnClickListener(v -> {
@@ -274,7 +274,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void askUserToAddPhoto() {
         TapTargetView.showFor(this,                 // `this` is an Activity
-                TapTarget.forView(findViewById(R.id.profile_image), "Click to add profile picture", "It's optional but will help your followers to get to know you better")
+                TapTarget.forView(findViewById(R.id.profile_image_shimmer), "Click to add profile picture", "It's optional but will help your followers to get to know you better")
                         // All options below are optional
                         .outerCircleColor(R.color.blue)      // Specify a color for the outer circle
                         .titleTextSize(25)                  // Specify the size (in sp) of the title text

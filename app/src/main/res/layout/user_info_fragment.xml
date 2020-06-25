@@ -39,7 +39,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/profile_image"
+                    android:id="@+id/profile_image_shimmer"
                     android:layout_width="150dp"
                     android:layout_height="90dp"
                     android:scaleType="centerCrop"
@@ -53,7 +53,7 @@
 
 
                 <TextView
-                    android:id="@+id/textViewName"
+                    android:id="@+id/nameShimmer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -69,7 +69,7 @@
                     tools:text="Amr mohammed" />
 
                 <TextView
-                    android:id="@+id/emailTextInputLayout"
+                    android:id="@+id/emailShimmer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -79,7 +79,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textViewName"
+                    app:layout_constraintTop_toBottomOf="@+id/nameShimmer"
                     tools:text="amr@gmail.com" />
 
                 <Button
@@ -99,7 +99,7 @@
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/emailTextInputLayout" />
+                    app:layout_constraintTop_toBottomOf="@+id/emailShimmer" />
 
 
                <ImageButton
@@ -138,7 +138,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/followButton" />
 
                 <TextView
-                    android:id="@+id/followersCountTextView"
+                    android:id="@+id/followerCountShimmer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -161,7 +161,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/imageView18"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/imageView17"
-                    app:layout_constraintTop_toBottomOf="@+id/followersCountTextView" />
+                    app:layout_constraintTop_toBottomOf="@+id/followerCountShimmer" />
 
                 <ImageView
                     android:id="@+id/imageView18"
@@ -179,7 +179,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/followButton" />
 
                 <TextView
-                    android:id="@+id/followingCountTextView"
+                    android:id="@+id/followingCountShimmer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -202,7 +202,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/imageView19"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/imageView18"
-                    app:layout_constraintTop_toBottomOf="@+id/followingCountTextView" />
+                    app:layout_constraintTop_toBottomOf="@+id/followingCountShimmer" />
 
                 <ImageView
                     android:id="@+id/imageView19"
@@ -220,7 +220,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/followButton" />
 
                 <TextView
-                    android:id="@+id/ratingAverageTextView"
+                    android:id="@+id/ratingAverageShimmer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -242,7 +242,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/imageView19"
-                    app:layout_constraintTop_toBottomOf="@+id/ratingAverageTextView" />
+                    app:layout_constraintTop_toBottomOf="@+id/ratingAverageShimmer" />
 
 
                 <!--  &lt;!&ndash;About Me Card&ndash;&gt;
