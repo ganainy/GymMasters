@@ -20,7 +20,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_marginBottom="50dp"
-    tools:context=".ui.posts.postComments.PostCommentsFragment">
+    tools:context=".ui.posts.exercisePostComments.ExercisePostCommentsFragment">
 
    <include layout="@layout/post_exercise_item2"
        android:id="@+id/postExerciseLayout"

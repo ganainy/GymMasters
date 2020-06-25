@@ -57,7 +57,7 @@ public class FindUsersActivity extends AppCompatActivity implements ActivityCall
     private NetworkChangeReceiver networkChangeReceiver;
     private FindUserViewModel mViewModel;
 
-    @BindView(R.id.notFoundTextView)
+    @BindView(R.id.noNewsFeedTextView)
     TextView notFoundTextView;
 
     @BindView(R.id.findUsersButton)

@@ -26,7 +26,6 @@ public class Post implements Parcelable {
             dateStamp = in.readLong();
         }
         byte tmpIsLiked = in.readByte();
-        isLiked = tmpIsLiked == 0 ? null : tmpIsLiked == 1;
     }
 
     public static final Creator<Post> CREATOR = new Creator<Post>() {
@@ -55,22 +54,10 @@ public class Post implements Parcelable {
     private Integer EntityType; //0 exercise,1 workout
     private Long dateStamp;
 
-    public Boolean getLiked() {
-        return isLiked;
-    }
-
-    public void setLiked(Boolean liked) {
-        isLiked = liked;
-    }
-
-    Boolean isLiked;
-
-
     public Post(Exercise exercise, Integer entityType, Long dateStamp,Boolean isLiked) {
         this.exercise = exercise;
         EntityType = entityType;
         this.dateStamp = dateStamp;
-        this.isLiked=isLiked;
         id=UUID.randomUUID().getLeastSignificantBits();
     }
 
@@ -79,7 +66,6 @@ public class Post implements Parcelable {
         EntityType = entityType;
         this.dateStamp = dateStamp;
         id=UUID.randomUUID().getLeastSignificantBits();
-        this.isLiked=isLiked;
     }
 
     public Exercise getExercise() {
@@ -125,6 +111,5 @@ public class Post implements Parcelable {
             dest.writeByte((byte) 1);
             dest.writeLong(dateStamp);
         }
-        dest.writeByte((byte) (isLiked == null ? 0 : isLiked ? 1 : 2));
     }
 }

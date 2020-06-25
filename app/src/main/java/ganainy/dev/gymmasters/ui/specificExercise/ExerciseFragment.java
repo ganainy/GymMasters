@@ -34,7 +34,7 @@ public class ExerciseFragment extends LogFragment  {
 
     private ExerciseViewModel mViewModel;
 
-    @BindView(R.id.exerciseOneImageView)
+    @BindView(R.id.workoutImageView)
     ImageView exerciseImageView;
 
     @BindView(R.id.nameTextView)

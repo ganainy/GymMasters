@@ -171,7 +171,7 @@
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/circular_grey_bordersolid"
                     android:padding="8dp"
-                    android:src="@drawable/follow"
+                    android:src="@drawable/follow_black"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/textView14"
                     app:layout_constraintHorizontal_bias="0.5"

@@ -23,50 +23,87 @@ import ganainy.dev.gymmasters.models.app_models.Comment;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Post;
 import ganainy.dev.gymmasters.models.app_models.User;
+import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.utils.AuthUtils;
+
+import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
 
 public class PostCommentsViewModel extends AndroidViewModel {
 
     public static final String USERS = "users";
     public static final String LIKER_ID_LIST = "likerIdList";
     public static final String LIKE_COUNT = "likeCount";
-
-    private List<Pair<Comment, User>> userCommentPairList = new ArrayList<>();
-
-    public LiveData<List<Pair<Comment, User>>> getUserCommentPairListLiveData() {
-        return userCommentPairListLiveData;
-    }
-
-    private MutableLiveData<List<Pair<Comment, User>>> userCommentPairListLiveData = new MutableLiveData<>();
-
-    public LiveData<List<String>> getLikerIdListLiveData() {
-        return likerIdListLiveData;
-    }
-
-    private MutableLiveData<List<String>> likerIdListLiveData = new MutableLiveData<>();
+    public static final String WORKOUT = "workout";
 
     public static final String COMMENT_LIST = "commentList";
     public static final String COMMENT_COUNT = "commentCount";
     public static final String TAG = "PostCommentsViewModel";
 
+    PostComment emptyComment = new PostComment(PostComment.PostCommentType.EMPTY_COMMENTS);
+    PostComment loadingComment = new PostComment(PostComment.PostCommentType.LOADING_COMMENTS);
+
     private Post mPost;
 
-    public static final String EXERCISES = "exercises";
+    /*will hold original comments plus any new user comments by user*/
+    List<PostComment> postCommentList=new ArrayList<>();
+    /*one time live data to get post comments on first fragment opening*/
+    private MutableLiveData<List<PostComment>> postCommentListLiveData = new MutableLiveData<>();
+    /*this live data for changes in comments*/
+    private MutableLiveData<List<PostComment>> updatedPostCommentsLiveData = new MutableLiveData<>();
+
+    /*this live data for changes in likes*/
+    private MutableLiveData<List<PostComment>> updatedPostLikesLiveData = new MutableLiveData<>();
 
     public PostCommentsViewModel(@NonNull Application application) {
         super(application);
     }
 
     public void saveComment(String commentText) {
+        if (mPost.getWorkout()!=null)
+        saveWorkoutComment(commentText);
+        else if (mPost.getExercise()!=null)
+            saveExerciseComment(commentText);
+    }
 
+    private void saveWorkoutComment(String commentText) {
+        Comment comment = new Comment(AuthUtils.getLoggedUserId(getApplication()), System.currentTimeMillis(), commentText);
+        if (mPost.getWorkout().getCommentList() == null) {
+            //post has NO comments
+            ArrayList<Comment> commentList = new ArrayList<>();
+            commentList.add(comment);
+            mPost.getWorkout().setCommentList(commentList);
+        } else {
+            //post has previous comments
+            mPost.getWorkout().getCommentList().add(comment);
+        }
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put(COMMENT_LIST, mPost.getWorkout().getCommentList());
+        updates.put(COMMENT_COUNT, mPost.getWorkout().getCommentList().size());
+
+        FirebaseDatabase.getInstance().getReference().child(WORKOUT).child(mPost.getWorkout().getId()).updateChildren(updates)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "onDataChange: suc");
+                }).addOnFailureListener(e -> {
+            Log.d(TAG, "onDataChange: " + e.getMessage());
+            //todo handle error
+        });
+
+
+        postCommentList.add(new PostComment(new Pair<>(comment,AuthUtils.getLoggedUser())));
+        updatedPostCommentsLiveData.setValue(postCommentList);
+    }
+
+    private void saveExerciseComment(String commentText) {
+        Comment comment = new Comment(AuthUtils.getLoggedUserId(getApplication()), System.currentTimeMillis(), commentText);
         if (mPost.getExercise().getCommentList() == null) {
             //post has NO comments
             ArrayList<Comment> commentList = new ArrayList<>();
-            commentList.add(new Comment(AuthUtils.getLoggedUserId(getApplication()), System.currentTimeMillis(), commentText));
+            commentList.add(comment);
             mPost.getExercise().setCommentList(commentList);
         } else {
             //post has previous comments
-            mPost.getExercise().getCommentList().add(new Comment(AuthUtils.getLoggedUserId(getApplication()), System.currentTimeMillis(), commentText));
+            mPost.getExercise().getCommentList().add(comment);
         }
 
         Map<String, Object> updates = new HashMap<>();
@@ -82,7 +119,10 @@ public class PostCommentsViewModel extends AndroidViewModel {
         });
 
 
+        postCommentList.add(new PostComment(new Pair<>(comment,AuthUtils.getLoggedUser())));
+        updatedPostCommentsLiveData.setValue(postCommentList);
     }
+
 
     public Post getPost() {
         return mPost;
@@ -90,26 +130,54 @@ public class PostCommentsViewModel extends AndroidViewModel {
 
     public void setPost(Post mPost) {
         this.mPost = mPost;
-        observePostChanges();
     }
 
-    /**
-     * this method will trigger when any comment or like changes on post
-     */
-    private void observePostChanges() {
-        FirebaseDatabase.getInstance().getReference().child(EXERCISES).child(mPost.getExercise().getId()).addValueEventListener(new ValueEventListener() {
+    public void getPostComments() {
+        postCommentList.add(new PostComment(mPost));
+        postCommentList.add(loadingComment);
+        postCommentListLiveData.setValue(postCommentList);
+        if (mPost.getWorkout()!=null)
+            getWorkoutComments();
+        else if (mPost.getExercise()!=null)
+           getExerciseComments();
+
+    }
+
+    private void getExerciseComments() {
+        FirebaseDatabase.getInstance().getReference().child(EXERCISES).child(mPost.getExercise().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot exerciseSnapshot) {
                 //comments or likes changed
                 Exercise exercise = exerciseSnapshot.getValue(Exercise.class);
                 if (exercise.getCommentList() == null) {
-                    userCommentPairListLiveData.setValue(null);
+                    //no comments
+                    postCommentList.add(emptyComment);
+                    postCommentListLiveData.setValue(postCommentList);
                 } else {
                     getCommenterInformation(exercise.getCommentList());
                 }
+            }
 
-                likerIdListLiveData.setValue(exercise.getLikerIdList());
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+
+    private void getWorkoutComments() {
+        FirebaseDatabase.getInstance().getReference().child(WORKOUT).child(mPost.getWorkout().getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot workoutSnapshot) {
+                //comments or likes changed
+                Workout workout = workoutSnapshot.getValue(Workout.class);
+                if (workout.getCommentList() == null) {
+                  //no comments
+                    postCommentList.add(emptyComment);
+                    postCommentListLiveData.setValue(postCommentList);
+                } else {
+                    getCommenterInformation(workout.getCommentList());
+                }
             }
 
             @Override
@@ -120,7 +188,8 @@ public class PostCommentsViewModel extends AndroidViewModel {
     }
 
     private void getCommenterInformation(List<Comment> commentList) {
-        userCommentPairList.clear();
+        List<Pair<Comment, User>> userCommentPairList = new ArrayList<>();
+
         FirebaseDatabase.getInstance().getReference().child(USERS).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -133,7 +202,15 @@ public class PostCommentsViewModel extends AndroidViewModel {
                         }
                     }
                 }
-                userCommentPairListLiveData.setValue(userCommentPairList);
+
+                /*merge post and comments in one list to be show in multi view type recycler*/
+                    postCommentList.remove(emptyComment);
+                    postCommentList.remove(loadingComment);
+                for (Pair<Comment,User> userCommentPair:userCommentPairList){
+                    postCommentList.add(new PostComment(userCommentPair));
+                }
+                postCommentListLiveData.setValue(postCommentList);
+
             }
 
             @Override
@@ -145,6 +222,16 @@ public class PostCommentsViewModel extends AndroidViewModel {
 
 
     public void likePost() {
+
+        if (mPost.getWorkout()!=null)
+            likeWorkout();
+        else if (mPost.getExercise()!=null)
+            likeExercise();
+
+
+    }
+
+    private void likeExercise() {
         if (mPost.getExercise().getLikerIdList() == null) {
             //post has NO likes
             ArrayList<String> likeIdList = new ArrayList<>();
@@ -172,5 +259,59 @@ public class PostCommentsViewModel extends AndroidViewModel {
             Log.d(TAG, "onDataChange: " + e.getMessage());
             //todo handle error
         });
+
+        //first item is always the post, so we update the post and notify recycler
+        postCommentList.set(0,new PostComment(mPost));
+        updatedPostLikesLiveData.setValue(postCommentList);
     }
+
+    private void likeWorkout() {
+        if (mPost.getWorkout().getLikerIdList() == null) {
+            //post has NO likes
+            ArrayList<String> likeIdList = new ArrayList<>();
+            likeIdList.add(AuthUtils.getLoggedUserId(getApplication()));
+            mPost.getWorkout().setLikerIdList(likeIdList);
+        } else {
+            //post has previous likes
+            if (mPost.getWorkout().getLikerIdList().contains(AuthUtils.getLoggedUserId(getApplication()))){
+                //logged user already liked post
+                mPost.getWorkout().getLikerIdList().remove(AuthUtils.getLoggedUserId(getApplication()));
+            }else{
+                //logged user didn't like this post
+                mPost.getWorkout().getLikerIdList().add(AuthUtils.getLoggedUserId(getApplication()));
+            }
+        }
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put(LIKER_ID_LIST, mPost.getWorkout().getLikerIdList());
+        updates.put(LIKE_COUNT, mPost.getWorkout().getLikerIdList().size());
+
+        FirebaseDatabase.getInstance().getReference().child(WORKOUT).child(mPost.getWorkout().getId()).updateChildren(updates)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "onDataChange: suc");
+                }).addOnFailureListener(e -> {
+            Log.d(TAG, "onDataChange: " + e.getMessage());
+            //todo handle error
+        });
+
+        //first item is always the post, so we update the post and notify recycler
+        postCommentList.set(0,new PostComment(mPost));
+        updatedPostLikesLiveData.setValue(postCommentList);
+    }
+
+    //region helpers
+
+    public LiveData<List<PostComment>> getUpdatedPostLikesLiveData() {
+        return updatedPostLikesLiveData;
+    }
+
+    public LiveData<List<PostComment>> getPostCommentListLiveData() {
+        return postCommentListLiveData;
+    }
+
+    public MutableLiveData<List<PostComment>> getUpdatedPostCommentsLiveData() {
+        return updatedPostCommentsLiveData;
+    }
+
+    //endregion
 }

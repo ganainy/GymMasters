@@ -214,7 +214,7 @@ public class UserInfoFragment extends Fragment {
             followButton.setText("following");
         } else if (followState == FollowState.NOT_FOLLOWING) {
             followButton.setBackgroundResource((R.drawable.btn_add_blue));
-            followButton.setText("follow");
+            followButton.setText("follow_black");
         }
     }
 

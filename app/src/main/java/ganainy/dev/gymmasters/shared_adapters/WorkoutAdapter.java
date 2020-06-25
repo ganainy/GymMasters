@@ -92,7 +92,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.WorkoutV
             textViewNumberOfExercises = itemView.findViewById(R.id.textViewNumberOfExercises);
             textViewTime = itemView.findViewById(R.id.textViewReps);
             workoutImageView = itemView.findViewById(R.id.workoutImageView);
-            difficultyTextView = itemView.findViewById(R.id.targetMuscleTextView);
+            difficultyTextView = itemView.findViewById(R.id.workoutDurationTextView);
 
             itemView.setOnClickListener(view -> workoutCallback.onWorkoutClicked(workoutList.get(getAdapterPosition())));
         }

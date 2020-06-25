@@ -1,16 +1,6 @@
 package ganainy.dev.gymmasters.ui.posts.postComments;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,73 +9,26 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-
-import org.ocpsoft.prettytime.PrettyTime;
-
-import java.util.Date;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Post;
-import ganainy.dev.gymmasters.utils.AuthUtils;
+import ganainy.dev.gymmasters.models.app_models.User;
+import ganainy.dev.gymmasters.models.app_models.Workout;
+import ganainy.dev.gymmasters.ui.posts.PostCallback;
 
-public class PostCommentsFragment extends Fragment implements CommentCallback {
+public class PostCommentsFragment extends Fragment {
     public static final String TAG = "PostCommentsFragment";
 
     PostCommentsAdapter postCommentsAdapter;
-
-    @BindView(R.id.postExerciseLayout)
-    ConstraintLayout postExerciseLayout;
-
-    @BindView(R.id.profileImageView)
-    ImageView profileImageView;
-
-    @BindView(R.id.userNameTextView)
-    TextView userNameTextView;
-
-    @BindView(R.id.dateTextView)
-    TextView dateTextView;
-
-    @BindView(R.id.exerciseOneImageView)
-    ImageView exerciseOneImageView;
-
-    @BindView(R.id.exerciseTwoImageView)
-    ImageView exerciseTwoImageView;
-
-    @BindView(R.id.exerciseNameTextView)
-    TextView exerciseNameTextView;
-
-    @BindView(R.id.likeButton)
-    ImageView likeButton;
-
-    @BindView(R.id.commentButton)
-    ImageView commentButton;
-
-    @BindView(R.id.commentCountTextView)
-    TextView commentCountTextView;
-
-    @BindView(R.id.likeCountTextView)
-    TextView likeCountTextView;
-
-    @BindView(R.id.noCommentsTextView)
-    TextView noCommentsTextView;
-
-    @BindView(R.id.loadingProgressbar)
-    ProgressBar loadingProgressbar;
-
-    @BindView(R.id.likeImage)
-    ImageView likeImage;
-
-    @BindView(R.id.targetMuscleTextView)
-    TextView targetMuscleTextView;
 
     @BindView(R.id.commentEditText)
     EditText commentEditText;
@@ -100,17 +43,17 @@ public class PostCommentsFragment extends Fragment implements CommentCallback {
     private PostCommentsViewModel mViewModel;
 
     public static PostCommentsFragment newInstance(Post post) {
-        PostCommentsFragment postCommentsFragment = new PostCommentsFragment();
+        PostCommentsFragment exercisePostCommentsFragment = new PostCommentsFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(POST, post);
-        postCommentsFragment.setArguments(bundle);
-        return postCommentsFragment;
+        exercisePostCommentsFragment.setArguments(bundle);
+        return exercisePostCommentsFragment;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.post_comments_fragment, container, false);
+        View view = inflater.inflate(R.layout.workout_post_comments_fragment, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -121,16 +64,67 @@ public class PostCommentsFragment extends Fragment implements CommentCallback {
 
         mViewModel = new ViewModelProvider(this).get(PostCommentsViewModel.class);
         initRecycler();
+        initListeners();
 
-        Post post = getArguments().getParcelable(POST);
-        mViewModel.setPost(post);
-        setDetails(post);
+        if (savedInstanceState==null){
+            //only download data if this fragment is NOT recreated
+            Post post = getArguments().getParcelable(POST);
+            mViewModel.setPost(post);
+            mViewModel.getPostComments();
+        }
 
 
-        likeButton.setOnClickListener(v -> {
-            mViewModel.likePost();
+        mViewModel.getPostCommentListLiveData().observe(getViewLifecycleOwner(), postCommentList -> {
+                postCommentsAdapter.setData(postCommentList);
+                postCommentsAdapter.notifyDataSetChanged();
         });
 
+
+        mViewModel.getUpdatedPostCommentsLiveData().observe(getViewLifecycleOwner(), updatedPostCommentList->{
+            postCommentsAdapter.setData(updatedPostCommentList);
+           postCommentsAdapter.notifyItemInserted(commentsRecyclerView.getAdapter().getItemCount());
+           commentsRecyclerView.smoothScrollToPosition(commentsRecyclerView.getAdapter().getItemCount());
+        });
+
+        mViewModel.getUpdatedPostLikesLiveData().observe(getViewLifecycleOwner(), updatedPostLikesList->{
+            postCommentsAdapter.setData(updatedPostLikesList);
+            postCommentsAdapter.notifyItemChanged(0);
+        });
+    }
+
+    private void initRecycler() {
+
+        postCommentsAdapter = new PostCommentsAdapter(getActivity().getApplication(), new PostCallback() {
+            @Override
+            public void onExerciseClicked(Exercise exercise, Integer adapterPosition) {
+
+            }
+
+            @Override
+            public void onWorkoutClicked(Workout workout, Integer adapterPosition) {
+
+            }
+
+            @Override
+            public void onUserClicked(User user) {
+
+            }
+
+            @Override
+            public void onPostLike(Post post, Integer adapterPosition) {
+                mViewModel.likePost();
+            }
+
+            @Override
+            public void onPostComment(Post post, Integer adapterPosition) {
+                commentEditText.requestFocus();
+            }
+        });
+        commentsRecyclerView.setItemAnimator(null);
+        commentsRecyclerView.setAdapter(postCommentsAdapter);
+    }
+
+    public void initListeners() {
 
         //softkeyboard send action on keyboard does same job as send button
         commentEditText.setOnEditorActionListener((v, actionId, event) -> {
@@ -141,51 +135,6 @@ public class PostCommentsFragment extends Fragment implements CommentCallback {
             return false;
         });
 
-    }
-
-    private void initRecycler() {
-
-        postCommentsAdapter = new PostCommentsAdapter(getActivity().getApplication(), this);
-        commentsRecyclerView.setAdapter(postCommentsAdapter);
-    }
-
-    public void setDetails(final Post post) {
-        Exercise exercise = post.getExercise();
-
-        Glide.with(requireContext()).load(exercise.getCreatorImageUrl())
-                .apply(new RequestOptions().placeholder(R.drawable.loading_animation).error(R.drawable.anonymous_profile))
-                .circleCrop()
-                .into(profileImageView);
-
-        userNameTextView.setText(exercise.getCreatorName());
-
-        dateTextView.setText(new PrettyTime().format(new Date((Long.parseLong(exercise.getDate())))));
-
-        Glide.with(requireContext()).load(exercise.getPreviewPhotoOneUrl())
-                .apply(new RequestOptions().placeholder(R.drawable.loading_animation).error(R.drawable.ic_exercise_grey))
-                .into(exerciseOneImageView);
-
-        Glide.with(requireContext()).load(exercise.getPreviewPhotoTwoUrl())
-                .apply(new RequestOptions().placeholder(R.drawable.loading_animation).error(R.drawable.ic_exercise_2_grey))
-                .into(exerciseTwoImageView);
-
-        exerciseNameTextView.setText(exercise.getName());
-
-        targetMuscleTextView.setText(exercise.getBodyPart());
-
-        if (exercise.getLikeCount() != null)
-            likeCountTextView.setText(Long.toString(exercise.getLikeCount()));
-
-
-        likeButton.setOnClickListener(v -> {
-            Log.d(TAG, "setDetails: ");
-            // postCallback.onPostLike(exercise.getId(),getAdapterPosition());
-        });
-
-        commentButton.setOnClickListener(v -> {
-            commentEditText.requestFocus();
-        });
-
         sendImageView.setOnClickListener(v -> {
             if (commentEditText.getText().toString().trim().isEmpty()) {
                 commentEditText.startAnimation(shakeError());
@@ -194,44 +143,7 @@ public class PostCommentsFragment extends Fragment implements CommentCallback {
                 commentEditText.setText("");
             }
         });
-
-
-        mViewModel.getUserCommentPairListLiveData().observe(getViewLifecycleOwner(), userCommentPairList -> {
-            if (userCommentPairList == null) {
-                //post has no comments
-                commentCountTextView.setText(0);
-                noCommentsTextView.setVisibility(View.VISIBLE);
-                commentsRecyclerView.setVisibility(View.GONE);
-                loadingProgressbar.setVisibility(View.GONE);
-            } else {
-                //post has comments
-                commentCountTextView.setText(String.valueOf(userCommentPairList.size()));
-                noCommentsTextView.setVisibility(View.GONE);
-                loadingProgressbar.setVisibility(View.GONE);
-                commentsRecyclerView.setVisibility(View.VISIBLE);
-                postCommentsAdapter.setData(userCommentPairList);
-                commentsRecyclerView.scrollToPosition(userCommentPairList.size() - 1);
             }
-        });
-
-
-        mViewModel.getLikerIdListLiveData().observe(getViewLifecycleOwner(), likerIdList -> {
-            if (likerIdList == null) {
-                //post has NO likes
-                likeCountTextView.setText("0");
-                likeImage.setImageResource(R.drawable.ic_like_grey);
-            } else {
-                //post has likes
-                likeCountTextView.setText(String.valueOf(likerIdList.size()));
-                if (likerIdList.contains(AuthUtils.getLoggedUserId(getActivity().getApplication())))
-                    likeImage.setImageResource(R.drawable.ic_like_blue);
-                else
-                    likeImage.setImageResource(R.drawable.ic_like_grey);
-            }
-        });
-
-
-    }
 
     public TranslateAnimation shakeError() {
         TranslateAnimation shake = new TranslateAnimation(0, 10, 0, 0);

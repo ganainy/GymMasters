@@ -65,7 +65,7 @@
     <string name="executions_steps">Executions steps</string>
     <string name="execution">Execution :</string>
     <string name="exercises_added_successfully">Added Exercise successfully.</string>
-    <string name="something_went_wrong">Something went wrong, check connection and try again.</string>
+    <string name="something_went_wrong">Something went wrong, try again later.</string>
     <string name="exercise_was_same_name_exist">Exercise with same name already exists \n your exercise was not added</string>
     <string name="exercise_name_atleast_6">Exercise name must be at least 6 letters</string>
     <string name="workout_name_atleast_6">Workout name must be at least 6 letters</string>
@@ -130,6 +130,13 @@
     <string name="your_feed">Your feed</string>
     <string name="write_a_comment">Write a comment...</string>
     <string name="this_post_has_no_comments_yet">This post has no comments yet</string>
+    <string name="beginner">Beginner</string>
+    <string name="intermediate">Intermediate</string>
+    <string name="professional">Professional</string>
+    <string name="loading_news_feed">Loading news feed...</string>
+    <string name="follow_more_users">Follow more users</string>
+    <string name="no_news_feed_from_the_users_you_follow">No News feed from the users you follow</string>
+    <string name="loading_comments">Loading comments...</string>
 
 
 </resources>

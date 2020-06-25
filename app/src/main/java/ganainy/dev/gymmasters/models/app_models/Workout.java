@@ -30,6 +30,37 @@ public class Workout implements Parcelable {
     private String creatorName;
     private String creatorImageUrl;
 
+    public static final Creator<Workout> CREATOR = new Creator<Workout>() {
+        @Override
+        public Workout createFromParcel(Parcel in) {
+            return new Workout(in);
+        }
+
+        @Override
+        public Workout[] newArray(int size) {
+            return new Workout[size];
+        }
+    };
+
+    public List<String> getLikerIdList() {
+        return likerIdList;
+    }
+
+    public void setLikerIdList(List<String> likerIdList) {
+        this.likerIdList = likerIdList;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
+    }
+
+    private List<String> likerIdList;
+    private List<Comment> commentList;
+
 
     public String getCreatorImageUrl() {
         return creatorImageUrl;
@@ -46,17 +77,7 @@ public class Workout implements Parcelable {
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
     }
-    public static final Creator<Workout> CREATOR = new Creator<Workout>() {
-        @Override
-        public Workout createFromParcel(Parcel in) {
-            return new Workout(in);
-        }
 
-        @Override
-        public Workout[] newArray(int size) {
-            return new Workout[size];
-        }
-    };
     private List<Exercise> workoutExerciseList;
 
     protected Workout(Parcel in) {
@@ -143,22 +164,26 @@ public class Workout implements Parcelable {
         this.creatorName = creatorName;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(name);
-        parcel.writeString(duration);
-        parcel.writeString(exercisesNumber);
-        parcel.writeString(level);
-        parcel.writeString(photoLink);
-        parcel.writeString(creatorImageUrl);
-        parcel.writeTypedList(workoutExerciseList);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(duration);
+        dest.writeString(exercisesNumber);
+        dest.writeString(level);
+        dest.writeString(photoLink);
+        dest.writeString(creatorId);
+        dest.writeString(date);
+        dest.writeString(creatorName);
+        dest.writeString(creatorImageUrl);
+        dest.writeStringList(likerIdList);
+        dest.writeTypedList(commentList);
+        dest.writeTypedList(workoutExerciseList);
     }
-
-
 }

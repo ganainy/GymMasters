@@ -127,7 +127,7 @@ public  class ExercisesAdapter extends RecyclerView.Adapter<ExercisesAdapter.Exe
 
         ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
-            exerciseImage = itemView.findViewById(R.id.exerciseOneImageView);
+            exerciseImage = itemView.findViewById(R.id.workoutImageView);
             exerciseName = itemView.findViewById(R.id.exerciseNameEdittext);
 
             itemView.setOnClickListener(v -> exerciseCallback.onExerciseClick(exercisesList.get(getAdapterPosition())));

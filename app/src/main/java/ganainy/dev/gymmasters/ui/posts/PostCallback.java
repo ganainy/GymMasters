@@ -9,6 +9,6 @@ public interface PostCallback {
     void onExerciseClicked(Exercise exercise, Integer adapterPosition);
     void onWorkoutClicked(Workout workout, Integer adapterPosition);
     void onUserClicked(User user);
-    void onPostLike(String postId, Integer adapterPosition);
+    void onPostLike(Post post, Integer adapterPosition);
     void onPostComment(Post post, Integer adapterPosition);
 }

@@ -4,11 +4,11 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,13 +24,12 @@ import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Post;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.utils.AuthUtils;
-import ganainy.dev.gymmasters.utils.FirebaseUtils;
+import ganainy.dev.gymmasters.utils.Event;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
 import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
-import static ganainy.dev.gymmasters.utils.Constants.SOCIAL;
 
-public class PostsViewModel extends ViewModel {
+public class PostsViewModel extends AndroidViewModel {
 
     public static final String USERS = "users";
     public static final String FOLLOWING_UID = "followingUID";
@@ -39,9 +38,15 @@ public class PostsViewModel extends ViewModel {
     public static final String NAME = "name";
     public static final String PHOTO = "photo";
     public static final String TAG = "PostsViewModel";
+    public static final String LIKER_ID_LIST="likerIdList";
+    public static final String LIKE_COUNT="likeCount";
 
     Application app;
     private List<String> mFollowingIdList = new ArrayList<>();
+
+    public PostsViewModel(@NonNull Application application) {
+        super(application);
+    }
 
     public List<Post> getPostList() {
         return postList;
@@ -65,15 +70,17 @@ public class PostsViewModel extends ViewModel {
 
     private MutableLiveData<List<Post>> postListLiveData=new MutableLiveData<>();
 
-    public PostsViewModel(Application app) {
-        this.app = app;
+    public LiveData<Event<Pair<List<Post>, Integer>>> getUpdatePostLiveData() {
+        return updatePostLiveData;
     }
+
+    private MutableLiveData<Event<Pair<List<Post>,Integer>>> updatePostLiveData=new MutableLiveData<>();
 
     /**get ids of user that current logged in user is following*/
     void getFollowingUid() {
-        networkStateLiveData.setValue(NetworkState.LOADING);
-
         if (!mFollowingIdList.isEmpty())return;
+
+        networkStateLiveData.setValue(NetworkState.LOADING);
 
         final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child(USERS).child(AuthUtils.getLoggedUserId(app));
         users.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -95,7 +102,7 @@ public class PostsViewModel extends ViewModel {
                         }
                     });
                 } else {
-                    //logged in user doesn't follow anyone
+                    //logged in user doesn't follow_black anyone
                     networkStateLiveData.setValue(NetworkState.EMPTY);
                 }
             }
@@ -152,18 +159,17 @@ public class PostsViewModel extends ViewModel {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    //only show in main list the workouts that admin added
                     for (int i = 0; i < mFollowingIdList.size(); i++) {
                         if (ds.child(CREATOR_ID).getValue().equals(mFollowingIdList.get(i))) {
-                            Workout workout =FirebaseUtils.getWorkoutFromSnapshot(ds);
+                            Workout workout =ds.getValue(Workout.class);
                             postList.add(new Post(workout, 1, Long.valueOf(workout.getDate()),false));
                         }
-
                     }
                 }
-
+                if (!postList.isEmpty())
                 getNamesAndImageUrlsPostsOwners();
-
+                else
+                    networkStateLiveData.setValue(NetworkState.EMPTY);
             }
 
             @Override
@@ -195,7 +201,6 @@ public class PostsViewModel extends ViewModel {
                     }
                     }
 
-
                     networkStateLiveData.setValue(NetworkState.SUCCESS);
                     postListLiveData.setValue(postList);
                 }
@@ -206,61 +211,83 @@ public class PostsViewModel extends ViewModel {
                 }
             });
 
-        //todo add like count and comment count node to exercise and show in adapter
     }
 
 
 
-    public void likePost(String postId, Integer adapterPosition) {
+    public void likePost(Post post, Integer adapterPosition) {
+        if (post.getEntityType()==0){
+            //this is exercise
+            likeExercise(post,adapterPosition);
+        }else if (post.getEntityType()==1){
+            //this is workout
+           likeWorkout(post,adapterPosition);
+        }
 
-  /*      reference.child(SOCIAL).child(exerciseKey).setValue(0);//add node in social with this exercise id
-        //which will be used later for counting likes/comments*/
 
+    }
 
-        FirebaseDatabase.getInstance().getReference(EXERCISES).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                for (DataSnapshot exerciseIdSnap:snapshot.getChildren()) {
-                    if (exerciseIdSnap.getKey().equals(postId)){
-                        Exercise exercise = exerciseIdSnap.getValue(Exercise.class);
-
-                        if (exercise.getLikerIdList()!=null){
-                            if (exercise.getLikerIdList().contains(AuthUtils.getLoggedUserId(app))){
-                                //logged user already liked this post
-                                exercise.getLikerIdList().remove(AuthUtils.getLoggedUserId(app));
-                            }else{
-                                //logged user didn't like this post
-                                exercise.getLikerIdList().add(AuthUtils.getLoggedUserId(app));
-                            }
-                        }else {
-                            //this exercise has no likes
-                            ArrayList<String> likerIdList = new ArrayList<>();
-                            likerIdList.add(AuthUtils.getLoggedUserId(app));
-                            exercise.setLikerIdList(likerIdList);
-                        }
-
-                        Map<String, Object> updates = new HashMap<>();
-                        updates.put("likerIdList", exercise.getLikerIdList());
-                        updates.put("likeCount", exercise.getLikerIdList().size());
-
-                        FirebaseDatabase.getInstance().getReference()
-                                .child(EXERCISES)
-                                .child(postId)
-                                .updateChildren(updates).addOnFailureListener(e -> {
-
-                        });
-
-                    break;
-                    }
-                }
-
+    private void likeWorkout(Post post,Integer adapterPosition) {
+        if (post.getWorkout().getLikerIdList() == null) {
+            //post has NO likes
+            ArrayList<String> likeIdList = new ArrayList<>();
+            likeIdList.add(AuthUtils.getLoggedUserId(getApplication()));
+            post.getWorkout().setLikerIdList(likeIdList);
+        } else {
+            //post has previous likes
+            if (post.getWorkout().getLikerIdList().contains(AuthUtils.getLoggedUserId(getApplication()))){
+                //logged user already liked post
+                post.getWorkout().getLikerIdList().remove(AuthUtils.getLoggedUserId(getApplication()));
+            }else{
+                //logged user didn't like this post
+                post.getWorkout().getLikerIdList().add(AuthUtils.getLoggedUserId(getApplication()));
             }
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d(TAG, "onCancelled: "+error.getMessage());
-            }
+        Map<String, Object> updates = new HashMap<>();
+        updates.put(LIKER_ID_LIST, post.getWorkout().getLikerIdList());
+        updates.put(LIKE_COUNT, post.getWorkout().getLikerIdList().size());
+
+        FirebaseDatabase.getInstance().getReference().child(WORKOUT).child(post.getWorkout().getId()).updateChildren(updates)
+                .addOnSuccessListener(aVoid -> {
+                    postList.set(adapterPosition,post);
+                    updatePostLiveData.setValue(new Event<>(new Pair<>(postList,adapterPosition)));
+                }).addOnFailureListener(e -> {
+            Log.d(TAG, "onDataChange: " + e.getMessage());
+            //todo handle error
         });
     }
+
+    private void likeExercise(Post post, Integer adapterPosition) {
+
+        if (post.getExercise().getLikerIdList() == null) {
+            //post has NO likes
+            ArrayList<String> likeIdList = new ArrayList<>();
+            likeIdList.add(AuthUtils.getLoggedUserId(getApplication()));
+            post.getExercise().setLikerIdList(likeIdList);
+        } else {
+            //post has previous likes
+            if (post.getExercise().getLikerIdList().contains(AuthUtils.getLoggedUserId(getApplication()))){
+                //logged user already liked post
+                post.getExercise().getLikerIdList().remove(AuthUtils.getLoggedUserId(getApplication()));
+            }else{
+                //logged user didn't like this post
+                post.getExercise().getLikerIdList().add(AuthUtils.getLoggedUserId(getApplication()));
+            }
+        }
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put(LIKER_ID_LIST, post.getExercise().getLikerIdList());
+        updates.put(LIKE_COUNT, post.getExercise().getLikerIdList().size());
+
+        FirebaseDatabase.getInstance().getReference().child(EXERCISES).child(post.getExercise().getId()).updateChildren(updates)
+                .addOnSuccessListener(aVoid -> {
+                    postList.set(adapterPosition,post);
+                    updatePostLiveData.setValue(new Event<>(new Pair<>(postList,adapterPosition)));
+                }).addOnFailureListener(e -> {
+            Log.d(TAG, "onDataChange: " + e.getMessage());
+            //todo handle error
+        });
+    }
+
 }

@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:background="@drawable/circularbordersolid"
-    android:padding="8dp">
+    android:background="@color/white"
+    >
 
     <ImageView
         android:id="@+id/profileImageView"
@@ -136,7 +135,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="12dp"
         android:background="@drawable/circular_grey_bordersolid"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -192,5 +191,7 @@
         app:layout_constraintStart_toEndOf="@+id/likeImage"
         app:layout_constraintTop_toTopOf="@+id/likeImage"
         android:text="..." />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

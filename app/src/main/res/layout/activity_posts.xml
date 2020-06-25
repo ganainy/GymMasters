@@ -2,10 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/container"
-    android:background="@color/grey"
+    android:background="@color/white"
     tools:context="ganainy.dev.gymmasters.ui.posts.PostsActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -15,21 +15,21 @@
         android:background="@color/colorPrimary"
         app:titleTextColor="#eee"
 
-        >
+        tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/backArrowImageView"
+                style="?android:borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 android:src="@drawable/ic_arrow_back_white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:adjustViewBounds="true"
-                style="?android:borderlessButtonStyle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,65 +51,79 @@
         </LinearLayout>
 
     </androidx.appcompat.widget.Toolbar>
+
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginTop="60dp"
         android:id="@+id/sharedRv"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/post_exercise_item"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:listitem="@layout/post_exercise_item2" />
 
-
-    <ImageView
-        android:id="@+id/bgImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/no_f"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/notFoundTextView"
+        android:id="@+id/noNewsFeedTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
-        android:fontFamily="sans-serif-smallcaps"
+        android:fontFamily="@font/proximanovaregular"
         android:gravity="center"
-        android:text="No News feed from the users you follow"
-        android:textColor="@color/textblack"
+        android:text="@string/no_news_feed_from_the_users_you_follow"
+        android:textColor="@color/grey"
         android:textSize="32sp"
         android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/usersRecycler"
-        app:layout_constraintStart_toEndOf="@+id/usersRecycler"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/errorTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/proximanovaregular"
+        android:gravity="center"
+        android:text="@string/something_went_wrong"
+        android:textColor="@color/grey"
+        android:textSize="32sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/findUsersButton"
-        style="@style/MyButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:padding="16dp"
-        android:text="Follow more users"
+        android:drawablePadding="8dp"
+        android:textColor="@color/grey"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/notFoundTextView"
-        app:layout_constraintStart_toStartOf="@+id/notFoundTextView"
-        app:layout_constraintTop_toBottomOf="@+id/notFoundTextView" />
+        android:background="@drawable/circular_grey_bordersolid"
+        android:textAllCaps="false"
+        android:drawableStart="@drawable/ic_follow_grey"
+        android:text="@string/follow_more_users"
+        app:layout_constraintEnd_toEndOf="@+id/noNewsFeedTextView"
+        app:layout_constraintStart_toStartOf="@+id/noNewsFeedTextView"
+        app:layout_constraintTop_toBottomOf="@+id/noNewsFeedTextView" />
 
 
     <ProgressBar
         android:id="@+id/loadingProgressbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:indeterminateTint="@color/grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -121,12 +135,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Loading news feed..."
+        android:text="@string/loading_news_feed"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/loadingProgressbar"
         app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="@+id/loadingProgressbar"
         app:layout_constraintTop_toBottomOf="@+id/loadingProgressbar" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/loadingGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="loadingTextView,loadingProgressbar" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

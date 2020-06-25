@@ -30,16 +30,6 @@ public class Exercise implements Parcelable{
         date = in.readString();
         creatorName = in.readString();
         additional_notes = in.readString();
-        if (in.readByte() == 0) {
-            likeCount = null;
-        } else {
-            likeCount = in.readLong();
-        }
-        if (in.readByte() == 0) {
-            commentCount = null;
-        } else {
-            commentCount = in.readLong();
-        }
         likerIdList = in.createStringArrayList();
         commentList = in.createTypedArrayList(Comment.CREATOR);
         creatorImageUrl = in.readString();
@@ -81,8 +71,6 @@ public class Exercise implements Parcelable{
     private String date;
     private String creatorName;
     private String additional_notes;
-    private Long likeCount=0L;
-    private Long commentCount=0L;
     private List<String> likerIdList;
     private List<Comment> commentList;
     private String creatorImageUrl;
@@ -239,21 +227,6 @@ public class Exercise implements Parcelable{
         this.isAddedToWorkout = isAddedToWorkout;
     }
 
-    public Long getLikeCount() {
-        return likeCount;
-    }
-
-    public void setLikeCount(Long likeCount) {
-        this.likeCount = likeCount;
-    }
-
-    public Long getCommentCount() {
-        return commentCount;
-    }
-
-    public void setCommentCount(Long commentCount) {
-        this.commentCount = commentCount;
-    }
 
     @Override
     public int describeContents() {
@@ -276,18 +249,6 @@ public class Exercise implements Parcelable{
         dest.writeString(date);
         dest.writeString(creatorName);
         dest.writeString(additional_notes);
-        if (likeCount == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeLong(likeCount);
-        }
-        if (commentCount == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeLong(commentCount);
-        }
         dest.writeStringList(likerIdList);
         dest.writeTypedList(commentList);
         dest.writeString(creatorImageUrl);

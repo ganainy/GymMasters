@@ -1,4 +1,4 @@
-package ganainy.dev.gymmasters.ui.posts.postComments;
+package ganainy.dev.gymmasters.ui.posts;
 
 import android.app.Application;
 import android.view.LayoutInflater;
@@ -8,143 +8,88 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+
+import ganainy.dev.gymmasters.R;
+import ganainy.dev.gymmasters.models.app_models.Exercise;
+import ganainy.dev.gymmasters.models.app_models.Post;
+import ganainy.dev.gymmasters.models.app_models.Workout;
+
 import com.bumptech.glide.request.RequestOptions;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import ganainy.dev.gymmasters.R;
-import ganainy.dev.gymmasters.models.app_models.Comment;
-import ganainy.dev.gymmasters.models.app_models.Exercise;
-import ganainy.dev.gymmasters.models.app_models.User;
-import ganainy.dev.gymmasters.models.app_models.Workout;
-import ganainy.dev.gymmasters.ui.posts.PostCallback;
 import ganainy.dev.gymmasters.utils.AuthUtils;
 
-/**
- * this adapter can be used to show exercises/workouts/post comments
- */
-public class PostCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = "SharedAdapter";
+    private static final int TYPE_WORKOUT = 0;
+    private static final int TYPE_EXERCISE = 1;
+    private final Application app;
+    private List<Post> postList;
+    private PostCallback postCallback;
 
-    private static final int RECYCLER_TYPE_WORKOUT = 0;
-    private static final int RECYCLER_TYPE_EXERCISE = 1;
-    private static final int RECYCLER_TYPE_COMMENT = 2;
-    private static final int RECYCLER_TYPE_NO_COMMENTS = 3;
-    private static final int RECYCLER_TYPE_LOADING = 4;
-    Application app;
-    List<PostComment> postCommentList;
-    PostCallback postCallback;
-
-    public PostCommentsAdapter(Application app, PostCallback postCallback) {
+    public PostsAdapter(Application app, PostCallback postCallback) {
         this.app = app;
         this.postCallback = postCallback;
-    }
 
-    public void setData(List<PostComment> postCommentList) {
-        this.postCommentList = postCommentList;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        if (viewType== RECYCLER_TYPE_COMMENT){
-            View view = LayoutInflater.from(app).inflate(R.layout.comment_item, viewGroup, false);
-            return new PostCommentViewHolder(view);
-        }else if (viewType== RECYCLER_TYPE_EXERCISE){
-            View view = LayoutInflater.from(app).inflate(R.layout.post_exercise_item2, viewGroup, false);
+
+        View view;
+        if (viewType == TYPE_EXERCISE) {
+
+            view = LayoutInflater.from(app).inflate(R.layout.post_exercise_item2, viewGroup, false);
             return new PostExerciseViewHolder(view);
-        }
-        else if (viewType== RECYCLER_TYPE_WORKOUT){
-            View view = LayoutInflater.from(app).inflate(R.layout.post_workout_item2, viewGroup, false);
+
+        } else {
+            view = LayoutInflater.from(app).inflate(R.layout.post_workout_item2, viewGroup, false);
             return new PostWorkoutViewHolder(view);
-        }else if (viewType== RECYCLER_TYPE_NO_COMMENTS){
-            View view = LayoutInflater.from(app).inflate(R.layout.empty_comments_item, viewGroup, false);
-            return new EmptyCommentsViewHolder(view);
-        }else if (viewType== RECYCLER_TYPE_LOADING){
-            View view = LayoutInflater.from(app).inflate(R.layout.loading_item, viewGroup, false);
-            return new LoadingViewHolder(view);
         }
-        return null;//error
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-
-        if (viewHolder instanceof PostExerciseViewHolder) {
-            ((PostExerciseViewHolder) viewHolder).setDetails(postCommentList.get(position));
-        } else if (viewHolder instanceof PostWorkoutViewHolder) {
-            ((PostWorkoutViewHolder) viewHolder).setDetails(postCommentList.get(position));
-        } else if (viewHolder instanceof PostCommentViewHolder) {
-            ((PostCommentViewHolder) viewHolder).setDetails(postCommentList.get(position));
+        if (getItemViewType(position) == TYPE_EXERCISE) {
+            ((PostExerciseViewHolder) viewHolder).setDetails(postList.get(position));
+        } else {
+            ((PostWorkoutViewHolder) viewHolder).setDetails(postList.get(position));
         }
-
-
     }
 
     @Override
     public int getItemCount() {
-        return postCommentList == null ? 0 : postCommentList.size();
+        return postList == null ? 0 : postList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (postCommentList.get(position).getPostCommentType().equals(PostComment.PostCommentType.POST_EXERCISE)) {
-            return RECYCLER_TYPE_EXERCISE;
-        } else if (postCommentList.get(position).getPostCommentType().equals(PostComment.PostCommentType.POST_WORKOUT)) {
-            return RECYCLER_TYPE_WORKOUT;
-        } else if (postCommentList.get(position).getPostCommentType().equals(PostComment.PostCommentType.COMMENT)) {
-            return RECYCLER_TYPE_COMMENT;
-        } else if (postCommentList.get(position).getPostCommentType().equals(PostComment.PostCommentType.LOADING_COMMENTS)) {
-            return RECYCLER_TYPE_LOADING;
-        }else if (postCommentList.get(position).getPostCommentType().equals(PostComment.PostCommentType.EMPTY_COMMENTS)) {
-            return RECYCLER_TYPE_NO_COMMENTS;
+        if (postList.get(position).getEntityType() == 0) {
+            return TYPE_EXERCISE;
+        } else {
+            return TYPE_WORKOUT;
         }
-
-        return -1;
 
     }
 
+    @Override
+    public long getItemId(int position) {
+        return postList.get(position).getId();
+    }
 
-    public class PostCommentViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.commenterImageView)
-        ImageView commenterImageView;
-
-        @BindView(R.id.commenterNameTextView)
-        TextView commenterNameTextView;
-
-        @BindView(R.id.commentTextView)
-        TextView commentTextView;
-
-        @BindView(R.id.commentDateTextView)
-        TextView commentDateTextView;
-
-
-        public PostCommentViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
-        }
-
-        public void setDetails(PostComment postComment) {
-            Pair<Comment, User> currentUserCommentPair = postComment.getUserCommentPair();
-            Glide.with(app).load(currentUserCommentPair.second.getPhoto())
-                    .apply(new RequestOptions().placeholder(R.drawable.loading_animation).error(R.drawable.anonymous_profile))
-                    .circleCrop()
-                    .into(commenterImageView);
-
-            commenterNameTextView.setText(currentUserCommentPair.second.getName());
-
-            commentTextView.setText(currentUserCommentPair.first.getText());
-
-            commentDateTextView.setText(new PrettyTime().format(new Date(currentUserCommentPair.first.getDateCreated())));
-        }
+    public void setData(List<Post> postList) {
+        this.postList = postList;
     }
 
     class PostExerciseViewHolder extends RecyclerView.ViewHolder {
@@ -190,8 +135,8 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ButterKnife.bind(this, itemView);
         }
 
-        public void setDetails(final PostComment postComment) {
-            Exercise exercise = postComment.getPost().getExercise();
+        public void setDetails(final Post post) {
+            Exercise exercise = post.getExercise();
 
             Glide.with(app).load(exercise.getCreatorImageUrl())
                     .apply(new RequestOptions().placeholder(R.drawable.loading_animation).error(R.drawable.anonymous_profile))
@@ -214,29 +159,29 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             targetMuscleTextView.setText(exercise.getBodyPart());
 
-            if (exercise.getCommentList() != null)
+            if (post.getExercise().getCommentList()!=null)
                 commentCountTextView.setText(Long.toString(exercise.getCommentList().size()));
             else
-                commentCountTextView.setText("0");
+                commentCountTextView.setText("0") ;
 
-            if (exercise.getLikerIdList() != null)
-                likeCountTextView.setText(Long.toString(exercise.getLikerIdList().size()));
+            if (post.getExercise().getLikerIdList()!=null)
+            likeCountTextView.setText(Long.toString(exercise.getLikerIdList().size()));
             else
-                likeCountTextView.setText("0");
+                likeCountTextView.setText("0") ;
 
-            if (exercise.getLikerIdList() != null &&
-                    exercise.getLikerIdList().contains(AuthUtils.getLoggedUserId(app)))
+            if (post.getExercise().getLikerIdList()!=null &&
+                    post.getExercise().getLikerIdList().contains(AuthUtils.getLoggedUserId(app)))
                 likeImage.setImageResource(R.drawable.ic_like_blue);
             else
                 likeImage.setImageResource(R.drawable.ic_like_grey);
 
 
             likeButton.setOnClickListener(v -> {
-                postCallback.onPostLike(postComment.getPost(), getAdapterPosition());
+                postCallback.onPostLike(post, getAdapterPosition());
             });
 
             commentButton.setOnClickListener(v -> {
-                postCallback.onPostComment(postComment.getPost(), getAdapterPosition());
+                postCallback.onPostComment(post, 0);
             });
 
         }
@@ -288,9 +233,9 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ButterKnife.bind(this, itemView);
         }
 
-        public void setDetails(PostComment postComment) {
+        public void setDetails(Post post) {
 
-            Workout workout = postComment.getPost().getWorkout();
+            Workout workout = post.getWorkout();
 
             Glide.with(app).load(workout.getCreatorImageUrl())
                     .apply(new RequestOptions().placeholder(R.drawable.loading_animation).error(R.drawable.anonymous_profile))
@@ -311,19 +256,19 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             workoutDifficultyTextView.setText(workout.getLevel());
 
-            if (workout.getCommentList() != null)
+            if (post.getWorkout().getCommentList()!=null)
                 commentCountTextView.setText(Long.toString(workout.getCommentList().size()));
             else
-                commentCountTextView.setText("0");
+                commentCountTextView.setText("0") ;
 
-            if (workout.getLikerIdList() != null)
+            if (post.getWorkout().getLikerIdList()!=null)
                 likeCountTextView.setText(Long.toString(workout.getLikerIdList().size()));
             else
-                likeCountTextView.setText("0");
+                likeCountTextView.setText("0") ;
 
 
-            if (workout.getLikerIdList() != null &&
-                    workout.getLikerIdList().contains(AuthUtils.getLoggedUserId(app)))
+            if (post.getWorkout().getLikerIdList()!=null &&
+                    post.getWorkout().getLikerIdList().contains(AuthUtils.getLoggedUserId(app)))
                 likeImage.setImageResource(R.drawable.ic_like_blue);
             else
                 likeImage.setImageResource(R.drawable.ic_like_grey);
@@ -346,28 +291,13 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
             likeButton.setOnClickListener(v -> {
-                postCallback.onPostLike(postComment.getPost(), getAdapterPosition());
+                postCallback.onPostLike(post, getAdapterPosition());
             });
 
             commentButton.setOnClickListener(v -> {
-                postCallback.onPostComment(postComment.getPost(), getAdapterPosition());
+                postCallback.onPostComment(post, 1);
             });
 
         }
     }
-
-    class LoadingViewHolder extends RecyclerView.ViewHolder {
-
-        public LoadingViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
-    }
-
-    class EmptyCommentsViewHolder extends RecyclerView.ViewHolder {
-
-        public EmptyCommentsViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
-    }
-
 }

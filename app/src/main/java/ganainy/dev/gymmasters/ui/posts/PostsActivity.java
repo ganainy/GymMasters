@@ -5,13 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Group;
+import androidx.core.util.Pair;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ganainy.dev.gymmasters.R;
@@ -19,15 +20,13 @@ import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Post;
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
-import ganainy.dev.gymmasters.ui.createExercise.CreateExerciseViewModel;
 import ganainy.dev.gymmasters.ui.findUser.FindUsersActivity;
 import ganainy.dev.gymmasters.ui.posts.postComments.PostCommentsFragment;
-import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
 import ganainy.dev.gymmasters.utils.ApplicationViewModelFactory;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,18 +37,19 @@ public class PostsActivity extends AppCompatActivity {
     private static final String TAG = "PostsActivity";
     private NetworkChangeReceiver networkChangeReceiver;
     private PostsViewModel mViewModel;
-    private SharedAdapter sharedAdapter;
+    private PostsAdapter postsAdapter;
 
-    @BindView(R.id.notFoundTextView)
-    TextView notFoundTextView;
+    @BindView(R.id.noNewsFeedTextView)
+    TextView noNewsFeedTextView;
+
+    @BindView(R.id.errorTextView)
+    TextView errorTextView;
+
     @BindView(R.id.findUsersButton)
-    Button button;
-    @BindView(R.id.bgImageView)
-    ImageView bgImageView;
-    @BindView(R.id.loadingTextView)
-    TextView loadingTextView;
-    @BindView(R.id.loadingProgressbar)
-    ProgressBar loadingProgressbar;
+    Button findUsersButton;
+
+    @BindView(R.id.loadingGroup)
+    Group loadingGroup;
 
     @BindView(R.id.sharedRv)
     RecyclerView recyclerView;
@@ -74,25 +74,29 @@ public class PostsActivity extends AppCompatActivity {
 
         mViewModel.getNetworkStateLiveData().observe(this, networkState -> {
             switch (networkState) {
-
                 case SUCCESS:
-                    //hide loading
-                    loadingTextView.setVisibility(View.GONE);
-                    loadingProgressbar.setVisibility(View.GONE);
+                    errorTextView.setVisibility(View.GONE);
+                    noNewsFeedTextView.setVisibility(View.GONE);
+                    findUsersButton.setVisibility(View.GONE);
+                    loadingGroup.setVisibility(View.GONE);
                     break;
                 case ERROR:
-                    //todo
+                    errorTextView.setVisibility(View.VISIBLE);
+                    noNewsFeedTextView.setVisibility(View.GONE);
+                    findUsersButton.setVisibility(View.GONE);
+                    loadingGroup.setVisibility(View.GONE);
                     break;
                 case LOADING:
-                    loadingTextView.setVisibility(View.VISIBLE);
-                    loadingProgressbar.setVisibility(View.VISIBLE);
+                    errorTextView.setVisibility(View.GONE);
+                    noNewsFeedTextView.setVisibility(View.GONE);
+                    findUsersButton.setVisibility(View.GONE);
+                    loadingGroup.setVisibility(View.VISIBLE);
                     break;
                 case EMPTY:
-                    notFoundTextView.setVisibility(View.VISIBLE);
-                    button.setVisibility(View.VISIBLE);
-                    bgImageView.setVisibility(View.VISIBLE);
-                    loadingTextView.setVisibility(View.GONE);
-                    loadingProgressbar.setVisibility(View.GONE);
+                    errorTextView.setVisibility(View.GONE);
+                    noNewsFeedTextView.setVisibility(View.VISIBLE);
+                    findUsersButton.setVisibility(View.VISIBLE);
+                    loadingGroup.setVisibility(View.GONE);
                     break;
                 case STOP_LOADING:
                     break;
@@ -104,8 +108,17 @@ public class PostsActivity extends AppCompatActivity {
         mViewModel.getPostListLiveData().observe(this, posts -> {
 
                         Collections.sort(posts, (s1, s2) -> s2.getDateStamp().compareTo(s1.getDateStamp()));
-            sharedAdapter.setData(posts);
-            sharedAdapter.notifyDataSetChanged();
+            postsAdapter.setData(posts);
+            postsAdapter.notifyDataSetChanged();
+        });
+
+        /*called when we need to update single recycler item, for example when post is liked*/
+        mViewModel.getUpdatePostLiveData().observe(this,postsEvent->{
+            Pair<List<Post>, Integer> postsPositionPair = postsEvent.getContentIfNotHandled();
+            if (postsPositionPair!=null){
+                postsAdapter.setData(postsPositionPair.first);
+                postsAdapter.notifyItemChanged(postsPositionPair.second);
+            }
         });
     }
 
@@ -117,11 +130,7 @@ public class PostsActivity extends AppCompatActivity {
 
     private void setupRecycler() {
 
-        //todo open selected exercise
-        /* Intent i = new Intent(this,);
-                i.putExtra("exercise", currentExercise);
-                startActivity(i);*/
-        sharedAdapter = new SharedAdapter(getApplication(), new PostCallback() {
+        postsAdapter = new PostsAdapter(getApplication(), new PostCallback() {
             @Override
             public void onExerciseClicked(Exercise exercise, Integer adapterPosition) {
                 //todo open selected exercise
@@ -141,36 +150,34 @@ public class PostsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onPostLike(String postId, Integer adapterPosition) {
-                mViewModel.likePost(postId, adapterPosition);
-                Post oldPost = mViewModel.getPostList().get(adapterPosition);
-                Post newPost=oldPost;
-
-                if (newPost.getLiked())
-                newPost.getExercise().setLikeCount(newPost.getExercise().getLikeCount()-1);
-                else
-                    newPost.getExercise().setLikeCount(newPost.getExercise().getLikeCount()+1);
-
-                newPost.setLiked(!newPost.getLiked());
-                mViewModel.getPostList().set(adapterPosition,newPost);
-                sharedAdapter.setData(mViewModel.getPostList());
-                sharedAdapter.notifyItemChanged(adapterPosition);
+            public void onPostLike(Post post, Integer adapterPosition) {
+                mViewModel.likePost(post, adapterPosition);
             }
 
             @Override
-            public void onPostComment(Post post, Integer adapterPosition) {
-                PostCommentsFragment postCommentsFragment = PostCommentsFragment.newInstance(post);
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.add(R.id.container, postCommentsFragment).addToBackStack("postCommentsFragment").commit();
+            public void onPostComment(Post post, Integer postType) {
+                    openPostCommentFragment(post);
             }
         });
         //sharedExerciseWorkoutList setdata
 
-        sharedAdapter.setHasStableIds(true);
+        postsAdapter.setHasStableIds(true);
         recyclerView.setItemAnimator(null);
-        recyclerView.setAdapter(sharedAdapter);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                DividerItemDecoration.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
+        recyclerView.setAdapter(postsAdapter);
 
 
+    }
+
+
+    private void openPostCommentFragment(Post post) {
+        PostCommentsFragment postCommentsFragment = PostCommentsFragment.newInstance(post);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, postCommentsFragment).addToBackStack("postCommentsFragment").commit();
     }
 
 

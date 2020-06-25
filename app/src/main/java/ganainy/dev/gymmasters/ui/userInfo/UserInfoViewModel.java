@@ -69,7 +69,7 @@ public class UserInfoViewModel extends ViewModel {
 
         //get workouts list
         getWorkouts();
-        //get follow state first time we open activity
+        //get follow_black state first time we open activity
         getFollowState();
         //get followers count
         getFollowersCount();
@@ -357,7 +357,7 @@ public class UserInfoViewModel extends ViewModel {
         //add id of profile account in followingUID of logged in account
         FirebaseDatabase.getInstance().getReference(USERS).child(AuthUtils.getLoggedUserId(app)).child(FOLLOWING_UID)
                 .push().setValue(profileOwner.getId()).addOnSuccessListener(aVoid -> {
-            /*follow was successful get new followers count*/
+            /*follow_black was successful get new followers count*/
             getFollowersCount();
             followState = FollowState.FOLLOWING;
             userProfileModel.setFollowState(followState);
