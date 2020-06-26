@@ -1,4 +1,4 @@
-package ganainy.dev.gymmasters.ui.specificWorkout;
+package ganainy.dev.gymmasters.ui.workout;
 
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 

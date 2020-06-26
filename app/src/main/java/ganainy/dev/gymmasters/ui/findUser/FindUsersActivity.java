@@ -23,12 +23,15 @@ import java.util.List;
 
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
+import ganainy.dev.gymmasters.models.app_models.Post;
 import ganainy.dev.gymmasters.models.app_models.User;
-import ganainy.dev.gymmasters.ui.main.ProfileCallback;
+import ganainy.dev.gymmasters.models.app_models.Workout;
+import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 import ganainy.dev.gymmasters.ui.userExercises.UserExercisesFragment;
 import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.UserWorkoutsFragment;
 import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
 import ganainy.dev.gymmasters.ui.userInfo.UserInfoFragment;
+import ganainy.dev.gymmasters.ui.workout.WorkoutFragment;
 import ganainy.dev.gymmasters.utils.ApplicationViewModelFactory;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 
@@ -37,7 +40,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ganainy.dev.gymmasters.utils.NetworkUtil;
 
-public class FindUsersActivity extends AppCompatActivity implements ProfileCallback {
+public class FindUsersActivity extends AppCompatActivity implements ActivityCallback {
     private static final String TAG = "FindUsersActivity";
     public static final String SOURCE = "source";
     public static final String FIND = "find";
@@ -282,12 +285,20 @@ public class FindUsersActivity extends AppCompatActivity implements ProfileCallb
 
     @Override
     public void openCreateWorkoutFragment() {
-
+        try {
+            throw new IllegalAccessException("unhandled override");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void openCreateExerciseFragment() {
-
+        try {
+            throw new IllegalAccessException("unhandled override");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -299,12 +310,54 @@ public class FindUsersActivity extends AppCompatActivity implements ProfileCallb
 
     @Override
     public void showLoggedUserFollowers(String key, String value) {
-
+        try {
+            throw new IllegalAccessException("unhandled override");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void showUsersFollowedByLoggedUser(String key, String value) {
+        try {
+            throw new IllegalAccessException("unhandled override");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 
+    @Override
+    public void openYoutubeFragment(String exerciseName) {
+        try {
+            throw new IllegalAccessException("unhandled override");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onOpenFindUsersActivity(String key, String value) {
+        try {
+            throw new IllegalAccessException("unhandled override");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onOpenPostCommentFragment(Post post) {
+        try {
+            throw new IllegalAccessException("unhandled override");
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onOpenWorkoutFragment(Workout workout) {
+        WorkoutFragment workoutFragment = WorkoutFragment.newInstance(workout);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, workoutFragment).addToBackStack("workoutFragment").commit();
     }
 }
 

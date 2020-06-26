@@ -29,7 +29,7 @@ import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
-import ganainy.dev.gymmasters.ui.main.ProfileCallback;
+import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 
 public class UserInfoFragment extends Fragment {
 
@@ -111,15 +111,15 @@ public class UserInfoFragment extends Fragment {
 
     @OnClick(R.id.showExercisesLayout)
     void showExerciseList() {
-        ProfileCallback profileCallback = (ProfileCallback) requireActivity();
-        profileCallback.openUserExercisesFragment(mViewModel.getUserProfileModel().getProfileOwner().getId(),
+        ActivityCallback activityCallback = (ActivityCallback) requireActivity();
+        activityCallback.openUserExercisesFragment(mViewModel.getUserProfileModel().getProfileOwner().getId(),
                 mViewModel.getUserProfileModel().getProfileOwner().getName());
     }
 
     @OnClick(R.id.showWorkoutsLayout)
     void showWorkoutList() {
-        ProfileCallback profileCallback = (ProfileCallback) requireActivity();
-        profileCallback.openUserWorkoutsFragment(mViewModel.getUserProfileModel().getProfileOwner().getId(),
+        ActivityCallback activityCallback = (ActivityCallback) requireActivity();
+        activityCallback.openUserWorkoutsFragment(mViewModel.getUserProfileModel().getProfileOwner().getId(),
                 mViewModel.getUserProfileModel().getProfileOwner().getName());
     }
 

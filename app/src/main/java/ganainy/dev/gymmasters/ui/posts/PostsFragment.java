@@ -1,11 +1,9 @@
 package ganainy.dev.gymmasters.ui.posts;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,7 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,10 +21,6 @@ import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Post;
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
-import ganainy.dev.gymmasters.ui.findUser.FindUsersActivity;
-import ganainy.dev.gymmasters.ui.main.workouts.PostsCallback;
-import ganainy.dev.gymmasters.ui.posts.postComments.PostCommentsFragment;
-import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +28,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import ganainy.dev.gymmasters.ui.main.ActivityCallback;
+import ganainy.dev.gymmasters.utils.AuthUtils;
 
 public class PostsFragment extends Fragment {
     private static final String TAG = "PostsFragment";
@@ -58,8 +53,8 @@ public class PostsFragment extends Fragment {
 
     @OnClick(R.id.findUsersButton)
     void openFindUsers() {
-        PostsCallback postsCallback=(PostsCallback) requireActivity();
-        postsCallback.onOpenFindUsersActivity(SOURCE, FIND);
+        ActivityCallback activityCallback =(ActivityCallback) requireActivity();
+        activityCallback.onOpenFindUsersActivity(SOURCE, FIND);
     }
 
 
@@ -75,6 +70,7 @@ public class PostsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.posts_fragment, container, false);
         ButterKnife.bind(this, view);
+        setupRecycler();
         return view;
     }
 
@@ -82,8 +78,10 @@ public class PostsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setupRecycler();
         mViewModel = new ViewModelProvider(this).get(PostsViewModel.class);
+
+        saveLoggedUser();
+
         mViewModel.getFollowingUid();
 
         mViewModel.getNetworkStateLiveData().observe(getViewLifecycleOwner(), networkState -> {
@@ -129,6 +127,13 @@ public class PostsFragment extends Fragment {
                 postsAdapter.setData(postsPositionPair.first);
                 postsAdapter.notifyItemChanged(postsPositionPair.second);
             }
+        });
+    }
+
+    /**save logged user info to be accessed through app*/
+    private void saveLoggedUser() {
+        mViewModel.getLoggedUser().observe(getViewLifecycleOwner(),loggedUser->{
+            AuthUtils.putUser(requireContext(),loggedUser);
         });
     }
 
@@ -178,8 +183,8 @@ public class PostsFragment extends Fragment {
     }
 
     private void openPostCommentFragment(Post post) {
-        PostsCallback postsCallback=(PostsCallback) requireActivity();
-        postsCallback.onOpenPostCommentFragment(post);
+        ActivityCallback activityCallback=(ActivityCallback) requireActivity();
+        activityCallback.onOpenPostCommentFragment(post);
   }
 
 }

@@ -21,21 +21,21 @@ import androidx.viewpager.widget.ViewPager;
 
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Post;
+import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.ui.createExercise.CreateExerciseFragment;
 import ganainy.dev.gymmasters.ui.createWorkout.CreateWorkoutFragment;
 import ganainy.dev.gymmasters.ui.findUser.FindUsersActivity;
 import ganainy.dev.gymmasters.ui.main.home.ProfileFragment;
-import ganainy.dev.gymmasters.ui.main.workouts.PostsCallback;
 import ganainy.dev.gymmasters.ui.posts.postComments.PostCommentsFragment;
 import ganainy.dev.gymmasters.ui.userExercises.UserExercisesFragment;
 import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.UserWorkoutsFragment;
 import ganainy.dev.gymmasters.ui.map.MapsActivity;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
-import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeCallback;
 import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeFragment;
-import ganainy.dev.gymmasters.ui.timer.TimerActivity;
 import ganainy.dev.gymmasters.ui.login.LoginActivity;
+import ganainy.dev.gymmasters.ui.workout.WorkoutFragment;
+import ganainy.dev.gymmasters.utils.AuthUtils;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -56,7 +56,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ganainy.dev.gymmasters.utils.NetworkUtil;
 
-public class MainActivity extends AppCompatActivity implements ProfileCallback, YoutubeCallback, PostsCallback {
+public class MainActivity extends AppCompatActivity implements ActivityCallback {
     public static final String SOURCE = "source";
     public static final String FOLLOWERS = "followers";
     public static final String FIND = "find";
@@ -104,9 +104,6 @@ public class MainActivity extends AppCompatActivity implements ProfileCallback, 
                     break;
                 case R.id.nav_profile:
                     handleProfileClick();
-                    break;
-                case R.id.nav_timer:
-                    handleTimerClick();
                     break;
                 case R.id.nav_map:
                     handleMapClick();
@@ -177,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements ProfileCallback, 
         if (currentUser != null) {
             //user logged in with email/password
             mAuth.signOut();
+            AuthUtils.setLoggedUserId(null);
             openLoginActivityAndClearTask();
         } else {
             //user logged in with google account
@@ -186,7 +184,10 @@ public class MainActivity extends AppCompatActivity implements ProfileCallback, 
             GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
             mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) openLoginActivityAndClearTask();
+                if (task.isSuccessful()) {
+                    openLoginActivityAndClearTask();
+                    AuthUtils.setLoggedUserId(null);
+                }
                 else {
                     Toast.makeText(
                             MainActivity.this,
@@ -196,12 +197,6 @@ public class MainActivity extends AppCompatActivity implements ProfileCallback, 
                 }
             });
         }
-    }
-
-    private void handleTimerClick() {
-        drawerLayout.closeDrawers();
-        Intent i = new Intent(MainActivity.this, TimerActivity.class);
-        startActivity(i);
     }
 
     private void handleDiscoverClick() {
@@ -391,5 +386,12 @@ public class MainActivity extends AppCompatActivity implements ProfileCallback, 
         PostCommentsFragment postCommentsFragment = PostCommentsFragment.newInstance(post);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.container, postCommentsFragment).addToBackStack("postCommentsFragment").commit();
+    }
+
+    @Override
+    public void onOpenWorkoutFragment(Workout workout) {
+        WorkoutFragment workoutFragment = WorkoutFragment.newInstance(workout);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, workoutFragment).addToBackStack("workoutFragment").commit();
     }
 }

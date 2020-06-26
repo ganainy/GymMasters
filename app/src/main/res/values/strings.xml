@@ -112,7 +112,7 @@
     <string name="compound_definition">\"An exercise that involves two or more joint movements. \"</string>
     <string name="got_it">Got it!</string>
     <string name="delete_exercise_q">Delete exercise ?</string>
-    <string name="confirm_delete">Are you sure you want to delete this exercise permanently from app?</string>
+    <string name="confirm_delete_exercise">Are you sure you want to delete this exercise permanently from app?</string>
     <string name="delete">Delete</string>
     <string name="exercise_deleted_successfully">Exercise deleted Successfully</string>
     <string name="error_deleting_exercise">Error while deleting exercise</string>
@@ -142,7 +142,6 @@
     <string name="my_profile">My profile</string>
     <string name="logout">Logout</string>
     <string name="utilities">Utilities</string>
-    <string name="timer">Timer</string>
     <string name="nearby_gyms">Nearby gyms</string>
     <string name="find">Find</string>
     <string name="discover">Discover</string>
@@ -152,6 +151,18 @@
     <string name="rating">rating</string>
     <string name="tell_your_followers_something_about_yourself">Tell your followers something about yourself</string>
     <string name="no_workouts_found">No workouts found</string>
+    <string name="delete_workout_question">Delete workout ?</string>
+    <string name="confirm_delete_workout">Are you sure you want to delete this workout permanently from app?</string>
+    <string name="deleted_successfully">Deleted Successfully</string>
+    <string name="workout_hint">Workout hint</string>
+    <string name="click_any_exercise_to_view_in_full_detail">Click any exercise to view in full detail</string>
+    <string name="timer">Timer</string>
+    <string name="reset_timer">Reset timer</string>
+    <string name="set_timer">Set timer</string>
+    <string name="low_volume">Low volume</string>
+    <string name="device_volume_is_less_than_50_consider_increasing_it_to_hear_reminder_clearly">Device volume is less than 50%, consider increasing it to hear reminder clearly</string>
+    <string name="set">Set</string>
+    <string name="choose_timer_duration">Choose timer duration</string>
 
 
 </resources>

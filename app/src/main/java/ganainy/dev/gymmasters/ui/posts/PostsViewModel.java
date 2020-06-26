@@ -22,6 +22,7 @@ import java.util.Map;
 
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Post;
+import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.utils.AuthUtils;
 import ganainy.dev.gymmasters.utils.Event;
@@ -289,4 +290,21 @@ public class PostsViewModel extends AndroidViewModel {
         });
     }
 
+
+    public LiveData<User> getLoggedUser(){
+        MutableLiveData<User> loggedUserLiveData=new MutableLiveData<>();
+        FirebaseDatabase.getInstance().getReference().child(USERS).child(AuthUtils.getLoggedUserId(getApplication())).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                User loggedUser = userSnapshot.getValue(User.class);
+                loggedUserLiveData.setValue(loggedUser);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return loggedUserLiveData;
+    }
 }

@@ -131,7 +131,11 @@ public class CreateWorkoutViewModel extends ViewModel {
         String photoPath = WORKOUT_IMAGES + MiscellaneousUtils.formatUriAsTimeStampedString(imageUri);
         final StorageReference imagesRef = storageRef.child(photoPath);
         imagesRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
-            uploadWorkout(photoPath);
+            imagesRef.getDownloadUrl().addOnSuccessListener(photoDownloadUrl->{
+                uploadWorkout(photoDownloadUrl.toString());
+            }).addOnFailureListener(e->{
+                networkStateLiveData.setValue(NetworkState.ERROR);
+            });
         }).addOnFailureListener(e -> {
             networkStateLiveData.setValue(NetworkState.ERROR);
 
@@ -144,7 +148,6 @@ public class CreateWorkoutViewModel extends ViewModel {
 
 
     private void uploadWorkout(String photoPath) {
-        //todo add workout id like we did with exercise
         DatabaseReference workoutRef = FirebaseDatabase.getInstance().getReference(WORKOUT);
 
         Workout workout = new Workout();

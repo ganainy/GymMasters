@@ -34,7 +34,7 @@
             android:value="@string/google_map_key" />
 
         <activity
-            android:name="ganainy.dev.gymmasters.ui.timer.TimerActivity"
+            android:name="ganainy.dev.gymmasters.ui.timer.TimerFragment"
             android:label="@string/title_activity_timer"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -44,7 +44,7 @@
             android:name="ganainy.dev.gymmasters.ui.findUser.FindUsersActivity"
             />
         <activity
-            android:name="ganainy.dev.gymmasters.ui.specificWorkout.SpecificWorkoutActivity"
+            android:name="ganainy.dev.gymmasters.ui.workout.WorkoutFragment"
         />
         <activity
             android:name="ganainy.dev.gymmasters.ui.exercise.MuscleExercisesActivity"

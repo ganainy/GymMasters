@@ -66,6 +66,9 @@ public class PostCommentsViewModel extends AndroidViewModel {
     }
 
     private void saveWorkoutComment(String commentText) {
+
+        postCommentList.remove(emptyComment);
+
         Comment comment = new Comment(AuthUtils.getLoggedUserId(getApplication()), System.currentTimeMillis(), commentText);
         if (mPost.getWorkout().getCommentList() == null) {
             //post has NO comments
@@ -90,11 +93,14 @@ public class PostCommentsViewModel extends AndroidViewModel {
         });
 
 
-        postCommentList.add(new PostComment(new Pair<>(comment,AuthUtils.getLoggedUser())));
+        postCommentList.add(new PostComment(new Pair<>(comment,AuthUtils.getUser(getApplication()))));
         updatedPostCommentsLiveData.setValue(postCommentList);
     }
 
     private void saveExerciseComment(String commentText) {
+
+        postCommentList.remove(emptyComment);
+
         Comment comment = new Comment(AuthUtils.getLoggedUserId(getApplication()), System.currentTimeMillis(), commentText);
         if (mPost.getExercise().getCommentList() == null) {
             //post has NO comments
@@ -119,7 +125,7 @@ public class PostCommentsViewModel extends AndroidViewModel {
         });
 
 
-        postCommentList.add(new PostComment(new Pair<>(comment,AuthUtils.getLoggedUser())));
+        postCommentList.add(new PostComment(new Pair<>(comment,AuthUtils.getUser(getApplication()))));
         updatedPostCommentsLiveData.setValue(postCommentList);
     }
 
@@ -152,6 +158,7 @@ public class PostCommentsViewModel extends AndroidViewModel {
                 if (exercise.getCommentList() == null) {
                     //no comments
                     postCommentList.add(emptyComment);
+                    postCommentList.remove(loadingComment);
                     postCommentListLiveData.setValue(postCommentList);
                 } else {
                     getCommenterInformation(exercise.getCommentList());
@@ -174,6 +181,7 @@ public class PostCommentsViewModel extends AndroidViewModel {
                 if (workout.getCommentList() == null) {
                   //no comments
                     postCommentList.add(emptyComment);
+                    postCommentList.remove(loadingComment);
                     postCommentListLiveData.setValue(postCommentList);
                 } else {
                     getCommenterInformation(workout.getCommentList());

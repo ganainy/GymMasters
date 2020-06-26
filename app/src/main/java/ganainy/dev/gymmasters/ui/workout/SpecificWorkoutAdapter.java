@@ -1,14 +1,17 @@
-package ganainy.dev.gymmasters.ui.specificWorkout;
+package ganainy.dev.gymmasters.ui.workout;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
@@ -22,6 +25,7 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private static final String TAG = "SpecificWorkoutAdapter";
     private static final int TYPE_REPS = 1;
     private static final int TYPE_TIME = 2;
+    private static final int TYPE_DOT = 3;
     private final Context context;
     private List<Exercise> workoutExerciseList;
     private ExerciseInsideWorkoutCallback exerciseInsideWorkoutCallback;
@@ -36,47 +40,55 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view;
         if (viewType == TYPE_REPS) { // for TYPE_REPS layout
-
             view = LayoutInflater.from(context).inflate(R.layout.inside_workout_item_reps, viewGroup, false);
             return new RepsExerciseViewHolder(view);
-
-        } else { // for TYPE_TIME layout
+        } else if (viewType==TYPE_TIME){ // for TYPE_TIME layout
             view = LayoutInflater.from(context).inflate(R.layout.inside_workout_item_duration, viewGroup, false);
             return new TimedExerciseViewHolder(view);
+        }else if (viewType==TYPE_DOT){
+            view = LayoutInflater.from(context).inflate(R.layout.dot_item, viewGroup, false);
+            return new DotViewHolder(view);
         }
+
+        return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        if (getItemViewType(position) == TYPE_REPS) {
+        if (viewHolder instanceof RepsExerciseViewHolder){
             ((RepsExerciseViewHolder) viewHolder).setDetails(workoutExerciseList.get(position));
-        } else {
+        }else if (viewHolder instanceof TimedExerciseViewHolder){
             ((TimedExerciseViewHolder) viewHolder).setDetails(workoutExerciseList.get(position));
         }
     }
 
     @Override
     public int getItemCount() {
-        return workoutExerciseList.size();
+        return workoutExerciseList==null?0:workoutExerciseList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (workoutExerciseList.get(position).getDuration() == null) {
-            return TYPE_REPS;
 
-        } else {
-            return TYPE_TIME;
+        Exercise currentExercise = workoutExerciseList.get(position);
+
+        if (currentExercise==null){
+            return TYPE_DOT;
         }
+        else if (currentExercise.getDuration() != null) {
+            return TYPE_TIME;
+        } else if (currentExercise.getSets() !=null && currentExercise.getReps()!=null){
+            return TYPE_REPS;
+        }
+
+        return -1;
     }
 
-    public void setDataSource(List<Exercise> workoutExerciseList) {
+    public void setData(List<Exercise> workoutExerciseList) {
         this.workoutExerciseList = workoutExerciseList;
-
     }
 
 
-    //
     class RepsExerciseViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.textViewExName)
@@ -90,6 +102,9 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         @BindView(R.id.textViewTargetMuscle)
         TextView textViewTargetMuscle;
+
+        @BindView(R.id.exerciseImageView)
+        ImageView exerciseImageView;
 
 
         RepsExerciseViewHolder(@NonNull View itemView) {
@@ -105,11 +120,16 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             textViewSets.setText(workoutExercise.getSets() + " Sets");
             textViewReps.setText(workoutExercise.getReps() + " Reps");
             textViewTargetMuscle.setText(workoutExercise.getBodyPart());
+
+     /*       Glide.with(context).load(workoutExercise.getPreviewPhotoOneUrl())
+                    .apply(new RequestOptions().placeholder(R.drawable.loading_animation).error(R.drawable.ic_dumbell_grey))
+                    .circleCrop()
+                    .into(exerciseImageView);*/
         }
     }
 
-    //
     class TimedExerciseViewHolder extends RecyclerView.ViewHolder {
+        //todo add load photo and allow user to create timed exercise
         @BindView(R.id.textViewExName)
         TextView textViewExName;
 
@@ -130,12 +150,17 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     exerciseInsideWorkoutCallback.onTimeExerciseClicked(workoutExerciseList.get(getAdapterPosition()),getAdapterPosition()));
         }
 
-
         public void setDetails(Exercise workoutExercise) {
             textViewExName.setText(workoutExercise.getName());
             textViewSets.setText(workoutExercise.getSets() + " Sets");
             textViewTime.setText(workoutExercise.getDuration() + " Secs");
             textViewTargetMuscle.setText(workoutExercise.getBodyPart());
+        }
+    }
+
+    class DotViewHolder extends RecyclerView.ViewHolder {
+        DotViewHolder(@NonNull View itemView) {
+            super(itemView);
         }
     }
 

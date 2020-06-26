@@ -1,8 +1,11 @@
 package ganainy.dev.gymmasters.ui.main;
 
 import ganainy.dev.gymmasters.models.app_models.Exercise;
+import ganainy.dev.gymmasters.models.app_models.Post;
+import ganainy.dev.gymmasters.models.app_models.User;
+import ganainy.dev.gymmasters.models.app_models.Workout;
 
-public interface ProfileCallback {
+public interface ActivityCallback {
     void openUserWorkoutsFragment(String userId,String userName);
     void openUserExercisesFragment(String userId,String userName);
     void openCreateWorkoutFragment();
@@ -10,4 +13,8 @@ public interface ProfileCallback {
     void openExerciseFragment(Exercise exercise);
     void showLoggedUserFollowers(String key,String value);
     void showUsersFollowedByLoggedUser(String key,String value);
+    void openYoutubeFragment(String exerciseName);
+    void onOpenFindUsersActivity(String key,String value);
+    void onOpenPostCommentFragment(Post post);
+    void onOpenWorkoutFragment(Workout workout);
 }

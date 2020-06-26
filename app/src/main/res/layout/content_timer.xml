@@ -4,114 +4,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ganainy.dev.gymmasters.ui.timer.TimerActivity"
-    android:background="@drawable/circular_grey_bordersolid"
-    tools:showIn="@layout/activity_timer">
+    tools:context="ganainy.dev.gymmasters.ui.timer.TimerFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:background="@drawable/circularbordersolid"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/view"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="8dp">
-
-        <Chronometer
-            android:id="@+id/chronometer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/proximanovaregular"
-            android:textSize="50sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_play_timer"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/circularbordersolid"
-        app:layout_constraintBottom_toTopOf="@+id/view2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="122dp"
-        android:layout_height="35dp"
-
-        android:text="Reset timer"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/view"
-        app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view" />
-
-
-    <ImageView
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/ic_reset_timer"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toTopOf="@+id/view" />
-
-
-    <View
-        android:id="@+id/view2"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/circularbordersolid"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/timerTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set time reminder"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/view2"
-        app:layout_constraintEnd_toEndOf="@+id/view2"
-        app:layout_constraintStart_toStartOf="@+id/view2"
-        app:layout_constraintTop_toTopOf="@+id/view2" />
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/proximanovaregular"
+        android:textSize="50sp"
+        tools:text="00:55"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
     <ImageView
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:id="@+id/playImageView"
+        style="?android:borderlessButtonStyle"
+        android:layout_width="124dp"
+        android:layout_height="124dp"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_play_timer"
+        app:layout_constraintBottom_toTopOf="@+id/setTimerButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timerTextView"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <Button
+        android:id="@+id/setTimerButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/ic_megaphone_timer"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toTopOf="@+id/view2" />
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/circular_grey_bordersolid"
+        android:text="@string/set_timer"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/resetTimerButton"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/resetTimerButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:text="@string/reset_timer"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/setTimerButton" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

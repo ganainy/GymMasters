@@ -21,8 +21,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
-import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeCallback;
-import ganainy.dev.gymmasters.utils.ApplicationViewModelFactory;
+import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 
 public class ExerciseFragment extends LogFragment  {
 
@@ -82,8 +81,8 @@ public class ExerciseFragment extends LogFragment  {
     }
 
     private void openYoutubeFragment() {
-        YoutubeCallback youtubeCallback = (YoutubeCallback) requireActivity();
-        youtubeCallback.openYoutubeFragment(mViewModel.getExercise().getName());
+        ActivityCallback activityCallback = (ActivityCallback) requireActivity();
+        activityCallback.openYoutubeFragment(mViewModel.getExercise().getName());
     }
 
     @OnClick(R.id.mechanicQuestionMark)
@@ -99,7 +98,7 @@ public class ExerciseFragment extends LogFragment  {
     private void showConfirmDeleteDialog() {
         new AlertDialog.Builder(requireActivity())
                 .setTitle(R.string.delete_exercise_q)
-                .setMessage(R.string.confirm_delete)
+                .setMessage(R.string.confirm_delete_exercise)
                 .setIcon(R.drawable.ic_delete_black_24dp)
                 .setPositiveButton(R.string.delete, (dialog, which) -> mViewModel.deleteExercise())
                 .setNegativeButton(R.string.cancel, null)

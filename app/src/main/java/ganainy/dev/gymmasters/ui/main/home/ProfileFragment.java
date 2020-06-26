@@ -1,6 +1,5 @@
 package ganainy.dev.gymmasters.ui.main.home;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -25,9 +23,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.User;
-import ganainy.dev.gymmasters.ui.findUser.FindUsersActivity;
-import ganainy.dev.gymmasters.ui.main.MainActivity;
-import ganainy.dev.gymmasters.ui.main.ProfileCallback;
+import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 import ganainy.dev.gymmasters.utils.AuthUtils;
 
 import butterknife.BindView;
@@ -90,39 +86,39 @@ public class ProfileFragment extends Fragment {
 
     @OnClick(R.id.createWorkout)
     void createWorkout() {
-        ProfileCallback profileCallback = (ProfileCallback) requireActivity();
-        profileCallback.openCreateWorkoutFragment();
+        ActivityCallback activityCallback = (ActivityCallback) requireActivity();
+        activityCallback.openCreateWorkoutFragment();
     }
 
     @OnClick(R.id.createExercise)
     void createExercise() {
-        ProfileCallback profileCallback = (ProfileCallback) requireActivity();
-        profileCallback.openCreateExerciseFragment();
+        ActivityCallback activityCallback = (ActivityCallback) requireActivity();
+        activityCallback.openCreateExerciseFragment();
     }
 
     @OnClick(R.id.viewLoggedUserExercises)
     void viewLoggedUserExercises() {
-        ProfileCallback profileCallback = (ProfileCallback) requireActivity();
-        profileCallback.openUserExercisesFragment(AuthUtils.getLoggedUserId(requireContext()),null);
+        ActivityCallback activityCallback = (ActivityCallback) requireActivity();
+        activityCallback.openUserExercisesFragment(AuthUtils.getLoggedUserId(requireContext()),null);
     }
 
     @OnClick(R.id.viewLoggedUserWorkouts)
     void viewWorkouts() {
-        ProfileCallback profileCallback = (ProfileCallback) requireActivity();
-        profileCallback.openUserWorkoutsFragment(AuthUtils.getLoggedUserId(requireContext()),null);
+        ActivityCallback activityCallback = (ActivityCallback) requireActivity();
+        activityCallback.openUserWorkoutsFragment(AuthUtils.getLoggedUserId(requireContext()),null);
     }
 
 
     @OnClick(R.id.viewMyFollowersButton)
     void onViewMyFollowersClick() {
-        ProfileCallback profileCallback = (ProfileCallback) requireActivity();
-        profileCallback.showLoggedUserFollowers(SOURCE, FOLLOWERS);
+        ActivityCallback activityCallback = (ActivityCallback) requireActivity();
+        activityCallback.showLoggedUserFollowers(SOURCE, FOLLOWERS);
     }
 
     @OnClick(R.id.viewUsersIamFollowingButton)
     void onViewUsersIamFollowingClick() {
-        ProfileCallback profileCallback = (ProfileCallback) requireActivity();
-        profileCallback.showUsersFollowedByLoggedUser(SOURCE, FOLLOWING);
+        ActivityCallback activityCallback = (ActivityCallback) requireActivity();
+        activityCallback.showUsersFollowedByLoggedUser(SOURCE, FOLLOWING);
     }
 
 

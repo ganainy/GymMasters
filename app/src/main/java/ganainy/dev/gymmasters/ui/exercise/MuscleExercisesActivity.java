@@ -1,6 +1,5 @@
 package ganainy.dev.gymmasters.ui.exercise;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,7 +12,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import butterknife.BindView;
@@ -22,14 +20,13 @@ import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.shared_adapters.ExercisesAdapter;
 import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
-import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeCallback;
 import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeFragment;
 import ganainy.dev.gymmasters.utils.MiscellaneousUtils;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
 import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.SELECTED_MUSCLE;
 
-public class MuscleExercisesActivity extends AppCompatActivity implements YoutubeCallback {
+public class MuscleExercisesActivity extends AppCompatActivity {
     private static final String TAG = "ExercisesActivity";
     public static final String EXERCISE = "exercise";
     ExercisesViewModel exercisesViewModel;
@@ -148,10 +145,4 @@ public class MuscleExercisesActivity extends AppCompatActivity implements Youtub
         });
     }
 
-    @Override
-    public void openYoutubeFragment(String exerciseName) {
-        YoutubeFragment youtubeFragment = YoutubeFragment.newInstance(exerciseName);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.container, youtubeFragment).addToBackStack("youtubeFragment").commit();
-    }
 }

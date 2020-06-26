@@ -17,14 +17,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.shimmer.ShimmerFrameLayout;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.shared_adapters.WorkoutAdapter;
-import ganainy.dev.gymmasters.ui.specificWorkout.SpecificWorkoutActivity;
+import ganainy.dev.gymmasters.ui.main.ActivityCallback;
+import ganainy.dev.gymmasters.ui.workout.WorkoutFragment;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
 import static ganainy.dev.gymmasters.ui.main.home.ProfileFragment.USER_ID;
@@ -129,9 +128,7 @@ public class UserWorkoutsFragment extends Fragment {
     private void setupRecycler(View view) {
         recyclerView = view.findViewById(R.id.workoutRecyclerView);
         workoutAdapter = new WorkoutAdapter(requireContext().getApplicationContext(), clickedWorkout -> {
-            Intent intent = new Intent(requireContext(), SpecificWorkoutActivity.class);
-            intent.putExtra(WORKOUT, clickedWorkout);
-            startActivity(intent);
+            ((ActivityCallback)requireActivity()).onOpenWorkoutFragment(clickedWorkout);
         });
         recyclerView.setAdapter(workoutAdapter);
     }
