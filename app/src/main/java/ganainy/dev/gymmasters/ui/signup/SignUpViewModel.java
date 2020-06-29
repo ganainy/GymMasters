@@ -32,7 +32,10 @@ import com.google.firebase.storage.StorageReference;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.utils.Event;
+import ganainy.dev.gymmasters.utils.MiscellaneousUtils;
 import ganainy.dev.gymmasters.utils.SharedPrefUtils;
+
+import static ganainy.dev.gymmasters.ui.main.home.ProfileViewModel.USER_IMAGES;
 
 public class SignUpViewModel extends ViewModel {
 
@@ -120,7 +123,8 @@ public class SignUpViewModel extends ViewModel {
             //uploadImage to firebase storage then upload data to realtime db
             final User newUser = new User(uid, username, email);
 
-            final StorageReference imagesRef = FirebaseStorage.getInstance().getReference().child("images/" + imageUri.getLastPathSegment());
+            final StorageReference imagesRef = FirebaseStorage.getInstance().getReference()
+                    .child(USER_IMAGES + MiscellaneousUtils.formatUriAsTimeStampedString(imageUri));
             imagesRef.putFile(imageUri).addOnSuccessListener(taskSnapshot ->
                     {
 

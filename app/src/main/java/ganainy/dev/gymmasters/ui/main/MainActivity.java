@@ -1,11 +1,7 @@
 package ganainy.dev.gymmasters.ui.main;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -13,7 +9,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
@@ -26,10 +21,10 @@ import ganainy.dev.gymmasters.ui.createExercise.CreateExerciseFragment;
 import ganainy.dev.gymmasters.ui.createWorkout.CreateWorkoutFragment;
 import ganainy.dev.gymmasters.ui.findUser.FindUsersActivity;
 import ganainy.dev.gymmasters.ui.main.home.ProfileFragment;
+import ganainy.dev.gymmasters.ui.map.MapsActivity;
 import ganainy.dev.gymmasters.ui.posts.postComments.PostCommentsFragment;
 import ganainy.dev.gymmasters.ui.userExercises.UserExercisesFragment;
 import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.UserWorkoutsFragment;
-import ganainy.dev.gymmasters.ui.map.MapsActivity;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
 import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeFragment;
@@ -45,12 +40,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -126,44 +115,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback 
 
     private void handleMapClick() {
         drawerLayout.closeDrawers();
-        //check permissions before opening map activity
-        //todo move permission check to map activity
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-        } else {
-            Dexter.withActivity(this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                    .withListener(new PermissionListener() {
-                        @Override
-                        public void onPermissionGranted(PermissionGrantedResponse response) {
-                            startActivity(new Intent(getApplicationContext(), MapsActivity.class));
-                        }
-
-                        @Override
-                        public void onPermissionDenied(PermissionDeniedResponse response) {
-                            if (response.isPermanentlyDenied()) {
-                                //show alert dialog with custom view
-                                new AlertDialog.Builder(MainActivity.this)
-                                        .setTitle(R.string.permission_required)
-                                        .setMessage(R.string.permanently_denied_permission)
-                                        .setIcon(R.drawable.ic_location_on_black_24dp)
-                                        .setPositiveButton(R.string.change, (dialog, which) -> {
-                                            Intent i = new Intent();
-                                            i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                            i.setData(Uri.fromParts("package", getPackageName(), null));
-                                        })
-                                        .setNegativeButton(R.string.mcancel, null)
-                                        .show();
-                            } else {
-                                Toast.makeText(MainActivity.this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                            token.continuePermissionRequest();
-                        }
-                    }).check();
-        }
+        startActivity(new Intent(this, MapsActivity.class));
     }
 
     private void handleSignOutClick() {

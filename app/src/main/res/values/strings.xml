@@ -163,6 +163,26 @@
     <string name="device_volume_is_less_than_50_consider_increasing_it_to_hear_reminder_clearly">Device volume is less than 50%, consider increasing it to hear reminder clearly</string>
     <string name="set">Set</string>
     <string name="choose_timer_duration">Choose timer duration</string>
+    <string name="unknown">Unknown</string>
+    <string name="open_right_now">Open right now</string>
+    <string name="closed_right_now">Closed right now</string>
+    <string name="gym_rate">%1$s /5</string>
+    <string name="location_rationale">We need your location to be able to find a gym near your location</string>
 
 
+<!--debug-->
+    <string name="perm_granted">Permission granted</string>
+    <string name="rat_accepted">rationale accpeted</string>
+    <string name="rat_denied">rational denied</string>
+    <string name="req_perm">Requesting permission</string>
+    <string name="perm_denied">Permission denied</string>
+    <string name="all_good_get_location">All good get location</string>
+    <string name="perm_permanently_denied_go_to_settings">Permanantely denied, Go to setting</string>
+    <string name="return_from_settings">Return from settings</string>
+    <string name="please_enable_gps">Please enable GPS so we can show you a gym near your location</string>
+    <string name="couldnt_find_nearby_gym">Sorry , couldn\'t find any nearby gyms</string>
+    <string name="find_nearby_gym">Find nearby gym</string>
+    <string name="find_gyms_nearby_your_location_using_the_button_or_search_for_any_place_and_find_gyms_near_that_place_using_the_search_bar">Find gyms nearby your location using the button or search for any place and find gyms near that place using the search bar!</string>
+    <string name="profile_image_updated_successfully">Profile image updated successfully</string>
+    <string name="cant_get_location_search_instead">Can\'t get your location but you can still search for a place and find gyms near it.</string>
 </resources>

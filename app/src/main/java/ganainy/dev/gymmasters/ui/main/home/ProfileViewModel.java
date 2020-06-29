@@ -1,8 +1,11 @@
 package ganainy.dev.gymmasters.ui.main.home;
 
+import android.app.Application;
+import android.net.Uri;
 import android.util.Pair;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -12,10 +15,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import ganainy.dev.gymmasters.models.app_models.User;
+import ganainy.dev.gymmasters.utils.AuthUtils;
+import ganainy.dev.gymmasters.utils.Event;
+import ganainy.dev.gymmasters.utils.MiscellaneousUtils;
+import ganainy.dev.gymmasters.utils.NetworkState;
+
+import static ganainy.dev.gymmasters.ui.createWorkout.CreateWorkoutViewModel.WORKOUT_IMAGES;
 
 
-public class ProfileViewModel extends ViewModel {
+public class ProfileViewModel extends AndroidViewModel {
 
     private static final String TAG = "MainFragmentHomeViewMod";
     public static final String FOLLOWERS_UID = "followersUID";
@@ -23,13 +38,37 @@ public class ProfileViewModel extends ViewModel {
     public static final String RATINGS = "Ratings";
     public static final String FOLLOWING_UID = "followingUID";
     public static final String ABOUT_ME = "about_me";
+    public static final String USER_IMAGES = "userImages/";
+    public static final String PHOTO = "photo";
     private long sumRatings, sumRaters;
+    private Uri mImageUri;
 
+    public LiveData<Uri> getImageUriLiveData() {
+        return imageUriLiveData;
+    }
+
+    private MutableLiveData<Uri> imageUriLiveData = new MutableLiveData<>();
+
+    public LiveData<Event<Boolean>> getImageUploadSuccessLiveData() {
+        return imageUploadSuccessLiveData;
+    }
+
+    private MutableLiveData<Event<Boolean>> imageUploadSuccessLiveData = new MutableLiveData<>();
     private MutableLiveData<User> userLiveData = new MutableLiveData<>();
     private MutableLiveData<String> followersCountLiveData = new MutableLiveData<>();
     private MutableLiveData<Pair<Boolean,String>> updateAboutMe = new MutableLiveData<>();
     private MutableLiveData<String> followingCountLiveData = new MutableLiveData<>();
     private MutableLiveData<Long> ratingAverageLiveData = new MutableLiveData<>();
+
+    public ProfileViewModel(@NonNull Application application) {
+        super(application);
+    }
+
+    public LiveData<Boolean> getUploadingStateLiveData() {
+        return uploadingStateLiveData;
+    }
+
+    private MutableLiveData<Boolean> uploadingStateLiveData = new MutableLiveData<>();
 
 
     public LiveData<Long> getRatingAverageLiveData() {
@@ -162,6 +201,41 @@ public class ProfileViewModel extends ViewModel {
 
             }
         });
+    }
+
+    public void setImageUri(Uri mImageUri) {
+        this.mImageUri = mImageUri;
+        imageUriLiveData.setValue(mImageUri);
+        uploadImage(mImageUri);
+    }
+
+    private void uploadImage(Uri imageUri) {
+            uploadingStateLiveData.setValue(true);
+
+            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+            String photoPath = USER_IMAGES + MiscellaneousUtils.formatUriAsTimeStampedString(imageUri);
+            final StorageReference imagesRef = storageRef.child(photoPath);
+            imagesRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+                imagesRef.getDownloadUrl().addOnSuccessListener(photoDownloadUrl->{
+                   //save with user
+                    Map<String, Object> updates = new HashMap<>();
+                    updates.put(PHOTO, photoDownloadUrl.toString());
+
+                    FirebaseDatabase.getInstance()
+                            .getReference()
+                            .child(USERS)
+                            .child(AuthUtils.getLoggedUserId(getApplication()))
+                            .updateChildren(updates).addOnSuccessListener(aVoid -> {
+                        imageUploadSuccessLiveData.setValue(new Event<>(true));
+                    }).addOnFailureListener(e->{
+                        uploadingStateLiveData.setValue(false);
+                    });
+                }).addOnFailureListener(e->{
+                    uploadingStateLiveData.setValue(false);
+                });
+            }).addOnFailureListener(e -> {
+                uploadingStateLiveData.setValue(false);
+            });
     }
 
 }

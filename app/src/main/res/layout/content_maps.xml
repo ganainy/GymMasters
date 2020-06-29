@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ganainy.dev.gymmasters.ui.map.MapsActivity"
+    tools:context="ganainy.dev.gymmasters.ui.map.temp"
     tools:showIn="@layout/activity_maps">
 
     <fragment
@@ -67,19 +67,35 @@
     </com.skyfishjy.library.RippleBackground>
 
     <Button
+        android:id="@+id/button_find_nearby_gym"
         android:layout_width="wrap_content"
-        android:id="@+id/button2"
-        android:background="@color/green"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:paddingHorizontal="16dp"
-        android:fontFamily="@font/proximanovaregular"
-        android:text="Find nearby gym"
-        android:textSize="18sp"
+        android:background="@drawable/circular_grey_bordersolid"
+        android:drawableStart="@drawable/ic_search_black"
+        android:drawablePadding="8dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:text="@string/find_nearby_gym"
         android:textAllCaps="false"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <!--hint for first time users-->
+    <include
+        android:id="@+id/hint_layout"
+        layout="@layout/map_hint"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:layout_margin="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_find_nearby_gym"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchBar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

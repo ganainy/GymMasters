@@ -1,5 +1,6 @@
 package ganainy.dev.gymmasters.ui.main.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -8,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -23,6 +26,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.User;
+import ganainy.dev.gymmasters.ui.login.LoginActivity;
 import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 import ganainy.dev.gymmasters.utils.AuthUtils;
 
@@ -38,6 +42,9 @@ import static ganainy.dev.gymmasters.ui.main.MainActivity.SOURCE;
 public class ProfileFragment extends Fragment {
     private static final String TAG = "MainFragmentHome";
     public static final String USER_ID = "userId";
+    private static final int PICK_IMAGE = 101;
+
+    private Handler mHandler =new Handler();
 
     @BindView(R.id.viewLoggedUserExercises)
     Button viewMyExercisesButton;
@@ -76,6 +83,9 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.aboutUserContentShimmer)
     ShimmerFrameLayout aboutUserContentShimmer;
 
+    @BindView(R.id.progressBar_upload_image)
+    ProgressBar uploadImageProgressBar;
+
 
     private ProfileViewModel mViewModel;
 
@@ -108,7 +118,6 @@ public class ProfileFragment extends Fragment {
         activityCallback.openUserWorkoutsFragment(AuthUtils.getLoggedUserId(requireContext()),null);
     }
 
-
     @OnClick(R.id.viewMyFollowersButton)
     void onViewMyFollowersClick() {
         ActivityCallback activityCallback = (ActivityCallback) requireActivity();
@@ -121,13 +130,22 @@ public class ProfileFragment extends Fragment {
         activityCallback.showUsersFollowedByLoggedUser(SOURCE, FOLLOWING);
     }
 
+    @OnClick(R.id.image_button_change_picture)
+    void onChangeProfileImageClick() {
+        openImageChooser();
+    }
+
+    @OnClick(R.id.edit)
+    public void onEditAboutMeClicked() {
+        showAlertDialog();
+    }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -167,6 +185,38 @@ public class ProfileFragment extends Fragment {
                 //update failed, keep old about me
             }
         });
+
+        mViewModel.getImageUriLiveData().observe(getViewLifecycleOwner(),imageUri->{
+            mHandler.postDelayed(() -> {
+                profileImage.setImageURI(imageUri);
+            },100);
+        });
+
+        mViewModel.getUploadingStateLiveData().observe(getViewLifecycleOwner(),isUploading->{
+            if (isUploading){
+                uploadImageProgressBar.setVisibility(View.VISIBLE);
+
+            }else {
+                uploadImageProgressBar.setVisibility(View.GONE);
+            }
+        });
+
+        mViewModel.getImageUploadSuccessLiveData().observe(getViewLifecycleOwner(),isUploadProfileImageSuccessfullEvent->{
+            Boolean isImageUploadSuccessful = isUploadProfileImageSuccessfullEvent.getContentIfNotHandled();
+            if (isImageUploadSuccessful!=null && isImageUploadSuccessful){
+                //image upload successfully
+                Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.profile_image_updated_successfully),Toast.LENGTH_LONG)
+                        .show();
+            }else if (isImageUploadSuccessful != null){
+                //error uploading image
+                Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.something_went_wrong),Toast.LENGTH_LONG)
+                        .show();
+            }
+        });
     }
 
     private void setupUi(User user) {
@@ -203,11 +253,13 @@ public class ProfileFragment extends Fragment {
         aboutUserContentShimmer.setVisibility(View.INVISIBLE);
     }
 
-
-    @OnClick(R.id.edit)
-    public void onEditAboutMeClicked() {
-        showAlertDialog();
+    private void openImageChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
     }
+
 
     private void showAlertDialog() {
         final View alertDialogView = getLayoutInflater().inflate(R.layout.edit_view, null);
@@ -245,5 +297,16 @@ public class ProfileFragment extends Fragment {
                 .apply(new RequestOptions().placeholder(shimmerDrawable).error(R.drawable.anonymous_profile))
                 .into(profileImage);
         }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data != null && requestCode == PICK_IMAGE) {
+            mViewModel.setImageUri(data.getData());
+        }
+
+    }
 
 }

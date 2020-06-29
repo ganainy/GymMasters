@@ -155,6 +155,7 @@ public class WorkoutFragment extends Fragment {
 
 
     private void deleteWorkout() {
+        //todo move to view model and add success/failure listeners of db operations
         //remove exercise data from db
         final String workoutId = workout.getId();
         final String photoLink = workout.getPhotoLink();

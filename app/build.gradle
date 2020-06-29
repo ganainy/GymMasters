@@ -77,8 +77,8 @@ dependencies {
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:10.0.5'
     //google sign in
     implementation 'com.google.android.gms:play-services-auth:18.0.0'
-    //dexter for runtime permission
-    implementation 'com.karumi:dexter:5.0.0'
+    //easy permissions
+    implementation 'pub.devrel:easypermissions:3.0.0'
     //material search bar
     implementation 'com.github.mancj:MaterialSearchBar:0.8.2'
     //places
