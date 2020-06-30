@@ -227,6 +227,7 @@ public class ProfileViewModel extends AndroidViewModel {
                             .child(AuthUtils.getLoggedUserId(getApplication()))
                             .updateChildren(updates).addOnSuccessListener(aVoid -> {
                         imageUploadSuccessLiveData.setValue(new Event<>(true));
+                        uploadingStateLiveData.setValue(false);
                     }).addOnFailureListener(e->{
                         uploadingStateLiveData.setValue(false);
                     });

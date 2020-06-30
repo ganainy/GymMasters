@@ -1,13 +1,17 @@
 package ganainy.dev.gymmasters.ui.exercise;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,15 +22,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
+import ganainy.dev.gymmasters.shared_adapters.ExerciseCallback;
 import ganainy.dev.gymmasters.shared_adapters.ExercisesAdapter;
+import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
-import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeFragment;
 import ganainy.dev.gymmasters.utils.MiscellaneousUtils;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
 import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment.SELECTED_MUSCLE;
 
-public class MuscleExercisesActivity extends AppCompatActivity {
+public class MuscleFragment extends Fragment {
     private static final String TAG = "ExercisesActivity";
     public static final String EXERCISE = "exercise";
     ExercisesViewModel exercisesViewModel;
@@ -49,30 +54,45 @@ public class MuscleExercisesActivity extends AppCompatActivity {
 
     private ExercisesAdapter exercisesAdapter;
 
+    public static MuscleFragment newInstance(String selectedMuscle){
+        MuscleFragment muscleFragment=new MuscleFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString(SELECTED_MUSCLE,selectedMuscle);
+        muscleFragment.setArguments(bundle);
+        return muscleFragment;
+    }
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exercises);
-        ButterKnife.bind(this);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.muscle_fragment, container, false);
+        ButterKnife.bind(this, view);
         setupRecycler();
         setupSearchView();
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         exercisesViewModel = new ViewModelProvider(this).get(ExercisesViewModel.class);
 
-       if (getIntent().hasExtra(SELECTED_MUSCLE)) {
-            String selectedMuscle = getIntent().getStringExtra(SELECTED_MUSCLE);
+        if (getArguments().getString(SELECTED_MUSCLE)!=null){
+            String selectedMuscle = getArguments().getString(SELECTED_MUSCLE);
             setTabHeaderImage(selectedMuscle);
             exercisesViewModel.getSelectedMuscleExercises(selectedMuscle);
         }
 
-        exercisesViewModel.getExerciseListLiveData().observe(this, exercises -> {
+        exercisesViewModel.getExerciseListLiveData().observe(getViewLifecycleOwner(), exercises -> {
             exercisesAdapter.setData(exercises);
             exercisesAdapter.notifyDataSetChanged();
         });
 
-        exercisesViewModel.getNetworkStateLiveData().observe(this, this::handleNetworkStateUi);
+        exercisesViewModel.getNetworkStateLiveData().observe(getViewLifecycleOwner(), this::handleNetworkStateUi);
     }
+
+
 
     private void handleNetworkStateUi(NetworkState networkState) {
         switch (networkState){
@@ -104,28 +124,20 @@ public class MuscleExercisesActivity extends AppCompatActivity {
     }
 
 
-
-
-
     /**
      * set header image based on selected muscle from previous fragment
      */
     private void setTabHeaderImage(String selectedMuscle) {
-        collapsingToolbarImage.setImageResource(MiscellaneousUtils.getImageId(this, selectedMuscle));
+        collapsingToolbarImage.setImageResource(MiscellaneousUtils.getImageId(requireActivity(), selectedMuscle));
     }
-
 
     private void setupRecycler() {
 
         //handle click of certain exercise
-        exercisesAdapter = new ExercisesAdapter(this, this::openSelectedExerciseFragment);
+        exercisesAdapter = new ExercisesAdapter(requireActivity(), clickedExercise -> {
+            ((ActivityCallback) requireActivity()).openExerciseFragment(clickedExercise);
+        });
         exercisesRecyclerView.setAdapter(exercisesAdapter);
-    }
-
-    private void openSelectedExerciseFragment(Exercise exercise) {
-        ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exercise);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.container, exerciseFragment).addToBackStack("exerciseFragment").commit();
     }
 
     private void setupSearchView() {

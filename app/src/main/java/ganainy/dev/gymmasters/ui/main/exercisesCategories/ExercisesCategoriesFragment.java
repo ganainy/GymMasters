@@ -18,9 +18,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import ganainy.dev.gymmasters.R;
-import ganainy.dev.gymmasters.ui.exercise.MuscleExercisesActivity;
+import ganainy.dev.gymmasters.ui.exercise.MuscleFragment;
 
 import butterknife.ButterKnife;
+import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,9 +62,7 @@ public class ExercisesCategoriesFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         CategoriesAdapter categoriesAdapter = new CategoriesAdapter(selectedCategory -> {
-            Intent intent = new Intent(getActivity(), MuscleExercisesActivity.class);
-            intent.putExtra(SELECTED_MUSCLE, selectedCategory);
-            startActivity(intent);
+            ((ActivityCallback) requireActivity()).onOpenMuscleFragment(selectedCategory);
         });
         categoriesAdapter.setData(getCategoriesList());
 

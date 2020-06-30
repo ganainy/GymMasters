@@ -184,6 +184,20 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 postCallback.onPostComment(post, 0);
             });
 
+            exerciseNameTextView.setOnClickListener(v->
+                    postCallback.onExerciseClicked(exercise,getAdapterPosition()));
+
+            exerciseOneImageView.setOnClickListener(v->
+                    postCallback.onExerciseClicked(exercise,getAdapterPosition()));
+
+            exerciseTwoImageView.setOnClickListener(v->
+                    postCallback.onExerciseClicked(exercise,getAdapterPosition()));
+
+            profileImageView.setOnClickListener(v->
+                    postCallback.onUserClicked(exercise.getCreatorId()));
+
+            userNameTextView.setOnClickListener(v->
+                    postCallback.onUserClicked(exercise.getCreatorId()));
         }
     }
 
@@ -298,6 +312,17 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 postCallback.onPostComment(post, 1);
             });
 
+            workoutNameTextView.setOnClickListener(v->
+                    postCallback.onWorkoutClicked(workout,getAdapterPosition()));
+
+            workoutImageView.setOnClickListener(v->
+                    postCallback.onWorkoutClicked(workout,getAdapterPosition()));
+
+            profileImageView.setOnClickListener(v->
+                    postCallback.onUserClicked(workout.getCreatorId()));
+
+            userNameTextView.setOnClickListener(v->
+                    postCallback.onUserClicked(workout.getCreatorId()));
         }
     }
 }

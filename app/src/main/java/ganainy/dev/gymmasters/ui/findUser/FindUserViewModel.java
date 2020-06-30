@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
@@ -18,17 +19,16 @@ import com.google.firebase.database.ValueEventListener;
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.utils.AuthUtils;
 
-public class FindUserViewModel extends ViewModel {
+public class FindUserViewModel extends AndroidViewModel {
 
     public static final String FOLLOWING_UID = "followingUID";
     public static final String USERS = "users";
     public static final String ID = "id";
     public static final String FOLLOWERS_UID = "followersUID";
     public static final String RATINGS = "Ratings";
-    Application app;
+
     private long sumRatings;
     private int sumRaters;
-
 
     private MutableLiveData<User> userLiveData =new MutableLiveData<>();
     private MutableLiveData<User> userWithRatingLiveData =new MutableLiveData<>();
@@ -40,40 +40,41 @@ public class FindUserViewModel extends ViewModel {
     LiveData<User> userWithRatingTransformation;
     LiveData<User> userWithRatingAndFollowerCountTransformation;
 
-    public FindUserViewModel(Application app) {
-        this.app = app;
-
-        userWithRatingTransformation = Transformations.switchMap(userLiveData, user -> {
-                getRating(user);
-            return userWithRatingLiveData;
-        });
-
-        userWithRatingAndFollowerCountTransformation=Transformations.switchMap(userWithRatingLiveData,userWithRating->{
-                getFollowersCount(userWithRating);
-            return userWithRatingAndFollowerCountLiveData;
-        });
-
-        followingUserTransformation =Transformations.switchMap(followingIdLiveData, followingId->{
-            getFollowingUserById(followingId);
-            return userLiveData;
-        });
-
-        followerUserTransformation =Transformations.switchMap(followerIdLiveData, followerId->{
-            getFollowerDataById(followerId);
-            return userLiveData;
-        });
-
-    }
 
 
     private MutableLiveData<String> followingIdLiveData =new MutableLiveData<>();
     private MutableLiveData<String> followerIdLiveData =new MutableLiveData<>();
     private MutableLiveData<NoUsersType> noUsersLiveData=new MutableLiveData<>();
 
+    public FindUserViewModel(@NonNull Application application) {
+        super(application);
 
-   public void loadFollowingId() {
+            userWithRatingTransformation = Transformations.switchMap(userLiveData, user -> {
+                getRating(user);
+                return userWithRatingLiveData;
+            });
+
+            userWithRatingAndFollowerCountTransformation=Transformations.switchMap(userWithRatingLiveData,userWithRating->{
+                getFollowersCount(userWithRating);
+                return userWithRatingAndFollowerCountLiveData;
+            });
+
+            followingUserTransformation =Transformations.switchMap(followingIdLiveData, followingId->{
+                getFollowingUserById(followingId);
+                return userLiveData;
+            });
+
+            followerUserTransformation =Transformations.switchMap(followerIdLiveData, followerId->{
+                getFollowerDataById(followerId);
+                return userLiveData;
+            });
+
+    }
+
+
+    public void loadFollowingId() {
        loadingLiveData.setValue(true);
-        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child(USERS).child(AuthUtils.getLoggedUserId(app));
+        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child(USERS).child(AuthUtils.getLoggedUserId(getApplication()));
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -138,7 +139,7 @@ public class FindUserViewModel extends ViewModel {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    if (ds.child(ID).getValue().equals(AuthUtils.getLoggedUserId(app))) {
+                    if (ds.child(ID).getValue().equals(AuthUtils.getLoggedUserId(getApplication()))) {
                         //don't show this user in list since it's the logged in user
                     } else {
                         User user = ds.getValue(User.class);
@@ -158,7 +159,7 @@ public class FindUserViewModel extends ViewModel {
 
    public void loadFollowersIds() {
        loadingLiveData.setValue(true);
-        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child(USERS).child(AuthUtils.getLoggedUserId(app));
+        final DatabaseReference users = FirebaseDatabase.getInstance().getReference().child(USERS).child(AuthUtils.getLoggedUserId(getApplication()));
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

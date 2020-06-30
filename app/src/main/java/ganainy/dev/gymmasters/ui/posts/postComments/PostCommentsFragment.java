@@ -97,7 +97,7 @@ public class PostCommentsFragment extends Fragment {
         postCommentsAdapter = new PostCommentsAdapter(getActivity().getApplication(), new PostCallback() {
             @Override
             public void onExerciseClicked(Exercise exercise, Integer adapterPosition) {
-
+                //todo
             }
 
             @Override
@@ -106,7 +106,7 @@ public class PostCommentsFragment extends Fragment {
             }
 
             @Override
-            public void onUserClicked(User user) {
+            public void onUserClicked(String postCreatorId) {
 
             }
 
@@ -151,6 +151,7 @@ public class PostCommentsFragment extends Fragment {
         shake.setInterpolator(new CycleInterpolator(7));
         return shake;
     }
+
 
 
 }

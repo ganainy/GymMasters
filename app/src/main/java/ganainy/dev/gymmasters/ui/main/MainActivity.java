@@ -2,6 +2,7 @@ package ganainy.dev.gymmasters.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -11,17 +12,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Post;
+import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.ui.createExercise.CreateExerciseFragment;
 import ganainy.dev.gymmasters.ui.createWorkout.CreateWorkoutFragment;
-import ganainy.dev.gymmasters.ui.findUser.FindUsersActivity;
+import ganainy.dev.gymmasters.ui.exercise.MuscleFragment;
+import ganainy.dev.gymmasters.ui.findUser.FindUserFragment;
 import ganainy.dev.gymmasters.ui.main.home.ProfileFragment;
 import ganainy.dev.gymmasters.ui.map.MapsActivity;
+import ganainy.dev.gymmasters.ui.posts.PostsFragment;
 import ganainy.dev.gymmasters.ui.posts.postComments.PostCommentsFragment;
 import ganainy.dev.gymmasters.ui.userExercises.UserExercisesFragment;
 import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.UserWorkoutsFragment;
@@ -29,6 +34,7 @@ import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
 import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeFragment;
 import ganainy.dev.gymmasters.ui.login.LoginActivity;
+import ganainy.dev.gymmasters.ui.userInfo.UserFragment;
 import ganainy.dev.gymmasters.ui.workout.WorkoutFragment;
 import ganainy.dev.gymmasters.utils.AuthUtils;
 import ganainy.dev.gymmasters.utils.NetworkChangeReceiver;
@@ -44,6 +50,8 @@ import com.google.firebase.auth.FirebaseUser;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ganainy.dev.gymmasters.utils.NetworkUtil;
+
+import static ganainy.dev.gymmasters.ui.findUser.FindUserFragment.ALL;
 
 public class MainActivity extends AppCompatActivity implements ActivityCallback {
     public static final String SOURCE = "source";
@@ -153,9 +161,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback 
 
     private void handleDiscoverClick() {
         drawerLayout.closeDrawers();
-        Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
-        i.putExtra(SOURCE, FIND);
-        startActivity(i);
+        openFindUserFragment(ALL);
     }
 
     private void handleProfileClick() {
@@ -243,8 +249,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback 
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if (getSupportFragmentManager().getBackStackEntryCount() != 0) {
-            /*if there is fragment in back stack close it only*/
+            //todo find cleaner way to show update in comments count when going back from postcommentsfragment to postsfragment
+            Fragment fragment =getSupportFragmentManager().findFragmentByTag("postCommentsFragment");
+            if (fragment!=null){
+                /*we clicked back button on PostCommentsFragment, refresh posts so if logged user added comment it would show on comment count*/
+                PostsFragment postsFragment =
+                        (PostsFragment)getSupportFragmentManager().findFragmentByTag("android:switcher:" + view_pager_main.getId() + ":" + 0);
+                if (postsFragment!=null)postsFragment.refreshPosts();
+            }
             super.onBackPressed();
+
+
         } else {
             new AlertDialog.Builder(this)
                     .setMessage(R.string.are_you_sure_exit)
@@ -307,16 +322,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback 
 
     @Override
     public void showLoggedUserFollowers(String key, String value) {
-        Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
-        i.putExtra(key, value);
-        startActivity(i);
+        openFindUserFragment(FOLLOWERS);
     }
 
     @Override
     public void showUsersFollowedByLoggedUser(String key, String value) {
-        Intent i = new Intent(MainActivity.this, FindUsersActivity.class);
-        i.putExtra(key, value);
-        startActivity(i);
+        openFindUserFragment(FOLLOWING);
     }
 
     @Override
@@ -327,17 +338,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback 
     }
 
     @Override
-    public void onOpenFindUsersActivity(String key, String value) {
-        Intent i = new Intent(this, FindUsersActivity.class);
-        i.putExtra(key, value);
-        startActivity(i);
+    public void onOpenFindUserFragment(String filterType) {
+        openFindUserFragment(filterType);
+    }
+
+    private void openFindUserFragment(String value) {
+        FindUserFragment findUserFragment = FindUserFragment.newInstance(value);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, findUserFragment).addToBackStack("findUserFragment").commit();
     }
 
     @Override
     public void onOpenPostCommentFragment(Post post) {
         PostCommentsFragment postCommentsFragment = PostCommentsFragment.newInstance(post);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.container, postCommentsFragment).addToBackStack("postCommentsFragment").commit();
+        fragmentTransaction.add(R.id.container, postCommentsFragment,"postCommentsFragment").addToBackStack("postCommentsFragment").commit();
     }
 
     @Override
@@ -345,5 +360,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback 
         WorkoutFragment workoutFragment = WorkoutFragment.newInstance(workout);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.container, workoutFragment).addToBackStack("workoutFragment").commit();
+    }
+
+    @Override
+    public void onOpenMuscleFragment(String muscleName) {
+        MuscleFragment muscleFragment = MuscleFragment.newInstance(muscleName);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, muscleFragment).addToBackStack("muscleFragment").commit();
+    }
+
+    @Override
+    public void onOpenUserFragment(User user) {
+        UserFragment userFragment = UserFragment.newInstance(user);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, userFragment).addToBackStack("userFragment").commit();
     }
 }

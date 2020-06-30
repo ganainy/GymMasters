@@ -1,9 +1,11 @@
 package ganainy.dev.gymmasters.ui.posts;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,10 +53,13 @@ public class PostsFragment extends Fragment {
     @BindView(R.id.sharedRv)
     RecyclerView recyclerView;
 
+  @BindView(R.id.loading_profile_layout)
+  LinearLayout loadingProfileLayout;
+
     @OnClick(R.id.findUsersButton)
     void openFindUsers() {
         ActivityCallback activityCallback =(ActivityCallback) requireActivity();
-        activityCallback.onOpenFindUsersActivity(SOURCE, FIND);
+        activityCallback.onOpenFindUserFragment(FIND);
     }
 
 
@@ -128,6 +133,12 @@ public class PostsFragment extends Fragment {
                 postsAdapter.notifyItemChanged(postsPositionPair.second);
             }
         });
+
+        /*show loading view after user is clicked until his profile is loaded and opened*/
+        mViewModel.getLoadingPostCreatorProfileLiveData().observe(getViewLifecycleOwner(),isProfileLoading->{
+            if (isProfileLoading)loadingProfileLayout.setVisibility(View.VISIBLE);
+                else loadingProfileLayout.setVisibility(View.GONE);
+        });
     }
 
     /**save logged user info to be accessed through app*/
@@ -142,20 +153,19 @@ public class PostsFragment extends Fragment {
         postsAdapter = new PostsAdapter(requireActivity().getApplication(), new PostCallback() {
             @Override
             public void onExerciseClicked(Exercise exercise, Integer adapterPosition) {
-                //todo open selected exercise
-               /* Intent i = new Intent(this,);
-                i.putExtra("exercise", currentExercise);
-                startActivity(i);*/
+                ((ActivityCallback) requireActivity()).openExerciseFragment(exercise);
             }
 
             @Override
             public void onWorkoutClicked(Workout workout, Integer adapterPosition) {
-
+                ((ActivityCallback) requireActivity()).onOpenWorkoutFragment(workout);
             }
 
             @Override
-            public void onUserClicked(User user) {
-
+            public void onUserClicked(String postCreatorId) {
+                mViewModel.getUserById(postCreatorId).observe(getViewLifecycleOwner(),postCreator->{
+                    ((ActivityCallback) requireActivity()).onOpenUserFragment(postCreator);
+                });
             }
 
             @Override
@@ -168,7 +178,6 @@ public class PostsFragment extends Fragment {
                     openPostCommentFragment(post);
             }
         });
-        //sharedExerciseWorkoutList setdata
 
         postsAdapter.setHasStableIds(true);
         recyclerView.setItemAnimator(null);
@@ -187,4 +196,9 @@ public class PostsFragment extends Fragment {
         activityCallback.onOpenPostCommentFragment(post);
   }
 
+    public void refreshPosts() {
+        postsAdapter.setData(null);
+        mViewModel.clearFollowingIdList();
+        mViewModel.getFollowingUid();
+    }
 }

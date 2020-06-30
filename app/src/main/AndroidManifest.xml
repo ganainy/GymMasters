@@ -34,13 +34,6 @@
             android:name=".ui.map.MapsActivity"
          />
         <activity
-            android:name="ganainy.dev.gymmasters.ui.findUser.FindUsersActivity"
-            />
-        <activity
-            android:name="ganainy.dev.gymmasters.ui.exercise.MuscleExercisesActivity"
-            android:label="@string/title_activity_exercises"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name="ganainy.dev.gymmasters.ui.main.MainActivity"
             android:label="@string/title_activity_main"
             />

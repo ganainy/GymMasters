@@ -42,6 +42,10 @@ public class PostsViewModel extends AndroidViewModel {
     public static final String LIKER_ID_LIST="likerIdList";
     public static final String LIKE_COUNT="likeCount";
 
+    public void clearFollowingIdList() {
+        this.mFollowingIdList.clear();
+    }
+
     private List<String> mFollowingIdList = new ArrayList<>();
 
     public PostsViewModel(@NonNull Application application) {
@@ -63,6 +67,12 @@ public class PostsViewModel extends AndroidViewModel {
     }
 
     private MutableLiveData<NetworkState> networkStateLiveData=new MutableLiveData<>();
+
+    public LiveData<Boolean> getLoadingPostCreatorProfileLiveData() {
+        return loadingPostCreatorProfileLiveData;
+    }
+
+    private MutableLiveData<Boolean> loadingPostCreatorProfileLiveData=new MutableLiveData<>();
 
     public MutableLiveData<List<Post>> getPostListLiveData() {
         return postListLiveData;
@@ -306,5 +316,24 @@ public class PostsViewModel extends AndroidViewModel {
             }
         });
         return loggedUserLiveData;
+    }
+
+    public LiveData<User> getUserById(String postCreatorId) {
+        loadingPostCreatorProfileLiveData.setValue(true);
+        MutableLiveData<User> postCreatorLiveData=new MutableLiveData<>();
+        FirebaseDatabase.getInstance().getReference().child(USERS).child(postCreatorId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                User postCreator = userSnapshot.getValue(User.class);
+                postCreatorLiveData.setValue(postCreator);
+                loadingPostCreatorProfileLiveData.setValue(false);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                loadingPostCreatorProfileLiveData.setValue(false);
+            }
+        });
+        return postCreatorLiveData;
     }
 }

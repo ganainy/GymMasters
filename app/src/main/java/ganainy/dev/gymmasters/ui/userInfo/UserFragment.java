@@ -31,12 +31,12 @@ import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 
-public class UserInfoFragment extends Fragment {
+public class UserFragment extends Fragment {
 
     public static final String USER = "user";
     private UserInfoViewModel mViewModel;
 
-    private static final String TAG = "UserInfoFragmentTag";
+    private static final String TAG = "UserFragment";
 
     @BindView(R.id.exerciseCountFullTextView)
     TextView exerciseCountFullTextView;
@@ -127,12 +127,12 @@ public class UserInfoFragment extends Fragment {
     /**
      * @param user : the user which we will show the profile of (not logged in user)
      */
-    public static UserInfoFragment newInstance(User user) {
-        UserInfoFragment userInfoFragment = new UserInfoFragment();
+    public static UserFragment newInstance(User user) {
+        UserFragment userFragment = new UserFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(USER, user);
-        userInfoFragment.setArguments(bundle);
-        return userInfoFragment;
+        userFragment.setArguments(bundle);
+        return userFragment;
     }
 
     @Override
@@ -210,10 +210,10 @@ public class UserInfoFragment extends Fragment {
 
         if (followState == FollowState.FOLLOWING) {
             followButton.setBackgroundResource((R.drawable.btn_add_green)); //green
-            followButton.setText("following");
+            followButton.setText(getString(R.string.following));
         } else if (followState == FollowState.NOT_FOLLOWING) {
             followButton.setBackgroundResource((R.drawable.btn_add_blue));
-            followButton.setText("follow_black");
+            followButton.setText(getString(R.string.follow));
         }
     }
 
@@ -261,10 +261,8 @@ public class UserInfoFragment extends Fragment {
                 .setTitle("Rate user")
                 .setView(rate_view)
                 .setPositiveButton("Rate", (dialog, which) -> {
-
                     rating = ratingBar.getProgress();
                     mViewModel.setRate((long) rating);
-
                 })
                 .setNegativeButton("Cancel", null)
                 .show();

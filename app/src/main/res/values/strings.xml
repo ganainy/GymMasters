@@ -185,4 +185,5 @@
     <string name="find_gyms_nearby_your_location_using_the_button_or_search_for_any_place_and_find_gyms_near_that_place_using_the_search_bar">Find gyms nearby your location using the button or search for any place and find gyms near that place using the search bar!</string>
     <string name="profile_image_updated_successfully">Profile image updated successfully</string>
     <string name="cant_get_location_search_instead">Can\'t get your location but you can still search for a place and find gyms near it.</string>
+    <string name="loading_user_profile">Loading profile...</string>
 </resources>

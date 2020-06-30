@@ -14,7 +14,9 @@ public interface ActivityCallback {
     void showLoggedUserFollowers(String key,String value);
     void showUsersFollowedByLoggedUser(String key,String value);
     void openYoutubeFragment(String exerciseName);
-    void onOpenFindUsersActivity(String key,String value);
+    void onOpenFindUserFragment(String filterType);
     void onOpenPostCommentFragment(Post post);
     void onOpenWorkoutFragment(Workout workout);
+    void onOpenMuscleFragment(String muscleName);
+    void onOpenUserFragment(User user);
 }
