@@ -1,7 +1,7 @@
 # GymMasters
 
 An app where you can find workouts , exercises and create custom workouts , exercises with images and videos which your followers can see or you can find and 
-follow other users to try their custom workouts , exercises ,find gym nearby user location or any location on map
+follow other users to try their custom exercises/workouts which will show on your feed with ability to like and comment on them , exercises ,find gym nearby user location or any location on map.
 
 
 Features:<br>
