@@ -94,7 +94,7 @@
     <string name="users_iam_following">Users I am following</string>
     <string name="play_video_instead">Show video instead of images</string>
     <string name="none">None</string>
-    <string name="basic_definition">A principal exercise that can place greater absolute intensity
+    <string name="isolated_definition">A principal exercise that can place greater absolute intensity
         on muscles exercised relative to auxiliary exercises. Basic exercises tend to have more of
         the following characteristics:gravity dependentinclusion or shift of resistance through
         multiple muscle group throughout the range of motione.g. bench press: front deltoid to
@@ -119,15 +119,15 @@
     <string name="rate">rate</string>
     <string name="about_user">About Mohammed</string>
     <string name="click_to_view">Click to view</string>
-    <string name="write_a_comment">Write a comment...</string>
+    <string name="write_a_comment">Write a comment…</string>
     <string name="this_post_has_no_comments_yet">This post has no comments yet</string>
     <string name="beginner">Beginner</string>
     <string name="intermediate">Intermediate</string>
     <string name="professional">Professional</string>
-    <string name="loading_news_feed">Loading news feed...</string>
+    <string name="loading_news_feed">Loading news feed…</string>
     <string name="follow_more_users">Follow more users</string>
     <string name="no_news_feed_from_the_users_you_follow">No News feed from the users you follow</string>
-    <string name="loading_comments">Loading comments...</string>
+    <string name="loading_comments">Loading comments…</string>
     <string name="feed">Feed</string>
     <string name="personal">Personal</string>
     <string name="my_profile">My profile</string>
@@ -165,11 +165,11 @@
     <string name="find_gyms_nearby_your_location_using_the_button_or_search_for_any_place_and_find_gyms_near_that_place_using_the_search_bar">Find gyms nearby your location using the button or search for any place and find gyms near that place using the search bar!</string>
     <string name="profile_image_updated_successfully">Profile image updated successfully</string>
     <string name="cant_get_location_search_instead">Can\'t get your location but you can still search for a place and find gyms near it.</string>
-    <string name="loading_user_profile">Loading profile...</string>
+    <string name="loading_user_profile">Loading profile…</string>
     <string name="already_added_click_icon_to_remove">Already added ,click icon to remove</string>
     <string name="create_custom_workouts_and_exercises">Create custom workouts and exercises</string>
-    <string name="follow_rate_and_watch_other_users_exercises_and_workouts">Follow ,rate and watch other users\' exercises and workouts</string>
-    <string name="find_gyms_near_your_location_and_a_lot_more">Find gyms near your location and a lot more...</string>
+    <string name="follow_rate_and_watch_other_users_exercises_and_workouts">Follow other users and get their exercises and workouts on your posts feed</string>
+    <string name="find_gyms_near_your_location_and_a_lot_more">Find gyms near your location and a lot more…</string>
     <string name="create">Create</string>
     <string name="view">View</string>
     <string name="overall_rating">overall rating</string>

@@ -25,7 +25,7 @@ import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 
 public class ExerciseFragment extends LogFragment  {
 
-    public static final String BASIC = "basic";
+    public static final String ISOLATED = "isolated";
     public static final String COMPOUND = "compound";
     public static final String EXERCISE = "exercise";
 
@@ -208,9 +208,9 @@ public class ExerciseFragment extends LogFragment  {
 
         //change message depending on type of mechanism , utility
         switch (s) {
-            case BASIC: {
+            case ISOLATED: {
                 builder.setMessage(
-                        getString(R.string.basic_definition));
+                        getString(R.string.isolated_definition));
                 break;
             }
             case COMPOUND: {

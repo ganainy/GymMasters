@@ -138,7 +138,11 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        signUp.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), SignUpActivity.class)));
+        signUp.setOnClickListener(v -> {
+                    startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+                    finish();
+                }
+        );
 
         signIn.setOnClickListener(v ->loginViewModel.authenticateUser());
 

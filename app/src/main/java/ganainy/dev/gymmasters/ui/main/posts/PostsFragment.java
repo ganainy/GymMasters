@@ -33,10 +33,11 @@ import butterknife.OnClick;
 import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 import ganainy.dev.gymmasters.utils.AuthUtils;
 
+import static ganainy.dev.gymmasters.ui.findUser.FindUserFragment.ALL;
+
 public class PostsFragment extends Fragment {
     private static final String TAG = "PostsFragment";
     public static final String SOURCE = "source";
-    public static final String FIND = "find";
     private PostsViewModel mViewModel;
     private PostsAdapter postsAdapter;
 
@@ -59,7 +60,7 @@ public class PostsFragment extends Fragment {
     @OnClick(R.id.findUsersButton)
     void openFindUsers() {
         ActivityCallback activityCallback =(ActivityCallback) requireActivity();
-        activityCallback.onOpenFindUserFragment(FIND);
+        activityCallback.onOpenFindUserFragment(ALL);
     }
 
 

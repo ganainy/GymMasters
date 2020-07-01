@@ -166,8 +166,12 @@ public class SignUpActivity extends AppCompatActivity {
             startActivityForResult(signInIntent, RC_SIGN_IN);
         });
 
-        signInTextView.setOnClickListener(v ->
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class)));
+
+        signInTextView.setOnClickListener(v -> {
+                    startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+                    finish();
+                }
+        );
 
         profileImage.setOnClickListener(v -> openImageChooser());
 
