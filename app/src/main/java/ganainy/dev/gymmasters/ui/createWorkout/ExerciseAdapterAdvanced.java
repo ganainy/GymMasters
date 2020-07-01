@@ -8,24 +8,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
-
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
-
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
-public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapterAdvanced.ExerciseViewHolder>  {
+public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapterAdvanced.ExerciseViewHolder> {
     private static final String TAG = "ExerciseAdapterAdvanced";
     public static final String EXERCISE_IMAGES = "exerciseImages/";
 
@@ -54,13 +48,13 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
             exerciseViewHolder.parentConstraint.setBackgroundResource(R.drawable.circular_green_bordersolid);
             exerciseViewHolder.AlreadyAddedLayout.setVisibility(View.VISIBLE);
             exerciseViewHolder.imageViewPlus.setVisibility(View.GONE);
-            if (exerciseList.get(i).getReps()!=null) {
+            if (exerciseList.get(i).getReps() != null) {
                 exerciseViewHolder.repsCountTextView.setVisibility(View.VISIBLE);
-                exerciseViewHolder.repsCountTextView.setText(context.getString(R.string.reps,exerciseList.get(i).getReps()));
+                exerciseViewHolder.repsCountTextView.setText(context.getString(R.string.reps, exerciseList.get(i).getReps()));
             }
-            if (exerciseList.get(i).getSets()!=null) {
+            if (exerciseList.get(i).getSets() != null) {
                 exerciseViewHolder.setsCountTextView.setVisibility(View.VISIBLE);
-                exerciseViewHolder.setsCountTextView.setText(context.getString(R.string.sets,exerciseList.get(i).getSets()));
+                exerciseViewHolder.setsCountTextView.setText(context.getString(R.string.sets, exerciseList.get(i).getSets()));
             }
         } else {
             exerciseViewHolder.parentConstraint.setBackgroundResource(R.drawable.circular_grey_bordersolid);
@@ -97,8 +91,8 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
 
     //viewHolder
     class ExerciseViewHolder extends RecyclerView.ViewHolder {
-        CircleImageView exerciseImage;
-        TextView exerciseName,repsCountTextView,setsCountTextView;
+        ImageView exerciseImage;
+        TextView exerciseName, repsCountTextView, setsCountTextView;
         ImageView imageViewPlus, deleteImageView;
         ConstraintLayout parentConstraint;
         LinearLayout AlreadyAddedLayout;
@@ -117,11 +111,11 @@ public class ExerciseAdapterAdvanced extends RecyclerView.Adapter<ExerciseAdapte
 
             /*delegate interactions to parent*/
             imageViewPlus.setOnClickListener(v -> {
-                        addExerciseCallback.onExercisesAdded(exerciseList.get(getAdapterPosition()),getAdapterPosition());
+                        addExerciseCallback.onExercisesAdded(exerciseList.get(getAdapterPosition()), getAdapterPosition());
                     }
             );
 
-            deleteImageView.setOnClickListener(view -> addExerciseCallback.onExercisesDeleted(exerciseList.get(getAdapterPosition()),getAdapterPosition()));
+            deleteImageView.setOnClickListener(view -> addExerciseCallback.onExercisesDeleted(exerciseList.get(getAdapterPosition()), getAdapterPosition()));
         }
 
     }

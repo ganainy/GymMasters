@@ -23,7 +23,7 @@ import ganainy.dev.gymmasters.utils.AuthUtils;
 import ganainy.dev.gymmasters.utils.Event;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
-import static ganainy.dev.gymmasters.ui.muscle.MuscleViewModel.EXERCISES;
+import static ganainy.dev.gymmasters.utils.Constants.EXERCISES;
 import static ganainy.dev.gymmasters.utils.MiscellaneousUtils.formatUriAsTimeStampedString;
 
 public class CreateExerciseViewModel extends ViewModel {

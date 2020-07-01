@@ -41,11 +41,11 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int RECYCLER_TYPE_LOADING = 4;
     Application app;
     List<PostComment> postCommentList;
-    PostCallback postCallback;
+    PostCommentCallback postCommentCallback;
 
-    public PostCommentsAdapter(Application app, PostCallback postCallback) {
+    public PostCommentsAdapter(Application app, PostCommentCallback postCommentCallback) {
         this.app = app;
-        this.postCallback = postCallback;
+        this.postCommentCallback = postCommentCallback;
     }
 
     public void setData(List<PostComment> postCommentList) {
@@ -232,13 +232,29 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
             likeButton.setOnClickListener(v -> {
-                postCallback.onPostLike(postComment.getPost(), getAdapterPosition());
+                postCommentCallback.onPostLike(postComment.getPost());
             });
 
             commentButton.setOnClickListener(v -> {
-                postCallback.onPostComment(postComment.getPost(), getAdapterPosition());
+                postCommentCallback.onPostComment(postComment.getPost());
             });
 
+            profileImageView.setOnClickListener(v->{
+                postCommentCallback.onUserClicked(exercise.getCreatorId());
+            });
+
+            userNameTextView.setOnClickListener(v->{
+                postCommentCallback.onUserClicked(exercise.getCreatorId());
+            });
+
+            exerciseOneImageView.setOnClickListener(v->
+                    postCommentCallback.onExerciseClicked(exercise));
+
+            exerciseTwoImageView.setOnClickListener(v->
+                    postCommentCallback.onExerciseClicked(exercise));
+
+            exerciseNameTextView.setOnClickListener(v->
+                    postCommentCallback.onExerciseClicked(exercise));
         }
     }
 
@@ -346,12 +362,24 @@ public class PostCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
             likeButton.setOnClickListener(v -> {
-                postCallback.onPostLike(postComment.getPost(), getAdapterPosition());
+                postCommentCallback.onPostLike(postComment.getPost());
             });
 
             commentButton.setOnClickListener(v -> {
-                postCallback.onPostComment(postComment.getPost(), getAdapterPosition());
+                postCommentCallback.onPostComment(postComment.getPost());
             });
+
+            workoutNameTextView.setOnClickListener(v->
+                    postCommentCallback.onWorkoutClicked(workout));
+
+            workoutImageView.setOnClickListener(v->
+                    postCommentCallback.onWorkoutClicked(workout));
+
+            profileImageView.setOnClickListener(v->
+                    postCommentCallback.onUserClicked(workout.getCreatorId()));
+
+            userNameTextView.setOnClickListener(v->
+                    postCommentCallback.onUserClicked(workout.getCreatorId()));
 
         }
     }

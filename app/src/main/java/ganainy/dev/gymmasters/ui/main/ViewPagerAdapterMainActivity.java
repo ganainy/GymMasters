@@ -20,9 +20,9 @@ public class ViewPagerAdapterMainActivity extends FragmentPagerAdapter {
             case 0:
                 return  PostsFragment.newInstance();
             case 1:
-                return new ExercisesCategoriesFragment();
+                return  ExercisesCategoriesFragment.newInstance();
             case 2:
-                return  new WorkoutsFragment();
+                return   WorkoutsFragment.newInstance();
         }
         return null; //does not happen
     }

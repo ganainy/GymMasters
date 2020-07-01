@@ -49,6 +49,7 @@ import com.google.firebase.auth.FirebaseUser;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ganainy.dev.gymmasters.utils.NetworkUtil;
+import ganainy.dev.gymmasters.utils.SharedPrefUtils;
 
 import static ganainy.dev.gymmasters.ui.findUser.FindUserFragment.ALL;
 
@@ -251,10 +252,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback 
             //todo find cleaner way to show update in comments count when going back from postcommentsfragment to postsfragment
             Fragment fragment =getSupportFragmentManager().findFragmentByTag("postCommentsFragment");
             if (fragment!=null){
+
                 /*we clicked back button on PostCommentsFragment, refresh posts so if logged user added comment it would show on comment count*/
-                PostsFragment postsFragment =
-                        (PostsFragment)getSupportFragmentManager().findFragmentByTag("android:switcher:" + view_pager_main.getId() + ":" + 0);
-                if (postsFragment!=null)postsFragment.refreshPosts();
+                PostsFragment postsFragment = (PostsFragment)getSupportFragmentManager()
+                                .findFragmentByTag("android:switcher:" + view_pager_main.getId() + ":" + 0);
+
+                if (postsFragment!=null && SharedPrefUtils.getBoolean(this,SharedPrefUtils.SHOULD_UPDATE_POSTS)) {
+                    postsFragment.refreshPosts();
+                }
             }
             super.onBackPressed();
 
@@ -286,36 +291,56 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback 
     /**methods called by child fragments to talk to parent activity*/
     @Override
     public void openUserWorkoutsFragment(String userId,String userName) {
-        UserWorkoutsFragment userWorkoutsFragment = UserWorkoutsFragment.newInstance(userId,null);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        UserWorkoutsFragment userWorkoutsFragment = UserWorkoutsFragment.newInstance(userId,userName);
+       FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right,
+                        R.anim.exit_to_left,
+                        R.anim.enter_from_left,
+                        R.anim.exit_to_right);
         fragmentTransaction.add(R.id.container, userWorkoutsFragment).addToBackStack("userWorkoutsFragment").commit();
     }
 
     @Override
     public void openUserExercisesFragment(String userId,String userName) {
-        UserExercisesFragment userExercisesFragment = UserExercisesFragment.newInstance(userId,null);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        UserExercisesFragment userExercisesFragment = UserExercisesFragment.newInstance(userId,userName);
+       FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right,
+                        R.anim.exit_to_left,
+                        R.anim.enter_from_left,
+                        R.anim.exit_to_right);
         fragmentTransaction.add(R.id.container, userExercisesFragment).addToBackStack("userExercisesFragment").commit();
     }
 
     @Override
     public void openCreateWorkoutFragment() {
         CreateWorkoutFragment createWorkoutFragment = new CreateWorkoutFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+       FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right,
+                        R.anim.exit_to_left,
+                        R.anim.enter_from_left,
+                        R.anim.exit_to_right);
         fragmentTransaction.add(R.id.container, createWorkoutFragment).addToBackStack("createWorkoutFragment").commit();
     }
 
     @Override
     public void openCreateExerciseFragment() {
         CreateExerciseFragment createExerciseFragment = new CreateExerciseFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+       FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right,
+                        R.anim.exit_to_left,
+                        R.anim.enter_from_left,
+                        R.anim.exit_to_right);
         fragmentTransaction.add(R.id.container, createExerciseFragment).addToBackStack("createExerciseFragment").commit();
     }
 
     @Override
     public void openExerciseFragment(Exercise exercise) {
         ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exercise);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+       FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right,
+                        R.anim.exit_to_left,
+                        R.anim.enter_from_left,
+                        R.anim.exit_to_right);
         fragmentTransaction.add(R.id.container, exerciseFragment).addToBackStack("exerciseFragment").commit();
     }
 
@@ -332,7 +357,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback 
     @Override
     public void openYoutubeFragment(String exerciseName) {
         YoutubeFragment youtubeFragment = YoutubeFragment.newInstance(exerciseName);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+       FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right,
+                        R.anim.exit_to_left,
+                        R.anim.enter_from_left,
+                        R.anim.exit_to_right);
         fragmentTransaction.add(R.id.container, youtubeFragment).addToBackStack("youtubeFragment").commit();
     }
 
@@ -343,35 +372,55 @@ public class MainActivity extends AppCompatActivity implements ActivityCallback 
 
     private void openFindUserFragment(String value) {
         FindUserFragment findUserFragment = FindUserFragment.newInstance(value);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+       FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right,
+                        R.anim.exit_to_left,
+                        R.anim.enter_from_left,
+                        R.anim.exit_to_right);
         fragmentTransaction.add(R.id.container, findUserFragment).addToBackStack("findUserFragment").commit();
     }
 
     @Override
     public void onOpenPostCommentFragment(Post post) {
         PostCommentsFragment postCommentsFragment = PostCommentsFragment.newInstance(post);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right,
+                        R.anim.exit_to_left,
+                        R.anim.enter_from_left,
+                        R.anim.exit_to_right);
         fragmentTransaction.add(R.id.container, postCommentsFragment,"postCommentsFragment").addToBackStack("postCommentsFragment").commit();
     }
 
     @Override
     public void onOpenWorkoutFragment(Workout workout) {
         WorkoutFragment workoutFragment = WorkoutFragment.newInstance(workout);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+       FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right,
+                        R.anim.exit_to_left,
+                        R.anim.enter_from_left,
+                        R.anim.exit_to_right);
         fragmentTransaction.add(R.id.container, workoutFragment).addToBackStack("workoutFragment").commit();
     }
 
     @Override
     public void onOpenMuscleFragment(String muscleName) {
         MuscleFragment muscleFragment = MuscleFragment.newInstance(muscleName);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+       FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right,
+                        R.anim.exit_to_left,
+                        R.anim.enter_from_left,
+                        R.anim.exit_to_right);
         fragmentTransaction.add(R.id.container, muscleFragment).addToBackStack("muscleFragment").commit();
     }
 
     @Override
     public void onOpenUserFragment(User user) {
         UserFragment userFragment = UserFragment.newInstance(user);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+       FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right,
+                        R.anim.exit_to_left,
+                        R.anim.enter_from_left,
+                        R.anim.exit_to_right);
         fragmentTransaction.add(R.id.container, userFragment).addToBackStack("userFragment").commit();
     }
 }

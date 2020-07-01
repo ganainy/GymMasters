@@ -2,7 +2,6 @@
 <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/scrollView"
     android:background="@color/white"
     android:layout_width="match_parent"
@@ -15,10 +14,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <!--Top Profile Section -->
 
+            <!--toolbar-->
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/workoutRecyclerView"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                tools:ignore="MissingConstraints">
+                <ImageView
+                    android:id="@+id/backArrowImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_arrow_back_white"
+                    android:adjustViewBounds="true"
+                    style="?android:borderlessButtonStyle"
+                    />
+                <TextView
+                    android:id="@+id/toolbarTitleTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="Amr profile"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    />
+            </androidx.appcompat.widget.Toolbar>
 
-            <!--About Me Card-->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,12 +113,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:background="@drawable/btn_add_blue"
+                    android:background="@drawable/circular_light_grey_bordersolid"
                     android:fontFamily="@font/proximanovaregular"
                     android:text="@string/follow"
                     android:textAlignment="center"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"
+                    android:textColor="@color/dark_grey"
                     app:layout_constraintEnd_toStartOf="@+id/rateButton"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="packed"
@@ -111,7 +135,7 @@
                     android:background="@drawable/circular_light_grey_bordersolid"
                     android:fontFamily="@font/proximanovaregular"
                     android:padding="12dp"
-                    android:src="@drawable/ic_star_white"
+                    android:src="@drawable/ic_star_grey"
                     android:text="@string/rate"
                     android:textAlignment="center"
                     android:textAllCaps="false"
@@ -251,7 +275,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/grey"/>
+                android:background="@color/light_grey"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/about_me"
@@ -295,7 +319,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/grey"/>
+                android:background="@color/light_grey"/>
 
             <!--buttons-->
             <LinearLayout
@@ -315,7 +339,7 @@
                     android:layout_height="60dp"
                     android:id="@+id/showExercisesLayout"
                     android:layout_marginTop="16dp"
-                    android:background="@drawable/round_rectangle_grey_border"
+                    android:background="@drawable/round_rectangle_light_grey_border"
                     >
 
 
@@ -374,7 +398,7 @@
                     android:layout_height="60dp"
                     android:layout_marginTop="16dp"
                     android:id="@+id/showWorkoutsLayout"
-                    android:background="@drawable/round_rectangle_grey_border"
+                    android:background="@drawable/round_rectangle_light_grey_border"
 
                     >
 
@@ -383,7 +407,7 @@
                         android:id="@+id/workoutCountTextView"
                         android:layout_width="70dp"
                         android:layout_height="match_parent"
-                        android:background="@drawable/circular_pink_bordersolid"
+                        android:background="@drawable/circular_blue_bordersolid"
                         android:fontFamily="@font/proximanovaregular"
                         android:gravity="center"
                         android:textColor="@color/white"

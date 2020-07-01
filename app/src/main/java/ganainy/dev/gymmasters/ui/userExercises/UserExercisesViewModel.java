@@ -13,14 +13,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
-import ganainy.dev.gymmasters.utils.NetworkState;
-import static ganainy.dev.gymmasters.ui.muscle.MuscleViewModel.EXERCISES;
+import ganainy.dev.gymmasters.utils.NetworkState;import static ganainy.dev.gymmasters.utils.Constants.EXERCISES;
 
 public class UserExercisesViewModel extends ViewModel {
     public static final String CREATOR_ID = "creatorId";
 
     private MutableLiveData<NetworkState> networkStateLiveData =new MutableLiveData<>();
-    private ArrayList<Exercise> loggedUserExercisesArrayList= new ArrayList<>();
+
+    private ArrayList<Exercise> userExercisesList = new ArrayList<>();
     private MutableLiveData<List<Exercise>> exerciseListLiveData =new MutableLiveData<>();
 
     public LiveData<List<Exercise>> getExerciseListLiveData() {
@@ -36,18 +36,18 @@ public class UserExercisesViewModel extends ViewModel {
         exerciseNode.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                loggedUserExercisesArrayList.clear();
+                userExercisesList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         if (ds.hasChild(CREATOR_ID) && ds.child(CREATOR_ID).getValue().equals(loggedInUserId)) {
                             Exercise exerciseFromSnapshot = ds.getValue(Exercise.class);
-                            loggedUserExercisesArrayList.add(exerciseFromSnapshot);
+                            userExercisesList.add(exerciseFromSnapshot);
                         }
                 }
 
-                if (loggedUserExercisesArrayList.size()==0)
+                if (userExercisesList.size()==0)
                     networkStateLiveData.setValue(NetworkState.EMPTY);
                 else {
-                    exerciseListLiveData.setValue(loggedUserExercisesArrayList);
+                    exerciseListLiveData.setValue(userExercisesList);
                     networkStateLiveData.setValue(NetworkState.SUCCESS);
                 }
             }

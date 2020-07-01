@@ -17,9 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ganainy.dev.gymmasters.R;
+import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.shared_adapters.ExercisesAdapter;
 import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 import ganainy.dev.gymmasters.utils.MiscellaneousUtils;
@@ -30,7 +33,7 @@ import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCatego
 public class MuscleFragment extends Fragment {
     private static final String TAG = "ExercisesActivity";
     public static final String EXERCISE = "exercise";
-    MuscleViewModel muscleViewModel;
+    MuscleViewModel mViewModel;
 
     @BindView(R.id.collapse_toolbar)
     CollapsingToolbarLayout htab_collapse_toolbar;
@@ -72,20 +75,20 @@ public class MuscleFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        muscleViewModel = new ViewModelProvider(this).get(MuscleViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(MuscleViewModel.class);
 
         if (getArguments().getString(SELECTED_MUSCLE)!=null){
             String selectedMuscle = getArguments().getString(SELECTED_MUSCLE);
             setTabHeaderImage(selectedMuscle);
-            muscleViewModel.getSelectedMuscleExercises(selectedMuscle);
+            mViewModel.getSelectedMuscleExercises(selectedMuscle);
         }
 
-        muscleViewModel.getExerciseListLiveData().observe(getViewLifecycleOwner(), exercises -> {
+        mViewModel.getExerciseListLiveData().observe(getViewLifecycleOwner(), exercises -> {
             exercisesAdapter.setData(exercises);
             exercisesAdapter.notifyDataSetChanged();
         });
 
-        muscleViewModel.getNetworkStateLiveData().observe(getViewLifecycleOwner(), this::handleNetworkStateUi);
+        mViewModel.getNetworkStateLiveData().observe(getViewLifecycleOwner(), this::handleNetworkStateUi);
     }
 
 
@@ -141,13 +144,19 @@ public class MuscleFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String queryString) {
-                exercisesAdapter.getFilter().filter(queryString);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String queryString) {
-                exercisesAdapter.getFilter().filter(queryString);
+                ArrayList<Exercise> filteredExercises=new ArrayList<>();
+                for (Exercise exercise:mViewModel.getSelectedMuscleExerciseList()){
+                    if (exercise.getName().toLowerCase().contains(queryString)){
+                        filteredExercises.add(exercise);
+                    }
+                }
+                exercisesAdapter.setData(filteredExercises);
+                exercisesAdapter.notifyDataSetChanged();
                 return false;
             }
         });

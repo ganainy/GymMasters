@@ -26,9 +26,7 @@ import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.utils.AuthUtils;
 import ganainy.dev.gymmasters.utils.Event;
-import ganainy.dev.gymmasters.utils.NetworkState;
-
-import static ganainy.dev.gymmasters.ui.muscle.MuscleViewModel.EXERCISES;
+import ganainy.dev.gymmasters.utils.NetworkState;import static ganainy.dev.gymmasters.utils.Constants.EXERCISES;
 
 public class PostsViewModel extends AndroidViewModel {
 
@@ -131,6 +129,7 @@ public class PostsViewModel extends AndroidViewModel {
         exerciseNode.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                postList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         for (int i = 0; i < mFollowingIdList.size(); i++) {
                             if (ds.child(CREATOR_ID).getValue().equals(mFollowingIdList.get(i))) {
@@ -318,14 +317,14 @@ public class PostsViewModel extends AndroidViewModel {
         return loggedUserLiveData;
     }
 
-    public LiveData<User> getUserById(String postCreatorId) {
+    public LiveData<Event<User>> getUserById(String postCreatorId) {
         loadingPostCreatorProfileLiveData.setValue(true);
-        MutableLiveData<User> postCreatorLiveData=new MutableLiveData<>();
+        MutableLiveData<Event<User>> postCreatorLiveData=new MutableLiveData<>();
         FirebaseDatabase.getInstance().getReference().child(USERS).child(postCreatorId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot userSnapshot) {
                 User postCreator = userSnapshot.getValue(User.class);
-                postCreatorLiveData.setValue(postCreator);
+                postCreatorLiveData.setValue(new Event<>(postCreator));
                 loadingPostCreatorProfileLiveData.setValue(false);
             }
 

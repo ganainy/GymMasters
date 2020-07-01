@@ -23,7 +23,7 @@ import ganainy.dev.gymmasters.models.app_models.UserProfile;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.utils.AuthUtils;
 
-import static ganainy.dev.gymmasters.ui.muscle.MuscleViewModel.EXERCISES;
+import static ganainy.dev.gymmasters.utils.Constants.EXERCISES;
 
 public class UserViewModel extends ViewModel {
     private static final String TAG = "UserInfoActivityViewMod";

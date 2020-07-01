@@ -45,6 +45,10 @@ public class ExercisesCategoriesFragment extends Fragment {
         // Required empty public constructorp
     }
 
+    public static Fragment newInstance() {
+        return new ExercisesCategoriesFragment();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

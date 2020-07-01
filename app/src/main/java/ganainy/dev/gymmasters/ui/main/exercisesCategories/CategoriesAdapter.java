@@ -12,14 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 import ganainy.dev.gymmasters.R;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.UserViewHolder> {

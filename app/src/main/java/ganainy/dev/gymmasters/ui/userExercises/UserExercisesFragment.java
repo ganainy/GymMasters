@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -98,6 +99,9 @@ public class UserExercisesFragment extends Fragment {
             ActivityCallback activityCallback = (ActivityCallback) requireActivity();
             activityCallback.openExerciseFragment(exercise);
         });
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(exercisesRecyclerView.getContext(),
+                DividerItemDecoration.VERTICAL);
+        exercisesRecyclerView.addItemDecoration(dividerItemDecoration);
         exercisesRecyclerView.setAdapter(exercisesAdapter);
     }
 

@@ -23,7 +23,7 @@
             tools:context=".SignUpActivity">
 
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageView
                 android:id="@+id/profile_image_shimmer"
                 android:layout_width="200dp"
                 android:layout_height="141dp"

@@ -21,9 +21,13 @@ import static ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCatego
 import static ganainy.dev.gymmasters.utils.Constants.EXERCISES;
 
 public class MuscleViewModel extends ViewModel {
-    private static final String TAG = "ExerciseActivityViewMod";
+    private static final String TAG = "MuscleViewModel";
 
-    private List<Exercise> selectedMuscleExerciseArrayList = new ArrayList<>();
+    public List<Exercise> getSelectedMuscleExerciseList() {
+        return selectedMuscleExerciseList;
+    }
+
+    private List<Exercise> selectedMuscleExerciseList = new ArrayList<>();
     private MutableLiveData<List<Exercise>> exerciseListLiveData =new MutableLiveData<>();
     private MutableLiveData<NetworkState> networkStateLiveData =new MutableLiveData<>();
 
@@ -42,20 +46,20 @@ public class MuscleViewModel extends ViewModel {
 
         if (!muscle.equals(SHOWALL)) {
 
-            selectedMuscleExerciseArrayList.clear();
+            selectedMuscleExerciseList.clear();
             exercisesRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot ds:dataSnapshot.getChildren()) {
                         Exercise exercise = ds.getValue(Exercise.class);
                         if (exercise.getBodyPart().equals(muscle)){
-                            selectedMuscleExerciseArrayList.add(exercise);
+                            selectedMuscleExerciseList.add(exercise);
                         }
                     }
-                    if (selectedMuscleExerciseArrayList.size()==0)
+                    if (selectedMuscleExerciseList.size()==0)
                         networkStateLiveData.setValue(NetworkState.EMPTY);
                     else {
-                        exerciseListLiveData.setValue(selectedMuscleExerciseArrayList);
+                        exerciseListLiveData.setValue(selectedMuscleExerciseList);
                         networkStateLiveData.setValue(NetworkState.SUCCESS);
                     }
                 }
@@ -78,16 +82,16 @@ public class MuscleViewModel extends ViewModel {
         exercisesNode.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                selectedMuscleExerciseArrayList.clear();
+                selectedMuscleExerciseList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                         Exercise exerciseFromSnapshot = ds.getValue(Exercise.class);
-                        selectedMuscleExerciseArrayList.add(exerciseFromSnapshot);
+                        selectedMuscleExerciseList.add(exerciseFromSnapshot);
 
                 }
-                if (selectedMuscleExerciseArrayList.size()==0)
+                if (selectedMuscleExerciseList.size()==0)
                     networkStateLiveData.setValue(NetworkState.EMPTY);
                 else {
-                    exerciseListLiveData.setValue(selectedMuscleExerciseArrayList);
+                    exerciseListLiveData.setValue(selectedMuscleExerciseList);
                     networkStateLiveData.setValue(NetworkState.SUCCESS);
                 }
             }

@@ -56,6 +56,14 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/commentEditText"
         app:layout_constraintTop_toBottomOf="@+id/space" />
+
+
+    <include
+        android:id="@+id/loading_profile_layout"
+        layout="@layout/loading_profile_layout"
+        android:visibility="gone"
+         />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 

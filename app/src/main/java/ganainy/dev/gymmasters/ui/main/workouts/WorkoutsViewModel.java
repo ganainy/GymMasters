@@ -38,6 +38,7 @@ public class WorkoutsViewModel extends ViewModel {
     }
 
     public void downloadWorkouts() {
+        networkStateLiveData.setValue(NetworkState.LOADING);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.child("workout").addValueEventListener(new ValueEventListener() {
             @Override

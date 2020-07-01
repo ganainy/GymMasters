@@ -26,8 +26,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.ui.login.LoginActivity;
 import ganainy.dev.gymmasters.ui.main.MainActivity;
@@ -38,7 +36,7 @@ public class SignUpActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 102;
     public static final String IMAGE_URI = "imageUri";
 
-    CircleImageView profileImage;
+    ImageView profileImage;
     private TextInputEditText userNameEditText, emailEditText, passwordEditText;
     private TextInputLayout passwordTextInputLayout,usernameTextInputLayout,emailTextInputLayout;
     Button signUp;
@@ -257,6 +255,8 @@ public class SignUpActivity extends AppCompatActivity {
 // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
+                .requestProfile()
+                .requestIdToken(getString(R.string.request_id_token))
                 .build();
 
         // Build a GoogleSignInClient with the options specified by gso.

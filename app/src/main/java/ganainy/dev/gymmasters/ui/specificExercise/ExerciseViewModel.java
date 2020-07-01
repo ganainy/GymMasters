@@ -28,8 +28,7 @@ import java.util.TimerTask;
 
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.utils.AuthUtils;
-
-import static ganainy.dev.gymmasters.ui.muscle.MuscleViewModel.EXERCISES;
+import static ganainy.dev.gymmasters.utils.Constants.EXERCISES;
 
 public class ExerciseViewModel extends AndroidViewModel {
 

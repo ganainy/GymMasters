@@ -17,8 +17,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="title_activity_exercises">ExercisesActivity</string>
-    <string name="title_activity_timer">TimerActivity</string>
     <string name="about_me">About me</string>
     <string name="signup_failed">Sign up failed with this email and password.</string>
     <string name="error_signing_up">Error happened while signing up, Check connection and retry.</string>
@@ -28,12 +26,6 @@
     <string name="credentials_error">Error signing in, check your credentials</string>
     <string name="workouts">Workouts</string>
     <string name="exercises">Exercises</string>
-    <string name="home">Home</string>
-    <string name="permission_required">Permission required</string>
-    <string name="permanently_denied_permission">You permanently denied permission ,but it can be changed from settings</string>
-    <string name="change">Change</string>
-    <string name="mcancel">Cancel</string>
-    <string name="permission_denied">Permission denied</string>
     <string name="error_logging_out">\"Error logging out: \"</string>
     <string name="are_you_sure_exit">Are you sure you want to exit?</string>
     <string name="connection_lost">Internet connection lost</string>
@@ -127,7 +119,6 @@
     <string name="rate">rate</string>
     <string name="about_user">About Mohammed</string>
     <string name="click_to_view">Click to view</string>
-    <string name="your_feed">Your feed</string>
     <string name="write_a_comment">Write a comment...</string>
     <string name="this_post_has_no_comments_yet">This post has no comments yet</string>
     <string name="beginner">Beginner</string>
@@ -143,7 +134,6 @@
     <string name="logout">Logout</string>
     <string name="utilities">Utilities</string>
     <string name="nearby_gyms">Nearby gyms</string>
-    <string name="find">Find</string>
     <string name="discover">Discover</string>
     <string name="social">Social</string>
     <string name="view_my_followers">My followers</string>
@@ -156,13 +146,6 @@
     <string name="deleted_successfully">Deleted Successfully</string>
     <string name="workout_hint">Workout hint</string>
     <string name="click_any_exercise_to_view_in_full_detail">Click any exercise to view in full detail</string>
-    <string name="timer">Timer</string>
-    <string name="reset_timer">Reset timer</string>
-    <string name="set_timer">Set timer</string>
-    <string name="low_volume">Low volume</string>
-    <string name="device_volume_is_less_than_50_consider_increasing_it_to_hear_reminder_clearly">Device volume is less than 50%, consider increasing it to hear reminder clearly</string>
-    <string name="set">Set</string>
-    <string name="choose_timer_duration">Choose timer duration</string>
     <string name="unknown">Unknown</string>
     <string name="open_right_now">Open right now</string>
     <string name="closed_right_now">Closed right now</string>
@@ -172,13 +155,10 @@
 
 <!--debug-->
     <string name="perm_granted">Permission granted</string>
-    <string name="rat_accepted">rationale accpeted</string>
-    <string name="rat_denied">rational denied</string>
     <string name="req_perm">Requesting permission</string>
     <string name="perm_denied">Permission denied</string>
     <string name="all_good_get_location">All good get location</string>
     <string name="perm_permanently_denied_go_to_settings">Permanantely denied, Go to setting</string>
-    <string name="return_from_settings">Return from settings</string>
     <string name="please_enable_gps">Please enable GPS so we can show you a gym near your location</string>
     <string name="couldnt_find_nearby_gym">Sorry , couldn\'t find any nearby gyms</string>
     <string name="find_nearby_gym">Find nearby gym</string>
@@ -193,4 +173,5 @@
     <string name="create">Create</string>
     <string name="view">View</string>
     <string name="overall_rating">overall rating</string>
+    <string name="not_added_yet">Not added yet</string>
 </resources>

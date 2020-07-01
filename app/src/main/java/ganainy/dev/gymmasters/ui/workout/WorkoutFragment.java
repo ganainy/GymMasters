@@ -108,12 +108,6 @@ public class WorkoutFragment extends Fragment {
         if (getArguments().getParcelable(WORKOUT)!=null){
             workout=getArguments().getParcelable(WORKOUT);
 
-            if (savedInstanceState==null){
-                /*add two empty item in start and end of list to be replaces with start and ending dots*/
-                workout.getWorkoutExerciseList().add(0,null);
-                workout.getWorkoutExerciseList().add(null);
-            }
-
             specificWorkoutAdapter.setData(workout.getWorkoutExerciseList());
             specificWorkoutAdapter.notifyDataSetChanged();
             showHintIfFirstViewedWorkout();

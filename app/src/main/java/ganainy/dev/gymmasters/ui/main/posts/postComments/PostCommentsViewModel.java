@@ -25,8 +25,11 @@ import ganainy.dev.gymmasters.models.app_models.Post;
 import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.utils.AuthUtils;
+import ganainy.dev.gymmasters.utils.Event;
+import ganainy.dev.gymmasters.utils.SharedPrefUtils;
 
-import static ganainy.dev.gymmasters.ui.muscle.MuscleViewModel.EXERCISES;
+import static ganainy.dev.gymmasters.utils.Constants.EXERCISES;
+import static ganainy.dev.gymmasters.utils.SharedPrefUtils.SHOULD_UPDATE_POSTS;
 
 public class PostCommentsViewModel extends AndroidViewModel {
 
@@ -54,15 +57,30 @@ public class PostCommentsViewModel extends AndroidViewModel {
     /*this live data for changes in likes*/
     private MutableLiveData<List<PostComment>> updatedPostLikesLiveData = new MutableLiveData<>();
 
+    public LiveData<Boolean> getLoadingPostCreatorProfileLiveData() {
+        return loadingPostCreatorProfileLiveData;
+    }
+
+    /*on user name or photo click handle loading until profile is loaded*/
+    private MutableLiveData<Boolean> loadingPostCreatorProfileLiveData=new MutableLiveData<>();
+
     public PostCommentsViewModel(@NonNull Application application) {
         super(application);
+        updateShouldRefreshPosts(false);
     }
 
     public void saveComment(String commentText) {
-        if (mPost.getWorkout()!=null)
-        saveWorkoutComment(commentText);
-        else if (mPost.getExercise()!=null)
+        if (mPost.getWorkout()!=null) {
+            saveWorkoutComment(commentText);
+        } else if (mPost.getExercise()!=null) {
             saveExerciseComment(commentText);
+        }
+        updateShouldRefreshPosts(true);
+    }
+
+    /**when user adds comment will set shared pref to true which will be used to refresh posts fragment*/
+    private void updateShouldRefreshPosts(Boolean shouldRefreshPosts) {
+        SharedPrefUtils.putBoolean(getApplication(),shouldRefreshPosts,SHOULD_UPDATE_POSTS);
     }
 
     private void saveWorkoutComment(String commentText) {
@@ -305,6 +323,25 @@ public class PostCommentsViewModel extends AndroidViewModel {
         //first item is always the post, so we update the post and notify recycler
         postCommentList.set(0,new PostComment(mPost));
         updatedPostLikesLiveData.setValue(postCommentList);
+    }
+
+    public LiveData<Event<User>> getUserById(String postCreatorId) {
+        loadingPostCreatorProfileLiveData.setValue(true);
+        MutableLiveData<Event<User>> postCreatorLiveData=new MutableLiveData<>();
+        FirebaseDatabase.getInstance().getReference().child(USERS).child(postCreatorId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot userSnapshot) {
+                User postCreator = userSnapshot.getValue(User.class);
+                postCreatorLiveData.setValue(new Event<>(postCreator));
+                loadingPostCreatorProfileLiveData.setValue(false);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                loadingPostCreatorProfileLiveData.setValue(false);
+            }
+        });
+        return postCreatorLiveData;
     }
 
     //region helpers

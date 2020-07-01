@@ -16,7 +16,6 @@
 
         <!--Top Profile Section -->
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/top_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -297,7 +296,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@color/grey" />
+            android:background="@color/light_grey" />
 
         <!--About Me Card-->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -376,7 +375,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@color/grey" />
+            android:background="@color/light_grey" />
 
         <!--buttons-->
         <androidx.constraintlayout.widget.ConstraintLayout

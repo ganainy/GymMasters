@@ -221,8 +221,8 @@ public class ProfileFragment extends Fragment {
     private void setupUi(User user) {
         name.setText(user.getName());
         email.setText(user.getEmail());
-        aboutUserContentTextView.setText(user.getAbout_me());
         loadPhotoWithShimmerEffect(user);
+        setAboutMeText(user);
 
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
@@ -232,6 +232,14 @@ public class ProfileFragment extends Fragment {
                 showDataView();
             });
         }, 1500);
+    }
+
+    private void setAboutMeText(User user) {
+        if (user.getAbout_me()==null){
+            aboutUserContentTextView.setText(R.string.not_added_yet);
+        }else {
+            aboutUserContentTextView.setText(user.getAbout_me());
+        }
     }
 
     private void showDataView() {

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Post;
+import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 
 import java.util.Collections;
@@ -52,7 +54,7 @@ public class PostsFragment extends Fragment {
     RecyclerView recyclerView;
 
   @BindView(R.id.loading_profile_layout)
-  LinearLayout loadingProfileLayout;
+  FrameLayout loadingProfileLayout;
 
     @OnClick(R.id.findUsersButton)
     void openFindUsers() {
@@ -161,8 +163,11 @@ public class PostsFragment extends Fragment {
 
             @Override
             public void onUserClicked(String postCreatorId) {
-                mViewModel.getUserById(postCreatorId).observe(getViewLifecycleOwner(),postCreator->{
-                    ((ActivityCallback) requireActivity()).onOpenUserFragment(postCreator);
+                mViewModel.getUserById(postCreatorId).observe(getViewLifecycleOwner(),postCreatorEvent->{
+                    User postCreator = postCreatorEvent.getContentIfNotHandled();
+                    if (postCreator!=null) {
+                        ((ActivityCallback) requireActivity()).onOpenUserFragment(postCreator);
+                    }
                 });
             }
 

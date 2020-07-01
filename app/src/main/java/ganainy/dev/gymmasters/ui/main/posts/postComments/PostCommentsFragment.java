@@ -8,7 +8,9 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,8 +23,11 @@ import butterknife.ButterKnife;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.models.app_models.Post;
+import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
+import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 import ganainy.dev.gymmasters.ui.main.posts.PostCallback;
+import ganainy.dev.gymmasters.utils.AuthUtils;
 
 public class PostCommentsFragment extends Fragment {
     public static final String TAG = "PostCommentsFragment";
@@ -37,6 +42,10 @@ public class PostCommentsFragment extends Fragment {
 
     @BindView(R.id.sendImageView)
     ImageView sendImageView;
+
+    @BindView(R.id.loading_profile_layout)
+    FrameLayout loadingProfileLayout;
+
 
     public static final String POST = "post";
     private PostCommentsViewModel mViewModel;
@@ -89,36 +98,48 @@ public class PostCommentsFragment extends Fragment {
             postCommentsAdapter.setData(updatedPostLikesList);
             postCommentsAdapter.notifyItemChanged(0);
         });
+
+        /*show loading view after user is clicked until his profile is loaded and opened*/
+        mViewModel.getLoadingPostCreatorProfileLiveData().observe(getViewLifecycleOwner(),isProfileLoading->{
+            if (isProfileLoading)loadingProfileLayout.setVisibility(View.VISIBLE);
+            else loadingProfileLayout.setVisibility(View.GONE);
+        });
     }
 
     private void initRecycler() {
 
-        postCommentsAdapter = new PostCommentsAdapter(getActivity().getApplication(), new PostCallback() {
+        postCommentsAdapter = new PostCommentsAdapter(getActivity().getApplication(), new PostCommentCallback() {
             @Override
-            public void onExerciseClicked(Exercise exercise, Integer adapterPosition) {
-                //todo
+            public void onExerciseClicked(Exercise exercise) {
+                ((ActivityCallback) requireActivity()).openExerciseFragment(exercise);
             }
 
             @Override
-            public void onWorkoutClicked(Workout workout, Integer adapterPosition) {
-
+            public void onWorkoutClicked(Workout workout) {
+                ((ActivityCallback) requireActivity()).onOpenWorkoutFragment(workout);
             }
 
             @Override
             public void onUserClicked(String postCreatorId) {
-
+                mViewModel.getUserById(postCreatorId).observe(getViewLifecycleOwner(),postCreatorEvent->{
+                    User postCreator = postCreatorEvent.getContentIfNotHandled();
+                    if (postCreator!=null) {
+                        ((ActivityCallback) requireActivity()).onOpenUserFragment(postCreator);
+                    }
+                });
             }
 
             @Override
-            public void onPostLike(Post post, Integer adapterPosition) {
+            public void onPostLike(Post post) {
                 mViewModel.likePost();
             }
 
             @Override
-            public void onPostComment(Post post, Integer adapterPosition) {
+            public void onPostComment(Post post) {
                 commentEditText.requestFocus();
             }
         });
+
         commentsRecyclerView.setItemAnimator(null);
         commentsRecyclerView.setAdapter(postCommentsAdapter);
     }

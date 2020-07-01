@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+
+<FrameLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/semi_transparent_darker_grey_bg"
+    >
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="16dp"
     android:background="@drawable/circular_light_grey_bordersolid"
     android:orientation="vertical"
+    android:layout_gravity="center"
     android:padding="8dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+>
 
         <ProgressBar
             android:id="@+id/circle_progress"
@@ -19,7 +24,6 @@
             android:layout_gravity="center"
             android:indeterminateTint="@color/dark_grey"
             />
-
 
         <TextView
             android:layout_width="match_parent"
@@ -31,3 +35,4 @@
             android:textColor="@color/dark_grey"
             android:textSize="22sp" />
     </LinearLayout>
+</FrameLayout>

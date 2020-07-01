@@ -43,7 +43,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:listitem="@layout/excercise_item" />
+        tools:listitem="@layout/exercise_item" />
 
         <include layout="@layout/loading_layout_shimmer"
             android:id="@+id/loading_layout_shimmer"

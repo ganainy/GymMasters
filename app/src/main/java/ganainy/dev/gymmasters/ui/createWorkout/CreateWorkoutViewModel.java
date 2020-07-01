@@ -26,7 +26,8 @@ import ganainy.dev.gymmasters.utils.Event;
 import ganainy.dev.gymmasters.utils.MiscellaneousUtils;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
-import static ganainy.dev.gymmasters.ui.muscle.MuscleViewModel.EXERCISES;
+import static ganainy.dev.gymmasters.utils.Constants.EXERCISES;
+
 
 public class CreateWorkoutViewModel extends ViewModel {
 

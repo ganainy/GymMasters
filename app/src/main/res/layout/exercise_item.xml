@@ -6,11 +6,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:background="@drawable/circular_light_grey_bordersolid">
+  >
 
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/workoutImageView"
         android:layout_width="75dp"
         android:layout_height="75dp"

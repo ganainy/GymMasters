@@ -17,7 +17,7 @@
 
 
 
-    <include layout="@layout/loading_layout_shimmer"
+    <include layout="@layout/shimmer_loading_workout"
         android:id="@+id/loading_layout_shimmer"
         android:visibility="gone"
         />

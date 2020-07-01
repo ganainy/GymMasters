@@ -20,7 +20,7 @@ public class PostComment {
         this.userCommentPair = userCommentPair;
     }
 
-    PostCommentType postCommentType;
+    private PostCommentType postCommentType;
 
     public Post getPost() {
         return post;
@@ -30,8 +30,8 @@ public class PostComment {
         this.post = post;
     }
 
-    Pair<Comment, User> userCommentPair;
-    Post post;
+     private Pair<Comment, User> userCommentPair;
+     private Post post;
 
     public PostCommentType getPostCommentType() {
        return this.postCommentType;

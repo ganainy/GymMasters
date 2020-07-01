@@ -85,6 +85,12 @@ public class SpecificWorkoutAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public void setData(List<Exercise> workoutExerciseList) {
+        if (workoutExerciseList.get(0)!=null){
+            workoutExerciseList.add(0,null);
+        }
+        if (workoutExerciseList.get(workoutExerciseList.size()-1)!=null){
+            workoutExerciseList.add(null);
+        }
         this.workoutExerciseList = workoutExerciseList;
     }
 

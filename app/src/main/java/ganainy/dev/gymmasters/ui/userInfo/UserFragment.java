@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -83,6 +84,9 @@ public class UserFragment extends Fragment {
     @BindView(R.id.followingCountShimmer)
     TextView followingTextView;
 
+    @BindView(R.id.toolbarTitleTextView)
+    TextView toolbarTitleTextView;
+
     @BindView(R.id.ratingAverageShimmer)
     TextView ratingTextView;
 
@@ -102,10 +106,10 @@ public class UserFragment extends Fragment {
         rate();
     }
 
-   /* @OnClick(R.id.backArrowImageView)
+    @OnClick(R.id.backArrowImageView)
     public void onViewClicked() {
         requireActivity().onBackPressed();
-    }*/
+    }
 
     private int rating;
 
@@ -150,6 +154,7 @@ public class UserFragment extends Fragment {
 
         if (getArguments().getParcelable(USER) != null) {
             User mUser = getArguments().getParcelable(USER);
+            setToolbarTitle(mUser.getName());
             initViewModel(mUser);
 
             /*any changes in ui will be reflected using this observer*/
@@ -177,6 +182,12 @@ public class UserFragment extends Fragment {
                     .into(profile_image);
         }
 
+    }
+
+    private void setToolbarTitle(String name) {
+        if (name!=null){
+            toolbarTitleTextView.setText(name+" profile");
+        }
     }
 
     private void setAboutCardTitle(String profileOwnerName) {
@@ -211,9 +222,11 @@ public class UserFragment extends Fragment {
         if (followState == FollowState.FOLLOWING) {
             followButton.setBackgroundResource((R.drawable.btn_add_green)); //green
             followButton.setText(getString(R.string.following));
+            followButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.white));
         } else if (followState == FollowState.NOT_FOLLOWING) {
-            followButton.setBackgroundResource((R.drawable.btn_add_blue));
+            followButton.setBackgroundResource((R.drawable.circular_light_grey_bordersolid));
             followButton.setText(getString(R.string.follow));
+            followButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.dark_grey));
         }
     }
 

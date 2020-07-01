@@ -30,16 +30,22 @@ public class WorkoutsFragment extends Fragment {
     private WorkoutAdapter workoutAdapter;
     private WorkoutsViewModel workoutsViewModel;
     private RecyclerView recyclerView;
+
     @BindView(R.id.loading_layout_shimmer)
-    LinearLayout shimmerLoadingLayout;
+    LinearLayout loading_layout_shimmer;
+
     @BindView(R.id.empty_layout)
     ConstraintLayout emptyLayout;
+
     @BindView(R.id.error_layout)
     ConstraintLayout errorLayout;
 
-
     public WorkoutsFragment() {
         // Required empty public constructor
+    }
+
+    public static Fragment newInstance() {
+        return new WorkoutsFragment();
     }
 
 
@@ -49,9 +55,7 @@ public class WorkoutsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_workouts, container, false);
         ButterKnife.bind(this, view);
-
         setupRecycler(view);
-
         return view;
     }
 
@@ -67,7 +71,6 @@ public class WorkoutsFragment extends Fragment {
         });
 
         workoutsViewModel.getNetworkStateLiveData().observe(getViewLifecycleOwner(), this::handleNetworkStateUi);
-
     }
 
     private void handleNetworkStateUi(NetworkState networkState) {
@@ -76,25 +79,25 @@ public class WorkoutsFragment extends Fragment {
                 errorLayout.setVisibility(View.GONE);
                 emptyLayout.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
-                shimmerLoadingLayout.setVisibility(View.GONE);
+                loading_layout_shimmer.setVisibility(View.GONE);
                 break;
             case ERROR:
                 errorLayout.setVisibility(View.VISIBLE);
                 emptyLayout.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.GONE);
-                shimmerLoadingLayout.setVisibility(View.GONE);
+                loading_layout_shimmer.setVisibility(View.GONE);
                 break;
             case LOADING:
                 errorLayout.setVisibility(View.GONE);
                 emptyLayout.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.GONE);
-                shimmerLoadingLayout.setVisibility(View.VISIBLE);
+                loading_layout_shimmer.setVisibility(View.VISIBLE);
                 break;
             case EMPTY:
                 errorLayout.setVisibility(View.GONE);
                 emptyLayout.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
-                shimmerLoadingLayout.setVisibility(View.GONE);
+                loading_layout_shimmer.setVisibility(View.GONE);
                 break;
         }
     }
