@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="1"
-    android:background="@color/activity_bg"
+    android:background="@color/white"
     android:fillViewport="true">
 
     <FrameLayout
@@ -54,7 +54,7 @@
                     android:drawablePadding="8dp"
                     android:hint="@string/sign_up_user_name_edit_text_hint"
                     android:inputType="textPersonName"
-                    android:textColor="@color/textblack"
+                    android:textColor="@color/black"
                     android:textSize="12sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -103,7 +103,7 @@
                     android:inputType="textPassword"
                     android:singleLine="true"
                     android:imeOptions="actionGo"
-                    android:textColor="@color/textblack"
+                    android:textColor="@color/black"
                     android:textSize="12sp"
                     app:errorEnabled="true" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -116,7 +116,7 @@
                 android:layout_marginTop="12dp"
                 android:background="@drawable/button_selector_blue_rect"
                 android:text="@string/sign_up_sign_up_button"
-                android:textColor="@color/textwhite"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toStartOf="@+id/signUpButton"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -184,7 +184,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha=".5"
-            android:background="@color/beige"
+            android:background="@color/grey"
             android:visibility="gone" />
 
 

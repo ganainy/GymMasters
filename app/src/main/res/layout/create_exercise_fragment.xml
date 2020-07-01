@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:id="@+id/parentScroll"
     android:layout_height="match_parent"
-    android:background="@color/activity_bg"
-    tools:context="ganainy.dev.gymmasters.ui.createExercise.CreateNewExerciseActivity">
+    android:background="@color/white"
+  >
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -49,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/circularbordersolid"
+                android:background="@drawable/circular_white_bordersolid"
                 android:orientation="vertical"
                 android:padding="16dp"
                 >
@@ -68,7 +68,6 @@
                             android:layout_height="9dp"
                             android:layout_marginTop="8dp"
                             android:id="@+id/exerciseNameDot"
-                            android:visibility="gone"
                             android:layout_marginEnd="4dp"
                             android:src="@drawable/orange_circle" />
 
@@ -106,7 +105,6 @@
                             android:layout_height="9dp"
                             android:layout_marginTop="8dp"
                             android:id="@+id/executionDot"
-                            android:visibility="gone"
                             android:layout_marginEnd="4dp"
                             android:src="@drawable/orange_circle" />
 
@@ -169,7 +167,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/circularbordersolid"
+                android:background="@drawable/circular_white_bordersolid"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -184,7 +182,6 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="4dp"
                         android:id="@+id/mechanicDot"
-                        android:visibility="gone"
                         android:src="@drawable/orange_circle" />
 
                     <TextView
@@ -221,7 +218,6 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="4dp"
                         android:id="@+id/targetedMuscleDot"
-                        android:visibility="gone"
                         android:src="@drawable/orange_circle" />
 
                     <TextView
@@ -252,7 +248,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@drawable/circularbordersolid"
+                android:background="@drawable/circular_white_bordersolid"
                 android:orientation="vertical">
 
                 <ImageView
@@ -261,7 +257,6 @@
                     android:layout_height="9dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:visibility="gone"
                     android:src="@drawable/orange_circle"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

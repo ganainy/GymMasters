@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="8dp"
     android:layout_margin="8dp"
-    android:background="@drawable/circular_grey_bordersolid">
+    android:background="@drawable/circular_light_grey_bordersolid">
 
 
     <TextView

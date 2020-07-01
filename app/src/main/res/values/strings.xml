@@ -23,7 +23,7 @@
     <string name="signup_failed">Sign up failed with this email and password.</string>
     <string name="error_signing_up">Error happened while signing up, Check connection and retry.</string>
     <string name="sign_in">Sign in</string>
-    <string name="use_gym_master_account">Error signing in with google account ,\n please login with Gym master account instead.</string>
+    <string name="use_gym_master_account">Error signing in with google account, please login with Gym master account instead.</string>
     <string name="or">-OR-</string>
     <string name="credentials_error">Error signing in, check your credentials</string>
     <string name="workouts">Workouts</string>
@@ -51,8 +51,8 @@
     <string name="following">following</string>
     <string name="follower_s">follower(s)</string>
     <string name="create_workout">Create workout</string>
-    <string name="view_my_exercises">View my exercises</string>
-    <string name="view_my_workouts">View my workouts</string>
+    <string name="view_my_exercises">My exercises</string>
+    <string name="view_my_workouts">My workouts</string>
     <string name="create_exercise">Create exercise</string>
     <string name="add_two_photos_describing_the_exercise">Add two photos describing the exercise :</string>
     <string name="upload">Upload</string>
@@ -94,7 +94,7 @@
     <string name="sets">%1$s Sets</string>
     <string name="reps">%1$s Reps</string>
     <string name="no_followers_yet">No followers yet</string>
-    <string name="you_didn_t_follow_any_users_yet">You didn\'t follow any users yet</string>
+    <string name="you_didn_t_follow_any_users_yet">You didn\'t follow any users yet.</string>
     <string name="find_users_to_follow">Find users to follow</string>
     <string name="no_users_found">No users found</string>
     <string name="followers_count">%1$d Followers</string>
@@ -146,8 +146,8 @@
     <string name="find">Find</string>
     <string name="discover">Discover</string>
     <string name="social">Social</string>
-    <string name="view_my_followers">Show my followers</string>
-    <string name="view_users_iam_following">View users I am following</string>
+    <string name="view_my_followers">My followers</string>
+    <string name="view_users_iam_following">Users I am following</string>
     <string name="rating">rating</string>
     <string name="tell_your_followers_something_about_yourself">Tell your followers something about yourself</string>
     <string name="no_workouts_found">No workouts found</string>
@@ -186,4 +186,11 @@
     <string name="profile_image_updated_successfully">Profile image updated successfully</string>
     <string name="cant_get_location_search_instead">Can\'t get your location but you can still search for a place and find gyms near it.</string>
     <string name="loading_user_profile">Loading profile...</string>
+    <string name="already_added_click_icon_to_remove">Already added ,click icon to remove</string>
+    <string name="create_custom_workouts_and_exercises">Create custom workouts and exercises</string>
+    <string name="follow_rate_and_watch_other_users_exercises_and_workouts">Follow ,rate and watch other users\' exercises and workouts</string>
+    <string name="find_gyms_near_your_location_and_a_lot_more">Find gyms near your location and a lot more...</string>
+    <string name="create">Create</string>
+    <string name="view">View</string>
+    <string name="overall_rating">overall rating</string>
 </resources>

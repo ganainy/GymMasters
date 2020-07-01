@@ -16,10 +16,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/text_shadow"
+        android:background="@drawable/semi_transparent_grey_bg"
         android:fontFamily="@font/proximanovaregular"
         android:gravity="center"
-        android:text="Find gyms near your location and a lot more..."
+        android:text="@string/find_gyms_near_your_location_and_a_lot_more"
         android:textColor="#eee"
         android:textSize="32sp" />
 

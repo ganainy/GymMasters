@@ -2,7 +2,6 @@ package ganainy.dev.gymmasters.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -22,14 +21,14 @@ import ganainy.dev.gymmasters.models.app_models.User;
 import ganainy.dev.gymmasters.models.app_models.Workout;
 import ganainy.dev.gymmasters.ui.createExercise.CreateExerciseFragment;
 import ganainy.dev.gymmasters.ui.createWorkout.CreateWorkoutFragment;
-import ganainy.dev.gymmasters.ui.exercise.MuscleFragment;
+import ganainy.dev.gymmasters.ui.muscle.MuscleFragment;
 import ganainy.dev.gymmasters.ui.findUser.FindUserFragment;
-import ganainy.dev.gymmasters.ui.main.home.ProfileFragment;
+import ganainy.dev.gymmasters.ui.profile.ProfileFragment;
 import ganainy.dev.gymmasters.ui.map.MapsActivity;
-import ganainy.dev.gymmasters.ui.posts.PostsFragment;
-import ganainy.dev.gymmasters.ui.posts.postComments.PostCommentsFragment;
+import ganainy.dev.gymmasters.ui.main.posts.PostsFragment;
+import ganainy.dev.gymmasters.ui.main.posts.postComments.PostCommentsFragment;
 import ganainy.dev.gymmasters.ui.userExercises.UserExercisesFragment;
-import ganainy.dev.gymmasters.ui.main.loggedUserWorkouts.UserWorkoutsFragment;
+import ganainy.dev.gymmasters.ui.main.workoutsList.UserWorkoutsFragment;
 import ganainy.dev.gymmasters.R;
 import ganainy.dev.gymmasters.ui.specificExercise.ExerciseFragment;
 import ganainy.dev.gymmasters.ui.specificExercise.youtubeFragment.YoutubeFragment;

@@ -1,7 +1,6 @@
 package ganainy.dev.gymmasters.ui.main.exercisesCategories;
 
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,7 +17,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import ganainy.dev.gymmasters.R;
-import ganainy.dev.gymmasters.ui.exercise.MuscleFragment;
 
 import butterknife.ButterKnife;
 import ganainy.dev.gymmasters.ui.main.ActivityCallback;

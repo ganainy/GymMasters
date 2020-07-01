@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,8 +23,7 @@ import ganainy.dev.gymmasters.utils.AuthUtils;
 import ganainy.dev.gymmasters.utils.Event;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
-import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
-import static ganainy.dev.gymmasters.utils.Constants.SOCIAL;
+import static ganainy.dev.gymmasters.ui.muscle.MuscleViewModel.EXERCISES;
 import static ganainy.dev.gymmasters.utils.MiscellaneousUtils.formatUriAsTimeStampedString;
 
 public class CreateExerciseViewModel extends ViewModel {

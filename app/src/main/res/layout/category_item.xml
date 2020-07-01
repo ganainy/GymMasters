@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:layout_margin="8dp"
-    android:background="@drawable/circular_grey_bordersolid">
+    android:background="@drawable/circular_light_grey_bordersolid">
 
         <ImageView
             android:id="@+id/categoryImageView"
@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:alpha=".5"
-        android:background="@color/text_shadow"
+        android:background="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -50,7 +50,7 @@
             android:gravity="center"
             android:maxLines="1"
             android:textAllCaps="true"
-            android:textColor="@color/light_font"
+            android:textColor="@color/white"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

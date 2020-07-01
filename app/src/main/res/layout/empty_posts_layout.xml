@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent">
 
 
@@ -12,13 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/circular_grey_bordersolid"
+        android:background="@drawable/circular_light_grey_bordersolid"
         android:drawableStart="@drawable/ic_follow_grey"
         android:drawablePadding="8dp"
         android:padding="16dp"
         android:text="@string/follow_more_users"
         android:textAllCaps="false"
-        android:textColor="@color/grey"
+        android:textColor="@color/dark_grey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/noNewsFeedTextView"
         app:layout_constraintHorizontal_bias="0.5"
@@ -36,7 +37,7 @@
         android:gravity="center"
         android:text="@string/no_news_feed_from_the_users_you_follow"
         android:textAllCaps="false"
-        android:textColor="@color/grey"
+        android:textColor="@color/dark_grey"
         android:textSize="32sp"
         app:layout_constraintBottom_toTopOf="@+id/animation_view"
         app:layout_constraintEnd_toEndOf="parent"

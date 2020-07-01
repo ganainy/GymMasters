@@ -34,7 +34,7 @@ import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 public class UserFragment extends Fragment {
 
     public static final String USER = "user";
-    private UserInfoViewModel mViewModel;
+    private UserViewModel mViewModel;
 
     private static final String TAG = "UserFragment";
 
@@ -112,15 +112,15 @@ public class UserFragment extends Fragment {
     @OnClick(R.id.showExercisesLayout)
     void showExerciseList() {
         ActivityCallback activityCallback = (ActivityCallback) requireActivity();
-        activityCallback.openUserExercisesFragment(mViewModel.getUserProfileModel().getProfileOwner().getId(),
-                mViewModel.getUserProfileModel().getProfileOwner().getName());
+        activityCallback.openUserExercisesFragment(mViewModel.getUserProfile().getProfileOwner().getId(),
+                mViewModel.getUserProfile().getProfileOwner().getName());
     }
 
     @OnClick(R.id.showWorkoutsLayout)
     void showWorkoutList() {
         ActivityCallback activityCallback = (ActivityCallback) requireActivity();
-        activityCallback.openUserWorkoutsFragment(mViewModel.getUserProfileModel().getProfileOwner().getId(),
-                mViewModel.getUserProfileModel().getProfileOwner().getName());
+        activityCallback.openUserWorkoutsFragment(mViewModel.getUserProfile().getProfileOwner().getId(),
+                mViewModel.getUserProfile().getProfileOwner().getName());
     }
 
 
@@ -138,7 +138,7 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.user_info_fragment, container, false);
+        View view = inflater.inflate(R.layout.user_fragment, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -195,8 +195,8 @@ public class UserFragment extends Fragment {
     }
 
     private void initViewModel(User mUser) {
-        UserInfoViewModelFactory userInfoViewModelFactory = new UserInfoViewModelFactory(requireActivity().getApplication(),mUser);
-        mViewModel = new ViewModelProvider(this, userInfoViewModelFactory).get(UserInfoViewModel.class);
+        UserViewModelFactory userViewModelFactory = new UserViewModelFactory(requireActivity().getApplication(),mUser);
+        mViewModel = new ViewModelProvider(this, userViewModelFactory).get(UserViewModel.class);
     }
 
 

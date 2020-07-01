@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@drawable/circular_grey_bordersolid">
+    android:background="@drawable/circular_light_grey_bordersolid">
 
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -33,7 +33,7 @@
         android:fontFamily="@font/proximanovaregular"
         android:gravity="center_vertical"
         android:maxLines="2"
-        android:textColor="@color/textblack"
+        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

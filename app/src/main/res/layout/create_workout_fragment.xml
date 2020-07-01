@@ -8,7 +8,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/activity_bg"
+    android:background="@color/white"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -60,7 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/circularbordersolid"
+                    android:background="@drawable/circular_white_bordersolid"
                     android:orientation="vertical"
                     android:padding="16dp"
                   >
@@ -147,7 +147,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/circularbordersolid"
+                    android:background="@drawable/circular_white_bordersolid"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -194,7 +194,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/circularbordersolid"
+                    android:background="@drawable/circular_white_bordersolid"
                     android:orientation="vertical">
 
                     <ImageView
@@ -231,7 +231,7 @@
                             android:layout_height="200dp"
                             android:layout_margin="8dp"
                             android:layout_weight="1"
-                            android:background="@color/grey"
+                            android:background="@color/light_grey"
                             android:padding="60dp"
                             android:src="@drawable/ic_plus_black_symbol" />
 
@@ -245,7 +245,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:background="@drawable/circularbordersolid"
+                    android:background="@drawable/circular_white_bordersolid"
                     android:orientation="vertical"
                     android:padding="8dp">
 
@@ -274,7 +274,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/circular_grey_bordersolid"
+                        android:background="@drawable/circular_light_grey_bordersolid"
                         android:padding="4dp">
 
                         <ImageView
@@ -295,6 +295,7 @@
                         android:id="@+id/exercisesRecycler"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        tools:listitem="@layout/exercise_item_advanced"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         android:padding="8dp"/>
 

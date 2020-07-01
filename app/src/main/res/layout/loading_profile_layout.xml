@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="16dp"
-    android:background="@drawable/circular_grey_bordersolid"
+    android:background="@drawable/circular_light_grey_bordersolid"
     android:orientation="vertical"
     android:padding="8dp"
     app:layout_constraintBottom_toBottomOf="parent"
@@ -28,6 +28,6 @@
             android:fontFamily="@font/proximanovaregular"
             android:gravity="center"
             android:text="@string/loading_user_profile"
-            android:textColor="@color/lightBlack"
+            android:textColor="@color/dark_grey"
             android:textSize="22sp" />
     </LinearLayout>

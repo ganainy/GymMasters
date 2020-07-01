@@ -24,7 +24,7 @@ import ganainy.dev.gymmasters.shared_adapters.ExercisesAdapter;
 import ganainy.dev.gymmasters.ui.main.ActivityCallback;
 import ganainy.dev.gymmasters.utils.NetworkState;
 
-import static ganainy.dev.gymmasters.ui.main.home.ProfileFragment.USER_ID;
+import static ganainy.dev.gymmasters.ui.profile.ProfileFragment.USER_ID;
 
 /**can be called to show logged user exercises or any user exercises*/
 public class UserExercisesFragment extends Fragment {

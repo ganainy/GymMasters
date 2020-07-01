@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +34,7 @@ import ganainy.dev.gymmasters.utils.Event;
 import ganainy.dev.gymmasters.utils.MiscellaneousUtils;
 import ganainy.dev.gymmasters.utils.SharedPrefUtils;
 
-import static ganainy.dev.gymmasters.ui.main.home.ProfileViewModel.USER_IMAGES;
+import static ganainy.dev.gymmasters.ui.profile.ProfileViewModel.USER_IMAGES;
 
 public class SignUpViewModel extends ViewModel {
 

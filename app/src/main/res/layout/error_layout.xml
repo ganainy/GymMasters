@@ -6,8 +6,8 @@
     android:layout_height="match_parent">
 
 
-    <ImageView
-        android:id="@+id/imageView16"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_sad_animation"
         android:layout_width="128dp"
         android:layout_height="128dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -16,7 +16,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.39999998"
-        app:srcCompat="@drawable/ic_sad_emoji_grey" />
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/empty_lottie"
+        tools:layout_editor_absoluteX="16dp" />
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,9 +28,10 @@
         android:layout_marginTop="16dp"
         android:text="@string/error_while_loading_data"
         android:textSize="24sp"
+        android:gravity="center"
         android:fontFamily="@font/proximanovaregular"
         android:textColor="@color/grey"
-        app:layout_constraintEnd_toEndOf="@+id/imageView16"
-        app:layout_constraintStart_toStartOf="@+id/imageView16"
-        app:layout_constraintTop_toBottomOf="@+id/imageView16" />
+        app:layout_constraintEnd_toEndOf="@+id/lottie_sad_animation"
+        app:layout_constraintStart_toStartOf="@+id/lottie_sad_animation"
+        app:layout_constraintTop_toBottomOf="@+id/lottie_sad_animation" />
 </androidx.constraintlayout.widget.ConstraintLayout>

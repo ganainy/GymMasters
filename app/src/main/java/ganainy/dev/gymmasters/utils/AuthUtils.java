@@ -3,19 +3,11 @@ package ganainy.dev.gymmasters.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.annotation.NonNull;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import ganainy.dev.gymmasters.models.app_models.User;
-
-import static ganainy.dev.gymmasters.ui.userInfo.UserInfoViewModel.USERS;
 
 public class AuthUtils {
 

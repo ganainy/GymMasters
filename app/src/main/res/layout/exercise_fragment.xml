@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activity_bg"
+    android:background="@color/white"
     android:fillViewport="true"
     >
     <FrameLayout
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/circularbordersolid"
+            android:background="@drawable/circular_white_bordersolid"
             app:layout_constraintTop_toTopOf="parent"
             >
 
@@ -144,7 +144,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:padding="8dp"
-            android:background="@drawable/circularbordersolid"
+            android:background="@drawable/circular_white_bordersolid"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/topView"
             tools:layout_editor_absoluteX="8dp">
@@ -367,13 +367,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:background="@drawable/circularbordersolid"
+            android:background="@drawable/circular_white_bordersolid"
             android:drawableStart="@drawable/ic_play_grey"
             android:fontFamily="@font/proximanovaregular"
             android:padding="8dp"
             android:text="@string/play_video_instead"
             android:textAllCaps="false"
-            android:textColor="@color/grey"
+            android:textColor="@color/dark_grey"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:textSize="18sp"
             android:drawablePadding="8dp"
             android:layout_gravity="center_horizontal"

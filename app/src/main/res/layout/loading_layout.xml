@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:custom="http://schemas.android.com/tools"
-    android:background="#73B1ABAB">
+    android:background="#00FFFFFF">
 
 
     <LinearLayout
@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@drawable/circular_grey_bordersolid"
+        android:background="@drawable/circular_light_grey_bordersolid"
         android:orientation="vertical"
 
         android:padding="8dp"
@@ -36,7 +36,7 @@
             android:fontFamily="@font/proximanovaregular"
             android:gravity="center"
             android:text="@string/uploading"
-            android:textColor="@color/lightBlack"
+            android:textColor="@color/dark_grey"
             android:textSize="22sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

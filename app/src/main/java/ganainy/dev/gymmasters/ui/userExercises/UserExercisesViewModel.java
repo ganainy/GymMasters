@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.utils.NetworkState;
-import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
+import static ganainy.dev.gymmasters.ui.muscle.MuscleViewModel.EXERCISES;
 
 public class UserExercisesViewModel extends ViewModel {
     public static final String CREATOR_ID = "creatorId";

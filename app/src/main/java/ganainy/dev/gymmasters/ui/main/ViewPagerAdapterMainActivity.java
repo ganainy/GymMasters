@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import ganainy.dev.gymmasters.ui.main.exercisesCategories.ExercisesCategoriesFragment;
 import ganainy.dev.gymmasters.ui.main.workouts.WorkoutsFragment;
-import ganainy.dev.gymmasters.ui.posts.PostsFragment;
+import ganainy.dev.gymmasters.ui.main.posts.PostsFragment;
 
 public class ViewPagerAdapterMainActivity extends FragmentPagerAdapter {
     private static final String TAG = "ViewPagerAdapterMainAct";

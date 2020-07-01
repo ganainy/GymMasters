@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -30,7 +29,7 @@ import java.util.TimerTask;
 import ganainy.dev.gymmasters.models.app_models.Exercise;
 import ganainy.dev.gymmasters.utils.AuthUtils;
 
-import static ganainy.dev.gymmasters.ui.exercise.ExercisesViewModel.EXERCISES;
+import static ganainy.dev.gymmasters.ui.muscle.MuscleViewModel.EXERCISES;
 
 public class ExerciseViewModel extends AndroidViewModel {
 

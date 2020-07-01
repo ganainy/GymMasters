@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@drawable/circular_grey_bordersolid">
+        android:background="@drawable/circular_light_grey_bordersolid">
 
 
         <TextView

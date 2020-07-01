@@ -12,7 +12,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-android:background="@color/activity_bg"
+android:background="@color/white"
 >
 
 <com.google.android.material.appbar.AppBarLayout
@@ -75,7 +75,7 @@ android:background="@color/activity_bg"
         android:id="@+id/exercisesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/circularbordersolid"
+        android:background="@drawable/circular_white_bordersolid"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/excercise_item" />

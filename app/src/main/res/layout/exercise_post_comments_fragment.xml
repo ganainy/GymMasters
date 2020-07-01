@@ -22,7 +22,7 @@
     android:layout_marginBottom="50dp"
     tools:context=".ui.posts.exercisePostComments.ExercisePostCommentsFragment">
 
-   <include layout="@layout/post_exercise_item2"
+   <include layout="@layout/post_exercise_item"
        android:id="@+id/postExerciseLayout"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"

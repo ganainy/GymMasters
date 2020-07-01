@@ -15,10 +15,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/text_shadow"
+        android:background="@drawable/semi_transparent_grey_bg"
         android:fontFamily="@font/proximanovaregular"
         android:gravity="center"
-        android:text="Follow ,rate and watch other users' exercises and workouts"
+        android:text="@string/follow_rate_and_watch_other_users_exercises_and_workouts"
         android:textColor="#eee"
         android:textSize="32sp" />
 

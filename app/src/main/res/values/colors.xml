@@ -3,17 +3,11 @@
     <color name="colorPrimary">#3F527C</color>
     <color name="colorPrimaryDark">#283650</color>
     <color name="colorAccent">#2196F3</color>
-    <color name="textblack">#151C22</color>
-    <color name="textwhite">#F8F8F8</color>
     <color name="blue">#293859</color>
-    <color name="beige">#cccccc</color>
-    <color name="activity_bg">#EBEBEB</color>
-    <color name="grey">#86868A</color>
-    <!--shadow of text-->
-    <color name="light_font">#FBFBFB</color>
-    <color name="text_shadow">#7F000000</color>
+    <color name="grey">#B1B1B1</color>
     <color name="black">#000000</color>
-    <color name="lightBlack">#444343</color>
     <color name="red">#FF0000</color>
     <color name="dark_grey">#4E4E4E</color>
+    <color name="light_grey">#E3E3E3</color>
+    <color name="transparent" />
 </resources>

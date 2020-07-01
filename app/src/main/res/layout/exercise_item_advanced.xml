@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@drawable/circular_grey_bordersolid">
+    android:background="@drawable/circular_light_grey_bordersolid">
 
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -18,7 +18,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:padding="8dp"
-        android:src="@drawable/ic_dumbell_grey"
+        android:src="@drawable/ic_dumbell_black"
         app:layout_constraintStart_toStartOf="@id/parentConstraint"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,7 +32,7 @@
         android:fontFamily="@font/proximanovaregular"
         android:gravity="center_vertical"
         android:maxLines="2"
-        android:textColor="@color/textblack"
+        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/workoutImageView"
         app:layout_constraintEnd_toStartOf="@+id/imageViewDelete"
@@ -74,8 +74,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/proximanovaregular"
-            android:text="Already added ,click icon to remove"
-            android:textColor="@color/textblack" />
+            android:text="@string/already_added_click_icon_to_remove"
+            android:textColor="@color/black" />
 
         <ImageView
             android:id="@+id/deleteImageView"
