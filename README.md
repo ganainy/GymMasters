@@ -3,10 +3,14 @@
 An app where you can find workouts , exercises and create custom workouts , exercises with images and videos which your followers can see or you can find and 
 follow other users to try their custom exercises/workouts which will show on your feed with ability to like and comment on them , exercises ,find gym nearby user location or any location on map.
 
-video:https://www.youtube.com/watch?v=JitaH3K0fcM
+
+https://user-images.githubusercontent.com/44480226/157985264-0f93aff0-aa9a-415e-91b4-0ace6606084e.mp4
+
+
 
 ```diff
-! Note : you will have to add your own key that supports Youtube Data API , places API and maps API for their related features to work properly (ADD YOUR API KEY IN STRINGS FILE (src/main/res/values/strings.xml) )
+- Note : you will have to add your own key that supports Youtube Data API , places API and maps API for their related 
+- features to work properly  (ADD YOUR API KEY IN STRINGS FILE (src/main/res/values/strings.xml) )
 ```
 
 Features:<br>
