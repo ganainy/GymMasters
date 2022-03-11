@@ -5,6 +5,10 @@ follow other users to try their custom exercises/workouts which will show on you
 
 video:https://www.youtube.com/watch?v=JitaH3K0fcM
 
+
+! Note : you will have to add your own key that supports Youtube Data API , places API and maps API for their related features to work properly (ADD YOUR API KEY IN STRINGS FILE (src/main/res/values/strings.xml) )
+
+
 Features:<br>
 ----------
 Sign up and login with google account or app account<br><br>
