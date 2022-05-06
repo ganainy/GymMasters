@@ -16,39 +16,35 @@ https://user-images.githubusercontent.com/44480226/157985264-0f93aff0-aa9a-415e-
 Features:<br>
 ----------
 Sign up and login with google account or app account<br><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974170050297917/Screenshot_1593632448.png" width="350" ><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974174211047544/Screenshot_1593632490.png" width="350" ><br>
+<img src="https://user-images.githubusercontent.com/44480226/167210449-18d7dcac-e719-424e-acbc-d372a9fec24b.png" width="200" height="400" />
+<img src="https://user-images.githubusercontent.com/44480226/167210452-c7a95e23-df67-4e84-8e77-9189d6af2b68.png" width="200" height="400" />
 
 Find created user exercises by category to focus on the muscle you wanna grow<br><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974338011201616/Screenshot_1593632800.png" width="350" ><br>
+<img src="https://user-images.githubusercontent.com/44480226/167210945-7826d3c3-ca7b-4587-8b64-df4ba790a12b.png" width="200" height="400" ><br>
 
 Images not enough? watch a video instead of each exercise in the in-app youtube player<br><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974318088126484/Screenshot_1593632831.png" width="350" ><br>
- 
+<img src="https://user-images.githubusercontent.com/44480226/167211011-6667c04a-5746-4647-b95f-dad7aa6cd13f.png" width="200" height="400" />
+
+
 View workout in workouts tab to find the workout that suits your time space and level if you are beginner or professional<br><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974325025505432/Screenshot_1593632433.png" width="350" ><br>
- <img src="https://cdn.discordapp.com/attachments/694933808885268531/727974157895073863/Screenshot_1593632427.png" width="350" ><br>
- 
-Search for users to follow<br><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974187951718490/Screenshot_1593632604.png" width="350" ><br>
+<img src="https://user-images.githubusercontent.com/44480226/167211084-717c0734-4ec5-4255-8de4-47ed2305aba8.png" width="200" height="400" />
+
 
 See latest uploaded exercises and workouts of the people you follow one your news feed page<br><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974305429979176/Screenshot_1593632647.png" width="350" ><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974335091966024/Screenshot_1593632622.png" width="350" ><br>
+<img src="https://user-images.githubusercontent.com/44480226/167211130-70493f37-b3b3-427a-acca-afcd0e85f34e.png" width="200" height="400" />
+<img src="https://user-images.githubusercontent.com/44480226/167211137-98045364-4d6b-41a3-a5a8-f0d7d3e3f7a1.png" width="200" height="400" />
+
 
 Follow and rate other users to get their exercises and workouts on your posts feed<br><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974236169306193/Screenshot_1593632585.png" width="350" ><br>
+<img src="https://user-images.githubusercontent.com/44480226/167211151-12ea3e69-8b18-458f-837a-734b35566d2b.png" width="200" height="400" />
+
 
 Customize your profile and create custom exercises/workout to get more followers and better rating<br><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974198303129627/Screenshot_1593632363.png" width="350" ><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974221887569950/Screenshot_1593632386.png" width="350" ><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974235385102446/Screenshot_1593632256.png" width="350" ><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974277038735411/Screenshot_1593632274.png" width="350" ><br>
+<img src="https://user-images.githubusercontent.com/44480226/167211250-7d3898a9-5c48-4d8d-b9b5-9dcce74c3318.png" width="200" height="400" />
 
- Get your location and get the nearest gym to your location to start working out today<br><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974163347931209/Screenshot_1593632338.png" width="350" ><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974170201161778/Screenshot_1593632343.png" width="350" ><br>
-<img src="https://cdn.discordapp.com/attachments/694933808885268531/727974240573456434/Screenshot_1593632346.png" width="350" ><br>
+
+ See the nearest gym to your location to start working out today<br><br>
+ <img src="https://user-images.githubusercontent.com/44480226/167211282-26f67ada-e410-4d32-9c88-bf25d27ec584.png" width="200" height="400" />
 
 
 
